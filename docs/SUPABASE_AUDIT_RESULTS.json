@@ -1,0 +1,19 @@
+{
+  "timestamp": "2026-08-26T18:50:33.612Z",
+  "projectId": "leksmflinhohnekbgmgj",
+  "tables": {
+    "profiles": {
+      "exists": false,
+      "records": 0,
+      "status": "NO_EXISTE"
+    },
+    "product_metadata": {
+      "exists": false,
+      "records": 0,
+      "status": "NO_EXISTE"
+    }
+  },
+  "storageBuckets": [],
+  "notes": [],
+  "warnings": []
+}

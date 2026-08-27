@@ -22,6 +22,7 @@ import { Route as RosasEternasRouteImport } from './routes/rosas-eternas'
 import { Route as ServiciosRouteImport } from './routes/servicios'
 import { Route as SobreNosotrosRouteImport } from './routes/sobre-nosotros'
 import { Route as AuthenticatedMiCuentaRouteImport } from './routes/_authenticated/mi-cuenta'
+import { Route as DebugGhlTestRouteImport } from './routes/debug.ghl-test'
 import { Route as LegalSlugRouteImport } from './routes/legal.$slug'
 import { Route as ProductoIdRouteImport } from './routes/producto.$id'
 import { Route as ServiciosIndexRouteImport } from './routes/servicios.index'
@@ -91,6 +92,11 @@ const AuthenticatedMiCuentaRoute = AuthenticatedMiCuentaRouteImport.update({
   path: '/mi-cuenta',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const DebugGhlTestRoute = DebugGhlTestRouteImport.update({
+  id: '/debug/ghl-test',
+  path: '/debug/ghl-test',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LegalSlugRoute = LegalSlugRouteImport.update({
   id: '/legal/$slug',
   path: '/legal/$slug',
@@ -125,6 +131,7 @@ export interface FileRoutesByFullPath {
   '/servicios': typeof ServiciosRouteWithChildren
   '/sobre-nosotros': typeof SobreNosotrosRoute
   '/mi-cuenta': typeof AuthenticatedMiCuentaRoute
+  '/debug/ghl-test': typeof DebugGhlTestRoute
   '/legal/$slug': typeof LegalSlugRoute
   '/producto/$id': typeof ProductoIdRoute
   '/servicios/$slug': typeof ServiciosSlugRoute
@@ -142,6 +149,7 @@ export interface FileRoutesByTo {
   '/rosas-eternas': typeof RosasEternasRoute
   '/sobre-nosotros': typeof SobreNosotrosRoute
   '/mi-cuenta': typeof AuthenticatedMiCuentaRoute
+  '/debug/ghl-test': typeof DebugGhlTestRoute
   '/legal/$slug': typeof LegalSlugRoute
   '/producto/$id': typeof ProductoIdRoute
   '/servicios/$slug': typeof ServiciosSlugRoute
@@ -162,6 +170,7 @@ export interface FileRoutesById {
   '/servicios': typeof ServiciosRouteWithChildren
   '/sobre-nosotros': typeof SobreNosotrosRoute
   '/_authenticated/mi-cuenta': typeof AuthenticatedMiCuentaRoute
+  '/debug/ghl-test': typeof DebugGhlTestRoute
   '/legal/$slug': typeof LegalSlugRoute
   '/producto/$id': typeof ProductoIdRoute
   '/servicios/$slug': typeof ServiciosSlugRoute
@@ -182,6 +191,7 @@ export interface FileRouteTypes {
     | '/servicios'
     | '/sobre-nosotros'
     | '/mi-cuenta'
+    | '/debug/ghl-test'
     | '/legal/$slug'
     | '/producto/$id'
     | '/servicios/$slug'
@@ -199,6 +209,7 @@ export interface FileRouteTypes {
     | '/rosas-eternas'
     | '/sobre-nosotros'
     | '/mi-cuenta'
+    | '/debug/ghl-test'
     | '/legal/$slug'
     | '/producto/$id'
     | '/servicios/$slug'
@@ -218,6 +229,7 @@ export interface FileRouteTypes {
     | '/servicios'
     | '/sobre-nosotros'
     | '/_authenticated/mi-cuenta'
+    | '/debug/ghl-test'
     | '/legal/$slug'
     | '/producto/$id'
     | '/servicios/$slug'
@@ -237,6 +249,7 @@ export interface RootRouteChildren {
   RosasEternasRoute: typeof RosasEternasRoute
   ServiciosRoute: typeof ServiciosRouteWithChildren
   SobreNosotrosRoute: typeof SobreNosotrosRoute
+  DebugGhlTestRoute: typeof DebugGhlTestRoute
   LegalSlugRoute: typeof LegalSlugRoute
   ProductoIdRoute: typeof ProductoIdRoute
 }
@@ -334,6 +347,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMiCuentaRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/debug/ghl-test': {
+      id: '/debug/ghl-test'
+      path: '/debug/ghl-test'
+      fullPath: '/debug/ghl-test'
+      preLoaderRoute: typeof DebugGhlTestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/legal/$slug': {
       id: '/legal/$slug'
       path: '/legal/$slug'
@@ -403,6 +423,7 @@ const rootRouteChildren: RootRouteChildren = {
   RosasEternasRoute: RosasEternasRoute,
   ServiciosRoute: ServiciosRouteWithChildren,
   SobreNosotrosRoute: SobreNosotrosRoute,
+  DebugGhlTestRoute: DebugGhlTestRoute,
   LegalSlugRoute: LegalSlugRoute,
   ProductoIdRoute: ProductoIdRoute,
 }

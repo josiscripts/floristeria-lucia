@@ -1,0 +1,15 @@
+{
+  "timestamp": "2026-08-26T18:50:49.410Z",
+  "projectId": "leksmflinhohnekbgmgj",
+  "tables": [],
+  "storageBuckets": [],
+  "functions": [],
+  "triggers": [],
+  "policies": [],
+  "warnings": [
+    "No storage buckets found"
+  ],
+  "errors": [
+    "Tables audit failed: Could not find the table 'public.information_schema.tables' in the schema cache"
+  ]
+}
