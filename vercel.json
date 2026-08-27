@@ -4,7 +4,7 @@
   "regions": ["iad"],
   "functions": {
     "dist/server/server.js": {
-      "runtime": "nodejs20.x"
+      "runtime": "nodejs@20"
     }
   }
 }
