@@ -1,13 +1,13 @@
-import { defineConfig } from "@tanstack/react-start/config";
-import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
+import { defineConfig } from 'vite';
+import { tanstackStart } from '@tanstack/react-start/plugin/vite';
 
 export default defineConfig({
-  vite: {
-    plugins: [TanStackRouterVite({ autoCodeSplitting: true })],
-    resolve: {
-      alias: {
-        "@": "/src",
-      },
+  plugins: [
+    tanstackStart(),
+  ],
+  resolve: {
+    alias: {
+      "@": "/src",
     },
   },
 });
