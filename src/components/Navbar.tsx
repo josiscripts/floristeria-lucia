@@ -17,16 +17,18 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useShop } from "@/context/ShopContext";
+import { useTheme } from "@/context/ThemeContext";
 import { languages, useLanguage, useT } from "@/context/LanguageContext";
 import { company } from "@/data/company";
 import { priceRangeLabel, products } from "@/data/catalog";
 import { cn } from "@/lib/utils";
 
-const logo = { url: "/assets/logo-header.svg" };
-
 export function Navbar() {
   const t = useT();
+  const { theme } = useTheme();
   const { count, favorites, setCartOpen } = useShop();
+
+  const logo = { url: theme === "dark" ? "/assets/logo-footer.svg" : "/assets/logo-header.svg" };
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const pathname = useRouterState({ select: (s) => s.location.pathname });

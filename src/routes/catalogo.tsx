@@ -140,16 +140,6 @@ function CatalogPage() {
             >
               {categoryLabelOf(cat)}
             </FilterChip>
-            {/* Bodas mantiene su página de servicio existente. */}
-            {cat.id === "rosas-eternas" && (
-              <Link
-                to="/servicios/$slug"
-                params={{ slug: "bodas" }}
-                className="inline-flex items-center gap-1.5 rounded-full border border-border px-4 py-2 text-sm text-muted-foreground transition-colors hover:border-primary hover:text-primary"
-              >
-                {t("catalog.weddingsTab")}
-              </Link>
-            )}
           </Fragment>
         ))}
 
