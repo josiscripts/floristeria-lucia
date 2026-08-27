@@ -27,8 +27,9 @@ import { CookiePreferences, openCookiePreferences } from "@/components/CookiePre
 import { useT } from "@/context/LanguageContext";
 import { company } from "@/data/company";
 import { legalFooterLinks } from "@/data/legal-pages";
-import logo from "@/assets/logo-header.svg.asset.json";
 import ctaBouquet from "@/assets/hero-bouquet.jpg";
+
+const logo = { url: "/assets/logo-header.svg" };
 
 type NavLink = {
   key: string;

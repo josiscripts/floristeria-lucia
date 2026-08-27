@@ -21,7 +21,8 @@ import { languages, useLanguage, useT } from "@/context/LanguageContext";
 import { company } from "@/data/company";
 import { priceRangeLabel, products } from "@/data/catalog";
 import { cn } from "@/lib/utils";
-import logo from "@/assets/logo-header.svg.asset.json";
+
+const logo = { url: "/assets/logo-header.svg" };
 
 export function Navbar() {
   const t = useT();

@@ -6,7 +6,8 @@ import imgRamos from "@/assets/cat-ramos.jpg";
 import imgPlantas from "@/assets/cat-plantas.jpg";
 import imgComplementos from "@/assets/cat-complementos.jpg";
 import imgEventos from "@/assets/bodas.jpg";
-import imgCesta from "@/assets/hero-cesta-flores.jpeg.asset.json";
+
+const imgCesta = { url: "/assets/hero-cesta-flores.jpeg" };
 
 type Item = {
   key: "flores" | "plantas" | "cestas" | "complementos" | "eventos";

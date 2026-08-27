@@ -5,7 +5,8 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useT } from "@/context/LanguageContext";
 import { cn } from "@/lib/utils";
 import { services as allServices } from "@/data/services";
-import imgHero from "@/assets/hero-ramo-mano.jpeg.asset.json";
+
+const imgHero = { url: "/assets/hero-ramo-mano.jpeg" };
 
 export const Route = createFileRoute("/servicios/")({
   head: () => ({
