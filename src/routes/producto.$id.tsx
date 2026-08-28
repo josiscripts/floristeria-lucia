@@ -24,6 +24,7 @@ import {
   supportsRibbon,
   products,
 } from "@/data/catalog";
+import { useGHLProduct } from "@/hooks/useGHLProduct";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/producto/$id")({
@@ -53,7 +54,11 @@ function ProductPage() {
   const { productName, productDescription, productBadge, tierLabel } = useCatalogText();
   const { addLine, setCartOpen, toggleFavorite, isFavorite } = useShop();
 
-  const product = findProduct(id);
+  // Fetch product from GHL, with fallback to local catalog
+  const { data: ghlProduct } = useGHLProduct(id);
+  const fallbackProduct = findProduct(id);
+  const product = ghlProduct || fallbackProduct;
+
   const tiers = useMemo(() => (product ? priceTiers(product) : []), [product]);
   const [tierIndex, setTierIndex] = useState(0);
   const [color, setColor] = useState<string | undefined>(undefined);

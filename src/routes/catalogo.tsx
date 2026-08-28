@@ -8,7 +8,8 @@ import { Input } from "@/components/ui/input";
 import { useLanguage } from "@/context/LanguageContext";
 import { useShop } from "@/context/ShopContext";
 import { useCatalogText } from "@/i18n/catalog-text";
-import { categories, products, type CategoryId } from "@/data/catalog";
+import { categories, products as fallbackProducts, type CategoryId } from "@/data/catalog";
+import { useGHLProducts } from "@/hooks/useGHLProducts";
 import { legacyCategoryToService } from "@/data/services";
 import { cn } from "@/lib/utils";
 
@@ -81,17 +82,25 @@ function CatalogPage() {
   const { t } = useLanguage();
   const { categoryLabelOf } = useCatalogText();
 
+  // Fetch products from GHL, with fallback to local catalog
+  const { data: ghlData, isLoading, error } = useGHLProducts({
+    limit: 500,
+  });
+
   const activeCategory = categoria;
+
+  // Use GHL products if available, fallback to local catalog
+  const productsToUse = (ghlData && "products" in ghlData && ghlData.products) || fallbackProducts;
 
   const filtered = useMemo(() => {
     const query = (q ?? "").trim().toLowerCase();
-    return products.filter((p) => {
+    return productsToUse.filter((p) => {
       if (activeCategory && p.category !== activeCategory) return false;
       if (favoritos && !favorites.includes(p.id)) return false;
       if (query && !`${p.name} ${p.description}`.toLowerCase().includes(query)) return false;
       return true;
     });
-  }, [activeCategory, q, favoritos, favorites]);
+  }, [activeCategory, q, favoritos, favorites, productsToUse]);
 
 
   const isCondolencias = activeCategory === "condolencias";

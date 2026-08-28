@@ -17,8 +17,7 @@ export const cart: LocaleBundle = {
     orderReservedDescription: "Te llamamos al {{phone}} para confirmar fecha de entrega y dedicatoria.",
     pageEyebrow: "Tu pedido",
     pageTitle: "Revisa tu carrito",
-    pageIntro:
-      "Comprueba tus flores, cantidades y total antes de continuar con tu pedido.",
+    pageIntro: "Comprueba tus flores, cantidades y total antes de continuar con tu pedido.",
     emptyTitle: "Tu carrito está vacío.",
     emptySubtitle: "Añade flores y productos para comenzar tu pedido.",
     addProducts: "Añadir productos",
@@ -91,4 +90,3 @@ export const cart: LocaleBundle = {
     keepShoppingLink: "Seguir comprant",
   },
 };
-

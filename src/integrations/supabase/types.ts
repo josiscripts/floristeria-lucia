@@ -38,6 +38,187 @@ export type Database = {
         }
         Relationships: []
       }
+      product_metadata: {
+        Row: {
+          id: string
+          location_id: string | null
+          ghl_product_id: string
+          legacy_catalog_id: string | null
+          price_min: number | null
+          price_max: number | null
+          available_colors: string[] | null
+          badge_label: string | null
+          rose_step: number | null
+          requires_quote: boolean
+          status: string | null
+          auto_created: boolean
+          created_at: string
+          updated_at: string
+          deleted_at: string | null
+        }
+        Insert: {
+          id?: string
+          location_id?: string | null
+          ghl_product_id: string
+          legacy_catalog_id?: string | null
+          price_min?: number | null
+          price_max?: number | null
+          available_colors?: string[] | null
+          badge_label?: string | null
+          rose_step?: number | null
+          requires_quote?: boolean
+          status?: string | null
+          auto_created?: boolean
+          created_at?: string
+          updated_at?: string
+          deleted_at?: string | null
+        }
+        Update: {
+          id?: string
+          location_id?: string | null
+          ghl_product_id?: string
+          legacy_catalog_id?: string | null
+          price_min?: number | null
+          price_max?: number | null
+          available_colors?: string[] | null
+          badge_label?: string | null
+          rose_step?: number | null
+          requires_quote?: boolean
+          status?: string | null
+          auto_created?: boolean
+          created_at?: string
+          updated_at?: string
+          deleted_at?: string | null
+        }
+        Relationships: []
+      }
+      orders: {
+        Row: {
+          id: string
+          order_number: string
+          customer_name: string
+          customer_email: string
+          customer_phone: string
+          ghl_contact_id: string | null
+          address: string
+          city: string
+          postal_code: string
+          country: string
+          subtotal: number
+          total: number
+          delivery_date: string | null
+          dedicatory: string | null
+          notes: string | null
+          status: string
+          created_at: string
+          updated_at: string
+          deleted_at: string | null
+        }
+        Insert: {
+          id?: string
+          order_number: string
+          customer_name: string
+          customer_email: string
+          customer_phone: string
+          ghl_contact_id?: string | null
+          address: string
+          city: string
+          postal_code: string
+          country?: string
+          subtotal: number
+          total: number
+          delivery_date?: string | null
+          dedicatory?: string | null
+          notes?: string | null
+          status?: string
+          created_at?: string
+          updated_at?: string
+          deleted_at?: string | null
+        }
+        Update: {
+          id?: string
+          order_number?: string
+          customer_name?: string
+          customer_email?: string
+          customer_phone?: string
+          ghl_contact_id?: string | null
+          address?: string
+          city?: string
+          postal_code?: string
+          country?: string
+          subtotal?: number
+          total?: number
+          delivery_date?: string | null
+          dedicatory?: string | null
+          notes?: string | null
+          status?: string
+          created_at?: string
+          updated_at?: string
+          deleted_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_order_items_order"
+            columns: ["id"]
+            isOneToMany: true
+            referencedRelation: "order_items"
+            referencedColumns: ["order_id"]
+          }
+        ]
+      }
+      order_items: {
+        Row: {
+          id: string
+          order_id: string
+          ghl_product_id: string
+          product_name: string
+          size: string
+          quantity: number
+          unit_price: number
+          subtotal: number
+          color: string | null
+          special_instructions: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          order_id: string
+          ghl_product_id: string
+          product_name: string
+          size: string
+          quantity: number
+          unit_price: number
+          subtotal: number
+          color?: string | null
+          special_instructions?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          order_id?: string
+          ghl_product_id?: string
+          product_name?: string
+          size?: string
+          quantity?: number
+          unit_price?: number
+          subtotal?: number
+          color?: string | null
+          special_instructions?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_order_items_order"
+            columns: ["order_id"]
+            isOneToMany: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
     }
     Views: {
       [_ in never]: never

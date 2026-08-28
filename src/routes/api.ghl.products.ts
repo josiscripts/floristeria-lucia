@@ -1,5 +1,7 @@
 import { json } from "@tanstack/react-start";
 import { getGHLProducts, testGHLConnection } from "@/lib/ghl/client.server";
+import { normalizeGHLProducts } from "@/lib/normalize-ghl-product";
+import { getProductMetadataByIds } from "@/lib/product-metadata.server";
 
 export async function GET(request: Request) {
   try {
@@ -14,7 +16,7 @@ export async function GET(request: Request) {
     }
 
     // Fetch products (default action)
-    const locationId = url.searchParams.get("locationId") || undefined;
+    const locationId = url.searchParams.get("locationId") || process.env.GHL_LOCATION_ID;
     const limit = url.searchParams.get("limit")
       ? parseInt(url.searchParams.get("limit")!)
       : 100;
@@ -29,7 +31,28 @@ export async function GET(request: Request) {
       return json(result, { status: result.statusCode || 500 });
     }
 
-    return json(result, { status: 200 });
+    // Normalize products with metadata
+    const ghlProducts = result.products || [];
+    const ghlProductIds = ghlProducts.map((p: any) => p.id);
+    const metadataMap = await getProductMetadataByIds(ghlProductIds);
+
+    const normalizedProducts = await normalizeGHLProducts(
+      ghlProducts,
+      async (ghlProductId: string) => {
+        return metadataMap.get(ghlProductId) || null;
+      }
+    );
+
+    // Return normalized products in same structure as before for compatibility
+    return json(
+      {
+        products: normalizedProducts,
+        total: result.total || normalizedProducts.length,
+        pageSize: result.pageSize || normalizedProducts.length,
+        currentPage: result.currentPage || 1,
+      },
+      { status: 200 }
+    );
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Unknown server error";

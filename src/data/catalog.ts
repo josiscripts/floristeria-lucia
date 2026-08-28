@@ -5,6 +5,22 @@ import imgRosasEternas from "@/assets/cat-rosas-eternas.jpg";
 import imgComplementos from "@/assets/cat-complementos.jpg";
 import imgCondolencias from "@/assets/cat-condolencias.jpg";
 
+// Productos de condolencias
+import imgProducto1 from "@/assets/producto_1.png";
+import imgProducto2 from "@/assets/producto_2.png";
+import imgProducto3 from "@/assets/producto_3.png";
+import imgProducto4 from "@/assets/producto_4.png";
+import imgProducto5 from "@/assets/producto_5.png";
+import imgProducto6 from "@/assets/producto_6.png";
+import imgProducto7 from "@/assets/producto_7.jpg";
+import imgProducto8 from "@/assets/producto_8.png";
+import imgProducto9 from "@/assets/producto_9.png";
+import imgProducto10 from "@/assets/producto_10.png";
+import imgProducto11 from "@/assets/producto_11.png";
+import imgProducto12 from "@/assets/producto_12.png";
+import imgProducto13 from "@/assets/producto_13.png";
+import imgProducto14 from "@/assets/producto_14.png";
+
 /**
  * El catálogo contiene ÚNICAMENTE productos comprables.
  * Bodas, eventos, arreglos para eventos, composiciones personalizadas,
@@ -416,44 +432,116 @@ export const products: Product[] = [
 
   // Condolencias (productos)
   {
-    id: "cruz-flores",
-    name: "Cruz de flores",
+    id: "centro-corazon",
+    name: "Centro corazón",
     category: "condolencias",
     priceMin: 90,
-    image: imgCondolencias,
-    description: "Cruz de flor natural para tanatorio, iglesia o cementerio.",
+    image: imgProducto1,
+    description: "Centro funerario con flor natural variada, se puede elegir entre tono claro u oscuro.",
   },
   {
-    id: "ramo-condolencias",
-    name: "Ramo de condolencias",
+    id: "centro-lagrima",
+    name: "Centro lágrima",
     category: "condolencias",
-    priceMin: 60,
-    image: imgCondolencias,
-    description: "Ramo sobrio de flor natural para acompañar en la despedida.",
+    priceMin: 95,
+    image: imgProducto2,
+    description: "Centro funerario de flor natural con rosas, lisianthus, astromelias, clavel y lilium.",
   },
   {
-    id: "mural-flores",
-    name: "Mural de flores para pared",
+    id: "almohadon-f21",
+    name: "Almohadón F21",
     category: "condolencias",
-    priceMin: 150,
-    image: imgCondolencias,
-    description: "Mural floral para pared, diseñado a la medida del espacio.",
+    priceMin: 75,
+    image: imgProducto3,
+    description: "Centro funerario de flor natural con rosas, lilium, solidago y crisantemos. Se puede añadir cinta con texto.",
   },
   {
-    id: "ramos-bancas-iglesia",
-    name: "Ramos para bancas de iglesia",
+    id: "centro-redondo-f19",
+    name: "Centro redondo F19",
     category: "condolencias",
-    priceMin: 45,
-    image: imgCondolencias,
-    description: "Ramos para las bancas y centros para las esquinas de la mesa de la iglesia.",
+    priceMin: 55,
+    image: imgProducto4,
+    description: "Centro funerario de flor natural con margaritas y claveles. Blanco o de flor variada.",
   },
   {
-    id: "aro-flores",
-    name: "Aro de flores",
+    id: "centro-almohadon-f22",
+    name: "Centro almohadón F22",
+    category: "condolencias",
+    priceMin: 75,
+    image: imgProducto5,
+    description: "Centro funerario de flor natural con rosas, lilium, lisianthus y clavel.",
+  },
+  {
+    id: "cruz-floral",
+    name: "Cruz floral",
+    category: "condolencias",
+    priceMin: 120,
+    image: imgProducto6,
+    description: "Centro funerario de flor natural. Variada o de un color con detalle en otro tono.",
+  },
+  {
+    id: "centro-redondo-f3",
+    name: "Centro redondo F3",
+    category: "condolencias",
+    priceMin: 65,
+    image: imgProducto7,
+    description: "Centro funerario de flor natural con rosas, margaritas, lisianthus/astromelias/gerberas y claveles.",
+  },
+  {
+    id: "centro-redondo-f20",
+    name: "Centro redondo F20",
+    category: "condolencias",
+    priceMin: 105,
+    image: imgProducto8,
+    description: "Centro funerario redondo de rosas naturales con 25 rosas y paniculata.",
+  },
+  {
+    id: "corona-f23",
+    name: "Corona F23",
+    category: "condolencias",
+    priceMin: 190,
+    image: imgProducto9,
+    description: "Corona funeraria de flor natural variada en tono blanco-verde con lilium, rosas, gerberas, margaritas, claveles y paniculata.",
+  },
+  {
+    id: "corona-f25",
+    name: "Corona F25",
+    category: "condolencias",
+    priceMin: 170,
+    image: imgProducto10,
+    description: "Corona funeraria de flor natural y variada, tono claro u oscuro.",
+  },
+  {
+    id: "centro-almohadon-xxl",
+    name: "Centro almohadón XXL",
+    category: "condolencias",
+    priceMin: 230,
+    image: imgProducto11,
+    description: "Centro funerario extra grande con rosas, gerberas, anastasias, lisianthus, alhelíes y paniculata.",
+  },
+  {
+    id: "centro-50-rosas",
+    name: "Centro 50 rosas",
+    category: "condolencias",
+    priceMin: 180,
+    image: imgProducto12,
+    description: "Centro almohadón grande con rosas rojas naturales de máxima calidad. Colores a elegir.",
+  },
+  {
+    id: "centro-f24",
+    name: "Centro F24",
     category: "condolencias",
     priceMin: 110,
-    image: imgCondolencias,
-    description: "Aro o corona circular de flor natural para homenajes y despedidas.",
+    image: imgProducto13,
+    description: "Centro funerario de una cara con flor natural. Rosas, pitimini, antirrhinum/lisianthus y clavel.",
+  },
+  {
+    id: "corona-f26",
+    name: "Corona F26",
+    category: "condolencias",
+    priceMin: 260,
+    image: imgProducto14,
+    description: "Corona funeraria blanca de flor natural con rosas y lisianthus/astromelias.",
   },
 ];
 

@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as CarritoRouteImport } from './routes/carrito'
 import { Route as CatalogoRouteImport } from './routes/catalogo'
+import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as ContactoRouteImport } from './routes/contacto'
 import { Route as EnviosRouteImport } from './routes/envios'
 import { Route as FavoritosRouteImport } from './routes/favoritos'
@@ -22,6 +23,7 @@ import { Route as RosasEternasRouteImport } from './routes/rosas-eternas'
 import { Route as ServiciosRouteImport } from './routes/servicios'
 import { Route as SobreNosotrosRouteImport } from './routes/sobre-nosotros'
 import { Route as AuthenticatedMiCuentaRouteImport } from './routes/_authenticated/mi-cuenta'
+import { Route as ConfirmationOrderIdRouteImport } from './routes/confirmation.$orderId'
 import { Route as DebugGhlTestRouteImport } from './routes/debug.ghl-test'
 import { Route as LegalSlugRouteImport } from './routes/legal.$slug'
 import { Route as ProductoIdRouteImport } from './routes/producto.$id'
@@ -50,6 +52,11 @@ const CarritoRoute = CarritoRouteImport.update({
 const CatalogoRoute = CatalogoRouteImport.update({
   id: '/catalogo',
   path: '/catalogo',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckoutRoute = CheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactoRoute = ContactoRouteImport.update({
@@ -92,6 +99,11 @@ const AuthenticatedMiCuentaRoute = AuthenticatedMiCuentaRouteImport.update({
   path: '/mi-cuenta',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const ConfirmationOrderIdRoute = ConfirmationOrderIdRouteImport.update({
+  id: '/confirmation/$orderId',
+  path: '/confirmation/$orderId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DebugGhlTestRoute = DebugGhlTestRouteImport.update({
   id: '/debug/ghl-test',
   path: '/debug/ghl-test',
@@ -123,6 +135,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/carrito': typeof CarritoRoute
   '/catalogo': typeof CatalogoRoute
+  '/checkout': typeof CheckoutRoute
   '/contacto': typeof ContactoRoute
   '/envios': typeof EnviosRoute
   '/favoritos': typeof FavoritosRoute
@@ -131,6 +144,7 @@ export interface FileRoutesByFullPath {
   '/servicios': typeof ServiciosRouteWithChildren
   '/sobre-nosotros': typeof SobreNosotrosRoute
   '/mi-cuenta': typeof AuthenticatedMiCuentaRoute
+  '/confirmation/$orderId': typeof ConfirmationOrderIdRoute
   '/debug/ghl-test': typeof DebugGhlTestRoute
   '/legal/$slug': typeof LegalSlugRoute
   '/producto/$id': typeof ProductoIdRoute
@@ -142,6 +156,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/carrito': typeof CarritoRoute
   '/catalogo': typeof CatalogoRoute
+  '/checkout': typeof CheckoutRoute
   '/contacto': typeof ContactoRoute
   '/envios': typeof EnviosRoute
   '/favoritos': typeof FavoritosRoute
@@ -149,6 +164,7 @@ export interface FileRoutesByTo {
   '/rosas-eternas': typeof RosasEternasRoute
   '/sobre-nosotros': typeof SobreNosotrosRoute
   '/mi-cuenta': typeof AuthenticatedMiCuentaRoute
+  '/confirmation/$orderId': typeof ConfirmationOrderIdRoute
   '/debug/ghl-test': typeof DebugGhlTestRoute
   '/legal/$slug': typeof LegalSlugRoute
   '/producto/$id': typeof ProductoIdRoute
@@ -162,6 +178,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/carrito': typeof CarritoRoute
   '/catalogo': typeof CatalogoRoute
+  '/checkout': typeof CheckoutRoute
   '/contacto': typeof ContactoRoute
   '/envios': typeof EnviosRoute
   '/favoritos': typeof FavoritosRoute
@@ -170,6 +187,7 @@ export interface FileRoutesById {
   '/servicios': typeof ServiciosRouteWithChildren
   '/sobre-nosotros': typeof SobreNosotrosRoute
   '/_authenticated/mi-cuenta': typeof AuthenticatedMiCuentaRoute
+  '/confirmation/$orderId': typeof ConfirmationOrderIdRoute
   '/debug/ghl-test': typeof DebugGhlTestRoute
   '/legal/$slug': typeof LegalSlugRoute
   '/producto/$id': typeof ProductoIdRoute
@@ -183,6 +201,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/carrito'
     | '/catalogo'
+    | '/checkout'
     | '/contacto'
     | '/envios'
     | '/favoritos'
@@ -191,6 +210,7 @@ export interface FileRouteTypes {
     | '/servicios'
     | '/sobre-nosotros'
     | '/mi-cuenta'
+    | '/confirmation/$orderId'
     | '/debug/ghl-test'
     | '/legal/$slug'
     | '/producto/$id'
@@ -202,6 +222,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/carrito'
     | '/catalogo'
+    | '/checkout'
     | '/contacto'
     | '/envios'
     | '/favoritos'
@@ -209,6 +230,7 @@ export interface FileRouteTypes {
     | '/rosas-eternas'
     | '/sobre-nosotros'
     | '/mi-cuenta'
+    | '/confirmation/$orderId'
     | '/debug/ghl-test'
     | '/legal/$slug'
     | '/producto/$id'
@@ -221,6 +243,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/carrito'
     | '/catalogo'
+    | '/checkout'
     | '/contacto'
     | '/envios'
     | '/favoritos'
@@ -229,6 +252,7 @@ export interface FileRouteTypes {
     | '/servicios'
     | '/sobre-nosotros'
     | '/_authenticated/mi-cuenta'
+    | '/confirmation/$orderId'
     | '/debug/ghl-test'
     | '/legal/$slug'
     | '/producto/$id'
@@ -242,6 +266,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   CarritoRoute: typeof CarritoRoute
   CatalogoRoute: typeof CatalogoRoute
+  CheckoutRoute: typeof CheckoutRoute
   ContactoRoute: typeof ContactoRoute
   EnviosRoute: typeof EnviosRoute
   FavoritosRoute: typeof FavoritosRoute
@@ -249,6 +274,7 @@ export interface RootRouteChildren {
   RosasEternasRoute: typeof RosasEternasRoute
   ServiciosRoute: typeof ServiciosRouteWithChildren
   SobreNosotrosRoute: typeof SobreNosotrosRoute
+  ConfirmationOrderIdRoute: typeof ConfirmationOrderIdRoute
   DebugGhlTestRoute: typeof DebugGhlTestRoute
   LegalSlugRoute: typeof LegalSlugRoute
   ProductoIdRoute: typeof ProductoIdRoute
@@ -289,6 +315,13 @@ declare module '@tanstack/react-router' {
       path: '/catalogo'
       fullPath: '/catalogo'
       preLoaderRoute: typeof CatalogoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checkout': {
+      id: '/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof CheckoutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contacto': {
@@ -346,6 +379,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/mi-cuenta'
       preLoaderRoute: typeof AuthenticatedMiCuentaRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/confirmation/$orderId': {
+      id: '/confirmation/$orderId'
+      path: '/confirmation/$orderId'
+      fullPath: '/confirmation/$orderId'
+      preLoaderRoute: typeof ConfirmationOrderIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/debug/ghl-test': {
       id: '/debug/ghl-test'
@@ -416,6 +456,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   CarritoRoute: CarritoRoute,
   CatalogoRoute: CatalogoRoute,
+  CheckoutRoute: CheckoutRoute,
   ContactoRoute: ContactoRoute,
   EnviosRoute: EnviosRoute,
   FavoritosRoute: FavoritosRoute,
@@ -423,6 +464,7 @@ const rootRouteChildren: RootRouteChildren = {
   RosasEternasRoute: RosasEternasRoute,
   ServiciosRoute: ServiciosRouteWithChildren,
   SobreNosotrosRoute: SobreNosotrosRoute,
+  ConfirmationOrderIdRoute: ConfirmationOrderIdRoute,
   DebugGhlTestRoute: DebugGhlTestRoute,
   LegalSlugRoute: LegalSlugRoute,
   ProductoIdRoute: ProductoIdRoute,
