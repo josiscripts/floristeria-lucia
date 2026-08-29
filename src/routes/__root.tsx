@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -101,7 +102,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
     ],
-
   }),
   shellComponent: RootShell,
   component: RootComponent,
@@ -126,6 +126,8 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const router = useRouter();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isAdminRoute = pathname.startsWith("/admin");
 
   useEffect(() => {
     const { data: sub } = supabase.auth.onAuthStateChange((event) => {
@@ -139,19 +141,19 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-      <LanguageProvider>
-      <ShopProvider>
-        <div className="relative flex min-h-screen flex-col">
-          <Navbar />
-          <main className="flex-1">
-            {/* Required: nested routes render here. */}
-            <Outlet />
-          </main>
-          <Footer />
-        </div>
-        <Toaster />
-      </ShopProvider>
-      </LanguageProvider>
+        <LanguageProvider>
+          <ShopProvider>
+            <div className="relative flex min-h-screen flex-col">
+              {!isAdminRoute && <Navbar />}
+              <main className="flex-1">
+                {/* Required: nested routes render here. */}
+                <Outlet />
+              </main>
+              {!isAdminRoute && <Footer />}
+            </div>
+            <Toaster />
+          </ShopProvider>
+        </LanguageProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );
