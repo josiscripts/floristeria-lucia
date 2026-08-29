@@ -5,6 +5,11 @@ import imgPlantas from "@/assets/cat-plantas.jpg";
 import imgRamos from "@/assets/cat-ramos.jpg";
 import imgRosasEternas from "@/assets/cat-rosas-eternas.jpg";
 import imgCondolencias from "@/assets/cat-condolencias.jpg";
+import jarronRamo from "@/assets/jarron_ramo.png";
+import coronaFlores from "@/assets/corona_flores.png";
+import pulseraFlores from "@/assets/pulsera_flores.png";
+import ramoBoda from "@/assets/ramo_boda.png";
+import automovilBoda from "@/assets/automovil_boda.png";
 
 /**
  * Servicios: contenido que NO se vende como producto estándar porque necesita
@@ -50,33 +55,31 @@ export const services: Service[] = [
         name: "Ramo de novia",
         description:
           "Ramo de novia diseñado a medida, con la flor, el color y el estilo que quieras para tu día.",
-        image: imgBodas,
+        image: ramoBoda,
       },
       {
         id: "pulseras-flores",
         name: "Pulseras y prendidos de flores",
-        description:
-          "Pulseras y prendidos de flor natural para madrinas, damas e invitadas.",
-        image: imgBodas,
+        description: "Pulseras y prendidos de flor natural para madrinas, damas e invitadas.",
+        image: pulseraFlores,
       },
       {
         id: "corona-cabeza",
         name: "Corona de flores para la cabeza",
         description: "Corona o tocado de flor natural hecho a medida.",
-        image: imgBodas,
+        image: coronaFlores,
       },
       {
         id: "flores-jarrones-boda",
         name: "Flores en jarrones",
         description: "Jarrones con flor natural para mesas, altar y espacios del enlace.",
-        image: imgBodas,
+        image: jarronRamo,
       },
       {
         id: "decoracion-coche-boda",
         name: "Decoración floral del automóvil",
-        description:
-          "Decoración de la parte delantera del coche y detalles florales del vehículo.",
-        image: imgBodas,
+        description: "Decoración de la parte delantera del coche y detalles florales del vehículo.",
+        image: automovilBoda,
       },
     ],
   },
