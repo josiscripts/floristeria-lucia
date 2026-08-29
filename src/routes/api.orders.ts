@@ -6,6 +6,107 @@
 
 import { json } from "@tanstack/react-start";
 import { createOrder, type CreateOrderRequest } from "@/lib/orders.server";
+import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import type { Tables } from "@/integrations/supabase/types";
+
+/**
+ * GET /api/orders
+ * Query params:
+ *   page?: number (default 1)
+ *   limit?: number (default 20, max 100)
+ *   status?: string
+ *   search?: string (matches order_number, customer_name, customer_email, customer_phone)
+ *   fromDate?: string (ISO date, filters created_at >=)
+ *   toDate?: string (ISO date, filters created_at <=)
+ */
+export async function GET(request: Request) {
+  try {
+    const url = new URL(request.url);
+    const page = Math.max(1, parseInt(url.searchParams.get("page") || "1", 10) || 1);
+    const limitParam = parseInt(url.searchParams.get("limit") || "20", 10) || 20;
+    const limit = Math.min(Math.max(limitParam, 1), 100);
+    const skip = (page - 1) * limit;
+
+    const status = url.searchParams.get("status");
+    const search = url.searchParams.get("search")?.trim();
+    const fromDate = url.searchParams.get("fromDate");
+    const toDate = url.searchParams.get("toDate");
+
+    let query = supabaseAdmin
+      .from("orders")
+      .select("*", { count: "exact" })
+      .is("deleted_at", null)
+      .order("created_at", { ascending: false });
+
+    if (status) {
+      query = query.eq("status", status);
+    }
+
+    if (fromDate) {
+      query = query.gte("created_at", fromDate);
+    }
+
+    if (toDate) {
+      query = query.lte("created_at", toDate);
+    }
+
+    if (search) {
+      const safeSearch = search.replace(/[,()%]/g, "");
+      query = query.or(
+        `order_number.ilike.%${safeSearch}%,customer_name.ilike.%${safeSearch}%,customer_email.ilike.%${safeSearch}%,customer_phone.ilike.%${safeSearch}%`,
+      );
+    }
+
+    query = query.range(skip, skip + limit - 1);
+
+    const { data: orders, error, count } = await query;
+
+    if (error) {
+      console.error("[API] /api/orders GET error:", error.message);
+      return json({ error: "Failed to fetch orders" }, { status: 500 });
+    }
+
+    const orderIds = (orders || []).map((order) => order.id);
+    const itemsByOrder = new Map<string, Tables<"order_items">[]>();
+
+    if (orderIds.length > 0) {
+      const { data: items, error: itemsError } = await supabaseAdmin
+        .from("order_items")
+        .select("*")
+        .in("order_id", orderIds);
+
+      if (itemsError) {
+        console.error("[API] /api/orders GET items error:", itemsError.message);
+      } else {
+        for (const item of items || []) {
+          const list = itemsByOrder.get(item.order_id) || [];
+          list.push(item);
+          itemsByOrder.set(item.order_id, list);
+        }
+      }
+    }
+
+    const ordersWithItems = (orders || []).map((order) => ({
+      ...order,
+      items: itemsByOrder.get(order.id) || [],
+    }));
+
+    const total = count || 0;
+    const totalPages = limit > 0 ? Math.ceil(total / limit) : 0;
+
+    return json(
+      {
+        orders: ordersWithItems,
+        pagination: { total, page, limit, totalPages },
+      },
+      { status: 200 },
+    );
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown server error";
+    console.error("[API] /api/orders GET error:", message);
+    return json({ error: "An unexpected error occurred" }, { status: 500 });
+  }
+}
 
 /**
  * POST /api/orders
