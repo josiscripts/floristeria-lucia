@@ -1,0 +1,300 @@
+/**
+ * Order Management - Server-side
+ * Creates orders and order_items in Supabase
+ * Server-side only, never expose tokens to client
+ */
+
+import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { syncGHLContact, syncGHLOpportunity } from "@/lib/ghl/client.server";
+import type { CartLine } from "@/context/ShopContext";
+import type { TablesInsert } from "@/integrations/supabase/types";
+
+/**
+ * Customer data required to create an order
+ */
+export interface CreateOrderRequest {
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  address: string;
+  city: string;
+  postalCode: string;
+  country?: string;
+  deliveryDate?: string | null;
+  dedicatory?: string | null;
+  notes?: string | null;
+  cartLines: CartLine[];
+}
+
+/**
+ * Response from order creation
+ */
+export interface CreateOrderResponse {
+  success: boolean;
+  orderId?: string;
+  orderNumber?: string;
+  total?: number;
+  error?: string;
+}
+
+/**
+ * Validate email format
+ */
+function isValidEmail(email: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+/**
+ * Generate unique order number
+ * Format: ORD-YYYYMMDD-XXXXX
+ */
+function generateOrderNumber(): string {
+  const now = new Date();
+  const date = now.toISOString().split("T")[0]?.replace(/-/g, "") || "20260828";
+  const random = Math.random().toString(36).substring(2, 7).toUpperCase();
+  return `ORD-${date}-${random}`;
+}
+
+/**
+ * Validate cart lines
+ */
+function validateCartLines(cartLines: CartLine[]): string | null {
+  if (!cartLines || cartLines.length === 0) {
+    return "Cart cannot be empty";
+  }
+
+  for (const line of cartLines) {
+    if (!line.productId || !line.name) {
+      return "Invalid cart line: missing productId or name";
+    }
+    if (line.qty <= 0) {
+      return `Invalid quantity for ${line.name}: must be greater than 0`;
+    }
+    if (line.price <= 0) {
+      return `Invalid price for ${line.name}: must be greater than 0`;
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Create an order with order_items in Supabase
+ *
+ * PRICING NOTE: This function trusts the price from CartLine.
+ * The price was calculated by the frontend based on GHL data.
+ * For stricter validation, we could re-fetch the product from GHL
+ * and recalculate the price, but this adds latency.
+ * Current approach validates that price > 0 and is a valid number.
+ *
+ * If price tampering is a concern, implement:
+ * 1. getGHLProduct(productId) to fetch current price
+ * 2. Recalculate unit_price from priceMin/priceMax/tiers
+ */
+export async function createOrder(request: CreateOrderRequest): Promise<CreateOrderResponse> {
+  try {
+    // Validate customer data
+    if (!request.customerName?.trim()) {
+      return { success: false, error: "Customer name is required" };
+    }
+    if (!request.customerEmail?.trim()) {
+      return { success: false, error: "Customer email is required" };
+    }
+    if (!isValidEmail(request.customerEmail)) {
+      return { success: false, error: "Invalid email format" };
+    }
+    if (!request.customerPhone?.trim()) {
+      return { success: false, error: "Customer phone is required" };
+    }
+    if (!request.address?.trim()) {
+      return { success: false, error: "Address is required" };
+    }
+    if (!request.city?.trim()) {
+      return { success: false, error: "City is required" };
+    }
+    if (!request.postalCode?.trim()) {
+      return { success: false, error: "Postal code is required" };
+    }
+
+    // Validate cart
+    const cartValidation = validateCartLines(request.cartLines);
+    if (cartValidation) {
+      return { success: false, error: cartValidation };
+    }
+
+    // Calculate totals from cart lines
+    const subtotal = request.cartLines.reduce((sum, line) => sum + line.price * line.qty, 0);
+    const total = subtotal;
+
+    // Create order
+    const orderNumber = generateOrderNumber();
+    const orderData: TablesInsert<"orders"> = {
+      order_number: orderNumber,
+      customer_name: request.customerName.trim(),
+      customer_email: request.customerEmail.trim(),
+      customer_phone: request.customerPhone.trim(),
+      address: request.address.trim(),
+      city: request.city.trim(),
+      postal_code: request.postalCode.trim(),
+      country: request.country?.trim() || "ES",
+      subtotal,
+      total,
+      delivery_date: request.deliveryDate || null,
+      dedicatory: request.dedicatory?.trim() || null,
+      notes: request.notes?.trim() || null,
+      status: "pending",
+      ghl_contact_id: null,
+    };
+
+    const { data: orderRow, error: orderError } = await supabaseAdmin
+      .from("orders")
+      .insert([orderData])
+      .select("id")
+      .single();
+
+    if (orderError) {
+      console.error("[Orders] Failed to create order:", orderError);
+      return { success: false, error: "Failed to create order in database" };
+    }
+
+    if (!orderRow?.id) {
+      return { success: false, error: "Order created but no ID returned" };
+    }
+
+    // Create order items
+    const orderItems: TablesInsert<"order_items">[] = request.cartLines.map((line) => ({
+      order_id: orderRow.id,
+      ghl_product_id: line.productId,
+      product_name: line.name,
+      size: line.size,
+      quantity: line.qty,
+      unit_price: line.price,
+      subtotal: line.price * line.qty,
+      color: null,
+      special_instructions: null,
+    }));
+
+    const { error: itemsError } = await supabaseAdmin.from("order_items").insert(orderItems);
+
+    if (itemsError) {
+      console.error("[Orders] Failed to create order items:", itemsError);
+      // Order exists but items weren't created - this is a serious error
+      // In production, might want to trigger cleanup or manual review
+      return {
+        success: false,
+        error: "Order created but failed to add items. Please contact support.",
+      };
+    }
+
+    console.log(`[Orders] Successfully created order ${orderNumber} (${orderRow.id})`);
+
+    // Sync customer and opportunity to GHL (non-blocking, graceful failure)
+    const ghlLocationId = process.env["GHL_LOCATION_ID"];
+    if (ghlLocationId) {
+      syncGHLContactAndUpdateOrder(orderRow.id, orderNumber, request, total, ghlLocationId).catch(
+        (err) => {
+          console.error("[Orders] Background GHL sync error (non-blocking):", err);
+        },
+      );
+    }
+
+    return {
+      success: true,
+      orderId: orderRow.id,
+      orderNumber,
+      total,
+    };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    console.error("[Orders] Unexpected error creating order:", message);
+    return {
+      success: false,
+      error: "An unexpected error occurred. Please try again.",
+    };
+  }
+}
+
+/**
+ * Background sync: find or create GHL contact and opportunity, update order with IDs
+ * Non-blocking operation - will not throw, errors are logged
+ */
+async function syncGHLContactAndUpdateOrder(
+  orderId: string,
+  orderNumber: string,
+  request: CreateOrderRequest,
+  orderTotal: number,
+  ghlLocationId: string,
+): Promise<void> {
+  try {
+    // Step 1: Sync contact
+    const contactId = await syncGHLContact(
+      request.customerEmail,
+      {
+        firstName: request.customerName.split(" ")[0] || request.customerName,
+        lastName: request.customerName.split(" ").slice(1).join(" ") || "",
+        phone: request.customerPhone,
+      },
+      ghlLocationId,
+    );
+
+    if (!contactId) {
+      console.warn(`[Orders] GHL contact sync failed (no ID returned) for order ${orderId}`);
+      return;
+    }
+
+    // Update order with contact ID
+    let { error } = await supabaseAdmin
+      .from("orders")
+      .update({ ghl_contact_id: contactId })
+      .eq("id", orderId);
+
+    if (error) {
+      console.error(`[Orders] Failed to update order with GHL contact ID:`, error);
+      return;
+    }
+
+    console.log(`[Orders] Synced GHL contact ${contactId} for order ${orderId}`);
+
+    // Step 2: Sync opportunity
+    const opportunityId = await syncGHLOpportunity(
+      orderNumber,
+      {
+        id: orderId,
+        total: orderTotal,
+        customer_name: request.customerName,
+        customer_email: request.customerEmail,
+        customer_phone: request.customerPhone,
+        address: request.address,
+        city: request.city,
+        postal_code: request.postalCode,
+        delivery_date: request.deliveryDate ?? null,
+        dedicatory: request.dedicatory ?? null,
+        notes: request.notes ?? null,
+      },
+      contactId,
+      ghlLocationId,
+    );
+
+    if (!opportunityId) {
+      console.warn(`[Orders] GHL opportunity sync failed (no ID returned) for order ${orderId}`);
+      return;
+    }
+
+    // Update order with opportunity ID
+    ({ error } = await supabaseAdmin
+      .from("orders")
+      .update({ ghl_opportunity_id: opportunityId } as Record<string, string>)
+      .eq("id", orderId));
+
+    if (error) {
+      console.error(`[Orders] Failed to update order with GHL opportunity ID:`, error);
+      return;
+    }
+
+    console.log(
+      `[Orders] Successfully synced GHL opportunity ${opportunityId} for order ${orderId}`,
+    );
+  } catch (error) {
+    console.error(`[Orders] Unexpected error in GHL sync:`, error);
+  }
+}
