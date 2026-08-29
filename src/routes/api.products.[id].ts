@@ -1,12 +1,49 @@
 /**
  * API endpoint for product operations by ID
+ * GET /api/products/[id] - Fetch raw product (admin, no category normalization/drop)
  * PUT /api/products/[id] - Update product
  * DELETE /api/products/[id] - Delete (deactivate) product
  */
 
 import { json } from "@tanstack/react-start";
-import { updateGHLProduct, deleteGHLProduct } from "@/lib/ghl/client.server";
-import { syncProductMetadata, deleteProductMetadata } from "@/lib/product-metadata.server";
+import { getGHLProduct, updateGHLProduct, deleteGHLProduct } from "@/lib/ghl/client.server";
+import {
+  syncProductMetadata,
+  deleteProductMetadata,
+  getProductMetadata,
+} from "@/lib/product-metadata.server";
+
+export async function GET(request: Request) {
+  try {
+    const url = new URL(request.url);
+    const id = url.pathname.split("/").pop();
+
+    if (!id) {
+      return json({ error: "Missing product ID" }, { status: 400 });
+    }
+
+    const locationId = url.searchParams.get("locationId") || process.env["GHL_LOCATION_ID"];
+    const ghlResult = await getGHLProduct(id, locationId ?? undefined);
+
+    if (!("id" in ghlResult)) {
+      return json({ error: ghlResult.message, code: ghlResult.code }, { status: 404 });
+    }
+
+    const metadataResult = await getProductMetadata(id);
+
+    return json(
+      {
+        product: ghlResult,
+        metadata: metadataResult.success ? metadataResult.data : null,
+      },
+      { status: 200 },
+    );
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown server error";
+    console.error("[API] /api/products/[id] GET error:", message);
+    return json({ error: message, code: "API_ERROR" }, { status: 500 });
+  }
+}
 
 interface UpdateProductRequest {
   name?: string;

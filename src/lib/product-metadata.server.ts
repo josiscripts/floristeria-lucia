@@ -184,3 +184,38 @@ export async function getProductMetadataByIds(
     return new Map(); // Return empty map on error instead of failing
   }
 }
+
+/**
+ * Get full product_metadata rows (including deleted/status/audit fields) by GHL product IDs.
+ * Unlike getProductMetadataByIds, this includes soft-deleted records and every column,
+ * since admin views need to show full state rather than just the customer-facing subset.
+ */
+export async function getFullProductMetadataByIds(
+  ghlProductIds: string[],
+): Promise<Map<string, Tables<"product_metadata">>> {
+  try {
+    if (ghlProductIds.length === 0) {
+      return new Map();
+    }
+
+    const { data, error } = await supabaseAdmin
+      .from("product_metadata")
+      .select("*")
+      .in("ghl_product_id", ghlProductIds);
+
+    if (error) {
+      throw error;
+    }
+
+    const metadataMap = new Map<string, Tables<"product_metadata">>();
+    for (const record of data || []) {
+      metadataMap.set(record.ghl_product_id, record);
+    }
+
+    return metadataMap;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    console.error(`[ProductMetadata] Fetch full multiple failed:`, message);
+    return new Map();
+  }
+}

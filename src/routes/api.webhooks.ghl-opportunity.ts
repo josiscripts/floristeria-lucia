@@ -258,7 +258,7 @@ async function findOrderByOpportunity(
  * - MODE A (Private Integration): Uses newStageId (UUID)
  * - MODE B (Workflow): Uses stageName (string)
  */
-async function processStageChangeEvent(payload: GHLOpportunityWebhookPayload): Promise<{
+export async function processStageChangeEvent(payload: GHLOpportunityWebhookPayload): Promise<{
   success: boolean;
   orderId?: string;
   previousStatus?: string;

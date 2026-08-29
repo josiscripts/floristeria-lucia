@@ -1,16 +1,18 @@
 import type { Tables } from "@/integrations/supabase/types";
+import type { GHLProduct } from "@/lib/ghl/types";
 
 export type OrderRow = Tables<"orders">;
 export type OrderItemRow = Tables<"order_items">;
 export type WebhookEventRow = Tables<"webhook_events">;
+export type ProductMetadataRow = Tables<"product_metadata">;
 
 export interface OrdersListParams {
   page: number;
   limit?: number;
   status?: string;
   search?: string;
-  fromDate?: string;
-  toDate?: string;
+  fromDate?: string | undefined;
+  toDate?: string | undefined;
 }
 
 export interface OrdersListResponse {
@@ -32,8 +34,8 @@ export interface DashboardStatsResponse {
   recentOrders: OrderRow[];
 }
 
-async function fetchJson<T>(url: string): Promise<T> {
-  const response = await fetch(url);
+async function fetchJson<T>(url: string, init?: RequestInit): Promise<T> {
+  const response = await fetch(url, init);
   if (!response.ok) {
     const body = await response.json().catch(() => null);
     throw new Error(body?.error || `Error ${response.status}`);
@@ -59,4 +61,132 @@ export function fetchOrders(params: OrdersListParams): Promise<OrdersListRespons
 
 export function fetchOrderById(id: string): Promise<OrderDetailResponse> {
   return fetchJson<OrderDetailResponse>(`/api/orders/${encodeURIComponent(id)}`);
+}
+
+/**
+ * Fetches every order in a date range by paging through GET /api/orders (max page size).
+ * Reused for reports instead of adding a new aggregation endpoint — fine for a shop-sized
+ * order volume, since each page already includes items for revenue/top-product breakdowns.
+ */
+export async function fetchAllOrdersInRange(
+  fromDate?: string,
+  toDate?: string,
+): Promise<OrdersListResponse["orders"]> {
+  const limit = 100;
+  let page = 1;
+  let all: OrdersListResponse["orders"] = [];
+
+  while (true) {
+    const response = await fetchOrders({ page, limit, fromDate, toDate });
+    all = all.concat(response.orders);
+    if (page >= response.pagination.totalPages || response.orders.length === 0) break;
+    page += 1;
+  }
+
+  return all;
+}
+
+// --- Products ---
+
+export type AdminProduct = GHLProduct & { metadata: ProductMetadataRow | null };
+
+export interface ProductsListParams {
+  page: number;
+  limit?: number;
+  status?: string;
+  search?: string;
+}
+
+export interface ProductsListResponse {
+  products: AdminProduct[];
+  pagination: { total: number; page: number; limit: number; totalPages: number };
+}
+
+export interface ProductFormInput {
+  name: string;
+  description: string | undefined;
+  price: number | undefined;
+  category: string | undefined;
+  image: string | undefined;
+  sku: string | undefined;
+  price_max: number | undefined;
+  available_colors: string[] | undefined;
+  badge_label: string | undefined;
+  rose_step: number | undefined;
+}
+
+export function fetchProducts(params: ProductsListParams): Promise<ProductsListResponse> {
+  const search = new URLSearchParams();
+  search.set("page", String(params.page));
+  search.set("limit", String(params.limit ?? 20));
+  if (params.status) search.set("status", params.status);
+  if (params.search) search.set("search", params.search);
+
+  return fetchJson<ProductsListResponse>(`/api/products?${search.toString()}`);
+}
+
+export function fetchProductById(
+  id: string,
+): Promise<{ product: GHLProduct; metadata: ProductMetadataRow | null }> {
+  return fetchJson(`/api/products/${encodeURIComponent(id)}`);
+}
+
+export function createProduct(input: ProductFormInput) {
+  return fetchJson<{ success: boolean; product: GHLProduct }>("/api/products", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input),
+  });
+}
+
+export function updateProduct(id: string, input: Partial<ProductFormInput>) {
+  return fetchJson<{ success: boolean; product: GHLProduct }>(
+    `/api/products/${encodeURIComponent(id)}`,
+    {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(input),
+    },
+  );
+}
+
+export function deactivateProduct(id: string) {
+  return fetchJson<{ success: boolean }>(`/api/products/${encodeURIComponent(id)}`, {
+    method: "DELETE",
+  });
+}
+
+// --- Webhook events ---
+
+export interface WebhookEventsListParams {
+  page: number;
+  limit?: number;
+  eventType?: string;
+  processed?: "true" | "false" | undefined;
+  search?: string;
+}
+
+export interface WebhookEventsListResponse {
+  events: WebhookEventRow[];
+  pagination: { total: number; page: number; limit: number; totalPages: number };
+}
+
+export function fetchWebhookEvents(
+  params: WebhookEventsListParams,
+): Promise<WebhookEventsListResponse> {
+  const search = new URLSearchParams();
+  search.set("page", String(params.page));
+  search.set("limit", String(params.limit ?? 20));
+  if (params.eventType) search.set("eventType", params.eventType);
+  if (params.processed) search.set("processed", params.processed);
+  if (params.search) search.set("search", params.search);
+
+  return fetchJson<WebhookEventsListResponse>(`/api/webhook-events?${search.toString()}`);
+}
+
+export function retryWebhookEvent(id: string) {
+  return fetchJson<{ success: boolean; result: { success: boolean; error?: string } }>(
+    `/api/webhook-events/${encodeURIComponent(id)}/retry`,
+    { method: "POST" },
+  );
 }

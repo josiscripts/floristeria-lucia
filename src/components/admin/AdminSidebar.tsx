@@ -24,9 +24,9 @@ interface NavItem {
 const NAV_ITEMS: NavItem[] = [
   { label: "Dashboard", to: "/admin/dashboard", icon: LayoutDashboard },
   { label: "Pedidos", to: "/admin/orders", icon: Package },
-  { label: "Productos", icon: Flower2, comingSoon: true },
-  { label: "Reportes", icon: BarChart3, comingSoon: true },
-  { label: "Webhooks", icon: Webhook, comingSoon: true },
+  { label: "Productos", to: "/admin/products", icon: Flower2 },
+  { label: "Reportes", to: "/admin/reports", icon: BarChart3 },
+  { label: "Webhooks", to: "/admin/webhooks", icon: Webhook },
   { label: "Configuración", icon: Settings, comingSoon: true },
 ];
 
