@@ -127,7 +127,7 @@ function CatalogPage() {
         {isCondolencias && (
           <div className="mt-6">
             <Button asChild variant="outline">
-              <Link to="/servicios/$slug" params={{ slug: "condolencias-personalizadas" }}>
+              <Link to="/contacto">
                 {t("catalog.condolencias.customCta")}
               </Link>
             </Button>
@@ -151,6 +151,10 @@ function CatalogPage() {
             </FilterChip>
           </Fragment>
         ))}
+
+        <Link to="/servicios" className={chipClassName(false)}>
+          {t("catalog.eventosLink")}
+        </Link>
 
 
         <div className="relative ml-auto w-full sm:w-72">
@@ -243,6 +247,15 @@ function InfoBlock({
   );
 }
 
+function chipClassName(active: boolean) {
+  return cn(
+    "inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm transition-colors",
+    active
+      ? "border-primary bg-primary text-primary-foreground"
+      : "border-border text-muted-foreground hover:border-primary hover:text-primary",
+  );
+}
+
 function FilterChip({
   active,
   onClick,
@@ -253,16 +266,7 @@ function FilterChip({
   children: React.ReactNode;
 }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        "inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm transition-colors",
-        active
-          ? "border-primary bg-primary text-primary-foreground"
-          : "border-border text-muted-foreground hover:border-primary hover:text-primary",
-      )}
-    >
+    <button type="button" onClick={onClick} className={chipClassName(active)}>
       {children}
     </button>
   );

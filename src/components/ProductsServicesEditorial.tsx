@@ -33,8 +33,7 @@ const items: Item[] = [
     key: "eventos",
     num: "05",
     image: imgEventos,
-    to: "/servicios/$slug",
-    params: { slug: "bodas" },
+    to: "/servicios",
   },
 ];
 

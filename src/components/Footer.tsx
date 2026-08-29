@@ -50,9 +50,6 @@ const shopLinks: NavLink[] = [
 const serviceLinks: NavLink[] = [
   { key: "weddings", to: "/servicios/$slug", params: { slug: "bodas" } },
   { key: "events", to: "/servicios/$slug", params: { slug: "eventos" } },
-  { key: "arrangements", to: "/servicios/$slug", params: { slug: "arreglos-eventos" } },
-  { key: "compositions", to: "/servicios/$slug", params: { slug: "composiciones-personalizadas" } },
-  { key: "customOrders", to: "/servicios/$slug", params: { slug: "encargos-personalizados" } },
   { key: "customBouquet", to: "/personalizar-ramo" },
   { key: "shipping", to: "/envios" },
 ];

@@ -14,6 +14,7 @@ export const catalog: LocaleBundle = {
     requestQuoteButton: "Pedir presupuesto",
     viewProduct: "Ver producto",
     weddingsTab: "Bodas",
+    eventosLink: "Eventos",
     ramos: {
       title: "Ramos y arreglos florales",
       description:
@@ -86,6 +87,7 @@ export const catalog: LocaleBundle = {
     requestQuoteButton: "Request a quote",
     viewProduct: "View product",
     weddingsTab: "Weddings",
+    eventosLink: "Events",
     ramos: {
       title: "Bouquets and floral arrangements",
       description:
@@ -158,6 +160,7 @@ export const catalog: LocaleBundle = {
     requestQuoteButton: "Demanar pressupost",
     viewProduct: "Veure producte",
     weddingsTab: "Casaments",
+    eventosLink: "Esdeveniments",
     ramos: {
       title: "Rams i arranjaments florals",
       description:

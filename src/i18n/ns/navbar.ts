@@ -5,7 +5,7 @@ export const navbar: LocaleBundle = {
     links: {
       catalog: "Catálogo",
       preserved: "Rosas eternas",
-      services: "Servicios",
+      services: "Eventos",
       shipping: "Envíos y cobertura",
       about: "Sobre nosotros",
       contact: "Contacto",
@@ -31,7 +31,7 @@ export const navbar: LocaleBundle = {
     links: {
       catalog: "Catalogue",
       preserved: "Eternal roses",
-      services: "Services",
+      services: "Events",
       shipping: "Shipping and coverage",
       about: "About us",
       contact: "Contact",
@@ -57,7 +57,7 @@ export const navbar: LocaleBundle = {
     links: {
       catalog: "Catàleg",
       preserved: "Roses eternes",
-      services: "Serveis",
+      services: "Esdeveniments",
       shipping: "Enviaments i cobertura",
       about: "Sobre nosaltres",
       contact: "Contacte",
