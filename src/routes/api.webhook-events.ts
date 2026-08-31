@@ -11,10 +11,11 @@
 
 import { json } from "@tanstack/react-start";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { withAdminGuard } from "@/lib/admin/guard.server";
 
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-export async function GET(request: Request) {
+export const GET = withAdminGuard(async (request) => {
   try {
     const url = new URL(request.url);
     const page = Math.max(1, parseInt(url.searchParams.get("page") || "1", 10) || 1);
@@ -74,4 +75,4 @@ export async function GET(request: Request) {
     console.error("[API] /api/webhook-events GET error:", message);
     return json({ error: "An unexpected error occurred" }, { status: 500 });
   }
-}
+});

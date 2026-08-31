@@ -1,3 +1,4 @@
+import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
 import type { GHLProduct } from "@/lib/ghl/types";
 
@@ -5,6 +6,7 @@ export type OrderRow = Tables<"orders">;
 export type OrderItemRow = Tables<"order_items">;
 export type WebhookEventRow = Tables<"webhook_events">;
 export type ProductMetadataRow = Tables<"product_metadata">;
+export type AuditLogRow = Tables<"audit_logs">;
 
 export interface OrdersListParams {
   page: number;
@@ -34,8 +36,18 @@ export interface DashboardStatsResponse {
   recentOrders: OrderRow[];
 }
 
+/**
+ * Adjunta el access token de la sesión admin actual como Bearer.
+ * Las APIs administrativas lo requieren (ver src/lib/admin/guard.server.ts).
+ */
 async function fetchJson<T>(url: string, init?: RequestInit): Promise<T> {
-  const response = await fetch(url, init);
+  const { data } = await supabase.auth.getSession();
+  const token = data.session?.access_token;
+
+  const headers = new Headers(init?.headers);
+  if (token) headers.set("Authorization", `Bearer ${token}`);
+
+  const response = await fetch(url, { ...init, headers });
   if (!response.ok) {
     const body = await response.json().catch(() => null);
     throw new Error(body?.error || `Error ${response.status}`);
@@ -189,4 +201,24 @@ export function retryWebhookEvent(id: string) {
     `/api/webhook-events/${encodeURIComponent(id)}/retry`,
     { method: "POST" },
   );
+}
+
+// --- Audit logs ---
+
+export interface AuditLogsListParams {
+  page: number;
+  limit?: number;
+}
+
+export interface AuditLogsListResponse {
+  logs: AuditLogRow[];
+  pagination: { total: number; page: number; limit: number; totalPages: number };
+}
+
+export function fetchAuditLogs(params: AuditLogsListParams): Promise<AuditLogsListResponse> {
+  const search = new URLSearchParams();
+  search.set("page", String(params.page));
+  search.set("limit", String(params.limit ?? 20));
+
+  return fetchJson<AuditLogsListResponse>(`/api/audit-logs?${search.toString()}`);
 }

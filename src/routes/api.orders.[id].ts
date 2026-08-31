@@ -5,8 +5,9 @@
 
 import { json } from "@tanstack/react-start";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { withAdminGuard } from "@/lib/admin/guard.server";
 
-export async function GET(request: Request) {
+export const GET = withAdminGuard(async (request) => {
   try {
     const url = new URL(request.url);
     const id = url.pathname.split("/").pop();
@@ -59,4 +60,4 @@ export async function GET(request: Request) {
     console.error("[API] /api/orders/[id] GET error:", message);
     return json({ error: "An unexpected error occurred" }, { status: 500 });
   }
-}
+});

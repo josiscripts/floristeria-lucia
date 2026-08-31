@@ -7,10 +7,11 @@
 import { json } from "@tanstack/react-start";
 import { createOrder, type CreateOrderRequest } from "@/lib/orders.server";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { withAdminGuard } from "@/lib/admin/guard.server";
 import type { Tables } from "@/integrations/supabase/types";
 
 /**
- * GET /api/orders
+ * GET /api/orders — Admin only.
  * Query params:
  *   page?: number (default 1)
  *   limit?: number (default 20, max 100)
@@ -19,7 +20,7 @@ import type { Tables } from "@/integrations/supabase/types";
  *   fromDate?: string (ISO date, filters created_at >=)
  *   toDate?: string (ISO date, filters created_at <=)
  */
-export async function GET(request: Request) {
+export const GET = withAdminGuard(async (request) => {
   try {
     const url = new URL(request.url);
     const page = Math.max(1, parseInt(url.searchParams.get("page") || "1", 10) || 1);
@@ -106,10 +107,10 @@ export async function GET(request: Request) {
     console.error("[API] /api/orders GET error:", message);
     return json({ error: "An unexpected error occurred" }, { status: 500 });
   }
-}
+});
 
 /**
- * POST /api/orders
+ * POST /api/orders — Público: usado por el checkout de la tienda, sin cambios.
  * Request body:
  * {
  *   customerName: string,

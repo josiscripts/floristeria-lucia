@@ -33,6 +33,36 @@ export type Database = {
   };
   public: {
     Tables: {
+      audit_logs: {
+        Row: {
+          action: string;
+          created_at: string;
+          id: string;
+          metadata: Json | null;
+          record_id: string | null;
+          resource: string;
+          user_id: string | null;
+        };
+        Insert: {
+          action: string;
+          created_at?: string;
+          id?: string;
+          metadata?: Json | null;
+          record_id?: string | null;
+          resource: string;
+          user_id?: string | null;
+        };
+        Update: {
+          action?: string;
+          created_at?: string;
+          id?: string;
+          metadata?: Json | null;
+          record_id?: string | null;
+          resource?: string;
+          user_id?: string | null;
+        };
+        Relationships: [];
+      };
       order_items: {
         Row: {
           color: string | null;
@@ -215,6 +245,7 @@ export type Database = {
           full_name: string | null;
           id: string;
           phone: string | null;
+          role: string;
           updated_at: string;
         };
         Insert: {
@@ -222,6 +253,7 @@ export type Database = {
           full_name?: string | null;
           id: string;
           phone?: string | null;
+          role?: string;
           updated_at?: string;
         };
         Update: {
@@ -229,6 +261,7 @@ export type Database = {
           full_name?: string | null;
           id?: string;
           phone?: string | null;
+          role?: string;
           updated_at?: string;
         };
         Relationships: [];

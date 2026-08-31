@@ -5,12 +5,13 @@
 
 import { json } from "@tanstack/react-start";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { withAdminGuard } from "@/lib/admin/guard.server";
 
 function sumTotal(orders: { total: number }[]): number {
   return orders.reduce((sum, order) => sum + (order.total || 0), 0);
 }
 
-export async function GET(request: Request) {
+export const GET = withAdminGuard(async () => {
   try {
     const now = new Date();
     const startOfToday = new Date(now);
@@ -78,4 +79,4 @@ export async function GET(request: Request) {
     console.error("[API] /api/dashboard/stats GET error:", message);
     return json({ error: "An unexpected error occurred" }, { status: 500 });
   }
-}
+});

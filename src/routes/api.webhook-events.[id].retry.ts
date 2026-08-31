@@ -9,9 +9,10 @@
 import { json } from "@tanstack/react-start";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { processStageChangeEvent } from "@/routes/api.webhooks.ghl-opportunity";
+import { withAdminGuard, logAdminAction } from "@/lib/admin/guard.server";
 import type { GHLOpportunityWebhookPayload } from "@/lib/ghl/types";
 
-export async function POST(request: Request) {
+export const POST = withAdminGuard(async (request, admin) => {
   try {
     const url = new URL(request.url);
     const parts = url.pathname.split("/").filter(Boolean);
@@ -56,10 +57,18 @@ export async function POST(request: Request) {
       console.error("[API] /api/webhook-events/[id]/retry update error:", updateError.message);
     }
 
+    await logAdminAction({
+      userId: admin.user.id,
+      action: "webhook_event.retry",
+      resource: "webhook_events",
+      recordId: id,
+      metadata: { success: result.success },
+    });
+
     return json({ success: result.success, result }, { status: result.success ? 200 : 422 });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown server error";
     console.error("[API] /api/webhook-events/[id]/retry error:", message);
     return json({ error: message }, { status: 500 });
   }
-}
+});

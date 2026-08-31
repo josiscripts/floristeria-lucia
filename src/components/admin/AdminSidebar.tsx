@@ -27,7 +27,7 @@ const NAV_ITEMS: NavItem[] = [
   { label: "Productos", to: "/admin/products", icon: Flower2 },
   { label: "Reportes", to: "/admin/reports", icon: BarChart3 },
   { label: "Webhooks", to: "/admin/webhooks", icon: Webhook },
-  { label: "Configuración", icon: Settings, comingSoon: true },
+  { label: "Configuración", to: "/admin/settings", icon: Settings },
 ];
 
 export function AdminSidebar() {

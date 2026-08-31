@@ -12,8 +12,9 @@ import {
   deleteProductMetadata,
   getProductMetadata,
 } from "@/lib/product-metadata.server";
+import { withAdminGuard, logAdminAction } from "@/lib/admin/guard.server";
 
-export async function GET(request: Request) {
+export const GET = withAdminGuard(async (request) => {
   try {
     const url = new URL(request.url);
     const id = url.pathname.split("/").pop();
@@ -43,7 +44,7 @@ export async function GET(request: Request) {
     console.error("[API] /api/products/[id] GET error:", message);
     return json({ error: message, code: "API_ERROR" }, { status: 500 });
   }
-}
+});
 
 interface UpdateProductRequest {
   name?: string;
@@ -58,7 +59,7 @@ interface UpdateProductRequest {
   rose_step?: number;
 }
 
-export async function PUT(request: Request) {
+export const PUT = withAdminGuard(async (request, admin) => {
   try {
     // Extract ID from URL
     const url = new URL(request.url);
@@ -98,6 +99,14 @@ export async function PUT(request: Request) {
       rose_step: body.rose_step,
     });
 
+    await logAdminAction({
+      userId: admin.user.id,
+      action: "product.update",
+      resource: "products",
+      recordId: id,
+      metadata: { fields: Object.keys(updatePayload) },
+    });
+
     return json(
       {
         success: true,
@@ -111,9 +120,9 @@ export async function PUT(request: Request) {
     console.error("[API] /api/products/[id] PUT error:", message);
     return json({ error: message, code: "API_ERROR" }, { status: 500 });
   }
-}
+});
 
-export async function DELETE(request: Request) {
+export const DELETE = withAdminGuard(async (request, admin) => {
   try {
     // Extract ID from URL
     const url = new URL(request.url);
@@ -136,6 +145,13 @@ export async function DELETE(request: Request) {
     // Soft delete in Supabase
     const metadataResult = await deleteProductMetadata(id);
 
+    await logAdminAction({
+      userId: admin.user.id,
+      action: "product.deactivate",
+      resource: "products",
+      recordId: id,
+    });
+
     return json(
       {
         success: true,
@@ -149,4 +165,4 @@ export async function DELETE(request: Request) {
     console.error("[API] /api/products/[id] DELETE error:", message);
     return json({ error: message, code: "API_ERROR" }, { status: 500 });
   }
-}
+});

@@ -6,6 +6,7 @@
 import { json } from "@tanstack/react-start";
 import { createGHLProduct, getGHLProducts } from "@/lib/ghl/client.server";
 import { syncProductMetadata, getFullProductMetadataByIds } from "@/lib/product-metadata.server";
+import { withAdminGuard, logAdminAction } from "@/lib/admin/guard.server";
 import type { GHLProduct } from "@/lib/ghl/types";
 
 interface CreateProductRequest {
@@ -29,7 +30,7 @@ interface CreateProductRequest {
  * Search/pagination are applied in-memory after a single GHL page fetch (limit 100),
  * which is fine for a shop-sized catalog but would need server-side search for a larger one.
  */
-export async function GET(request: Request) {
+export const GET = withAdminGuard(async (request) => {
   try {
     const url = new URL(request.url);
     const locationId = url.searchParams.get("locationId") || process.env["GHL_LOCATION_ID"];
@@ -95,9 +96,9 @@ export async function GET(request: Request) {
     console.error("[API] /api/products GET error:", message);
     return json({ error: message, code: "API_ERROR" }, { status: 500 });
   }
-}
+});
 
-export async function POST(request: Request) {
+export const POST = withAdminGuard(async (request, admin) => {
   try {
     const body: CreateProductRequest = await request.json();
 
@@ -142,6 +143,14 @@ export async function POST(request: Request) {
       // Metadata can be synced later
     }
 
+    await logAdminAction({
+      userId: admin.user.id,
+      action: "product.create",
+      resource: "products",
+      recordId: (ghlResult as { id: string }).id,
+      metadata: { name: body.name },
+    });
+
     return json(
       {
         success: true,
@@ -158,4 +167,4 @@ export async function POST(request: Request) {
     console.error("[API] /api/products POST error:", message);
     return json({ error: message, code: "API_ERROR" }, { status: 500 });
   }
-}
+});
