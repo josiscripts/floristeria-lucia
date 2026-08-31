@@ -24,6 +24,11 @@ import { Route as ServiciosRouteImport } from './routes/servicios'
 import { Route as SobreNosotrosRouteImport } from './routes/sobre-nosotros'
 import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
 import { Route as AuthenticatedMiCuentaRouteImport } from './routes/_authenticated/mi-cuenta'
+import { Route as ApiAuditLogsRouteImport } from './routes/api.audit-logs'
+import { Route as ApiConfirmationRouteImport } from './routes/api.confirmation'
+import { Route as ApiOrdersRouteImport } from './routes/api.orders'
+import { Route as ApiProductsRouteImport } from './routes/api.products'
+import { Route as ApiWebhookEventsRouteImport } from './routes/api.webhook-events'
 import { Route as ConfirmationOrderIdRouteImport } from './routes/confirmation.$orderId'
 import { Route as DebugGhlTestRouteImport } from './routes/debug.ghl-test'
 import { Route as LegalSlugRouteImport } from './routes/legal.$slug'
@@ -37,11 +42,23 @@ import { Route as AuthenticatedAdminProductsRouteImport } from './routes/_authen
 import { Route as AuthenticatedAdminReportsRouteImport } from './routes/_authenticated/admin/reports'
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin/settings'
 import { Route as AuthenticatedAdminWebhooksRouteImport } from './routes/_authenticated/admin/webhooks'
+import { Route as ApiAdminDebugEnvRouteImport } from './routes/api.admin.debug-env'
+import { Route as ApiAdminDebugMetadataRouteImport } from './routes/api.admin.debug-metadata'
+import { Route as ApiAdminDiagnoseMetadataRouteImport } from './routes/api.admin.diagnose-metadata'
+import { Route as ApiAdminPopulateMetadataRouteImport } from './routes/api.admin.populate-metadata'
+import { Route as ApiDashboardStatsRouteImport } from './routes/api.dashboard.stats'
+import { Route as ApiGhlProductsRouteImport } from './routes/api.ghl.products'
+import { Route as ApiOrdersIdRouteImport } from './routes/api.orders.$id'
+import { Route as ApiProductsIdRouteImport } from './routes/api.products.$id'
+import { Route as ApiWebhooksGhlOpportunityRouteImport } from './routes/api.webhooks.ghl-opportunity'
+import { Route as ApiWebhooksGhlProductRouteImport } from './routes/api.webhooks.ghl-product'
 import { Route as AuthenticatedAdminOrdersIndexRouteImport } from './routes/_authenticated/admin/orders.index'
 import { Route as AuthenticatedAdminOrdersIdRouteImport } from './routes/_authenticated/admin/orders.$id'
 import { Route as AuthenticatedAdminProductsIndexRouteImport } from './routes/_authenticated/admin/products.index'
 import { Route as AuthenticatedAdminProductsIdRouteImport } from './routes/_authenticated/admin/products.$id'
 import { Route as AuthenticatedAdminProductsNewRouteImport } from './routes/_authenticated/admin/products.new'
+import { Route as ApiGhlProductsIdRouteImport } from './routes/api.ghl.products.$id'
+import { Route as ApiWebhookEventsIdRetryRouteImport } from './routes/api.webhook-events.$id.retry'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -117,6 +134,31 @@ const AuthenticatedMiCuentaRoute = AuthenticatedMiCuentaRouteImport.update({
   path: '/mi-cuenta',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const ApiAuditLogsRoute = ApiAuditLogsRouteImport.update({
+  id: '/api/audit-logs',
+  path: '/api/audit-logs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiConfirmationRoute = ApiConfirmationRouteImport.update({
+  id: '/api/confirmation',
+  path: '/api/confirmation',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiOrdersRoute = ApiOrdersRouteImport.update({
+  id: '/api/orders',
+  path: '/api/orders',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiProductsRoute = ApiProductsRouteImport.update({
+  id: '/api/products',
+  path: '/api/products',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiWebhookEventsRoute = ApiWebhookEventsRouteImport.update({
+  id: '/api/webhook-events',
+  path: '/api/webhook-events',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ConfirmationOrderIdRoute = ConfirmationOrderIdRouteImport.update({
   id: '/confirmation/$orderId',
   path: '/confirmation/$orderId',
@@ -188,6 +230,59 @@ const AuthenticatedAdminWebhooksRoute =
     path: '/webhooks',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const ApiAdminDebugEnvRoute = ApiAdminDebugEnvRouteImport.update({
+  id: '/api/admin/debug-env',
+  path: '/api/admin/debug-env',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminDebugMetadataRoute = ApiAdminDebugMetadataRouteImport.update({
+  id: '/api/admin/debug-metadata',
+  path: '/api/admin/debug-metadata',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminDiagnoseMetadataRoute =
+  ApiAdminDiagnoseMetadataRouteImport.update({
+    id: '/api/admin/diagnose-metadata',
+    path: '/api/admin/diagnose-metadata',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiAdminPopulateMetadataRoute =
+  ApiAdminPopulateMetadataRouteImport.update({
+    id: '/api/admin/populate-metadata',
+    path: '/api/admin/populate-metadata',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiDashboardStatsRoute = ApiDashboardStatsRouteImport.update({
+  id: '/api/dashboard/stats',
+  path: '/api/dashboard/stats',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiGhlProductsRoute = ApiGhlProductsRouteImport.update({
+  id: '/api/ghl/products',
+  path: '/api/ghl/products',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiOrdersIdRoute = ApiOrdersIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ApiOrdersRoute,
+} as any)
+const ApiProductsIdRoute = ApiProductsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ApiProductsRoute,
+} as any)
+const ApiWebhooksGhlOpportunityRoute =
+  ApiWebhooksGhlOpportunityRouteImport.update({
+    id: '/api/webhooks/ghl-opportunity',
+    path: '/api/webhooks/ghl-opportunity',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiWebhooksGhlProductRoute = ApiWebhooksGhlProductRouteImport.update({
+  id: '/api/webhooks/ghl-product',
+  path: '/api/webhooks/ghl-product',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedAdminOrdersIndexRoute =
   AuthenticatedAdminOrdersIndexRouteImport.update({
     id: '/',
@@ -218,6 +313,16 @@ const AuthenticatedAdminProductsNewRoute =
     path: '/new',
     getParentRoute: () => AuthenticatedAdminProductsRoute,
   } as any)
+const ApiGhlProductsIdRoute = ApiGhlProductsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ApiGhlProductsRoute,
+} as any)
+const ApiWebhookEventsIdRetryRoute = ApiWebhookEventsIdRetryRouteImport.update({
+  id: '/$id/retry',
+  path: '/$id/retry',
+  getParentRoute: () => ApiWebhookEventsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -234,6 +339,11 @@ export interface FileRoutesByFullPath {
   '/sobre-nosotros': typeof SobreNosotrosRoute
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/mi-cuenta': typeof AuthenticatedMiCuentaRoute
+  '/api/audit-logs': typeof ApiAuditLogsRoute
+  '/api/confirmation': typeof ApiConfirmationRoute
+  '/api/orders': typeof ApiOrdersRouteWithChildren
+  '/api/products': typeof ApiProductsRouteWithChildren
+  '/api/webhook-events': typeof ApiWebhookEventsRouteWithChildren
   '/confirmation/$orderId': typeof ConfirmationOrderIdRoute
   '/debug/ghl-test': typeof DebugGhlTestRoute
   '/legal/$slug': typeof LegalSlugRoute
@@ -246,10 +356,22 @@ export interface FileRoutesByFullPath {
   '/admin/reports': typeof AuthenticatedAdminReportsRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/webhooks': typeof AuthenticatedAdminWebhooksRoute
+  '/api/admin/debug-env': typeof ApiAdminDebugEnvRoute
+  '/api/admin/debug-metadata': typeof ApiAdminDebugMetadataRoute
+  '/api/admin/diagnose-metadata': typeof ApiAdminDiagnoseMetadataRoute
+  '/api/admin/populate-metadata': typeof ApiAdminPopulateMetadataRoute
+  '/api/dashboard/stats': typeof ApiDashboardStatsRoute
+  '/api/ghl/products': typeof ApiGhlProductsRouteWithChildren
+  '/api/orders/$id': typeof ApiOrdersIdRoute
+  '/api/products/$id': typeof ApiProductsIdRoute
+  '/api/webhooks/ghl-opportunity': typeof ApiWebhooksGhlOpportunityRoute
+  '/api/webhooks/ghl-product': typeof ApiWebhooksGhlProductRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/admin/orders/$id': typeof AuthenticatedAdminOrdersIdRoute
   '/admin/products/$id': typeof AuthenticatedAdminProductsIdRoute
   '/admin/products/new': typeof AuthenticatedAdminProductsNewRoute
+  '/api/ghl/products/$id': typeof ApiGhlProductsIdRoute
+  '/api/webhook-events/$id/retry': typeof ApiWebhookEventsIdRetryRoute
   '/admin/orders/': typeof AuthenticatedAdminOrdersIndexRoute
   '/admin/products/': typeof AuthenticatedAdminProductsIndexRoute
 }
@@ -266,6 +388,11 @@ export interface FileRoutesByTo {
   '/rosas-eternas': typeof RosasEternasRoute
   '/sobre-nosotros': typeof SobreNosotrosRoute
   '/mi-cuenta': typeof AuthenticatedMiCuentaRoute
+  '/api/audit-logs': typeof ApiAuditLogsRoute
+  '/api/confirmation': typeof ApiConfirmationRoute
+  '/api/orders': typeof ApiOrdersRouteWithChildren
+  '/api/products': typeof ApiProductsRouteWithChildren
+  '/api/webhook-events': typeof ApiWebhookEventsRouteWithChildren
   '/confirmation/$orderId': typeof ConfirmationOrderIdRoute
   '/debug/ghl-test': typeof DebugGhlTestRoute
   '/legal/$slug': typeof LegalSlugRoute
@@ -276,10 +403,22 @@ export interface FileRoutesByTo {
   '/admin/reports': typeof AuthenticatedAdminReportsRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/webhooks': typeof AuthenticatedAdminWebhooksRoute
+  '/api/admin/debug-env': typeof ApiAdminDebugEnvRoute
+  '/api/admin/debug-metadata': typeof ApiAdminDebugMetadataRoute
+  '/api/admin/diagnose-metadata': typeof ApiAdminDiagnoseMetadataRoute
+  '/api/admin/populate-metadata': typeof ApiAdminPopulateMetadataRoute
+  '/api/dashboard/stats': typeof ApiDashboardStatsRoute
+  '/api/ghl/products': typeof ApiGhlProductsRouteWithChildren
+  '/api/orders/$id': typeof ApiOrdersIdRoute
+  '/api/products/$id': typeof ApiProductsIdRoute
+  '/api/webhooks/ghl-opportunity': typeof ApiWebhooksGhlOpportunityRoute
+  '/api/webhooks/ghl-product': typeof ApiWebhooksGhlProductRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/admin/orders/$id': typeof AuthenticatedAdminOrdersIdRoute
   '/admin/products/$id': typeof AuthenticatedAdminProductsIdRoute
   '/admin/products/new': typeof AuthenticatedAdminProductsNewRoute
+  '/api/ghl/products/$id': typeof ApiGhlProductsIdRoute
+  '/api/webhook-events/$id/retry': typeof ApiWebhookEventsIdRetryRoute
   '/admin/orders': typeof AuthenticatedAdminOrdersIndexRoute
   '/admin/products': typeof AuthenticatedAdminProductsIndexRoute
 }
@@ -300,6 +439,11 @@ export interface FileRoutesById {
   '/sobre-nosotros': typeof SobreNosotrosRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/_authenticated/mi-cuenta': typeof AuthenticatedMiCuentaRoute
+  '/api/audit-logs': typeof ApiAuditLogsRoute
+  '/api/confirmation': typeof ApiConfirmationRoute
+  '/api/orders': typeof ApiOrdersRouteWithChildren
+  '/api/products': typeof ApiProductsRouteWithChildren
+  '/api/webhook-events': typeof ApiWebhookEventsRouteWithChildren
   '/confirmation/$orderId': typeof ConfirmationOrderIdRoute
   '/debug/ghl-test': typeof DebugGhlTestRoute
   '/legal/$slug': typeof LegalSlugRoute
@@ -312,10 +456,22 @@ export interface FileRoutesById {
   '/_authenticated/admin/reports': typeof AuthenticatedAdminReportsRoute
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/_authenticated/admin/webhooks': typeof AuthenticatedAdminWebhooksRoute
+  '/api/admin/debug-env': typeof ApiAdminDebugEnvRoute
+  '/api/admin/debug-metadata': typeof ApiAdminDebugMetadataRoute
+  '/api/admin/diagnose-metadata': typeof ApiAdminDiagnoseMetadataRoute
+  '/api/admin/populate-metadata': typeof ApiAdminPopulateMetadataRoute
+  '/api/dashboard/stats': typeof ApiDashboardStatsRoute
+  '/api/ghl/products': typeof ApiGhlProductsRouteWithChildren
+  '/api/orders/$id': typeof ApiOrdersIdRoute
+  '/api/products/$id': typeof ApiProductsIdRoute
+  '/api/webhooks/ghl-opportunity': typeof ApiWebhooksGhlOpportunityRoute
+  '/api/webhooks/ghl-product': typeof ApiWebhooksGhlProductRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/admin/orders/$id': typeof AuthenticatedAdminOrdersIdRoute
   '/_authenticated/admin/products/$id': typeof AuthenticatedAdminProductsIdRoute
   '/_authenticated/admin/products/new': typeof AuthenticatedAdminProductsNewRoute
+  '/api/ghl/products/$id': typeof ApiGhlProductsIdRoute
+  '/api/webhook-events/$id/retry': typeof ApiWebhookEventsIdRetryRoute
   '/_authenticated/admin/orders/': typeof AuthenticatedAdminOrdersIndexRoute
   '/_authenticated/admin/products/': typeof AuthenticatedAdminProductsIndexRoute
 }
@@ -336,6 +492,11 @@ export interface FileRouteTypes {
     | '/sobre-nosotros'
     | '/admin'
     | '/mi-cuenta'
+    | '/api/audit-logs'
+    | '/api/confirmation'
+    | '/api/orders'
+    | '/api/products'
+    | '/api/webhook-events'
     | '/confirmation/$orderId'
     | '/debug/ghl-test'
     | '/legal/$slug'
@@ -348,10 +509,22 @@ export interface FileRouteTypes {
     | '/admin/reports'
     | '/admin/settings'
     | '/admin/webhooks'
+    | '/api/admin/debug-env'
+    | '/api/admin/debug-metadata'
+    | '/api/admin/diagnose-metadata'
+    | '/api/admin/populate-metadata'
+    | '/api/dashboard/stats'
+    | '/api/ghl/products'
+    | '/api/orders/$id'
+    | '/api/products/$id'
+    | '/api/webhooks/ghl-opportunity'
+    | '/api/webhooks/ghl-product'
     | '/admin/'
     | '/admin/orders/$id'
     | '/admin/products/$id'
     | '/admin/products/new'
+    | '/api/ghl/products/$id'
+    | '/api/webhook-events/$id/retry'
     | '/admin/orders/'
     | '/admin/products/'
   fileRoutesByTo: FileRoutesByTo
@@ -368,6 +541,11 @@ export interface FileRouteTypes {
     | '/rosas-eternas'
     | '/sobre-nosotros'
     | '/mi-cuenta'
+    | '/api/audit-logs'
+    | '/api/confirmation'
+    | '/api/orders'
+    | '/api/products'
+    | '/api/webhook-events'
     | '/confirmation/$orderId'
     | '/debug/ghl-test'
     | '/legal/$slug'
@@ -378,10 +556,22 @@ export interface FileRouteTypes {
     | '/admin/reports'
     | '/admin/settings'
     | '/admin/webhooks'
+    | '/api/admin/debug-env'
+    | '/api/admin/debug-metadata'
+    | '/api/admin/diagnose-metadata'
+    | '/api/admin/populate-metadata'
+    | '/api/dashboard/stats'
+    | '/api/ghl/products'
+    | '/api/orders/$id'
+    | '/api/products/$id'
+    | '/api/webhooks/ghl-opportunity'
+    | '/api/webhooks/ghl-product'
     | '/admin'
     | '/admin/orders/$id'
     | '/admin/products/$id'
     | '/admin/products/new'
+    | '/api/ghl/products/$id'
+    | '/api/webhook-events/$id/retry'
     | '/admin/orders'
     | '/admin/products'
   id:
@@ -401,6 +591,11 @@ export interface FileRouteTypes {
     | '/sobre-nosotros'
     | '/_authenticated/admin'
     | '/_authenticated/mi-cuenta'
+    | '/api/audit-logs'
+    | '/api/confirmation'
+    | '/api/orders'
+    | '/api/products'
+    | '/api/webhook-events'
     | '/confirmation/$orderId'
     | '/debug/ghl-test'
     | '/legal/$slug'
@@ -413,10 +608,22 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/reports'
     | '/_authenticated/admin/settings'
     | '/_authenticated/admin/webhooks'
+    | '/api/admin/debug-env'
+    | '/api/admin/debug-metadata'
+    | '/api/admin/diagnose-metadata'
+    | '/api/admin/populate-metadata'
+    | '/api/dashboard/stats'
+    | '/api/ghl/products'
+    | '/api/orders/$id'
+    | '/api/products/$id'
+    | '/api/webhooks/ghl-opportunity'
+    | '/api/webhooks/ghl-product'
     | '/_authenticated/admin/'
     | '/_authenticated/admin/orders/$id'
     | '/_authenticated/admin/products/$id'
     | '/_authenticated/admin/products/new'
+    | '/api/ghl/products/$id'
+    | '/api/webhook-events/$id/retry'
     | '/_authenticated/admin/orders/'
     | '/_authenticated/admin/products/'
   fileRoutesById: FileRoutesById
@@ -435,10 +642,23 @@ export interface RootRouteChildren {
   RosasEternasRoute: typeof RosasEternasRoute
   ServiciosRoute: typeof ServiciosRouteWithChildren
   SobreNosotrosRoute: typeof SobreNosotrosRoute
+  ApiAuditLogsRoute: typeof ApiAuditLogsRoute
+  ApiConfirmationRoute: typeof ApiConfirmationRoute
+  ApiOrdersRoute: typeof ApiOrdersRouteWithChildren
+  ApiProductsRoute: typeof ApiProductsRouteWithChildren
+  ApiWebhookEventsRoute: typeof ApiWebhookEventsRouteWithChildren
   ConfirmationOrderIdRoute: typeof ConfirmationOrderIdRoute
   DebugGhlTestRoute: typeof DebugGhlTestRoute
   LegalSlugRoute: typeof LegalSlugRoute
   ProductoIdRoute: typeof ProductoIdRoute
+  ApiAdminDebugEnvRoute: typeof ApiAdminDebugEnvRoute
+  ApiAdminDebugMetadataRoute: typeof ApiAdminDebugMetadataRoute
+  ApiAdminDiagnoseMetadataRoute: typeof ApiAdminDiagnoseMetadataRoute
+  ApiAdminPopulateMetadataRoute: typeof ApiAdminPopulateMetadataRoute
+  ApiDashboardStatsRoute: typeof ApiDashboardStatsRoute
+  ApiGhlProductsRoute: typeof ApiGhlProductsRouteWithChildren
+  ApiWebhooksGhlOpportunityRoute: typeof ApiWebhooksGhlOpportunityRoute
+  ApiWebhooksGhlProductRoute: typeof ApiWebhooksGhlProductRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -548,6 +768,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMiCuentaRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/audit-logs': {
+      id: '/api/audit-logs'
+      path: '/api/audit-logs'
+      fullPath: '/api/audit-logs'
+      preLoaderRoute: typeof ApiAuditLogsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/confirmation': {
+      id: '/api/confirmation'
+      path: '/api/confirmation'
+      fullPath: '/api/confirmation'
+      preLoaderRoute: typeof ApiConfirmationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/orders': {
+      id: '/api/orders'
+      path: '/api/orders'
+      fullPath: '/api/orders'
+      preLoaderRoute: typeof ApiOrdersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/products': {
+      id: '/api/products'
+      path: '/api/products'
+      fullPath: '/api/products'
+      preLoaderRoute: typeof ApiProductsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/webhook-events': {
+      id: '/api/webhook-events'
+      path: '/api/webhook-events'
+      fullPath: '/api/webhook-events'
+      preLoaderRoute: typeof ApiWebhookEventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/confirmation/$orderId': {
       id: '/confirmation/$orderId'
       path: '/confirmation/$orderId'
@@ -639,6 +894,76 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminWebhooksRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/api/admin/debug-env': {
+      id: '/api/admin/debug-env'
+      path: '/api/admin/debug-env'
+      fullPath: '/api/admin/debug-env'
+      preLoaderRoute: typeof ApiAdminDebugEnvRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/debug-metadata': {
+      id: '/api/admin/debug-metadata'
+      path: '/api/admin/debug-metadata'
+      fullPath: '/api/admin/debug-metadata'
+      preLoaderRoute: typeof ApiAdminDebugMetadataRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/diagnose-metadata': {
+      id: '/api/admin/diagnose-metadata'
+      path: '/api/admin/diagnose-metadata'
+      fullPath: '/api/admin/diagnose-metadata'
+      preLoaderRoute: typeof ApiAdminDiagnoseMetadataRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/populate-metadata': {
+      id: '/api/admin/populate-metadata'
+      path: '/api/admin/populate-metadata'
+      fullPath: '/api/admin/populate-metadata'
+      preLoaderRoute: typeof ApiAdminPopulateMetadataRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/dashboard/stats': {
+      id: '/api/dashboard/stats'
+      path: '/api/dashboard/stats'
+      fullPath: '/api/dashboard/stats'
+      preLoaderRoute: typeof ApiDashboardStatsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/ghl/products': {
+      id: '/api/ghl/products'
+      path: '/api/ghl/products'
+      fullPath: '/api/ghl/products'
+      preLoaderRoute: typeof ApiGhlProductsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/orders/$id': {
+      id: '/api/orders/$id'
+      path: '/$id'
+      fullPath: '/api/orders/$id'
+      preLoaderRoute: typeof ApiOrdersIdRouteImport
+      parentRoute: typeof ApiOrdersRoute
+    }
+    '/api/products/$id': {
+      id: '/api/products/$id'
+      path: '/$id'
+      fullPath: '/api/products/$id'
+      preLoaderRoute: typeof ApiProductsIdRouteImport
+      parentRoute: typeof ApiProductsRoute
+    }
+    '/api/webhooks/ghl-opportunity': {
+      id: '/api/webhooks/ghl-opportunity'
+      path: '/api/webhooks/ghl-opportunity'
+      fullPath: '/api/webhooks/ghl-opportunity'
+      preLoaderRoute: typeof ApiWebhooksGhlOpportunityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/webhooks/ghl-product': {
+      id: '/api/webhooks/ghl-product'
+      path: '/api/webhooks/ghl-product'
+      fullPath: '/api/webhooks/ghl-product'
+      preLoaderRoute: typeof ApiWebhooksGhlProductRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/admin/orders/': {
       id: '/_authenticated/admin/orders/'
       path: '/'
@@ -673,6 +998,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/products/new'
       preLoaderRoute: typeof AuthenticatedAdminProductsNewRouteImport
       parentRoute: typeof AuthenticatedAdminProductsRoute
+    }
+    '/api/ghl/products/$id': {
+      id: '/api/ghl/products/$id'
+      path: '/$id'
+      fullPath: '/api/ghl/products/$id'
+      preLoaderRoute: typeof ApiGhlProductsIdRouteImport
+      parentRoute: typeof ApiGhlProductsRoute
+    }
+    '/api/webhook-events/$id/retry': {
+      id: '/api/webhook-events/$id/retry'
+      path: '/$id/retry'
+      fullPath: '/api/webhook-events/$id/retry'
+      preLoaderRoute: typeof ApiWebhookEventsIdRetryRouteImport
+      parentRoute: typeof ApiWebhookEventsRoute
     }
   }
 }
@@ -765,6 +1104,53 @@ const ServiciosRouteWithChildren = ServiciosRoute._addFileChildren(
   ServiciosRouteChildren,
 )
 
+interface ApiOrdersRouteChildren {
+  ApiOrdersIdRoute: typeof ApiOrdersIdRoute
+}
+
+const ApiOrdersRouteChildren: ApiOrdersRouteChildren = {
+  ApiOrdersIdRoute: ApiOrdersIdRoute,
+}
+
+const ApiOrdersRouteWithChildren = ApiOrdersRoute._addFileChildren(
+  ApiOrdersRouteChildren,
+)
+
+interface ApiProductsRouteChildren {
+  ApiProductsIdRoute: typeof ApiProductsIdRoute
+}
+
+const ApiProductsRouteChildren: ApiProductsRouteChildren = {
+  ApiProductsIdRoute: ApiProductsIdRoute,
+}
+
+const ApiProductsRouteWithChildren = ApiProductsRoute._addFileChildren(
+  ApiProductsRouteChildren,
+)
+
+interface ApiWebhookEventsRouteChildren {
+  ApiWebhookEventsIdRetryRoute: typeof ApiWebhookEventsIdRetryRoute
+}
+
+const ApiWebhookEventsRouteChildren: ApiWebhookEventsRouteChildren = {
+  ApiWebhookEventsIdRetryRoute: ApiWebhookEventsIdRetryRoute,
+}
+
+const ApiWebhookEventsRouteWithChildren =
+  ApiWebhookEventsRoute._addFileChildren(ApiWebhookEventsRouteChildren)
+
+interface ApiGhlProductsRouteChildren {
+  ApiGhlProductsIdRoute: typeof ApiGhlProductsIdRoute
+}
+
+const ApiGhlProductsRouteChildren: ApiGhlProductsRouteChildren = {
+  ApiGhlProductsIdRoute: ApiGhlProductsIdRoute,
+}
+
+const ApiGhlProductsRouteWithChildren = ApiGhlProductsRoute._addFileChildren(
+  ApiGhlProductsRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
@@ -779,10 +1165,23 @@ const rootRouteChildren: RootRouteChildren = {
   RosasEternasRoute: RosasEternasRoute,
   ServiciosRoute: ServiciosRouteWithChildren,
   SobreNosotrosRoute: SobreNosotrosRoute,
+  ApiAuditLogsRoute: ApiAuditLogsRoute,
+  ApiConfirmationRoute: ApiConfirmationRoute,
+  ApiOrdersRoute: ApiOrdersRouteWithChildren,
+  ApiProductsRoute: ApiProductsRouteWithChildren,
+  ApiWebhookEventsRoute: ApiWebhookEventsRouteWithChildren,
   ConfirmationOrderIdRoute: ConfirmationOrderIdRoute,
   DebugGhlTestRoute: DebugGhlTestRoute,
   LegalSlugRoute: LegalSlugRoute,
   ProductoIdRoute: ProductoIdRoute,
+  ApiAdminDebugEnvRoute: ApiAdminDebugEnvRoute,
+  ApiAdminDebugMetadataRoute: ApiAdminDebugMetadataRoute,
+  ApiAdminDiagnoseMetadataRoute: ApiAdminDiagnoseMetadataRoute,
+  ApiAdminPopulateMetadataRoute: ApiAdminPopulateMetadataRoute,
+  ApiDashboardStatsRoute: ApiDashboardStatsRoute,
+  ApiGhlProductsRoute: ApiGhlProductsRouteWithChildren,
+  ApiWebhooksGhlOpportunityRoute: ApiWebhooksGhlOpportunityRoute,
+  ApiWebhooksGhlProductRoute: ApiWebhooksGhlProductRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -11,6 +11,11 @@ import type { Tables } from "@/integrations/supabase/types";
 export interface ProductMetadataInput {
   ghl_product_id: string;
   legacy_catalog_id?: string | null;
+  // Core metadata that GHL doesn't persist
+  category?: string | null;
+  price?: number | null;
+  sku?: string | null;
+  // Extended metadata
   price_max?: number | null;
   available_colors?: string[] | null;
   badge_label?: string | null;
@@ -44,6 +49,9 @@ export async function syncProductMetadata(
       const { error: updateError } = await supabaseAdmin
         .from("product_metadata")
         .update({
+          category: input.category ?? null,
+          price_min: input.price ?? null,
+          sku: input.sku ?? null,
           legacy_catalog_id: input.legacy_catalog_id,
           price_max: input.price_max,
           available_colors: input.available_colors,
@@ -65,6 +73,9 @@ export async function syncProductMetadata(
         .from("product_metadata")
         .insert({
           ghl_product_id: input.ghl_product_id,
+          category: input.category ?? null,
+          price_min: input.price ?? null,
+          sku: input.sku ?? null,
           legacy_catalog_id: input.legacy_catalog_id,
           price_max: input.price_max,
           available_colors: input.available_colors,

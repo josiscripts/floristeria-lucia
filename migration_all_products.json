@@ -1,0 +1,402 @@
+[
+  {
+    "ghl_id": "6a9568a53e5066446e9ea655",
+    "catalog_id": "ramo-silvestre",
+    "name": "Ramo Silvestre",
+    "category": "ramos",
+    "price": 30,
+    "sku": "FL-RAM-0001"
+  },
+  {
+    "ghl_id": "6a9568a5d672c0c295fe8bbe",
+    "catalog_id": "ramo-felicidad",
+    "name": "Ramo Felicidad",
+    "category": "ramos",
+    "price": 35,
+    "sku": "FL-RAM-0002"
+  },
+  {
+    "ghl_id": "6a9568a68524b2edbf41731d",
+    "catalog_id": "ramo-alegria",
+    "name": "Ramo Alegría",
+    "category": "ramos",
+    "price": 35,
+    "sku": "FL-RAM-0003"
+  },
+  {
+    "ghl_id": "6a9568a7e6af69d3417420fe",
+    "catalog_id": "ramo-girasoles",
+    "name": "Ramo de Girasoles",
+    "category": "ramos",
+    "price": 30,
+    "sku": "FL-RAM-0004"
+  },
+  {
+    "ghl_id": "6a9568a7e6af69d341742102",
+    "catalog_id": "ramo-belleza",
+    "name": "Ramo Belleza",
+    "category": "ramos",
+    "price": 30,
+    "sku": "FL-RAM-0005"
+  },
+  {
+    "ghl_id": "6a9568a7e6af69d341742107",
+    "catalog_id": "ramo-rosas",
+    "name": "Ramo de Rosas",
+    "category": "ramos",
+    "price": 24,
+    "sku": "FL-RAM-0006"
+  },
+  {
+    "ghl_id": "6a9568a8f1e9a939e038f4c6",
+    "catalog_id": "anthurium",
+    "name": "Anthurium",
+    "category": "plantas",
+    "price": 25,
+    "sku": "FL-PLA-0007"
+  },
+  {
+    "ghl_id": "6a9568a8d0faa096b65be07e",
+    "catalog_id": "taza-plantas",
+    "name": "Taza de Plantas",
+    "category": "plantas",
+    "price": 36,
+    "sku": "FL-PLA-0008"
+  },
+  {
+    "ghl_id": "6a9568a98aa65051fa5cff86",
+    "catalog_id": "cesta-mimbre",
+    "name": "Cesta de Mimbre",
+    "category": "plantas",
+    "price": 60,
+    "sku": "FL-PLA-0009"
+  },
+  {
+    "ghl_id": "6a9568a9fa6dce62c5da9e57",
+    "catalog_id": "cesta-blanca-mimbre",
+    "name": "Cesta Blanca de Mimbre",
+    "category": "plantas",
+    "price": 45,
+    "sku": "FL-PLA-0010"
+  },
+  {
+    "ghl_id": "6a9568aa8524b2edbf41733f",
+    "catalog_id": "banera-ceramica",
+    "name": "Bañera Cerámica",
+    "category": "plantas",
+    "price": 35,
+    "sku": "FL-PLA-0011"
+  },
+  {
+    "ghl_id": "6a9568aa973de9c5b8125965",
+    "catalog_id": "orquidea-azul",
+    "name": "Orquídea Azul",
+    "category": "plantas",
+    "price": 30,
+    "sku": "FL-PLA-0012"
+  },
+  {
+    "ghl_id": "6a9568ab574f3e913ea056db",
+    "catalog_id": "orquidea",
+    "name": "Orquídea",
+    "category": "plantas",
+    "price": 30,
+    "sku": "FL-PLA-0013"
+  },
+  {
+    "ghl_id": "6a9568abbc5d5b7c7bf83955",
+    "catalog_id": "denrobium",
+    "name": "Denrobium",
+    "category": "plantas",
+    "price": 28,
+    "sku": "FL-PLA-0014"
+  },
+  {
+    "ghl_id": "6a9568abb334dc6b2047cc4d",
+    "catalog_id": "centro-orquideas-variadas",
+    "name": "Centro de Orquídeas Variadas",
+    "category": "plantas",
+    "price": 80,
+    "sku": "FL-PLA-0015"
+  },
+  {
+    "ghl_id": "6a9568aef1e9a939e038f525",
+    "catalog_id": "centro-orquidea-blanca",
+    "name": "Centro Orquídea Blanca",
+    "category": "plantas",
+    "price": 80,
+    "sku": "FL-PLA-0016"
+  },
+  {
+    "ghl_id": "6a9568aed672c0c295fe8c27",
+    "catalog_id": "cesta-rosa",
+    "name": "Cesta Rosa",
+    "category": "plantas",
+    "price": 25,
+    "sku": "FL-PLA-0017"
+  },
+  {
+    "ghl_id": "6a9568afd0faa096b65be0c4",
+    "catalog_id": "bonsai-ficus-ginseng",
+    "name": "Bonsái Ficus Ginseng",
+    "category": "plantas",
+    "price": 25,
+    "sku": "FL-PLA-0018"
+  },
+  {
+    "ghl_id": "6a9568af324935c27b1587df",
+    "catalog_id": "calathea",
+    "name": "Calathea",
+    "category": "plantas",
+    "price": 35,
+    "sku": "FL-PLA-0019"
+  },
+  {
+    "ghl_id": "6a9568af324935c27b1587e5",
+    "catalog_id": "caja-rosas-eternas",
+    "name": "Caja de Rosas Eternas",
+    "category": "rosas-eternas",
+    "price": 40,
+    "sku": "FL-ROS-0020"
+  },
+  {
+    "ghl_id": "6a9568b0d0faa096b65be0d9",
+    "catalog_id": "caja-romantica",
+    "name": "Caja Romántica",
+    "category": "rosas-eternas",
+    "price": 45,
+    "sku": "FL-ROS-0021"
+  },
+  {
+    "ghl_id": "6a9568b0d0faa096b65be0e3",
+    "catalog_id": "cupido",
+    "name": "Cupido",
+    "category": "rosas-eternas",
+    "price": 55,
+    "sku": "FL-ROS-0022"
+  },
+  {
+    "ghl_id": "6a9568b11c048083d92aeafa",
+    "catalog_id": "pecera-rosa-eterna",
+    "name": "Pecera Rosa Eterna",
+    "category": "rosas-eternas",
+    "price": 22,
+    "sku": "FL-ROS-0023"
+  },
+  {
+    "ghl_id": "6a9568b11c048083d92aeb01",
+    "catalog_id": "jarron-cristal-1",
+    "name": "Jarrón de Cristal Nº 1",
+    "category": "complementos",
+    "price": 1.5,
+    "sku": "FL-COM-0024"
+  },
+  {
+    "ghl_id": "6a9568b2bc5d5b7c7bf8399b",
+    "catalog_id": "jarron-cristal-2",
+    "name": "Jarrón de Cristal Nº 2",
+    "category": "complementos",
+    "price": 5,
+    "sku": "FL-COM-0025"
+  },
+  {
+    "ghl_id": "6a9568b2324935c27b158867",
+    "catalog_id": "chocolate-belga-pequena",
+    "name": "Chocolate Belga Pequeña",
+    "category": "complementos",
+    "price": 12.5,
+    "sku": "FL-COM-0026"
+  },
+  {
+    "ghl_id": "6a9568b3fa6dce62c5da9ec6",
+    "catalog_id": "chocolate-belga-grande",
+    "name": "Chocolate Belga Grande",
+    "category": "complementos",
+    "price": 15,
+    "sku": "FL-COM-0027"
+  },
+  {
+    "ghl_id": "6a9568b3383c8f49b38fc132",
+    "catalog_id": "oso-peluche",
+    "name": "Oso de Peluche",
+    "category": "complementos",
+    "price": 12.5,
+    "sku": "FL-COM-0028"
+  },
+  {
+    "ghl_id": "6a9568b3383c8f49b38fc137",
+    "catalog_id": "oso-peluche-corazon",
+    "name": "Oso de Peluche Corazón",
+    "category": "complementos",
+    "price": 12,
+    "sku": "FL-COM-0029"
+  },
+  {
+    "ghl_id": "6a9568b4574f3e913ea05752",
+    "catalog_id": "macetero-violeta-orquidea",
+    "name": "Macetero Violeta Orquídea",
+    "category": "complementos",
+    "price": 4.5,
+    "sku": "FL-COM-0030"
+  },
+  {
+    "ghl_id": "6a9568b6bc5d5b7c7bf839eb",
+    "catalog_id": "macetero-blanco-orquidea",
+    "name": "Macetero Blanco Orquídea",
+    "category": "complementos",
+    "price": 4.5,
+    "sku": "FL-COM-0031"
+  },
+  {
+    "ghl_id": "6a9568b6c330eca0575d4c53",
+    "catalog_id": "piruletas",
+    "name": "Piruletas",
+    "category": "complementos",
+    "price": 3,
+    "sku": "FL-COM-0032"
+  },
+  {
+    "ghl_id": "6a9568b78524b2edbf417401",
+    "catalog_id": "vino-seleccion",
+    "name": "Botella de vino",
+    "category": "complementos",
+    "price": 12,
+    "sku": "FL-COM-0033"
+  },
+  {
+    "ghl_id": "6a9568b7d0faa096b65be189",
+    "catalog_id": "tabla-quesos",
+    "name": "Selección de quesos",
+    "category": "complementos",
+    "price": 15,
+    "sku": "FL-COM-0034"
+  },
+  {
+    "ghl_id": "6a9568b88524b2edbf417408",
+    "catalog_id": "cesta-frutas",
+    "name": "Frutas de temporada",
+    "category": "complementos",
+    "price": 18,
+    "sku": "FL-COM-0035"
+  },
+  {
+    "ghl_id": "6a9568b8c330eca0575d4c62",
+    "catalog_id": "globos-ocasion",
+    "name": "Globos",
+    "category": "complementos",
+    "price": 4,
+    "sku": "FL-COM-0036"
+  },
+  {
+    "ghl_id": "6a9568b93e5066446e9ea820",
+    "catalog_id": "centro-corazon",
+    "name": "Centro corazón",
+    "category": "condolencias",
+    "price": 90,
+    "sku": "FL-CON-0037"
+  },
+  {
+    "ghl_id": "6a9568b9f1e9a939e038f5b2",
+    "catalog_id": "centro-lagrima",
+    "name": "Centro lágrima",
+    "category": "condolencias",
+    "price": 95,
+    "sku": "FL-CON-0038"
+  },
+  {
+    "ghl_id": "6a9568b9d0faa096b65be1b4",
+    "catalog_id": "almohadon-f21",
+    "name": "Almohadón F21",
+    "category": "condolencias",
+    "price": 75,
+    "sku": "FL-CON-0039"
+  },
+  {
+    "ghl_id": "6a9568bafa6dce62c5da9fe1",
+    "catalog_id": "centro-redondo-f19",
+    "name": "Centro redondo F19",
+    "category": "condolencias",
+    "price": 55,
+    "sku": "FL-CON-0040"
+  },
+  {
+    "ghl_id": "6a9568ba922f583e1653211a",
+    "catalog_id": "centro-almohadon-f22",
+    "name": "Centro almohadón F22",
+    "category": "condolencias",
+    "price": 75,
+    "sku": "FL-CON-0041"
+  },
+  {
+    "ghl_id": "6a9568bbc330eca0575d4cc1",
+    "catalog_id": "cruz-floral",
+    "name": "Cruz floral",
+    "category": "condolencias",
+    "price": 120,
+    "sku": "FL-CON-0042"
+  },
+  {
+    "ghl_id": "6a9568bbd672c0c295fe8d0d",
+    "catalog_id": "centro-redondo-f3",
+    "name": "Centro redondo F3",
+    "category": "condolencias",
+    "price": 65,
+    "sku": "FL-CON-0043"
+  },
+  {
+    "ghl_id": "6a9568bc324935c27b1588e4",
+    "catalog_id": "centro-redondo-f20",
+    "name": "Centro redondo F20",
+    "category": "condolencias",
+    "price": 105,
+    "sku": "FL-CON-0044"
+  },
+  {
+    "ghl_id": "6a9568bc324935c27b1588eb",
+    "catalog_id": "corona-f23",
+    "name": "Corona F23",
+    "category": "condolencias",
+    "price": 190,
+    "sku": "FL-CON-0045"
+  },
+  {
+    "ghl_id": "6a9568be574f3e913ea057cd",
+    "catalog_id": "corona-f25",
+    "name": "Corona F25",
+    "category": "condolencias",
+    "price": 170,
+    "sku": "FL-CON-0046"
+  },
+  {
+    "ghl_id": "6a9568bfd672c0c295fe8d71",
+    "catalog_id": "centro-almohadon-xxl",
+    "name": "Centro almohadón XXL",
+    "category": "condolencias",
+    "price": 230,
+    "sku": "FL-CON-0047"
+  },
+  {
+    "ghl_id": "6a9568bf973de9c5b8125aec",
+    "catalog_id": "centro-50-rosas",
+    "name": "Centro 50 rosas",
+    "category": "condolencias",
+    "price": 180,
+    "sku": "FL-CON-0048"
+  },
+  {
+    "ghl_id": "6a9568bf922f583e16532142",
+    "catalog_id": "centro-f24",
+    "name": "Centro F24",
+    "category": "condolencias",
+    "price": 110,
+    "sku": "FL-CON-0049"
+  },
+  {
+    "ghl_id": "6a9568c0973de9c5b8125afe",
+    "catalog_id": "corona-f26",
+    "name": "Corona F26",
+    "category": "condolencias",
+    "price": 260,
+    "sku": "FL-CON-0050"
+  }
+]

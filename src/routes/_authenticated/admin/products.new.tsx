@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 
@@ -13,13 +14,16 @@ export const Route = createFileRoute("/_authenticated/admin/products/new")({
 
 function NewProductPage() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (values: ProductFormValues) => {
     setSubmitting(true);
     try {
       const result = await createProduct(values);
-      toast.success(`Producto "${result.product.name}" creado correctamente`);
+      const productName = result.product.name || values.name || "Producto";
+      toast.success(`${productName} creado correctamente`);
+      await queryClient.invalidateQueries({ queryKey: ["admin", "products"] });
       navigate({ to: "/admin/products" });
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "No se pudo crear el producto");

@@ -3,11 +3,12 @@
  * GET /api/orders/[id]
  */
 
+import { createFileRoute } from "@tanstack/react-router";
 import { json } from "@tanstack/react-start";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { withAdminGuard } from "@/lib/admin/guard.server";
 
-export const GET = withAdminGuard(async (request) => {
+const GET = withAdminGuard(async (request) => {
   try {
     const url = new URL(request.url);
     const id = url.pathname.split("/").pop();
@@ -60,4 +61,12 @@ export const GET = withAdminGuard(async (request) => {
     console.error("[API] /api/orders/[id] GET error:", message);
     return json({ error: "An unexpected error occurred" }, { status: 500 });
   }
+});
+
+export const Route = createFileRoute("/api/orders/$id")({
+  server: {
+    handlers: {
+      GET: ({ request }) => GET(request),
+    },
+  },
 });

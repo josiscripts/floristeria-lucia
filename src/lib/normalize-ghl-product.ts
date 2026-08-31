@@ -7,6 +7,11 @@ import type { Product, CategoryId } from "@/data/catalog";
 import type { GHLProduct } from "./ghl/types";
 
 interface ProductMetadata {
+  // Critical metadata stored in Supabase because GHL doesn't persist
+  category?: string | null;
+  price?: number | null;
+  sku?: string | null;
+  // Extended metadata
   price_max?: number | null;
   available_colors?: string[] | null;
   badge_label?: string | null;
@@ -46,24 +51,25 @@ export function normalizeGHLProduct(
   metadata?: ProductMetadata | null,
 ): Product | null {
   // Validate required fields
-  if (!ghlProduct.id || !ghlProduct.name || !ghlProduct.description) {
-    console.warn("[Normalize] Missing required fields in GHL product", ghlProduct.id);
+  if (!ghlProduct.id || !ghlProduct.name) {
+    console.warn("[Normalize] Missing required fields (id/name) in GHL product", ghlProduct.id);
     return null;
   }
 
-  // Try to map category, fallback if unable
-  const category = normalizeCategory(ghlProduct.category);
-  if (!category) {
-    console.warn(
-      "[Normalize] Unable to map category for product",
-      ghlProduct.id,
-      ghlProduct.category,
-    );
-    return null;
+  // Category: try metadata first (from Supabase), then GHL category string
+  let mappedCategory = metadata?.category ? normalizeCategory(metadata.category) : undefined;
+  if (!mappedCategory) {
+    mappedCategory = normalizeCategory(ghlProduct.category);
   }
+  const category: CategoryId = mappedCategory || "ramos";
 
-  // Use GHL price as priceMin (required)
-  const priceMin = ghlProduct.price ?? 0;
+  // Price: use from metadata first (where it's actually stored), fallback to GHL
+  const priceMin = (metadata?.price !== undefined && metadata.price !== null)
+    ? metadata.price
+    : (ghlProduct.price ?? 0);
+
+  // SKU: use from metadata (where it's actually stored)
+  const sku = metadata?.sku ?? ghlProduct.sku;
 
   // Image: use first from images array or direct image
   const image = ghlProduct.images?.[0] || ghlProduct.image || "/assets/placeholder.jpg";

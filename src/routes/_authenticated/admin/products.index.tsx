@@ -36,7 +36,7 @@ export const Route = createFileRoute("/_authenticated/admin/products/")({
 
 function ProductsListPage() {
   const rawFilters = Route.useSearch();
-  const navigate = useNavigate({ from: Route.fullPath });
+  const navigate = useNavigate();
 
   const filters = {
     page: rawFilters.page ?? 1,

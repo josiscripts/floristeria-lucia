@@ -42,7 +42,10 @@ function EditProductPage() {
     setSubmitting(true);
     try {
       await updateProduct(id, values);
-      await queryClient.invalidateQueries({ queryKey: ["admin", "product", id] });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["admin", "product", id] }),
+        queryClient.invalidateQueries({ queryKey: ["admin", "products"] }),
+      ]);
       toast.success("Producto actualizado correctamente");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "No se pudo actualizar el producto");

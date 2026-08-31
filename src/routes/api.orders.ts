@@ -4,6 +4,7 @@
  * Server-side only, token never exposed to client
  */
 
+import { createFileRoute } from "@tanstack/react-router";
 import { json } from "@tanstack/react-start";
 import { createOrder, type CreateOrderRequest } from "@/lib/orders.server";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
@@ -20,7 +21,7 @@ import type { Tables } from "@/integrations/supabase/types";
  *   fromDate?: string (ISO date, filters created_at >=)
  *   toDate?: string (ISO date, filters created_at <=)
  */
-export const GET = withAdminGuard(async (request) => {
+const GET = withAdminGuard(async (request) => {
   try {
     const url = new URL(request.url);
     const page = Math.max(1, parseInt(url.searchParams.get("page") || "1", 10) || 1);
@@ -135,7 +136,7 @@ export const GET = withAdminGuard(async (request) => {
  *   }>
  * }
  */
-export async function POST(request: Request) {
+async function POST(request: Request) {
   try {
     const body: Partial<CreateOrderRequest> = await request.json();
 
@@ -186,3 +187,12 @@ export async function POST(request: Request) {
     );
   }
 }
+
+export const Route = createFileRoute("/api/orders")({
+  server: {
+    handlers: {
+      GET: ({ request }) => GET(request),
+      POST: ({ request }) => POST(request),
+    },
+  },
+});

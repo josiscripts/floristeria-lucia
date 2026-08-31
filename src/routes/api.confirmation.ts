@@ -1,3 +1,4 @@
+import { createFileRoute } from "@tanstack/react-router";
 import { json } from "@tanstack/react-start";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import type { Tables } from "@/integrations/supabase/types";
@@ -10,7 +11,7 @@ interface ConfirmationLoaderData {
   items: OrderItemRow[];
 }
 
-export async function GET(request: Request) {
+async function GET(request: Request) {
   try {
     const url = new URL(request.url);
     const orderId = url.searchParams.get("orderId");
@@ -62,3 +63,11 @@ export async function GET(request: Request) {
     return json({ error: "Failed to load confirmation" }, { status: 500 });
   }
 }
+
+export const Route = createFileRoute("/api/confirmation")({
+  server: {
+    handlers: {
+      GET: ({ request }) => GET(request),
+    },
+  },
+});

@@ -19,6 +19,7 @@
  * Reference: https://marketplace.gohighlevel.com/docs/webhook/WebhookIntegrationGuide/
  */
 
+import { createFileRoute } from "@tanstack/react-router";
 import { json } from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
 import { getOrderStatusFromGHLStage, type GHLOpportunityWebhookPayload } from "@/lib/ghl/types";
@@ -404,7 +405,7 @@ async function recordWebhookEvent(
 /**
  * Main webhook handler - Supports both Private Integration (Ed25519) and Workflow (Bearer) modes
  */
-export async function POST(request: Request) {
+async function POST(request: Request) {
   let rawBody: string = "";
   let payload: GHLOpportunityWebhookPayload | null = null;
   let webhookId: string | null = null;
@@ -646,3 +647,11 @@ export async function POST(request: Request) {
     );
   }
 }
+
+export const Route = createFileRoute("/api/webhooks/ghl-opportunity")({
+  server: {
+    handlers: {
+      POST: ({ request }) => POST(request),
+    },
+  },
+});

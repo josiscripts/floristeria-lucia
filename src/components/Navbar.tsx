@@ -1,6 +1,14 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { useQueryClient } from "@tanstack/react-query";
-import { ChevronDown, CircleUserRound, Heart, Menu, Search, ShoppingBag } from "lucide-react";
+import { useQueryClient, useQuery } from "@tanstack/react-query";
+import {
+  ChevronDown,
+  CircleUserRound,
+  Heart,
+  Menu,
+  Search,
+  ShoppingBag,
+  Gauge,
+} from "lucide-react";
 import { useMemo, useState } from "react";
 
 import { CartDrawer } from "@/components/CartDrawer";
@@ -42,7 +50,6 @@ export function Navbar() {
     { to: "/contacto", label: t("nav.links.contact") },
   ] as const;
 
-
   return (
     <header
       className={cn(
@@ -65,7 +72,6 @@ export function Navbar() {
             height={809}
             className="h-auto w-[135px] sm:w-[145px] lg:w-[160px] xl:w-[172px]"
           />
-
         </Link>
 
         <nav className="hidden min-w-0 flex-1 items-center gap-6 xl:flex xl:gap-8">
@@ -80,7 +86,6 @@ export function Navbar() {
             </Link>
           ))}
         </nav>
-
 
         <div className="ml-auto flex items-center gap-3 lg:gap-4">
           <div className="hidden md:block">
@@ -108,7 +113,10 @@ export function Navbar() {
             className="icon-micro relative hidden rounded-full p-1 text-foreground/80 hover:text-primary focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none md:inline-flex"
           >
             <Heart
-              className={cn("size-5.5 transition-colors duration-200", favorites.length > 0 && "fill-primary/15 text-primary")}
+              className={cn(
+                "size-5.5 transition-colors duration-200",
+                favorites.length > 0 && "fill-primary/15 text-primary",
+              )}
               strokeWidth={1.5}
             />
             {favorites.length > 0 && <CounterBadge value={favorites.length} />}
@@ -128,17 +136,27 @@ export function Navbar() {
             {count > 0 && <CounterBadge value={count} />}
           </button>
 
-
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="xl:hidden" aria-label={t("nav.openMenu")}>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="xl:hidden"
+                aria-label={t("nav.openMenu")}
+              >
                 <Menu className="size-5" />
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-80 overflow-y-auto">
               <SheetHeader>
                 <SheetTitle className="flex items-center gap-3 font-display text-xl font-normal">
-                  <img src={logo.url} alt={company.name} width={1942} height={809} className="h-14 w-auto" />
+                  <img
+                    src={logo.url}
+                    alt={company.name}
+                    width={1942}
+                    height={809}
+                    className="h-14 w-auto"
+                  />
                 </SheetTitle>
               </SheetHeader>
 
@@ -155,7 +173,6 @@ export function Navbar() {
                   </Link>
                 ))}
               </nav>
-
 
               <div className="mt-6 space-y-5 px-4 pb-8">
                 <div>
@@ -213,8 +230,6 @@ export function Navbar() {
   );
 }
 
-
-
 function SearchPill({ fullWidth = false }: { fullWidth?: boolean }) {
   const t = useT();
   const [query, setQuery] = useState("");
@@ -257,7 +272,6 @@ function SearchPill({ fullWidth = false }: { fullWidth?: boolean }) {
         </span>
       </div>
 
-
       {showPanel && (
         <div
           className={cn(
@@ -295,8 +309,11 @@ function SearchPill({ fullWidth = false }: { fullWidth?: boolean }) {
 function LanguageSelector() {
   const { language, setLanguage } = useLanguage();
   const t = useT();
-  const current =
-    languages.find((l) => l.code === language) ?? { code: "es" as const, label: "Español", short: "ES" };
+  const current = languages.find((l) => l.code === language) ?? {
+    code: "es" as const,
+    label: "Español",
+    short: "ES",
+  };
 
   return (
     <DropdownMenu>
@@ -369,6 +386,18 @@ function AccountMenu() {
   const signOut = useSignOut();
   const t = useT();
 
+  const { data: profile } = useQuery({
+    queryKey: ["profile", user?.id],
+    queryFn: async () => {
+      if (!user?.id) return null;
+      const { data } = await supabase.from("profiles").select("role").eq("id", user.id).single();
+      return data;
+    },
+    enabled: !!user?.id,
+  });
+
+  const isAdmin = profile?.role === "admin";
+
   if (loading || !user) {
     return (
       <Link
@@ -397,6 +426,17 @@ function AccountMenu() {
           {user.email}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+        {isAdmin && (
+          <>
+            <DropdownMenuItem asChild>
+              <Link to="/admin/dashboard">
+                <Gauge className="size-4" />
+                Panel de control
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+          </>
+        )}
         <DropdownMenuItem asChild>
           <Link to="/mi-cuenta">{t("nav.myAccount")}</Link>
         </DropdownMenuItem>
@@ -404,9 +444,7 @@ function AccountMenu() {
           <Link to="/mi-cuenta">{t("nav.myOrders")}</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link to="/favoritos">
-            {t("nav.favorites")}
-          </Link>
+          <Link to="/favoritos">{t("nav.favorites")}</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link to="/mi-cuenta">{t("nav.settings")}</Link>
@@ -423,6 +461,18 @@ function MobileAccountLinks({ onNavigate }: { onNavigate: () => void }) {
   const signOut = useSignOut();
   const t = useT();
 
+  const { data: profile } = useQuery({
+    queryKey: ["profile", user?.id],
+    queryFn: async () => {
+      if (!user?.id) return null;
+      const { data } = await supabase.from("profiles").select("role").eq("id", user.id).single();
+      return data;
+    },
+    enabled: !!user?.id,
+  });
+
+  const isAdmin = profile?.role === "admin";
+
   if (loading || !user) {
     return (
       <Link
@@ -437,6 +487,15 @@ function MobileAccountLinks({ onNavigate }: { onNavigate: () => void }) {
 
   return (
     <>
+      {isAdmin && (
+        <Link
+          to="/admin/dashboard"
+          onClick={onNavigate}
+          className="flex items-center gap-3 py-2 text-sm text-foreground hover:text-primary"
+        >
+          <Gauge className="size-5" strokeWidth={1.5} /> Panel de control
+        </Link>
+      )}
       <Link
         to="/mi-cuenta"
         onClick={onNavigate}

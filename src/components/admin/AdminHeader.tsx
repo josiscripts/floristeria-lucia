@@ -1,6 +1,6 @@
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, Link } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
-import { LogOut } from "lucide-react";
+import { LogOut, Store } from "lucide-react";
 
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
@@ -29,6 +29,13 @@ export function AdminHeader() {
         {user?.email && (
           <span className="hidden text-xs text-muted-foreground sm:inline">{user.email}</span>
         )}
+        <Button variant="outline" size="sm" asChild>
+          <Link to="/">
+            <Store className="size-4" />
+            <span className="hidden sm:inline">Ver mi tienda</span>
+            <span className="sm:hidden">Tienda</span>
+          </Link>
+        </Button>
         <Button variant="outline" size="sm" onClick={() => void handleSignOut()}>
           <LogOut className="size-4" />
           Salir

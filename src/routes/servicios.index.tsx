@@ -260,7 +260,6 @@ function ServicesIndex() {
       ?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-
   /** Variaciones de composición aplicadas por orden, se repiten si hay más servicios. */
   const layouts: Pick<ServiceEntry, "ratio" | "span" | "offset" | "gap">[] = [
     {
@@ -299,7 +298,6 @@ function ServicesIndex() {
     to: s.to,
     ...layouts[i % layouts.length]!,
   }));
-
 
   return (
     <div className="overflow-x-clip bg-background">
@@ -371,7 +369,6 @@ function ServicesIndex() {
           />
         </Reveal>
       </section>
-
 
       {/* INTRODUCCIÓN */}
       <Reveal as="section" className="relative px-6 py-20 text-center sm:px-10 lg:py-28">

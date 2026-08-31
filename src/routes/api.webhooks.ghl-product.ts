@@ -11,6 +11,7 @@
  * Duplicate webhook deliveries won't create duplicate records
  */
 
+import { createFileRoute } from "@tanstack/react-router";
 import { json } from "@tanstack/react-start";
 import { syncProductMetadata, deleteProductMetadata } from "@/lib/product-metadata.server";
 import type { GHLProduct } from "@/lib/ghl/types";
@@ -31,7 +32,7 @@ function validateWebhook(_body: unknown, _headers: Headers): boolean {
   return true;
 }
 
-export async function POST(request: Request) {
+async function POST(request: Request) {
   try {
     const headers = request.headers;
     const body: WebhookEvent = await request.json();
@@ -131,3 +132,11 @@ export async function POST(request: Request) {
     );
   }
 }
+
+export const Route = createFileRoute("/api/webhooks/ghl-product")({
+  server: {
+    handlers: {
+      POST: ({ request }) => POST(request),
+    },
+  },
+});

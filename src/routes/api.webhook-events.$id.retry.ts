@@ -6,13 +6,14 @@
  * event type with a processing function to re-invoke.
  */
 
+import { createFileRoute } from "@tanstack/react-router";
 import { json } from "@tanstack/react-start";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { processStageChangeEvent } from "@/routes/api.webhooks.ghl-opportunity";
 import { withAdminGuard, logAdminAction } from "@/lib/admin/guard.server";
 import type { GHLOpportunityWebhookPayload } from "@/lib/ghl/types";
 
-export const POST = withAdminGuard(async (request, admin) => {
+const POST = withAdminGuard(async (request, admin) => {
   try {
     const url = new URL(request.url);
     const parts = url.pathname.split("/").filter(Boolean);
@@ -71,4 +72,12 @@ export const POST = withAdminGuard(async (request, admin) => {
     console.error("[API] /api/webhook-events/[id]/retry error:", message);
     return json({ error: message }, { status: 500 });
   }
+});
+
+export const Route = createFileRoute("/api/webhook-events/$id/retry")({
+  server: {
+    handlers: {
+      POST: ({ request }) => POST(request),
+    },
+  },
 });

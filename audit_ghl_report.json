@@ -1,0 +1,30 @@
+{
+  "timestamp": "2026-08-31T11:05:51.082Z",
+  "locationId": "vOq7yOWR63XGU4qQ7XWd",
+  "products": {
+    "count": 1,
+    "total": [
+      {
+        "total": 1
+      }
+    ],
+    "items": [
+      {
+        "id": "6a87b91004c302157108f01d",
+        "name": "pepito",
+        "images": 0,
+        "status": "active"
+      }
+    ],
+    "categories": [],
+    "collectionsUsed": []
+  },
+  "collections": {},
+  "audit": [
+    "✗ Location NOT accessible",
+    "✓ 1 products found",
+    "Categories in GHL: NONE",
+    "⚠ Products do NOT use collectionIds",
+    "⚠ Product Collections endpoint might not exist or is empty"
+  ]
+}

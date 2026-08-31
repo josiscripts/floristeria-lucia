@@ -1,0 +1,58 @@
+[
+  {
+    "ghl_id": "6a95681bbc5d5b7c7bf833be",
+    "catalog_id": "ramo-silvestre",
+    "name": "Ramo Silvestre",
+    "category": "ramos",
+    "price": 30,
+    "sku": "FL-RAM-5368"
+  },
+  {
+    "ghl_id": "6a95681cbfd47b2be50c3f25",
+    "catalog_id": "ramo-felicidad",
+    "name": "Ramo Felicidad",
+    "category": "ramos",
+    "price": 35,
+    "sku": "FL-RAM-8109"
+  },
+  {
+    "ghl_id": "6a95681d383c8f49b38fbb86",
+    "catalog_id": "anthurium",
+    "name": "Anthurium",
+    "category": "plantas",
+    "price": 25,
+    "sku": "FL-PLA-6624"
+  },
+  {
+    "ghl_id": "6a95681df1e9a939e038ee43",
+    "catalog_id": "taza-plantas",
+    "name": "Taza de Plantas",
+    "category": "plantas",
+    "price": 36,
+    "sku": "FL-PLA-7867"
+  },
+  {
+    "ghl_id": "6a95681ec330eca0575d4645",
+    "catalog_id": "caja-rosas-eternas",
+    "name": "Caja de Rosas Eternas",
+    "category": "rosas-eternas",
+    "price": 40,
+    "sku": "FL-ROS-7885"
+  },
+  {
+    "ghl_id": "6a95681f973de9c5b8125437",
+    "catalog_id": "jarron-cristal-1",
+    "name": "Jarrón de Cristal Nº 1",
+    "category": "complementos",
+    "price": 1.5,
+    "sku": "FL-COM-5192"
+  },
+  {
+    "ghl_id": "6a956820e5e0de29ff3ecd48",
+    "catalog_id": "centro-corazon",
+    "name": "Centro corazón",
+    "category": "condolencias",
+    "price": 90,
+    "sku": "FL-CON-2151"
+  }
+]

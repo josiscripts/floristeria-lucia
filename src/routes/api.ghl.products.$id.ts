@@ -1,9 +1,10 @@
+import { createFileRoute } from "@tanstack/react-router";
 import { json } from "@tanstack/react-start";
 import { getGHLProduct } from "@/lib/ghl/client.server";
 import { normalizeGHLProduct } from "@/lib/normalize-ghl-product";
 import { getProductMetadata } from "@/lib/product-metadata.server";
 
-export async function GET(request: Request) {
+async function GET(request: Request) {
   try {
     // Extract product ID from URL path
     const url = new URL(request.url);
@@ -44,3 +45,11 @@ export async function GET(request: Request) {
     return json({ message, code: "API_ERROR" }, { status: 500 });
   }
 }
+
+export const Route = createFileRoute("/api/ghl/products/$id")({
+  server: {
+    handlers: {
+      GET: ({ request }) => GET(request),
+    },
+  },
+});

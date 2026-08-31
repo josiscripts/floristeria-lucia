@@ -5,6 +5,7 @@
  * DELETE /api/products/[id] - Delete (deactivate) product
  */
 
+import { createFileRoute } from "@tanstack/react-router";
 import { json } from "@tanstack/react-start";
 import { getGHLProduct, updateGHLProduct, deleteGHLProduct } from "@/lib/ghl/client.server";
 import {
@@ -14,7 +15,7 @@ import {
 } from "@/lib/product-metadata.server";
 import { withAdminGuard, logAdminAction } from "@/lib/admin/guard.server";
 
-export const GET = withAdminGuard(async (request) => {
+const GET = withAdminGuard(async (request) => {
   try {
     const url = new URL(request.url);
     const id = url.pathname.split("/").pop();
@@ -59,7 +60,7 @@ interface UpdateProductRequest {
   rose_step?: number;
 }
 
-export const PUT = withAdminGuard(async (request, admin) => {
+const PUT = withAdminGuard(async (request, admin) => {
   try {
     // Extract ID from URL
     const url = new URL(request.url);
@@ -122,7 +123,7 @@ export const PUT = withAdminGuard(async (request, admin) => {
   }
 });
 
-export const DELETE = withAdminGuard(async (request, admin) => {
+const DELETE = withAdminGuard(async (request, admin) => {
   try {
     // Extract ID from URL
     const url = new URL(request.url);
@@ -165,4 +166,14 @@ export const DELETE = withAdminGuard(async (request, admin) => {
     console.error("[API] /api/products/[id] DELETE error:", message);
     return json({ error: message, code: "API_ERROR" }, { status: 500 });
   }
+});
+
+export const Route = createFileRoute("/api/products/$id")({
+  server: {
+    handlers: {
+      GET: ({ request }) => GET(request),
+      PUT: ({ request }) => PUT(request),
+      DELETE: ({ request }) => DELETE(request),
+    },
+  },
 });

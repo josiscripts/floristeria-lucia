@@ -15,7 +15,7 @@ export function AdminPagination({ page, totalPages, total, onPageChange }: Admin
   return (
     <div className="flex flex-col items-center justify-between gap-3 border-t border-border pt-4 sm:flex-row">
       <p className="text-xs text-muted-foreground">
-        Página {page} de {Math.max(totalPages, 1)} · {total} pedido{total !== 1 ? "s" : ""}
+        Página {page} de {Math.max(totalPages, 1)} · {total} producto{total !== 1 ? "s" : ""}
       </p>
       <div className="flex items-center gap-2">
         <Button

@@ -9,13 +9,14 @@
  *   search?: string (matches opportunity_id, or order_id when search looks like a UUID)
  */
 
+import { createFileRoute } from "@tanstack/react-router";
 import { json } from "@tanstack/react-start";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { withAdminGuard } from "@/lib/admin/guard.server";
 
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-export const GET = withAdminGuard(async (request) => {
+const GET = withAdminGuard(async (request) => {
   try {
     const url = new URL(request.url);
     const page = Math.max(1, parseInt(url.searchParams.get("page") || "1", 10) || 1);
@@ -75,4 +76,12 @@ export const GET = withAdminGuard(async (request) => {
     console.error("[API] /api/webhook-events GET error:", message);
     return json({ error: "An unexpected error occurred" }, { status: 500 });
   }
+});
+
+export const Route = createFileRoute("/api/webhook-events")({
+  server: {
+    handlers: {
+      GET: ({ request }) => GET(request),
+    },
+  },
 });

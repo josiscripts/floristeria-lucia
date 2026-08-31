@@ -81,11 +81,25 @@ export async function getGHLProducts(
 
     const response = await ghlFetch<GHLProductsResponse>(fullEndpoint);
 
-    console.log(`[GHL] Successfully fetched ${response.items ? response.items.length : response.products?.length || 0} products from GHL`);
+    const rawProducts = (response as any).items || response.products || [];
+    console.log(`[GHL] Successfully fetched ${rawProducts.length} products from GHL`);
+
     // API v3 returns items array, normalize to products array for compatibility
+    const rawTotal = (response as any).total;
+    const normalizedTotal = Array.isArray(rawTotal)
+      ? Number(rawTotal[0]?.total ?? 0)
+      : Number(rawTotal ?? 0);
+
+    // Normalize _id → id for each product immediately
+    // GHL API returns _id as the primary ID field, but our codebase expects id
+    const normalizedProducts = rawProducts.map((product: any) => ({
+      ...product,
+      id: product.id ?? product._id,
+    }));
+
     const normalizedResponse: GHLProductsResponse = {
-      products: (response as any).items || response.products || [],
-      total: (response as any).total || 0,
+      products: normalizedProducts,
+      total: normalizedTotal,
       pageSize: (response as any).pageSize || 0,
       currentPage: (response as any).currentPage || 0,
     };
@@ -119,8 +133,18 @@ export async function getGHLProduct(
     const response = await ghlFetch<any>(endpoint);
     const product = (response.items && response.items[0]) || (response.products && response.products[0]);
 
+    if (!product) {
+      return { message: "Product not found", code: "NOT_FOUND" };
+    }
+
+    // Normalize ID field (GHL may return id or _id)
+    const normalizedProduct = {
+      ...product,
+      id: product.id ?? product._id,
+    };
+
     console.log(`[GHL] Successfully fetched product ${productId}`);
-    return product || { message: "Product not found", code: "NOT_FOUND" };
+    return normalizedProduct;
   } catch (error) {
     const ghlError: GHLError = {
       message:
@@ -182,17 +206,30 @@ export async function createGHLProduct(
   locationId?: string
 ): Promise<GHLProduct | GHLError> {
   try {
-    const endpoint = locationId
-      ? `/locations/${locationId}/products`
-      : "/products";
+    const finalLocationId = locationId || process.env["GHL_LOCATION_ID"];
+    const endpoint = `/products/?locationId=${finalLocationId}`;
 
-    const response = await ghlFetch<GHLProduct>(endpoint, {
+    // GHL v3 requires productType enum (must be uppercase)
+    const payload = {
+      locationId: finalLocationId,
+      ...productData,
+      productType: "PHYSICAL",
+    };
+
+    const response = await ghlFetch<any>(endpoint, {
       method: "POST",
-      body: JSON.stringify(productData),
+      body: JSON.stringify(payload),
     });
 
-    console.log(`[GHL] Successfully created product: ${response.id}`);
-    return response;
+    // Normalize response: ensure id field exists, fallback to input name if missing
+    const normalizedProduct: GHLProduct = {
+      ...response,
+      id: response.id ?? response._id,
+      name: response.name ?? productData.name,
+    };
+
+    console.log(`[GHL] Successfully created product: ${normalizedProduct.id}`);
+    return normalizedProduct;
   } catch (error) {
     const ghlError: GHLError = {
       message:

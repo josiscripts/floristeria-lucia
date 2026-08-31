@@ -3,6 +3,7 @@
  * GET /api/dashboard/stats
  */
 
+import { createFileRoute } from "@tanstack/react-router";
 import { json } from "@tanstack/react-start";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { withAdminGuard } from "@/lib/admin/guard.server";
@@ -11,7 +12,7 @@ function sumTotal(orders: { total: number }[]): number {
   return orders.reduce((sum, order) => sum + (order.total || 0), 0);
 }
 
-export const GET = withAdminGuard(async () => {
+const GET = withAdminGuard(async (request) => {
   try {
     const now = new Date();
     const startOfToday = new Date(now);
@@ -79,4 +80,12 @@ export const GET = withAdminGuard(async () => {
     console.error("[API] /api/dashboard/stats GET error:", message);
     return json({ error: "An unexpected error occurred" }, { status: 500 });
   }
+});
+
+export const Route = createFileRoute("/api/dashboard/stats")({
+  server: {
+    handlers: {
+      GET: ({ request }) => GET(request),
+    },
+  },
 });

@@ -82,8 +82,8 @@ function CatalogPage() {
   const { t } = useLanguage();
   const { categoryLabelOf } = useCatalogText();
 
-  // Fetch products from GHL, with fallback to local catalog
-  const { data: ghlData, isLoading, error } = useGHLProducts({
+  // Fetch products from GHL with fallback to local catalog
+  const { data: ghlData } = useGHLProducts({
     limit: 500,
   });
 

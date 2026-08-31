@@ -125,7 +125,23 @@ function LoginForm() {
       return;
     }
     toast.success(t("auth.login.success"));
-    navigate({ to: "/mi-cuenta" });
+
+    const { data: userData } = await supabase.auth.getUser();
+    if (userData.user) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", userData.user.id)
+        .single();
+
+      if (profile?.role === "admin") {
+        navigate({ to: "/admin/dashboard" });
+      } else {
+        navigate({ to: "/mi-cuenta" });
+      }
+    } else {
+      navigate({ to: "/mi-cuenta" });
+    }
   };
 
   return (
