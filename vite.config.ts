@@ -1,3 +1,4 @@
+import path from 'path';
 import { defineConfig } from 'vite';
 import viteReact from '@vitejs/plugin-react';
 import { tanstackStart } from '@tanstack/react-start/plugin/vite';
@@ -15,7 +16,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      "@": "/src",
+      "@": path.resolve(__dirname, "./src"),
     },
     tsconfigPaths: true,
   },
