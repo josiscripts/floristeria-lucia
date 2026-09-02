@@ -35,8 +35,9 @@ export const footer: LocaleBundle = {
     },
     schedule: {
       title: "Horario de atención",
-      weekdays: "Lunes a Viernes: 9:00 – 20:00",
-      saturday: "Sábados: 9:00 – 14:00",
+      weekdays: "Lunes a Viernes: 10:00–14:00 · 16:45–20:00",
+      saturday: "Sábados: 9:30–14:00",
+      sunday: "Domingos: Cerrado",
     },
     legalInfo: "Información legal",
     legalLinks: {
@@ -111,8 +112,9 @@ export const footer: LocaleBundle = {
     },
     schedule: {
       title: "Opening hours",
-      weekdays: "Monday to Friday: 9:00 – 20:00",
-      saturday: "Saturdays: 9:00 – 14:00",
+      weekdays: "Monday to Friday: 10:00–14:00 · 16:45–20:00",
+      saturday: "Saturdays: 9:30–14:00",
+      sunday: "Sundays: Closed",
     },
     legalInfo: "Legal information",
     legalLinks: {
@@ -187,8 +189,9 @@ export const footer: LocaleBundle = {
     },
     schedule: {
       title: "Horari d'atenció",
-      weekdays: "De dilluns a divendres: 9:00 – 20:00",
-      saturday: "Dissabtes: 9:00 – 14:00",
+      weekdays: "De dilluns a divendres: 10:00–14:00 · 16:45–20:00",
+      saturday: "Dissabtes: 9:30–14:00",
+      sunday: "Diumenges: Tancat",
     },
     legalInfo: "Informació legal",
     legalLinks: {

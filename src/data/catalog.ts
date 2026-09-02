@@ -523,7 +523,7 @@ export const products: Product[] = [
     id: "centro-50-rosas",
     name: "Centro 50 rosas",
     category: "condolencias",
-    priceMin: 180,
+    priceMin: 200,
     image: imgProducto12,
     description: "Centro almohadón grande con rosas rojas naturales de máxima calidad. Colores a elegir.",
   },

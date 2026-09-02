@@ -6,6 +6,8 @@ import { company } from "@/data/company";
 import { coverage } from "@/data/coverage";
 import { shippingZones } from "@/data/shipping";
 import { useT, useTList } from "@/context/LanguageContext";
+import ijjijij from "@/assets/ijjijij.jpg";
+import enviosDestino from "@/assets/envios_destino.jpg";
 
 export const Route = createFileRoute("/envios")({
   head: () => ({
@@ -169,8 +171,8 @@ function EnviosPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:py-20">
       {/* ── Encabezado editorial asimétrico ───────────────────────── */}
-      <section className="grid gap-12 lg:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)] lg:gap-0">
-        <Reveal className="lg:pr-16">
+      <section className="grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1.2fr)] lg:gap-20">
+        <Reveal className="flex flex-col justify-center">
           <p className="text-xs tracking-[0.35em] text-primary uppercase">
             {t("pages.shipping.badge")}
           </p>
@@ -192,20 +194,16 @@ function EnviosPage() {
 
         <Reveal
           delay={140}
-          className="relative flex items-center lg:border-l lg:border-border/60 lg:pl-16"
+          className="relative flex items-center justify-end"
         >
-          <div className="relative">
-            <FloralLine className="pointer-events-none absolute -top-10 left-1/2 -z-10 size-56 -translate-x-1/2 text-primary/15 sm:size-64" />
-            <p className="font-display text-[6.5rem] leading-none text-primary sm:text-[8.5rem]">
-              {townCount}
-            </p>
-            <div className="mt-4 h-px w-14 bg-gold/70" />
-            <p className="mt-4 text-xs leading-relaxed tracking-[0.3em] text-muted-foreground uppercase">
-              {t("pages.shipping.statLabelTop")}
-              <br />
-              {t("pages.shipping.statLabelBottom")}
-            </p>
-          </div>
+          <img
+            src={ijjijij}
+            alt="Ramo floral en floristería"
+            loading="lazy"
+            width={600}
+            height={500}
+            className="w-full rounded-lg object-cover object-center shadow-soft"
+          />
         </Reveal>
       </section>
 
@@ -263,7 +261,14 @@ function EnviosPage() {
           </Reveal>
 
           <Reveal delay={160}>
-            <CoverageMap />
+            <img
+              src={enviosDestino}
+              alt="Ramo floral entregado en destino"
+              loading="lazy"
+              width={600}
+              height={500}
+              className="w-full rounded-lg object-cover object-center shadow-soft"
+            />
           </Reveal>
         </div>
 
@@ -281,13 +286,9 @@ function EnviosPage() {
         <div className="mt-10 grid gap-x-14 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-20">
           {coverage.map((town, i) => (
             <Reveal key={town.name} delay={60 + i * 40}>
-              <div className="group flex items-center gap-4 border-b border-border/50 py-4 transition-colors hover:border-primary/40">
-                <span className="h-5 w-px shrink-0 bg-border/70" />
-                <span className="min-w-0 flex-1 truncate font-display text-lg text-foreground transition-colors group-hover:text-primary">
+              <div className="flex items-center justify-center border-b border-border/50 py-4">
+                <span className="font-display text-lg text-foreground text-center">
                   {town.name}
-                </span>
-                <span className="shrink-0 text-primary/70 transition-transform duration-300 group-hover:translate-x-1">
-                  →
                 </span>
               </div>
             </Reveal>

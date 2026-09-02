@@ -4,8 +4,8 @@ import { ArrowRight, Flower2, Scissors, Sparkles } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { useT } from "@/context/LanguageContext";
-import aboutImage from "@/assets/sobre-nosotros.jpg";
-import detailImage from "@/assets/cat-ramos.jpg";
+import aboutImage from "@/assets/sobre_nosotros_1.jpeg";
+import detailImage from "@/assets/sobre_nosotros_2.jpeg";
 
 function BotanicalLine({ className }: { className?: string }) {
   return (

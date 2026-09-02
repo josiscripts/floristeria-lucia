@@ -13,6 +13,7 @@ import {
   Mail,
   MapPin,
   MessageCircle,
+  MessageSquare,
   Minus,
   Phone,
   Plus,
@@ -193,10 +194,22 @@ export function Footer() {
         <li className="flex gap-2.5">
           <Phone className="mt-0.5 size-4 shrink-0 text-gold/80 dark:text-gold/85" strokeWidth={1.5} />
           <a
-            href={`tel:${company.phoneRaw}`}
+            href="tel:+34919953880"
             className="underline-offset-4 transition-colors hover:text-gold hover:underline dark:hover:text-gold"
           >
-            {company.phone}
+            919 95 38 80
+          </a>
+        </li>
+        <li className="flex gap-2.5">
+          <MessageSquare className="mt-0.5 size-4 shrink-0 text-gold/80 dark:text-gold/85" strokeWidth={1.5} />
+          <a
+            href={`https://wa.me/${company.whatsapp.replace(/[^\d]/g, "")}`}
+            target="_blank"
+            rel="noreferrer noopener"
+            aria-label="Contactar por WhatsApp"
+            className="underline-offset-4 transition-colors hover:text-gold hover:underline dark:hover:text-gold"
+          >
+            WhatsApp
           </a>
         </li>
         <li className="flex min-w-0 gap-2.5">
@@ -221,6 +234,9 @@ export function Footer() {
           </p>
           <p className="text-sm text-primary-foreground/72 dark:text-surface-foreground/80">
             {t("footer.schedule.saturday")}
+          </p>
+          <p className="text-sm text-primary-foreground/72 dark:text-surface-foreground/80">
+            {t("footer.schedule.sunday")}
           </p>
         </div>
       </div>

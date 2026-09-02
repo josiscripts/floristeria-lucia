@@ -115,32 +115,20 @@ function CatalogPage() {
 
 
         {/* Acciones contextuales: solo las que pertenecen a la categoría activa. */}
-        {activeCategory === "ramos" && (
-          <div className="mt-6">
-            <Button asChild>
-              <Link to="/personalizar-ramo">
-                <Sparkles className="size-4" /> {t("catalog.ramos.customize")}
-              </Link>
-            </Button>
-          </div>
-        )}
-        {isCondolencias && (
-          <div className="mt-6">
-            <Button asChild variant="outline">
-              <Link to="/contacto">
-                {t("catalog.condolencias.customCta")}
-              </Link>
-            </Button>
-          </div>
-        )}
       </header>
 
       <div className="mt-8 flex flex-wrap items-center gap-3">
         <FilterChip active={!categoria} onClick={() => navigate({ search: {} })}>
           {t("catalog.all")}
         </FilterChip>
-        {categories.map((cat) => (
+        {categories.map((cat, index) => (
           <Fragment key={cat.id}>
+            {/* Insert "Bodas y eventos" after Rosas eternas (before Complementos) */}
+            {cat.id === "complementos" && (
+              <Link to="/servicios" className={chipClassName(false)}>
+                {t("catalog.bodasEventosLink")}
+              </Link>
+            )}
             <FilterChip
               active={categoria === cat.id}
               onClick={() =>
@@ -151,10 +139,6 @@ function CatalogPage() {
             </FilterChip>
           </Fragment>
         ))}
-
-        <Link to="/servicios" className={chipClassName(false)}>
-          {t("catalog.eventosLink")}
-        </Link>
 
 
         <div className="relative ml-auto w-full sm:w-72">

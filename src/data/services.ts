@@ -1,5 +1,5 @@
-import imgBodas from "@/assets/bodas.jpg";
-import imgEventos from "@/assets/cat-eventos.jpg";
+import imgBodas from "@/assets/imagen_bodas.jpg";
+import imgEventos from "@/assets/imagen_eventos.webp";
 import imgDecoracion from "@/assets/cat-decoracion.jpg";
 import imgPlantas from "@/assets/cat-plantas.jpg";
 import imgRamos from "@/assets/cat-ramos.jpg";
@@ -10,6 +10,9 @@ import coronaFlores from "@/assets/corona_flores.png";
 import pulseraFlores from "@/assets/pulsera_flores.png";
 import ramoBoda from "@/assets/ramo_boda.png";
 import automovilBoda from "@/assets/automovil_boda.png";
+import decoracionCentros from "@/assets/decoracion_centros.jpg";
+import decoracionPuerta from "@/assets/decoracion_puerta.jpg";
+import decoracionEspacios from "@/assets/decoracion_espacios.png";
 
 /**
  * Servicios: contenido que NO se vende como producto estándar porque necesita
@@ -92,22 +95,22 @@ export const services: Service[] = [
     image: imgEventos,
     items: [
       {
-        id: "flores-evento",
-        name: "Flores para eventos y celebraciones",
-        description: "Centros y composiciones para aniversarios, empresas y presentaciones.",
-        image: imgEventos,
+        id: "centros-composiciones",
+        name: "Centros y composiciones",
+        description: "Composiciones florales diseñadas a medida para aniversarios, celebraciones empresariales y eventos especiales, con flor de temporada y diseño personalizado.",
+        image: decoracionCentros,
       },
       {
-        id: "decoracion-puerta",
-        name: "Decoración de puerta",
-        description: "Decoración floral de puertas y accesos para fechas señaladas.",
-        image: imgDecoracion,
+        id: "entradas-accesos",
+        name: "Entradas y accesos",
+        description: "Decoración floral personalizada para entradas, puertas y accesos de eventos, celebraciones y espacios, realzando la primera impresión con flor natural.",
+        image: decoracionPuerta,
       },
       {
-        id: "decoracion-espacios",
-        name: "Decoración de espacios",
-        description: "Escaparates, locales y espacios vestidos con flor natural y planta.",
-        image: imgDecoracion,
+        id: "ambientacion-espacios",
+        name: "Ambientación de espacios",
+        description: "Ambientación floral completa de espacios, locales, escaparates y zonas de eventos, transformando el ambiente con diseño floral de impacto.",
+        image: decoracionEspacios,
       },
     ],
   },

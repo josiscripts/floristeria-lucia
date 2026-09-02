@@ -3,8 +3,9 @@ import { ArrowRight, MapPin, Phone } from "lucide-react";
 
 import { company } from "@/data/company";
 import { useT } from "@/context/LanguageContext";
-import aboutImage from "@/assets/sobre-nosotros.jpg";
-import bodasImage from "@/assets/bodas.jpg";
+import aboutImageDesktop from "@/assets/sobre_nosotros_1.jpeg";
+import aboutImageMobile from "@/assets/sobre_nosotros_hero.jpeg";
+import ramoNuestraEsencia from "@/assets/ramo_nuestra_esencia.png";
 
 
 
@@ -44,13 +45,23 @@ function SobreNosotrosPage() {
             <div className="mt-6 rule-gold" />
             <p className="mt-6 max-w-xl text-muted-foreground lg:text-lg lg:leading-relaxed">{t("pages.about.intro")}</p>
           </div>
+          {/* Desktop/Tablet image */}
           <img
-            src={aboutImage}
+            src={aboutImageDesktop}
             alt={t("pages.about.imgAlt1")}
             loading="lazy"
             width={1280}
             height={960}
-            className="w-full rounded-lg object-cover shadow-soft lg:h-[min(70svh,38rem)]"
+            className="hidden w-full rounded-lg object-cover shadow-soft lg:h-[min(70svh,38rem)] lg:block"
+          />
+          {/* Mobile image */}
+          <img
+            src={aboutImageMobile}
+            alt={t("pages.about.imgAlt1")}
+            loading="lazy"
+            width={1280}
+            height={960}
+            className="block w-full rounded-lg object-cover shadow-soft lg:h-[min(70svh,38rem)] lg:hidden"
           />
         </div>
       </section>
@@ -107,8 +118,8 @@ function SobreNosotrosPage() {
               <span className="flex items-center gap-2">
                 <MapPin className="size-4 text-gold" /> {company.address}
               </span>
-              <a href={`tel:${company.phoneLink}`} className="flex items-center gap-2 font-display text-xl text-primary transition-colors duration-300 hover:text-primary/70">
-                <Phone className="size-4 text-gold" /> {company.phoneRaw}
+              <a href="tel:+34919953880" className="group flex items-center gap-2.5 font-display text-lg text-primary transition-colors duration-300 hover:text-primary/80 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:rounded">
+                <Phone className="size-4 text-gold transition-colors duration-300 group-hover:text-gold/80" /> 919 95 38 80
               </a>
             </div>
 
@@ -122,7 +133,7 @@ function SobreNosotrosPage() {
           </div>
 
           <img
-            src={bodasImage}
+            src={ramoNuestraEsencia}
             alt={t("pages.about.imgAlt3")}
             loading="lazy"
             width={1280}

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { company } from "@/data/company";
 import { useT } from "@/context/LanguageContext";
 import { cn } from "@/lib/utils";
-import bodasImage from "@/assets/bodas.jpg";
+import contactoImg from "@/assets/contacto_img.jpg";
 
 
 export const Route = createFileRoute("/contacto")({
@@ -169,19 +169,44 @@ function ContactoPage() {
 
             {/* CTAs */}
             <Reveal delay={400}>
-              <div className="mt-10 flex flex-col items-start gap-4">
-                <Button
-                  asChild
-                  size="lg"
-                  className="btn-micro group gap-2 rounded-md px-7"
+              <div className="mt-10 flex flex-col items-start gap-6">
+                {/* CTA Principal: WhatsApp */}
+                <a
+                  href={`https://wa.me/${company.whatsapp.replace(/[^\d]/g, "")}`}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="group w-full rounded-lg bg-primary px-6 py-5 text-primary-foreground transition-colors duration-300 hover:bg-primary/90"
                 >
-                  <a href={`tel:${company.phoneLink}`}>
-                    <Phone className="size-4" />
-                    <span>{t("pages.contact.ctaCall", { phone: company.phone })}</span>
-                    <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-0.5" />
-                  </a>
-                </Button>
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1 text-left">
+                      <div className="text-sm font-medium tracking-[0.15em] uppercase opacity-90">
+                        WhatsApp
+                      </div>
+                      <div className="mt-2 text-sm leading-relaxed">
+                        Escríbenos y cuéntanos tu idea
+                      </div>
+                    </div>
+                    <ArrowRight className="mt-1 size-5 shrink-0 transition-transform duration-300 group-hover:translate-x-1" />
+                  </div>
+                </a>
 
+                {/* CTA Secundario: Teléfono */}
+                <a
+                  href={`tel:${company.phoneLink}`}
+                  className="group w-full rounded-lg border border-primary/30 px-6 py-4 transition-all duration-300 hover:border-primary/50 hover:bg-primary/5"
+                >
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <Phone className="size-4 text-primary/70" />
+                      <span className="font-display text-sm font-medium text-foreground">
+                        {company.phone}
+                      </span>
+                    </div>
+                    <ArrowRight className="size-4 shrink-0 text-primary/60 transition-transform duration-300 group-hover:translate-x-1" />
+                  </div>
+                </a>
+
+                {/* CTA Terciario: Email */}
                 <ContactLink href={`mailto:${company.email}`}>
                   {t("pages.contact.ctaEmail")}
                 </ContactLink>
@@ -192,7 +217,7 @@ function ContactoPage() {
           {/* Columna derecha: imagen floral */}
           <Reveal delay={160} className="order-2">
             <img
-              src={bodasImage}
+              src={contactoImg}
               alt={t("pages.contact.imgAlt")}
               loading="eager"
               width={1280}
