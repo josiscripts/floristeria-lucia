@@ -13,12 +13,7 @@ interface UseGHLProductsOptions {
  * Token is never exposed to the browser
  */
 export function useGHLProducts(options: UseGHLProductsOptions = {}) {
-  const {
-    enabled = true,
-    locationId,
-    limit = 100,
-    skip = 0,
-  } = options;
+  const { enabled = true, locationId, limit = 100, skip = 0 } = options;
 
   return useQuery({
     queryKey: ["ghl-products", locationId, limit, skip],

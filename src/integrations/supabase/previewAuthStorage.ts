@@ -1,12 +1,12 @@
 // Preview auth storage adapter for Supabase
 // This enables Supabase auth to work in preview/development mode
 
-import { AuthChangeEvent, AuthSession } from '@supabase/supabase-js';
+import { AuthChangeEvent, AuthSession } from "@supabase/supabase-js";
 
 export function brokeredPreviewStorage() {
   const createStorageWithFallback = () => {
     // In browser environment, use localStorage
-    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+    if (typeof window !== "undefined" && typeof localStorage !== "undefined") {
       return {
         getItem: (key: string) => {
           try {

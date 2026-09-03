@@ -76,8 +76,12 @@ function Sprig({ className }: { className?: string }) {
         const y = 260 - i * 30;
         return (
           <g key={i}>
-            <path d={`M${98 - i * 4} ${y} C ${70 - i * 4} ${y - 6}, ${52 - i * 3} ${y - 26}, ${58 - i * 3} ${y - 40}`} />
-            <path d={`M${98 - i * 4} ${y} C ${126 - i * 4} ${y - 8}, ${146 - i * 3} ${y - 24}, ${140 - i * 3} ${y - 42}`} />
+            <path
+              d={`M${98 - i * 4} ${y} C ${70 - i * 4} ${y - 6}, ${52 - i * 3} ${y - 26}, ${58 - i * 3} ${y - 40}`}
+            />
+            <path
+              d={`M${98 - i * 4} ${y} C ${126 - i * 4} ${y - 8}, ${146 - i * 3} ${y - 24}, ${140 - i * 3} ${y - 42}`}
+            />
           </g>
         );
       })}
@@ -105,7 +109,10 @@ function Leaves({ className }: { className?: string }) {
 
 function GoldRule({ className = "" }: { className?: string }) {
   return (
-    <span aria-hidden className={`block h-px w-10 bg-gradient-to-r from-gold/80 to-transparent ${className}`} />
+    <span
+      aria-hidden
+      className={`block h-px w-10 bg-gradient-to-r from-gold/80 to-transparent ${className}`}
+    />
   );
 }
 
@@ -115,7 +122,6 @@ export function StoreHighlights() {
   const cols = useReveal<HTMLDivElement>();
   const art = useReveal<HTMLDivElement>();
   const [hint, setHint] = useState<(typeof occasions)[number]["key"] | null>(null);
-
 
   const fade = (visible: boolean, delay = 0) => ({
     opacity: visible ? 1 : 0,
@@ -150,7 +156,14 @@ export function StoreHighlights() {
 
           <div className="mt-8 flex items-center justify-center gap-3 text-gold">
             <span className="h-px w-14 bg-gradient-to-r from-transparent to-gold/70" />
-            <svg aria-hidden viewBox="0 0 24 24" className="size-3" fill="none" stroke="currentColor" strokeWidth="1.2">
+            <svg
+              aria-hidden
+              viewBox="0 0 24 24"
+              className="size-3"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.2"
+            >
               <path d="M12 3c2 3.2 2 5.8 0 9-2-3.2-2-5.8 0-9ZM12 21v-9" />
             </svg>
             <span className="h-px w-14 bg-gradient-to-l from-transparent to-gold/70" />
@@ -316,7 +329,14 @@ export function StoreHighlights() {
             </p>
             <div className="mt-7 flex items-center justify-center gap-3 text-gold">
               <span className="h-px w-12 bg-gradient-to-r from-transparent to-gold/70" />
-              <svg aria-hidden viewBox="0 0 24 24" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="1.1">
+              <svg
+                aria-hidden
+                viewBox="0 0 24 24"
+                className="size-3.5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.1"
+              >
                 <path d="M12 20V8M12 8c-3 0-5-2-5-4 3 0 5 1.8 5 4Zm0 0c3 0 5-2 5-4-3 0-5 1.8-5 4Z" />
               </svg>
               <span className="h-px w-12 bg-gradient-to-l from-transparent to-gold/70" />
@@ -326,9 +346,7 @@ export function StoreHighlights() {
             </p>
           </div>
         </div>
-
       </div>
-
     </section>
   );
 }

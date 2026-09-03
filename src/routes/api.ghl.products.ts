@@ -2,7 +2,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { json } from "@tanstack/react-start";
 import { getGHLProducts, testGHLConnection } from "@/lib/ghl/client.server";
 import { normalizeGHLProducts } from "@/lib/normalize-ghl-product";
-import { getProductMetadataByIds, getFullProductMetadataByIds } from "@/lib/product-metadata.server";
+import {
+  getProductMetadataByIds,
+  getFullProductMetadataByIds,
+} from "@/lib/product-metadata.server";
 
 async function GET(request: Request) {
   try {
@@ -18,12 +21,8 @@ async function GET(request: Request) {
 
     // Fetch products (default action)
     const locationId = url.searchParams.get("locationId") || process.env.GHL_LOCATION_ID;
-    const limit = url.searchParams.get("limit")
-      ? parseInt(url.searchParams.get("limit")!)
-      : 100;
-    const skip = url.searchParams.get("skip")
-      ? parseInt(url.searchParams.get("skip")!)
-      : 0;
+    const limit = url.searchParams.get("limit") ? parseInt(url.searchParams.get("limit")!) : 100;
+    const skip = url.searchParams.get("skip") ? parseInt(url.searchParams.get("skip")!) : 0;
 
     const result = await getGHLProducts(locationId, { limit, skip });
 
@@ -46,7 +45,7 @@ async function GET(request: Request) {
         // Map Supabase fields to ProductMetadata interface
         return {
           category: fullMetadata.category,
-          price: fullMetadata.price_min,  // ✅ CORREGIDO: usar price_min, no price
+          price: fullMetadata.price_min, // ✅ CORREGIDO: usar price_min, no price
           sku: fullMetadata.sku,
           price_max: fullMetadata.price_max,
           available_colors: fullMetadata.available_colors as string[] | null,
@@ -54,7 +53,7 @@ async function GET(request: Request) {
           rose_step: fullMetadata.rose_step,
           requires_quote: fullMetadata.requires_quote,
         };
-      }
+      },
     );
 
     // Return normalized products in same structure as before for compatibility
@@ -65,16 +64,12 @@ async function GET(request: Request) {
         pageSize: result.pageSize || normalizedProducts.length,
         currentPage: result.currentPage || 1,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Unknown server error";
+    const message = error instanceof Error ? error.message : "Unknown server error";
     console.error("[API] /api/ghl/products error:", message);
-    return json(
-      { message, code: "API_ERROR" },
-      { status: 500 }
-    );
+    return json({ message, code: "API_ERROR" }, { status: 500 });
   }
 }
 

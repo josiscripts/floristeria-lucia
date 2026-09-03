@@ -37,7 +37,8 @@ export const product: LocaleBundle = {
     quoteOnly: "Producto bajo presupuesto",
     requestQuote: "Pedir presupuesto",
     notFoundTitle: "Producto no disponible",
-    notFoundText: "No hemos encontrado este producto. Vuelve al catálogo para ver las propuestas disponibles.",
+    notFoundText:
+      "No hemos encontrado este producto. Vuelve al catálogo para ver las propuestas disponibles.",
     related: "También te puede gustar",
   },
   en: {
@@ -76,7 +77,8 @@ export const product: LocaleBundle = {
     quoteOnly: "Quote-based product",
     requestQuote: "Request a quote",
     notFoundTitle: "Product not available",
-    notFoundText: "We couldn't find this product. Go back to the catalogue to see what's available.",
+    notFoundText:
+      "We couldn't find this product. Go back to the catalogue to see what's available.",
     related: "You may also like",
   },
   ca: {
@@ -115,7 +117,8 @@ export const product: LocaleBundle = {
     quoteOnly: "Producte sota pressupost",
     requestQuote: "Demanar pressupost",
     notFoundTitle: "Producte no disponible",
-    notFoundText: "No hem trobat aquest producte. Torna al catàleg per veure les propostes disponibles.",
+    notFoundText:
+      "No hem trobat aquest producte. Torna al catàleg per veure les propostes disponibles.",
     related: "També et pot agradar",
   },
 };

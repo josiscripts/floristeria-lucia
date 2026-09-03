@@ -45,15 +45,12 @@ const POST = withAdminGuard(async (request, admin) => {
     }
 
     if (!productRes.data.has_color_variants) {
-      return json(
-        { error: "This product does not support color variants" },
-        { status: 400 }
-      );
+      return json({ error: "This product does not support color variants" }, { status: 400 });
     }
 
     // Get current colors to determine sort_order
     const colorsRes = await listColorVariants(productId);
-    const nextSort = body.sort_order ?? (colorsRes.data?.length ?? 0);
+    const nextSort = body.sort_order ?? colorsRes.data?.length ?? 0;
 
     // Create color variant
     const colorRes = await createColorVariant({

@@ -24,7 +24,6 @@ export const Route = createFileRoute("/envios")({
         content: "Busca tu población y comprueba si llegamos con nuestro reparto propio de flores.",
       },
     ],
-
   }),
   component: EnviosPage,
 });
@@ -162,7 +161,6 @@ function CoverageMap() {
   );
 }
 
-
 function EnviosPage() {
   const t = useT();
   const tList = useTList();
@@ -192,10 +190,7 @@ function EnviosPage() {
           </div>
         </Reveal>
 
-        <Reveal
-          delay={140}
-          className="relative flex items-center justify-end"
-        >
+        <Reveal delay={140} className="relative flex items-center justify-end">
           <img
             src={ijjijij}
             alt="Ramo floral en floristería"
@@ -237,7 +232,6 @@ function EnviosPage() {
         </div>
       </Reveal>
 
-
       {/* ── Lugares de envíos ─────────────────────────────────────── */}
       <section className="mt-20 lg:mt-28">
         <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-20">
@@ -249,9 +243,7 @@ function EnviosPage() {
               {t("pages.shipping.placesTitle")}
             </h2>
             <div className="mt-5 rule-gold" />
-            <p className="mt-6 max-w-md text-muted-foreground">
-              {t("pages.shipping.placesIntro")}
-            </p>
+            <p className="mt-6 max-w-md text-muted-foreground">{t("pages.shipping.placesIntro")}</p>
             <div className="mt-8 flex items-center gap-3">
               <FloralLine className="size-5 shrink-0 text-gold" />
               <p className="font-display text-lg italic text-primary sm:text-xl">
@@ -313,8 +305,6 @@ function EnviosPage() {
         </Reveal>
       </section>
 
-
-
       <section className="relative mt-20 overflow-hidden">
         {/* Ilustración floral lineal muy sutil */}
         <Reveal className="pointer-events-none absolute -top-6 right-0 hidden opacity-[0.18] md:block">
@@ -337,10 +327,40 @@ function EnviosPage() {
               strokeWidth="0.9"
               className="text-primary"
             />
-            <ellipse cx="152" cy="98" rx="16" ry="7" stroke="currentColor" strokeWidth="0.9" className="text-gold" />
-            <ellipse cx="38" cy="60" rx="16" ry="7" stroke="currentColor" strokeWidth="0.9" className="text-gold" />
-            <circle cx="44" cy="34" r="11" stroke="currentColor" strokeWidth="0.9" className="text-primary" />
-            <circle cx="44" cy="34" r="5" stroke="currentColor" strokeWidth="0.9" className="text-gold" />
+            <ellipse
+              cx="152"
+              cy="98"
+              rx="16"
+              ry="7"
+              stroke="currentColor"
+              strokeWidth="0.9"
+              className="text-gold"
+            />
+            <ellipse
+              cx="38"
+              cy="60"
+              rx="16"
+              ry="7"
+              stroke="currentColor"
+              strokeWidth="0.9"
+              className="text-gold"
+            />
+            <circle
+              cx="44"
+              cy="34"
+              r="11"
+              stroke="currentColor"
+              strokeWidth="0.9"
+              className="text-primary"
+            />
+            <circle
+              cx="44"
+              cy="34"
+              r="5"
+              stroke="currentColor"
+              strokeWidth="0.9"
+              className="text-gold"
+            />
           </svg>
         </Reveal>
 

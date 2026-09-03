@@ -90,7 +90,8 @@ export const auth: LocaleBundle = {
   ca: {
     page: {
       title: "El teu compte",
-      subtitle: "Accedeix o registra't per desar les teves dades i agilitzar les teves comandes a {{company}}.",
+      subtitle:
+        "Accedeix o registra't per desar les teves dades i agilitzar les teves comandes a {{company}}.",
       contactPrompt: "Prefereixes parlar amb nosaltres?",
       contactLink: "Contacta amb la floristeria",
     },

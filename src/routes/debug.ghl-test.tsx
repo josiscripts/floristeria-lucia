@@ -40,7 +40,9 @@ function GHLDebugPage() {
               {testEnabled ? "Stop Test" : "Start Connection Test"}
             </Button>
 
-            {connectionTest.isLoading && <p className="text-sm text-muted-foreground">Testing connection...</p>}
+            {connectionTest.isLoading && (
+              <p className="text-sm text-muted-foreground">Testing connection...</p>
+            )}
             {connectionTest.error && (
               <div className="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 p-4 rounded">
                 <p className="text-red-800 dark:text-red-200 font-mono text-sm">
@@ -49,11 +51,21 @@ function GHLDebugPage() {
               </div>
             )}
             {connectionTest.data && (
-              <div className={`border p-4 rounded ${connectionTest.data.connected ? "bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800" : "bg-red-50 dark:bg-red-950 border-red-200 dark:border-red-800"}`}>
-                <p className={`font-semibold ${connectionTest.data.connected ? "text-green-800 dark:text-green-200" : "text-red-800 dark:text-red-200"}`}>
+              <div
+                className={`border p-4 rounded ${connectionTest.data.connected ? "bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800" : "bg-red-50 dark:bg-red-950 border-red-200 dark:border-red-800"}`}
+              >
+                <p
+                  className={`font-semibold ${connectionTest.data.connected ? "text-green-800 dark:text-green-200" : "text-red-800 dark:text-red-200"}`}
+                >
                   Status: {connectionTest.data.connected ? "✅ Connected" : "❌ Disconnected"}
                 </p>
-                <p className={connectionTest.data.connected ? "text-green-700 dark:text-green-300" : "text-red-700 dark:text-red-300"}>
+                <p
+                  className={
+                    connectionTest.data.connected
+                      ? "text-green-700 dark:text-green-300"
+                      : "text-red-700 dark:text-red-300"
+                  }
+                >
                   {connectionTest.data.message}
                 </p>
                 {connectionTest.data.error && (
@@ -70,7 +82,9 @@ function GHLDebugPage() {
         <Card>
           <CardHeader>
             <CardTitle>Fetch Products</CardTitle>
-            <CardDescription>Retrieve products from GHL (limited to 10 for testing)</CardDescription>
+            <CardDescription>
+              Retrieve products from GHL (limited to 10 for testing)
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <Button
@@ -80,7 +94,9 @@ function GHLDebugPage() {
               {productsEnabled ? "Stop Fetching" : "Fetch Products from GHL"}
             </Button>
 
-            {ghlProducts.isLoading && <p className="text-sm text-muted-foreground">Loading products...</p>}
+            {ghlProducts.isLoading && (
+              <p className="text-sm text-muted-foreground">Loading products...</p>
+            )}
             {ghlProducts.error && (
               <div className="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 p-4 rounded">
                 <p className="text-red-800 dark:text-red-200 font-mono text-sm">
@@ -95,7 +111,8 @@ function GHLDebugPage() {
                     Found {ghlProducts.data.products.length} products
                   </p>
                   <p className="text-blue-700 dark:text-blue-300 text-sm">
-                    Total: {ghlProducts.data.total} | Page: {ghlProducts.data.currentPage} | Size: {ghlProducts.data.pageSize}
+                    Total: {ghlProducts.data.total} | Page: {ghlProducts.data.currentPage} | Size:{" "}
+                    {ghlProducts.data.pageSize}
                   </p>
                 </div>
 
@@ -109,7 +126,9 @@ function GHLDebugPage() {
                           <p className="text-xs text-muted-foreground">Price: ${product.price}</p>
                         )}
                         {product.description && (
-                          <p className="text-xs text-muted-foreground line-clamp-2">{product.description}</p>
+                          <p className="text-xs text-muted-foreground line-clamp-2">
+                            {product.description}
+                          </p>
                         )}
                       </div>
                     ))
@@ -123,7 +142,9 @@ function GHLDebugPage() {
               <div className="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 p-4 rounded">
                 <p className="text-red-800 dark:text-red-200 font-semibold">Error:</p>
                 <p className="text-red-700 dark:text-red-300 text-sm">{ghlProducts.data.message}</p>
-                <p className="text-red-600 dark:text-red-400 text-xs mt-2">Code: {ghlProducts.data.code}</p>
+                <p className="text-red-600 dark:text-red-400 text-xs mt-2">
+                  Code: {ghlProducts.data.code}
+                </p>
               </div>
             )}
           </CardContent>
@@ -136,13 +157,16 @@ function GHLDebugPage() {
           </CardHeader>
           <CardContent className="space-y-2 text-sm">
             <p>
-              <span className="font-semibold">API Endpoint:</span> <code className="bg-muted px-2 py-1 rounded">/api/ghl/products</code>
+              <span className="font-semibold">API Endpoint:</span>{" "}
+              <code className="bg-muted px-2 py-1 rounded">/api/ghl/products</code>
             </p>
             <p>
-              <span className="font-semibold">Token Status:</span> Check server logs for token validation
+              <span className="font-semibold">Token Status:</span> Check server logs for token
+              validation
             </p>
             <p>
-              <span className="font-semibold">Note:</span> This page is for debugging only. It will be removed before production.
+              <span className="font-semibold">Note:</span> This page is for debugging only. It will
+              be removed before production.
             </p>
           </CardContent>
         </Card>

@@ -137,10 +137,7 @@ export function SeasonalCollection() {
 
           <div className="relative flex h-full min-h-[26rem] flex-col justify-between p-6 sm:p-9 lg:min-h-[36rem] lg:p-12">
             <div>
-              <StatusPill
-                status={shown.status}
-                label={t(`home.seasonal.status.${shown.status}`)}
-              />
+              <StatusPill status={shown.status} label={t(`home.seasonal.status.${shown.status}`)} />
             </div>
             <div className="max-w-xl">
               <p className="text-[0.65rem] tracking-[0.34em] text-[var(--campaign-text-muted)] uppercase">
@@ -211,11 +208,7 @@ export function SeasonalCollection() {
                       {t(`home.seasonal.campaigns.${campaign.i18nKey}.title`)}
                     </h3>
                     <p className="mt-2 text-xs leading-relaxed text-[var(--campaign-text-secondary)]">
-                      {t(
-                        status === "past"
-                          ? "home.seasonal.pastNote"
-                          : "home.seasonal.soonNote",
-                      )}
+                      {t(status === "past" ? "home.seasonal.pastNote" : "home.seasonal.soonNote")}
                     </p>
                   </div>
                 </div>

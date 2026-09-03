@@ -8,7 +8,6 @@ import { useT } from "@/context/LanguageContext";
 import { cn } from "@/lib/utils";
 import contactoImg from "@/assets/contacto_img.jpg";
 
-
 export const Route = createFileRoute("/contacto")({
   head: () => ({
     meta: [
@@ -25,30 +24,16 @@ export const Route = createFileRoute("/contacto")({
           "Escríbenos para tu ramo de novia, decoración de bodas, eventos y composiciones personalizadas.",
       },
     ],
-
   }),
   component: ContactoPage,
 });
 
 function BotanicalStem({ className }: { className?: string }) {
   return (
-    <svg
-      className={className}
-      viewBox="0 0 24 80"
-      fill="none"
-      aria-hidden="true"
-    >
+    <svg className={className} viewBox="0 0 24 80" fill="none" aria-hidden="true">
       <path d="M12 0V80" stroke="currentColor" strokeWidth="1" />
-      <path
-        d="M12 28C8 28 4 32 4 36C4 40 8 44 12 44"
-        stroke="currentColor"
-        strokeWidth="1"
-      />
-      <path
-        d="M12 52C16 52 20 56 20 60C20 64 16 68 12 68"
-        stroke="currentColor"
-        strokeWidth="1"
-      />
+      <path d="M12 28C8 28 4 32 4 36C4 40 8 44 12 44" stroke="currentColor" strokeWidth="1" />
+      <path d="M12 52C16 52 20 56 20 60C20 64 16 68 12 68" stroke="currentColor" strokeWidth="1" />
     </svg>
   );
 }
@@ -81,7 +66,7 @@ function Reveal({
         const entry = entries[0];
         if (entry?.isIntersecting) setVisible(true);
       },
-      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
+      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" },
     );
     observer.observe(ref.current);
     return () => observer.disconnect();
@@ -93,7 +78,7 @@ function Reveal({
       className={cn(
         "transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none",
         visible || reduced ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0",
-        className
+        className,
       )}
       style={{ transitionDelay: reduced ? undefined : `${delay}ms` }}
     >
@@ -102,13 +87,7 @@ function Reveal({
   );
 }
 
-function ContactLink({
-  href,
-  children,
-}: {
-  href: string;
-  children: React.ReactNode;
-}) {
+function ContactLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
     <a
       href={href}
@@ -252,7 +231,10 @@ function ContactoPage() {
             <div className="hidden md:block w-px self-center bg-gold/20 h-2/3" aria-hidden="true" />
 
             {/* TELÉFONO */}
-            <Reveal delay={120} className="px-4 py-8 md:px-8 lg:px-12 border-t border-gold/15 md:border-t-0">
+            <Reveal
+              delay={120}
+              className="px-4 py-8 md:px-8 lg:px-12 border-t border-gold/15 md:border-t-0"
+            >
               <div className="flex h-full flex-col">
                 <Phone className="size-[18px] stroke-[1.5px] text-gold/60" aria-hidden="true" />
                 <h2 className="mt-4 font-display text-sm font-normal tracking-[0.2em] text-primary uppercase">
@@ -265,7 +247,9 @@ function ContactoPage() {
                   {t("pages.contact.info.phoneNote")}
                 </p>
                 <div className="mt-auto pt-6">
-                  <ContactLink href={`tel:${company.phoneLink}`}>{t("pages.contact.info.ctaCall")}</ContactLink>
+                  <ContactLink href={`tel:${company.phoneLink}`}>
+                    {t("pages.contact.info.ctaCall")}
+                  </ContactLink>
                 </div>
               </div>
             </Reveal>
@@ -273,7 +257,10 @@ function ContactoPage() {
             <div className="hidden md:block w-px self-center bg-gold/20 h-2/3" aria-hidden="true" />
 
             {/* EMAIL */}
-            <Reveal delay={240} className="px-4 py-8 md:px-8 lg:px-12 border-t border-gold/15 md:border-t-0">
+            <Reveal
+              delay={240}
+              className="px-4 py-8 md:px-8 lg:px-12 border-t border-gold/15 md:border-t-0"
+            >
               <div className="flex h-full flex-col">
                 <Mail className="size-[18px] stroke-[1.5px] text-gold/60" aria-hidden="true" />
                 <h2 className="mt-4 font-display text-sm font-normal tracking-[0.2em] text-primary uppercase">
@@ -283,7 +270,9 @@ function ContactoPage() {
                   {company.email}
                 </p>
                 <div className="mt-auto pt-6">
-                  <ContactLink href={`mailto:${company.email}`}>{t("pages.contact.info.ctaEmail")}</ContactLink>
+                  <ContactLink href={`mailto:${company.email}`}>
+                    {t("pages.contact.info.ctaEmail")}
+                  </ContactLink>
                 </div>
               </div>
             </Reveal>
@@ -350,16 +339,13 @@ function ContactoPage() {
                 rel="noreferrer"
                 className="group inline-flex items-center gap-2 text-sm text-primary transition-colors hover:text-gold"
               >
-                <span className="link-underline">
-                  {t("pages.contact.location.cta")}
-                </span>
+                <span className="link-underline">{t("pages.contact.location.cta")}</span>
                 <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
               </a>
             </div>
           </Reveal>
         </div>
       </section>
-
     </div>
   );
 }

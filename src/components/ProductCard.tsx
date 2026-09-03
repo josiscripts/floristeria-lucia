@@ -7,12 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/LanguageContext";
 import { useShop } from "@/context/ShopContext";
 import { useCatalogText } from "@/i18n/catalog-text";
-import {
-  categoryLabels,
-  formatPrice,
-  priceTiers,
-  type Product,
-} from "@/data/catalog";
+import { categoryLabels, formatPrice, priceTiers, type Product } from "@/data/catalog";
 import { cn } from "@/lib/utils";
 
 export function ProductCard({
@@ -24,8 +19,7 @@ export function ProductCard({
 }) {
   const { addLine, toggleFavorite, isFavorite } = useShop();
   const { t } = useLanguage();
-  const { productName, productDescription, productBadge, priceRange, tierLabel } =
-    useCatalogText();
+  const { productName, productDescription, productBadge, priceRange, tierLabel } = useCatalogText();
   const allTiers = priceTiers(product);
   const tiers = hideTiers ? allTiers.slice(0, 1) : allTiers;
   const [tierIndex, setTierIndex] = useState(0);

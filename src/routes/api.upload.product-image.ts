@@ -13,36 +13,33 @@
  * - public_url: alias for image_url
  */
 
-import { createFileRoute } from '@tanstack/react-router';
-import { json } from '@tanstack/react-start';
-import { supabaseAdmin } from '@/integrations/supabase/client.server';
+import { createFileRoute } from "@tanstack/react-router";
+import { json } from "@tanstack/react-start";
+import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
-const ALLOWED_MIME_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
+const ALLOWED_MIME_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-const BUCKET_NAME = 'product-images';
+const BUCKET_NAME = "product-images";
 
 /**
  * Generate a safe storage path for the image
  * Format: {ghlProductId}/{sequence}.{ext}
  */
-async function generateStoragePath(
-  ghlProductId: string,
-  mimeType: string
-): Promise<string> {
+async function generateStoragePath(ghlProductId: string, mimeType: string): Promise<string> {
   // Get current count of images for this product
   const { count, error: countError } = await supabaseAdmin
-    .from('product_images')
-    .select('*', { count: 'exact', head: true })
-    .eq('ghl_product_id', ghlProductId);
+    .from("product_images")
+    .select("*", { count: "exact", head: true })
+    .eq("ghl_product_id", ghlProductId);
 
   if (countError) {
-    console.error('[Upload] Error counting images:', countError);
+    console.error("[Upload] Error counting images:", countError);
   }
 
-  const sequence = String((count || 0) + 1).padStart(4, '0');
+  const sequence = String((count || 0) + 1).padStart(4, "0");
 
   // Get extension from MIME type
-  const ext = mimeType === 'image/jpeg' ? 'jpg' : mimeType === 'image/png' ? 'png' : 'webp';
+  const ext = mimeType === "image/jpeg" ? "jpg" : mimeType === "image/png" ? "png" : "webp";
 
   return `${ghlProductId}/${sequence}.${ext}`;
 }
@@ -51,7 +48,7 @@ async function generateStoragePath(
  * Get public URL for a stored image
  */
 function getPublicImageUrl(bucketName: string, storagePath: string): string {
-  const supabaseUrl = process.env.SUPABASE_URL || 'https://leksmflinhohnekbgmgj.supabase.co';
+  const supabaseUrl = process.env.SUPABASE_URL || "https://leksmflinhohnekbgmgj.supabase.co";
   return `${supabaseUrl}/storage/v1/object/public/${bucketName}/${storagePath}`;
 }
 
@@ -62,23 +59,23 @@ async function POST(req: Request) {
   try {
     // Parse multipart form data
     const formData = await req.formData();
-    const file = formData.get('file') as File;
-    const ghlProductId = formData.get('ghlProductId') as string;
+    const file = formData.get("file") as File;
+    const ghlProductId = formData.get("ghlProductId") as string;
 
     // Validate inputs
     if (!file) {
-      return json({ error: 'file is required' }, { status: 400 });
+      return json({ error: "file is required" }, { status: 400 });
     }
 
     if (!ghlProductId) {
-      return json({ error: 'ghlProductId is required' }, { status: 400 });
+      return json({ error: "ghlProductId is required" }, { status: 400 });
     }
 
     // Validate MIME type
     if (!ALLOWED_MIME_TYPES.has(file.type)) {
       return json(
         { error: `Invalid file type. Allowed: JPEG, PNG, WebP. Got: ${file.type}` },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -86,22 +83,19 @@ async function POST(req: Request) {
     if (file.size > MAX_FILE_SIZE) {
       return json(
         { error: `File too large. Max: 5MB. Got: ${(file.size / 1024 / 1024).toFixed(2)}MB` },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     // Check if product exists in GHL (optional but recommended)
     // For now, we'll just trust the ghlProductId exists in our product_metadata
     const { count } = await supabaseAdmin
-      .from('product_metadata')
-      .select('*', { count: 'exact', head: true })
-      .eq('ghl_product_id', ghlProductId);
+      .from("product_metadata")
+      .select("*", { count: "exact", head: true })
+      .eq("ghl_product_id", ghlProductId);
 
     if (!count) {
-      return json(
-        { error: 'Product not found. Invalid ghlProductId.' },
-        { status: 404 }
-      );
+      return json({ error: "Product not found. Invalid ghlProductId." }, { status: 404 });
     }
 
     // Generate storage path
@@ -119,12 +113,12 @@ async function POST(req: Request) {
       });
 
     if (uploadError) {
-      console.error('[Upload] Storage upload failed:', uploadError);
-      return json({ error: 'Failed to upload image to storage' }, { status: 500 });
+      console.error("[Upload] Storage upload failed:", uploadError);
+      return json({ error: "Failed to upload image to storage" }, { status: 500 });
     }
 
     if (!data) {
-      return json({ error: 'Upload returned no data' }, { status: 500 });
+      return json({ error: "Upload returned no data" }, { status: 500 });
     }
 
     // Generate public URL
@@ -140,18 +134,15 @@ async function POST(req: Request) {
         file_size: file.size,
         mime_type: file.type,
       },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error) {
-    console.error('[Upload] Unhandled error:', error);
-    return json(
-      { error: 'Failed to process upload request' },
-      { status: 500 }
-    );
+    console.error("[Upload] Unhandled error:", error);
+    return json({ error: "Failed to process upload request" }, { status: 500 });
   }
 }
 
-export const Route = createFileRoute('/api/upload/product-image')({
+export const Route = createFileRoute("/api/upload/product-image")({
   server: {
     handlers: {
       POST: ({ request }) => POST(request),

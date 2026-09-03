@@ -20,7 +20,13 @@ type Item = {
 
 const items: Item[] = [
   { key: "flores", num: "01", image: imgRamos, to: "/catalogo", search: { categoria: "ramos" } },
-  { key: "plantas", num: "02", image: imgPlantas, to: "/catalogo", search: { categoria: "plantas" } },
+  {
+    key: "plantas",
+    num: "02",
+    image: imgPlantas,
+    to: "/catalogo",
+    search: { categoria: "plantas" },
+  },
   { key: "cestas", num: "03", image: imgCesta.url, to: "/catalogo", search: { q: "cesta" } },
   {
     key: "complementos",

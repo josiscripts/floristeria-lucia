@@ -3,7 +3,12 @@ import { Droplets, Gift, Sparkles, Sun, type LucideIcon } from "lucide-react";
 
 import { ProductCard } from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { products } from "@/data/catalog";
 import { useT } from "@/context/LanguageContext";
 import rosasImage from "@/assets/cat-rosas-eternas.jpg";
@@ -39,7 +44,9 @@ function RosasEternasPage() {
       <section className="bg-surface">
         <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 py-14 sm:px-6 lg:grid-cols-2 lg:py-20">
           <div>
-            <p className="text-xs tracking-[0.35em] text-primary uppercase">{t("pages.preserved.badge")}</p>
+            <p className="text-xs tracking-[0.35em] text-primary uppercase">
+              {t("pages.preserved.badge")}
+            </p>
             <h1 className="mt-4 font-display text-4xl sm:text-5xl">
               {t("pages.preserved.title")}
               <span className="mt-2 block text-primary">{t("pages.preserved.titleHighlight")}</span>
@@ -85,8 +92,12 @@ function RosasEternasPage() {
                     {t("pages.preserved.step", { n: i + 1 })}
                   </span>
                 </div>
-                <h3 className="mt-4 font-display text-xl">{t(`pages.preserved.steps.${key}.title`)}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{t(`pages.preserved.steps.${key}.text`)}</p>
+                <h3 className="mt-4 font-display text-xl">
+                  {t(`pages.preserved.steps.${key}.title`)}
+                </h3>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  {t(`pages.preserved.steps.${key}.text`)}
+                </p>
               </article>
             );
           })}
@@ -110,7 +121,9 @@ function RosasEternasPage() {
 
       <section className="bg-surface py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <h2 className="font-display text-3xl sm:text-4xl">{t("pages.preserved.collectionTitle")}</h2>
+          <h2 className="font-display text-3xl sm:text-4xl">
+            {t("pages.preserved.collectionTitle")}
+          </h2>
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {eternas.map((p) => (
               <ProductCard key={p.id} product={p} />

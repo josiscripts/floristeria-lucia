@@ -18,7 +18,10 @@ export const Route = createFileRoute("/servicios/$slug")({
   head: ({ loaderData }) => {
     if (!loaderData) {
       return {
-        meta: [{ title: "Servicio no disponible · floristeria lucia" }, { name: "robots", content: "noindex" }],
+        meta: [
+          { title: "Servicio no disponible · floristeria lucia" },
+          { name: "robots", content: "noindex" },
+        ],
       };
     }
     const title = `${loaderData.label} · Servicios · floristeria lucia`;

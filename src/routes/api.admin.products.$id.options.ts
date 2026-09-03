@@ -151,7 +151,7 @@ const PUT = withAdminGuard(async (request, admin) => {
         productRes.data.ghl_product_id,
         body.price_amount,
         "EUR",
-        locationId
+        locationId,
       );
 
       if (!priceSync.success) {

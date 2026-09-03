@@ -105,12 +105,7 @@ export const GHL_STAGE_TO_ORDER_STATUS = {
  * Must match what the frontend (confirmation.$orderId.tsx) expects
  */
 export type OrderStatus =
-  | "pending"
-  | "confirmed"
-  | "preparing"
-  | "ready"
-  | "delivered"
-  | "cancelled";
+  "pending" | "confirmed" | "preparing" | "ready" | "delivered" | "cancelled";
 
 /**
  * GHL Opportunity Webhook Payload for stage_change event
@@ -197,13 +192,16 @@ export type GHLOpportunityWebhookPayload =
  * Returns the corresponding status value or undefined if stage ID is not mapped
  */
 export function getOrderStatusFromGHLStage(stageId: string): OrderStatus | undefined {
-  return GHL_STAGE_TO_ORDER_STATUS[stageId as keyof typeof GHL_STAGE_TO_ORDER_STATUS] as OrderStatus | undefined;
+  return GHL_STAGE_TO_ORDER_STATUS[stageId as keyof typeof GHL_STAGE_TO_ORDER_STATUS] as
+    OrderStatus | undefined;
 }
 
 /**
  * Validate if a string is a valid order status
  */
 export function isValidOrderStatus(status: unknown): status is OrderStatus {
-  return typeof status === "string" &&
-    ["pending", "confirmed", "preparing", "ready", "delivered", "cancelled"].includes(status);
+  return (
+    typeof status === "string" &&
+    ["pending", "confirmed", "preparing", "ready", "delivered", "cancelled"].includes(status)
+  );
 }

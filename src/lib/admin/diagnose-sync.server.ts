@@ -91,10 +91,7 @@ export async function diagnoseSyncState(): Promise<DiagnosticReport> {
       }
       if (meta.legacy_catalog_id) {
         withLegacyId++;
-        legacyIdMap.set(
-          meta.legacy_catalog_id,
-          (legacyIdMap.get(meta.legacy_catalog_id) || 0) + 1,
-        );
+        legacyIdMap.set(meta.legacy_catalog_id, (legacyIdMap.get(meta.legacy_catalog_id) || 0) + 1);
       }
       if (meta.sku) {
         withSku++;
@@ -129,17 +126,13 @@ export async function diagnoseSyncState(): Promise<DiagnosticReport> {
   }
 
   console.log(`[DIAGNOSE] Supabase metadata records: ${supabaseStats.total_metadata_records}`);
-  console.log(
-    `[DIAGNOSE] Records with ghl_product_id: ${supabaseStats.with_ghl_product_id}`,
-  );
+  console.log(`[DIAGNOSE] Records with ghl_product_id: ${supabaseStats.with_ghl_product_id}`);
   console.log(`[DIAGNOSE] Records with ghl_price_id: ${supabaseStats.with_ghl_price_id}`);
-  console.log(
-    `[DIAGNOSE] Records with legacy_catalog_id: ${supabaseStats.with_legacy_catalog_id}`,
-  );
+  console.log(`[DIAGNOSE] Records with legacy_catalog_id: ${supabaseStats.with_legacy_catalog_id}`);
   console.log(`[DIAGNOSE] Records with sku: ${supabaseStats.with_sku}`);
 
   // Step 3: Analyze GHL products
-  let ghlStats = {
+  const ghlStats = {
     total_products: 0,
     total_active: 0,
     total_inactive: 0,
@@ -171,9 +164,7 @@ export async function diagnoseSyncState(): Promise<DiagnosticReport> {
   }
 
   if (supabaseStats.duplicates.by_sku.length > 0) {
-    issues.push(
-      `CRITICAL: ${supabaseStats.duplicates.by_sku.length} duplicate SKUs found`,
-    );
+    issues.push(`CRITICAL: ${supabaseStats.duplicates.by_sku.length} duplicate SKUs found`);
   }
 
   if (supabaseStats.duplicates.by_legacy_catalog_id.length > 0) {

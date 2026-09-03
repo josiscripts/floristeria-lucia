@@ -25,29 +25,37 @@ async function GET() {
     return json({
       totalCount,
       countError: countError?.message,
-      sampleRecords: sampleData ? sampleData.slice(0, 3).map(r => ({
-        ghl_product_id: r.ghl_product_id,
-        category: r.category,
-        price_min: r.price_min,
-        sku: r.sku,
-        status: r.status,
-      })) : null,
+      sampleRecords: sampleData
+        ? sampleData.slice(0, 3).map((r) => ({
+            ghl_product_id: r.ghl_product_id,
+            category: r.category,
+            price_min: r.price_min,
+            sku: r.sku,
+            status: r.status,
+          }))
+        : null,
       sampleError: sampleError?.message,
       specificLookup: {
         testId: testGhlId,
         found: specificData && specificData.length > 0,
-        record: specificData && specificData[0] ? {
-          category: specificData[0].category,
-          price_min: specificData[0].price_min,
-          sku: specificData[0].sku,
-        } : null,
+        record:
+          specificData && specificData[0]
+            ? {
+                category: specificData[0].category,
+                price_min: specificData[0].price_min,
+                sku: specificData[0].sku,
+              }
+            : null,
         error: specificError?.message,
       },
     });
   } catch (error) {
-    return json({
-      error: error instanceof Error ? error.message : "Unknown",
-    }, { status: 500 });
+    return json(
+      {
+        error: error instanceof Error ? error.message : "Unknown",
+      },
+      { status: 500 },
+    );
   }
 }
 

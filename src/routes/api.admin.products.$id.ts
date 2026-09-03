@@ -8,11 +8,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { json } from "@tanstack/react-start";
 import { withAdminGuard, logAdminAction } from "@/lib/admin/guard.server";
-import {
-  getProductWithOptions,
-  updateProduct,
-  deleteProduct,
-} from "@/lib/products.server";
+import { getProductWithOptions, updateProduct, deleteProduct } from "@/lib/products.server";
 import { updateGHLProduct } from "@/lib/ghl/client.server";
 import { getGHLCollectionIdForCategory } from "@/lib/category-collection.server";
 import type { CategoryId } from "@/data/catalog";

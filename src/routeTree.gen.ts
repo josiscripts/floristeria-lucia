@@ -47,6 +47,8 @@ import { Route as ApiAdminDebugEnvRouteImport } from './routes/api.admin.debug-e
 import { Route as ApiAdminDebugMetadataRouteImport } from './routes/api.admin.debug-metadata'
 import { Route as ApiAdminDiagnoseMetadataRouteImport } from './routes/api.admin.diagnose-metadata'
 import { Route as ApiAdminPopulateMetadataRouteImport } from './routes/api.admin.populate-metadata'
+import { Route as ApiAdminProductsRouteImport } from './routes/api.admin.products'
+import { Route as ApiAdminSyncCatalogRouteImport } from './routes/api.admin.sync-catalog'
 import { Route as ApiDashboardStatsRouteImport } from './routes/api.dashboard.stats'
 import { Route as ApiGhlProductsRouteImport } from './routes/api.ghl.products'
 import { Route as ApiOrdersIdRouteImport } from './routes/api.orders.$id'
@@ -59,8 +61,11 @@ import { Route as AuthenticatedAdminOrdersIdRouteImport } from './routes/_authen
 import { Route as AuthenticatedAdminProductsIndexRouteImport } from './routes/_authenticated/admin/products.index'
 import { Route as AuthenticatedAdminProductsIdRouteImport } from './routes/_authenticated/admin/products.$id'
 import { Route as AuthenticatedAdminProductsNewRouteImport } from './routes/_authenticated/admin/products.new'
+import { Route as ApiAdminProductsIdRouteImport } from './routes/api.admin.products.$id'
 import { Route as ApiGhlProductsIdRouteImport } from './routes/api.ghl.products.$id'
 import { Route as ApiWebhookEventsIdRetryRouteImport } from './routes/api.webhook-events.$id.retry'
+import { Route as ApiAdminProductsIdColorsRouteImport } from './routes/api.admin.products.$id.colors'
+import { Route as ApiAdminProductsIdOptionsRouteImport } from './routes/api.admin.products.$id.options'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -259,6 +264,16 @@ const ApiAdminPopulateMetadataRoute =
     path: '/api/admin/populate-metadata',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiAdminProductsRoute = ApiAdminProductsRouteImport.update({
+  id: '/api/admin/products',
+  path: '/api/admin/products',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminSyncCatalogRoute = ApiAdminSyncCatalogRouteImport.update({
+  id: '/api/admin/sync-catalog',
+  path: '/api/admin/sync-catalog',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiDashboardStatsRoute = ApiDashboardStatsRouteImport.update({
   id: '/api/dashboard/stats',
   path: '/api/dashboard/stats',
@@ -325,6 +340,11 @@ const AuthenticatedAdminProductsNewRoute =
     path: '/new',
     getParentRoute: () => AuthenticatedAdminProductsRoute,
   } as any)
+const ApiAdminProductsIdRoute = ApiAdminProductsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ApiAdminProductsRoute,
+} as any)
 const ApiGhlProductsIdRoute = ApiGhlProductsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -335,6 +355,18 @@ const ApiWebhookEventsIdRetryRoute = ApiWebhookEventsIdRetryRouteImport.update({
   path: '/$id/retry',
   getParentRoute: () => ApiWebhookEventsRoute,
 } as any)
+const ApiAdminProductsIdColorsRoute =
+  ApiAdminProductsIdColorsRouteImport.update({
+    id: '/colors',
+    path: '/colors',
+    getParentRoute: () => ApiAdminProductsIdRoute,
+  } as any)
+const ApiAdminProductsIdOptionsRoute =
+  ApiAdminProductsIdOptionsRouteImport.update({
+    id: '/options',
+    path: '/options',
+    getParentRoute: () => ApiAdminProductsIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -373,6 +405,8 @@ export interface FileRoutesByFullPath {
   '/api/admin/debug-metadata': typeof ApiAdminDebugMetadataRoute
   '/api/admin/diagnose-metadata': typeof ApiAdminDiagnoseMetadataRoute
   '/api/admin/populate-metadata': typeof ApiAdminPopulateMetadataRoute
+  '/api/admin/products': typeof ApiAdminProductsRouteWithChildren
+  '/api/admin/sync-catalog': typeof ApiAdminSyncCatalogRoute
   '/api/dashboard/stats': typeof ApiDashboardStatsRoute
   '/api/ghl/products': typeof ApiGhlProductsRouteWithChildren
   '/api/orders/$id': typeof ApiOrdersIdRoute
@@ -384,10 +418,13 @@ export interface FileRoutesByFullPath {
   '/admin/orders/$id': typeof AuthenticatedAdminOrdersIdRoute
   '/admin/products/$id': typeof AuthenticatedAdminProductsIdRoute
   '/admin/products/new': typeof AuthenticatedAdminProductsNewRoute
+  '/api/admin/products/$id': typeof ApiAdminProductsIdRouteWithChildren
   '/api/ghl/products/$id': typeof ApiGhlProductsIdRoute
   '/api/webhook-events/$id/retry': typeof ApiWebhookEventsIdRetryRoute
   '/admin/orders/': typeof AuthenticatedAdminOrdersIndexRoute
   '/admin/products/': typeof AuthenticatedAdminProductsIndexRoute
+  '/api/admin/products/$id/colors': typeof ApiAdminProductsIdColorsRoute
+  '/api/admin/products/$id/options': typeof ApiAdminProductsIdOptionsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -422,6 +459,8 @@ export interface FileRoutesByTo {
   '/api/admin/debug-metadata': typeof ApiAdminDebugMetadataRoute
   '/api/admin/diagnose-metadata': typeof ApiAdminDiagnoseMetadataRoute
   '/api/admin/populate-metadata': typeof ApiAdminPopulateMetadataRoute
+  '/api/admin/products': typeof ApiAdminProductsRouteWithChildren
+  '/api/admin/sync-catalog': typeof ApiAdminSyncCatalogRoute
   '/api/dashboard/stats': typeof ApiDashboardStatsRoute
   '/api/ghl/products': typeof ApiGhlProductsRouteWithChildren
   '/api/orders/$id': typeof ApiOrdersIdRoute
@@ -433,10 +472,13 @@ export interface FileRoutesByTo {
   '/admin/orders/$id': typeof AuthenticatedAdminOrdersIdRoute
   '/admin/products/$id': typeof AuthenticatedAdminProductsIdRoute
   '/admin/products/new': typeof AuthenticatedAdminProductsNewRoute
+  '/api/admin/products/$id': typeof ApiAdminProductsIdRouteWithChildren
   '/api/ghl/products/$id': typeof ApiGhlProductsIdRoute
   '/api/webhook-events/$id/retry': typeof ApiWebhookEventsIdRetryRoute
   '/admin/orders': typeof AuthenticatedAdminOrdersIndexRoute
   '/admin/products': typeof AuthenticatedAdminProductsIndexRoute
+  '/api/admin/products/$id/colors': typeof ApiAdminProductsIdColorsRoute
+  '/api/admin/products/$id/options': typeof ApiAdminProductsIdOptionsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -477,6 +519,8 @@ export interface FileRoutesById {
   '/api/admin/debug-metadata': typeof ApiAdminDebugMetadataRoute
   '/api/admin/diagnose-metadata': typeof ApiAdminDiagnoseMetadataRoute
   '/api/admin/populate-metadata': typeof ApiAdminPopulateMetadataRoute
+  '/api/admin/products': typeof ApiAdminProductsRouteWithChildren
+  '/api/admin/sync-catalog': typeof ApiAdminSyncCatalogRoute
   '/api/dashboard/stats': typeof ApiDashboardStatsRoute
   '/api/ghl/products': typeof ApiGhlProductsRouteWithChildren
   '/api/orders/$id': typeof ApiOrdersIdRoute
@@ -488,10 +532,13 @@ export interface FileRoutesById {
   '/_authenticated/admin/orders/$id': typeof AuthenticatedAdminOrdersIdRoute
   '/_authenticated/admin/products/$id': typeof AuthenticatedAdminProductsIdRoute
   '/_authenticated/admin/products/new': typeof AuthenticatedAdminProductsNewRoute
+  '/api/admin/products/$id': typeof ApiAdminProductsIdRouteWithChildren
   '/api/ghl/products/$id': typeof ApiGhlProductsIdRoute
   '/api/webhook-events/$id/retry': typeof ApiWebhookEventsIdRetryRoute
   '/_authenticated/admin/orders/': typeof AuthenticatedAdminOrdersIndexRoute
   '/_authenticated/admin/products/': typeof AuthenticatedAdminProductsIndexRoute
+  '/api/admin/products/$id/colors': typeof ApiAdminProductsIdColorsRoute
+  '/api/admin/products/$id/options': typeof ApiAdminProductsIdOptionsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -532,6 +579,8 @@ export interface FileRouteTypes {
     | '/api/admin/debug-metadata'
     | '/api/admin/diagnose-metadata'
     | '/api/admin/populate-metadata'
+    | '/api/admin/products'
+    | '/api/admin/sync-catalog'
     | '/api/dashboard/stats'
     | '/api/ghl/products'
     | '/api/orders/$id'
@@ -543,10 +592,13 @@ export interface FileRouteTypes {
     | '/admin/orders/$id'
     | '/admin/products/$id'
     | '/admin/products/new'
+    | '/api/admin/products/$id'
     | '/api/ghl/products/$id'
     | '/api/webhook-events/$id/retry'
     | '/admin/orders/'
     | '/admin/products/'
+    | '/api/admin/products/$id/colors'
+    | '/api/admin/products/$id/options'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -581,6 +633,8 @@ export interface FileRouteTypes {
     | '/api/admin/debug-metadata'
     | '/api/admin/diagnose-metadata'
     | '/api/admin/populate-metadata'
+    | '/api/admin/products'
+    | '/api/admin/sync-catalog'
     | '/api/dashboard/stats'
     | '/api/ghl/products'
     | '/api/orders/$id'
@@ -592,10 +646,13 @@ export interface FileRouteTypes {
     | '/admin/orders/$id'
     | '/admin/products/$id'
     | '/admin/products/new'
+    | '/api/admin/products/$id'
     | '/api/ghl/products/$id'
     | '/api/webhook-events/$id/retry'
     | '/admin/orders'
     | '/admin/products'
+    | '/api/admin/products/$id/colors'
+    | '/api/admin/products/$id/options'
   id:
     | '__root__'
     | '/'
@@ -635,6 +692,8 @@ export interface FileRouteTypes {
     | '/api/admin/debug-metadata'
     | '/api/admin/diagnose-metadata'
     | '/api/admin/populate-metadata'
+    | '/api/admin/products'
+    | '/api/admin/sync-catalog'
     | '/api/dashboard/stats'
     | '/api/ghl/products'
     | '/api/orders/$id'
@@ -646,10 +705,13 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/orders/$id'
     | '/_authenticated/admin/products/$id'
     | '/_authenticated/admin/products/new'
+    | '/api/admin/products/$id'
     | '/api/ghl/products/$id'
     | '/api/webhook-events/$id/retry'
     | '/_authenticated/admin/orders/'
     | '/_authenticated/admin/products/'
+    | '/api/admin/products/$id/colors'
+    | '/api/admin/products/$id/options'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -680,6 +742,8 @@ export interface RootRouteChildren {
   ApiAdminDebugMetadataRoute: typeof ApiAdminDebugMetadataRoute
   ApiAdminDiagnoseMetadataRoute: typeof ApiAdminDiagnoseMetadataRoute
   ApiAdminPopulateMetadataRoute: typeof ApiAdminPopulateMetadataRoute
+  ApiAdminProductsRoute: typeof ApiAdminProductsRouteWithChildren
+  ApiAdminSyncCatalogRoute: typeof ApiAdminSyncCatalogRoute
   ApiDashboardStatsRoute: typeof ApiDashboardStatsRoute
   ApiGhlProductsRoute: typeof ApiGhlProductsRouteWithChildren
   ApiUploadProductImageRoute: typeof ApiUploadProductImageRoute
@@ -955,6 +1019,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAdminPopulateMetadataRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/admin/products': {
+      id: '/api/admin/products'
+      path: '/api/admin/products'
+      fullPath: '/api/admin/products'
+      preLoaderRoute: typeof ApiAdminProductsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/sync-catalog': {
+      id: '/api/admin/sync-catalog'
+      path: '/api/admin/sync-catalog'
+      fullPath: '/api/admin/sync-catalog'
+      preLoaderRoute: typeof ApiAdminSyncCatalogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/dashboard/stats': {
       id: '/api/dashboard/stats'
       path: '/api/dashboard/stats'
@@ -1039,6 +1117,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminProductsNewRouteImport
       parentRoute: typeof AuthenticatedAdminProductsRoute
     }
+    '/api/admin/products/$id': {
+      id: '/api/admin/products/$id'
+      path: '/$id'
+      fullPath: '/api/admin/products/$id'
+      preLoaderRoute: typeof ApiAdminProductsIdRouteImport
+      parentRoute: typeof ApiAdminProductsRoute
+    }
     '/api/ghl/products/$id': {
       id: '/api/ghl/products/$id'
       path: '/$id'
@@ -1052,6 +1137,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/webhook-events/$id/retry'
       preLoaderRoute: typeof ApiWebhookEventsIdRetryRouteImport
       parentRoute: typeof ApiWebhookEventsRoute
+    }
+    '/api/admin/products/$id/colors': {
+      id: '/api/admin/products/$id/colors'
+      path: '/colors'
+      fullPath: '/api/admin/products/$id/colors'
+      preLoaderRoute: typeof ApiAdminProductsIdColorsRouteImport
+      parentRoute: typeof ApiAdminProductsIdRoute
+    }
+    '/api/admin/products/$id/options': {
+      id: '/api/admin/products/$id/options'
+      path: '/options'
+      fullPath: '/api/admin/products/$id/options'
+      preLoaderRoute: typeof ApiAdminProductsIdOptionsRouteImport
+      parentRoute: typeof ApiAdminProductsIdRoute
     }
   }
 }
@@ -1179,6 +1278,30 @@ const ApiWebhookEventsRouteChildren: ApiWebhookEventsRouteChildren = {
 const ApiWebhookEventsRouteWithChildren =
   ApiWebhookEventsRoute._addFileChildren(ApiWebhookEventsRouteChildren)
 
+interface ApiAdminProductsIdRouteChildren {
+  ApiAdminProductsIdColorsRoute: typeof ApiAdminProductsIdColorsRoute
+  ApiAdminProductsIdOptionsRoute: typeof ApiAdminProductsIdOptionsRoute
+}
+
+const ApiAdminProductsIdRouteChildren: ApiAdminProductsIdRouteChildren = {
+  ApiAdminProductsIdColorsRoute: ApiAdminProductsIdColorsRoute,
+  ApiAdminProductsIdOptionsRoute: ApiAdminProductsIdOptionsRoute,
+}
+
+const ApiAdminProductsIdRouteWithChildren =
+  ApiAdminProductsIdRoute._addFileChildren(ApiAdminProductsIdRouteChildren)
+
+interface ApiAdminProductsRouteChildren {
+  ApiAdminProductsIdRoute: typeof ApiAdminProductsIdRouteWithChildren
+}
+
+const ApiAdminProductsRouteChildren: ApiAdminProductsRouteChildren = {
+  ApiAdminProductsIdRoute: ApiAdminProductsIdRouteWithChildren,
+}
+
+const ApiAdminProductsRouteWithChildren =
+  ApiAdminProductsRoute._addFileChildren(ApiAdminProductsRouteChildren)
+
 interface ApiGhlProductsRouteChildren {
   ApiGhlProductsIdRoute: typeof ApiGhlProductsIdRoute
 }
@@ -1219,6 +1342,8 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAdminDebugMetadataRoute: ApiAdminDebugMetadataRoute,
   ApiAdminDiagnoseMetadataRoute: ApiAdminDiagnoseMetadataRoute,
   ApiAdminPopulateMetadataRoute: ApiAdminPopulateMetadataRoute,
+  ApiAdminProductsRoute: ApiAdminProductsRouteWithChildren,
+  ApiAdminSyncCatalogRoute: ApiAdminSyncCatalogRoute,
   ApiDashboardStatsRoute: ApiDashboardStatsRoute,
   ApiGhlProductsRoute: ApiGhlProductsRouteWithChildren,
   ApiUploadProductImageRoute: ApiUploadProductImageRoute,

@@ -15,8 +15,7 @@ export const servicesNs: LocaleBundle = {
     fromPrice: "Desde {{price}}",
     priceOnRequest: "Precio según diseño",
     customizeTitle: "Personaliza tu diseño",
-    customizeIntro:
-      "Configura los elementos y te enviamos la confirmación con el precio final.",
+    customizeIntro: "Configura los elementos y te enviamos la confirmación con el precio final.",
     contactTitle: "¿Hablamos de tu celebración?",
     contactBody:
       "Escríbenos o llámanos y preparamos una propuesta con la flor de temporada, tu paleta de color y tu presupuesto.",

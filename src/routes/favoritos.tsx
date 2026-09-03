@@ -20,7 +20,8 @@ export const Route = createFileRoute("/favoritos")({
       { property: "og:title", content: "Mis favoritos · floristeria lucia" },
       {
         property: "og:description",
-        content: "Guarda tus ramos, plantas y rosas eternas favoritas y recupéralas cuando quieras.",
+        content:
+          "Guarda tus ramos, plantas y rosas eternas favoritas y recupéralas cuando quieras.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

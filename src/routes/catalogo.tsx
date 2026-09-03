@@ -15,7 +15,6 @@ import { cn } from "@/lib/utils";
 
 type CatalogTab = CategoryId;
 
-
 type CatalogSearch = {
   categoria?: CatalogTab | undefined;
   q?: string | undefined;
@@ -37,8 +36,7 @@ export const Route = createFileRoute("/catalogo")({
   validateSearch: (search: Record<string, unknown>): CatalogSearch => {
     const raw = search["categoria"];
     const categoria: CatalogTab | undefined = categories.find((c) => c.id === raw)?.id as
-      | CategoryId
-      | undefined;
+      CategoryId | undefined;
 
     return {
       categoria,
@@ -102,7 +100,6 @@ function CatalogPage() {
     });
   }, [activeCategory, q, favoritos, favorites, productsToUse]);
 
-
   const isCondolencias = activeCategory === "condolencias";
   const headerKey = activeCategory ? headerKeys[activeCategory] : "catalog.general";
 
@@ -112,7 +109,6 @@ function CatalogPage() {
         <p className="text-xs tracking-[0.35em] text-primary uppercase">{t("catalog.title")}</p>
         <h1 className="mt-4 font-display text-4xl sm:text-5xl">{t(`${headerKey}.title`)}</h1>
         <p className="mt-3 max-w-2xl text-muted-foreground">{t(`${headerKey}.description`)}</p>
-
 
         {/* Acciones contextuales: solo las que pertenecen a la categoría activa. */}
       </header>
@@ -139,7 +135,6 @@ function CatalogPage() {
             </FilterChip>
           </Fragment>
         ))}
-
 
         <div className="relative ml-auto w-full sm:w-72">
           <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -190,7 +185,6 @@ function CatalogPage() {
       )}
 
       {filtered.length === 0 ? (
-
         <div className="mt-16 rounded-lg border border-dashed border-border py-16 text-center">
           <p className="font-display text-2xl">{t("catalog.noResults.title")}</p>
           <p className="mt-2 text-sm text-muted-foreground">{t("catalog.noResults.description")}</p>
@@ -209,15 +203,7 @@ function CatalogPage() {
   );
 }
 
-function InfoBlock({
-  icon,
-  title,
-  text,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  text: string;
-}) {
+function InfoBlock({ icon, title, text }: { icon: React.ReactNode; title: string; text: string }) {
   return (
     <div className="rounded-lg border border-border/70 bg-card p-5">
       <p className="flex items-center gap-2 text-sm font-semibold">

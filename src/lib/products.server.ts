@@ -8,7 +8,7 @@ import type { Database } from "@/integrations/supabase/types";
 
 const supabase = createClient<Database>(
   process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
 );
 
 // ============================================================
@@ -137,7 +137,8 @@ export async function updateProduct(productId: string, input: UpdateProductInput
     if (input.category !== undefined) updateData.category = input.category;
     if (input.active !== undefined) updateData.active = input.active;
     if (input.cover_image_url !== undefined) updateData.cover_image_url = input.cover_image_url;
-    if (input.has_color_variants !== undefined) updateData.has_color_variants = input.has_color_variants;
+    if (input.has_color_variants !== undefined)
+      updateData.has_color_variants = input.has_color_variants;
 
     const { data, error } = await supabase
       .from("products")
@@ -264,10 +265,7 @@ export interface UpdateProductOptionInput {
   active?: boolean;
 }
 
-export async function updateProductOption(
-  optionId: string,
-  input: UpdateProductOptionInput
-) {
+export async function updateProductOption(optionId: string, input: UpdateProductOptionInput) {
   try {
     const updateData: Record<string, any> = {};
 

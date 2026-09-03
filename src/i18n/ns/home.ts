@@ -63,13 +63,18 @@ export const home: LocaleBundle = {
     seasonal: {
       eyebrow: "Colección de temporada",
       title: "Fechas especiales",
-      subtitle:
-        "Colecciones florales creadas para celebrar los momentos más especiales del año.",
+      subtitle: "Colecciones florales creadas para celebrar los momentos más especiales del año.",
       cta: "Ver colección",
       soonNote: "Disponible cuando comience la campaña.",
       availableNote: "Disponible durante todo el año.",
       pastNote: "Volverá la próxima temporada.",
-      status: { open: "Reservas abiertas", soon: "Próximamente", available: "Disponible", full: "Completo", past: "Temporada anterior" },
+      status: {
+        open: "Reservas abiertas",
+        soon: "Próximamente",
+        available: "Disponible",
+        full: "Completo",
+        past: "Temporada anterior",
+      },
       campaigns: {
         "dia-de-la-madre": {
           month: "Abril · Mayo",
@@ -123,7 +128,8 @@ export const home: LocaleBundle = {
       imageAlt: "Interior de la floristería con cubos de flor fresca",
       detailAlt: "Detalle de manos preparando un ramo de flores frescas",
       text: "Nos adaptamos a todos los gustos y necesidades de nuestros clientes. Ofrecemos el mejor servicio y la máxima calidad, con un diseño único y personalizado en cada uno de nuestros productos.",
-      quote: "El arte floral sirve para decir aquello que a veces no encontramos palabras para expresar.",
+      quote:
+        "El arte floral sirve para decir aquello que a veces no encontramos palabras para expresar.",
       values: {
         care: "Flores elegidas con cuidado",
         custom: "Diseños personalizados",
@@ -200,7 +206,13 @@ export const home: LocaleBundle = {
       soonNote: "Available once the campaign begins.",
       availableNote: "Available all year round.",
       pastNote: "Returning next season.",
-      status: { open: "Bookings open", soon: "Coming soon", available: "Available", full: "Fully booked", past: "Previous season" },
+      status: {
+        open: "Bookings open",
+        soon: "Coming soon",
+        available: "Available",
+        full: "Fully booked",
+        past: "Previous season",
+      },
       campaigns: {
         "dia-de-la-madre": {
           month: "April · May",
@@ -326,13 +338,18 @@ export const home: LocaleBundle = {
     seasonal: {
       eyebrow: "Col·lecció de temporada",
       title: "Dates especials",
-      subtitle:
-        "Col·leccions florals creades per celebrar els moments més especials de l'any.",
+      subtitle: "Col·leccions florals creades per celebrar els moments més especials de l'any.",
       cta: "Veure col·lecció",
       soonNote: "Disponible quan comenci la campanya.",
       availableNote: "Disponible durant tot l'any.",
       pastNote: "Tornarà la propera temporada.",
-      status: { open: "Reserves obertes", soon: "Properament", available: "Disponible", full: "Complet", past: "Temporada anterior" },
+      status: {
+        open: "Reserves obertes",
+        soon: "Properament",
+        available: "Disponible",
+        full: "Complet",
+        past: "Temporada anterior",
+      },
       campaigns: {
         "dia-de-la-madre": {
           month: "Abril · Maig",

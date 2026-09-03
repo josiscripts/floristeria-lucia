@@ -124,4 +124,3 @@ export function resolveSeasonalLineup(date: Date = new Date()): {
     upcoming,
   };
 }
-

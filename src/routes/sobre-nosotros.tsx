@@ -7,8 +7,6 @@ import aboutImageDesktop from "@/assets/sobre_nosotros_1.jpeg";
 import aboutImageMobile from "@/assets/sobre_nosotros_hero.jpeg";
 import ramoNuestraEsencia from "@/assets/ramo_nuestra_esencia.png";
 
-
-
 export const Route = createFileRoute("/sobre-nosotros")({
   head: () => ({
     meta: [
@@ -21,7 +19,8 @@ export const Route = createFileRoute("/sobre-nosotros")({
       { property: "og:title", content: "Sobre nosotros · floristeria lucia" },
       {
         property: "og:description",
-        content: "Servicio cercano, máxima calidad y composiciones personalizadas para cada emoción.",
+        content:
+          "Servicio cercano, máxima calidad y composiciones personalizadas para cada emoción.",
       },
     ],
   }),
@@ -37,13 +36,17 @@ function SobreNosotrosPage() {
       <section className="mx-auto flex max-w-7xl flex-col justify-center px-4 py-12 sm:px-6 lg:min-h-[calc(100svh-6rem)] lg:py-16">
         <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] lg:gap-16">
           <div className="lg:pr-12">
-            <p className="text-xs tracking-[0.35em] text-primary uppercase">{t("pages.about.badge")}</p>
+            <p className="text-xs tracking-[0.35em] text-primary uppercase">
+              {t("pages.about.badge")}
+            </p>
             <h1 className="mt-5 font-display text-4xl leading-[1.05] text-balance-tight sm:text-5xl lg:text-6xl">
               {t("pages.about.title")}
               <span className="mt-1 block">{t("pages.about.titleHighlight")}</span>
             </h1>
             <div className="mt-6 rule-gold" />
-            <p className="mt-6 max-w-xl text-muted-foreground lg:text-lg lg:leading-relaxed">{t("pages.about.intro")}</p>
+            <p className="mt-6 max-w-xl text-muted-foreground lg:text-lg lg:leading-relaxed">
+              {t("pages.about.intro")}
+            </p>
           </div>
           {/* Desktop/Tablet image */}
           <img
@@ -81,8 +84,12 @@ function SobreNosotrosPage() {
             const y = 215 - i * 32;
             return (
               <g key={i}>
-                <path d={`M${78 - i * 4} ${y} C ${52 - i * 4} ${y - 6}, ${36 - i * 3} ${y - 24}, ${42 - i * 3} ${y - 36}`} />
-                <path d={`M${78 - i * 4} ${y} C ${104 - i * 4} ${y - 8}, ${120 - i * 3} ${y - 22}, ${114 - i * 3} ${y - 38}`} />
+                <path
+                  d={`M${78 - i * 4} ${y} C ${52 - i * 4} ${y - 6}, ${36 - i * 3} ${y - 24}, ${42 - i * 3} ${y - 36}`}
+                />
+                <path
+                  d={`M${78 - i * 4} ${y} C ${104 - i * 4} ${y - 8}, ${120 - i * 3} ${y - 22}, ${114 - i * 3} ${y - 38}`}
+                />
               </g>
             );
           })}
@@ -90,14 +97,20 @@ function SobreNosotrosPage() {
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6">
           <div className="max-w-3xl lg:ml-[8%]">
-            <p className="text-xs tracking-[0.35em] text-primary uppercase">{t("pages.about.workEyebrow")}</p>
+            <p className="text-xs tracking-[0.35em] text-primary uppercase">
+              {t("pages.about.workEyebrow")}
+            </p>
             <h2 className="mt-6 font-display text-3xl leading-[1.15] text-balance-tight sm:text-4xl lg:text-5xl">
               {t("pages.about.workTitleA")}
               <span className="mt-1 block">{t("pages.about.workTitleB")}</span>
             </h2>
             <div className="mt-8 rule-gold" />
-            <p className="mt-10 max-w-2xl text-muted-foreground lg:text-lg lg:leading-[1.9]">{t("pages.about.workP1")}</p>
-            <p className="mt-12 max-w-xl text-muted-foreground lg:text-lg lg:leading-[1.9]">{t("pages.about.workP2")}</p>
+            <p className="mt-10 max-w-2xl text-muted-foreground lg:text-lg lg:leading-[1.9]">
+              {t("pages.about.workP1")}
+            </p>
+            <p className="mt-12 max-w-xl text-muted-foreground lg:text-lg lg:leading-[1.9]">
+              {t("pages.about.workP2")}
+            </p>
           </div>
         </div>
       </section>
@@ -106,20 +119,30 @@ function SobreNosotrosPage() {
       <section className="bg-surface py-20 lg:py-28">
         <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-20">
           <div>
-            <p className="text-xs tracking-[0.35em] text-primary uppercase">{t("pages.about.essenceBadge")}</p>
+            <p className="text-xs tracking-[0.35em] text-primary uppercase">
+              {t("pages.about.essenceBadge")}
+            </p>
             <h2 className="mt-6 font-display text-3xl leading-[1.15] text-balance-tight sm:text-4xl lg:text-[2.9rem]">
               {t("pages.about.essenceTitleA")}
-              <span className="mt-1 block italic text-primary">{t("pages.about.essenceTitleB")}</span>
+              <span className="mt-1 block italic text-primary">
+                {t("pages.about.essenceTitleB")}
+              </span>
             </h2>
             <div className="mt-8 rule-gold" />
-            <p className="mt-8 max-w-xl text-muted-foreground lg:leading-[1.9]">{t("pages.about.nearText")}</p>
+            <p className="mt-8 max-w-xl text-muted-foreground lg:leading-[1.9]">
+              {t("pages.about.nearText")}
+            </p>
 
             <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4 text-sm text-muted-foreground">
               <span className="flex items-center gap-2">
                 <MapPin className="size-4 text-gold" /> {company.address}
               </span>
-              <a href="tel:+34919953880" className="group flex items-center gap-2.5 font-display text-lg text-primary transition-colors duration-300 hover:text-primary/80 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:rounded">
-                <Phone className="size-4 text-gold transition-colors duration-300 group-hover:text-gold/80" /> 919 95 38 80
+              <a
+                href="tel:+34919953880"
+                className="group flex items-center gap-2.5 font-display text-lg text-primary transition-colors duration-300 hover:text-primary/80 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:rounded"
+              >
+                <Phone className="size-4 text-gold transition-colors duration-300 group-hover:text-gold/80" />{" "}
+                919 95 38 80
               </a>
             </div>
 

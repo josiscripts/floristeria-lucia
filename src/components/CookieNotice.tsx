@@ -73,12 +73,7 @@ export function CookieNotice() {
           >
             {t("footer.cookies.rejectAll")}
           </Button>
-          <Button
-            size="sm"
-            variant="default"
-            className="sm:ml-auto"
-            onClick={() => decide(true)}
-          >
+          <Button size="sm" variant="default" className="sm:ml-auto" onClick={() => decide(true)}>
             {t("footer.cookies.acceptAll")}
           </Button>
         </div>

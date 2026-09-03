@@ -77,7 +77,9 @@ export function CustomOrderBuilder({ kind }: { kind: BuilderKind }) {
       return;
     }
     const body = encodeURIComponent(summary());
-    const subject = encodeURIComponent(`${t("custom.summaryTitle")} · ${t(`custom.kinds.${kind}`)}`);
+    const subject = encodeURIComponent(
+      `${t("custom.summaryTitle")} · ${t(`custom.kinds.${kind}`)}`,
+    );
     window.location.href = `mailto:${company.email}?subject=${subject}&body=${body}`;
     toast.success(t("custom.sent"));
   };

@@ -6,7 +6,8 @@ export const store: LocaleBundle = {
     titleLine1: "Flores para cada ocasión,",
     titleLine2: "hechas con el corazón.",
     subtitle: "Todo lo que necesitas, con el cariño que nos define.",
-    intro: "Somos una floristería que se adapta a todos los gustos y necesidades de nuestros clientes. Ofrecemos el mejor servicio y la máxima calidad, con un diseño único y personalizado en cada uno de nuestros productos.",
+    intro:
+      "Somos una floristería que se adapta a todos los gustos y necesidades de nuestros clientes. Ofrecemos el mejor servicio y la máxima calidad, con un diseño único y personalizado en cada uno de nuestros productos.",
     pickup: {
       title1: "Te lo llevamos",
       title2: "o recógelo en tienda",
@@ -17,7 +18,8 @@ export const store: LocaleBundle = {
     offer: {
       title1: "Todo lo que imaginas,",
       title2: "en un solo lugar",
-      text1: "Ramos, cestas, plantas, flores preservadas y complementos seleccionados para cada momento especial.",
+      text1:
+        "Ramos, cestas, plantas, flores preservadas y complementos seleccionados para cada momento especial.",
       text2: "Especialistas en ramos de novia, bodas y todo tipo de eventos.",
       eventsLabel: "Especialistas en eventos",
       eventsList: "Ramos de novia · Bodas · Celebraciones",
@@ -54,7 +56,8 @@ export const store: LocaleBundle = {
     titleLine1: "Flowers for every occasion,",
     titleLine2: "made with the heart.",
     subtitle: "Everything you need, with the care that defines us.",
-    intro: "We are a flower shop that adapts to all the tastes and needs of our customers. We offer the best service and the highest quality, with a unique and personalised design in each of our products.",
+    intro:
+      "We are a flower shop that adapts to all the tastes and needs of our customers. We offer the best service and the highest quality, with a unique and personalised design in each of our products.",
     pickup: {
       title1: "We deliver it",
       title2: "or pick it up in store",
@@ -65,7 +68,8 @@ export const store: LocaleBundle = {
     offer: {
       title1: "Everything you imagine,",
       title2: "in one single place",
-      text1: "Bouquets, baskets, plants, preserved flowers and selected extras for every special moment.",
+      text1:
+        "Bouquets, baskets, plants, preserved flowers and selected extras for every special moment.",
       text2: "Specialists in bridal bouquets, weddings and all kinds of events.",
       eventsLabel: "Specialists in events",
       eventsList: "Bridal bouquets · Weddings · Celebrations",
@@ -94,7 +98,8 @@ export const store: LocaleBundle = {
         noreason: "Because you don't need a reason.",
       },
     },
-    imageAlt: "Editorial bouquet of roses, ranunculus and lisianthus in pink, cream and lavender tones",
+    imageAlt:
+      "Editorial bouquet of roses, ranunculus and lisianthus in pink, cream and lavender tones",
     footerLine: "A thousand colours of flowers for the soul and your senses.",
   },
   ca: {
@@ -102,7 +107,8 @@ export const store: LocaleBundle = {
     titleLine1: "Flors per a cada ocasió,",
     titleLine2: "fetes amb el cor.",
     subtitle: "Tot el que necessites, amb la cura que ens defineix.",
-    intro: "Som una floristeria que s'adapta a tots els gustos i necessitats dels nostres clients. Oferim el millor servei i la màxima qualitat, amb un disseny únic i personalitzat en cadascun dels nostres productes.",
+    intro:
+      "Som una floristeria que s'adapta a tots els gustos i necessitats dels nostres clients. Oferim el millor servei i la màxima qualitat, amb un disseny únic i personalitzat en cadascun dels nostres productes.",
     pickup: {
       title1: "T'ho portem",
       title2: "o recull-ho a la botiga",
@@ -113,7 +119,8 @@ export const store: LocaleBundle = {
     offer: {
       title1: "Tot el que imagines,",
       title2: "en un sol lloc",
-      text1: "Rams, cistelles, plantes, flors preservades i complements seleccionats per a cada moment especial.",
+      text1:
+        "Rams, cistelles, plantes, flors preservades i complements seleccionats per a cada moment especial.",
       text2: "Especialistes en rams de núvia, casaments i tot tipus d'esdeveniments.",
       eventsLabel: "Especialistes en esdeveniments",
       eventsList: "Rams de núvia · Casaments · Celebracions",

@@ -26,11 +26,7 @@ interface MatchResult {
  */
 function normalizeString(str: string): string {
   if (!str) return "";
-  return str
-    .toLowerCase()
-    .trim()
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "");
+  return str.toLowerCase().trim().normalize("NFD").replace(/[̀-ͯ]/g, "");
 }
 
 /**
@@ -38,13 +34,13 @@ function normalizeString(str: string): string {
  */
 function matchWithCatalog(
   ghlProduct: any,
-  catalogProducts: any[]
+  catalogProducts: any[],
 ): { catalogProduct?: any; confidence: "exact" | "high" | "low" | "none" } {
   const ghlName = ghlProduct.name || "";
 
   // Exact match by name
   const exactMatch = catalogProducts.find(
-    (p) => normalizeString(p.name) === normalizeString(ghlName)
+    (p) => normalizeString(p.name) === normalizeString(ghlName),
   );
   if (exactMatch) return { catalogProduct: exactMatch, confidence: "exact" };
 
@@ -62,8 +58,7 @@ function matchWithCatalog(
     const catFirst = normalizeString(p.name).split(" ")[0];
     return ghlFirst === catFirst && ghlFirst.length > 3;
   });
-  if (firstWordMatch)
-    return { catalogProduct: firstWordMatch, confidence: "low" };
+  if (firstWordMatch) return { catalogProduct: firstWordMatch, confidence: "low" };
 
   return { confidence: "none" };
 }
@@ -73,10 +68,7 @@ function matchWithCatalog(
  * Format: FL-{CAT}-{NUM}
  * Example: FL-RAM-0001
  */
-function generateSKU(
-  category: CategoryId | null | undefined,
-  index: number
-): string {
+function generateSKU(category: CategoryId | null | undefined, index: number): string {
   if (!category) {
     return "FL-XXX-0000";
   }
@@ -156,10 +148,7 @@ export async function populateProductMetadataFromCatalog(): Promise<{
     if (match.confidence !== "none" && match.catalogProduct) {
       // Matched product
       const catalogProd = match.catalogProduct;
-      const sku = generateSKU(
-        catalogProd.category as CategoryId,
-        skuIndex++
-      );
+      const sku = generateSKU(catalogProd.category as CategoryId, skuIndex++);
 
       matched.push({
         type: "matched",
@@ -214,7 +203,7 @@ export async function populateProductMetadataFromCatalog(): Promise<{
         sku: m.sku,
         legacy_catalog_id: m.catalogId,
         status: "active",
-      })
+      }),
     ),
     // Orphan products (no category/price/sku)
     ...orphans.map((o) =>
@@ -224,16 +213,14 @@ export async function populateProductMetadataFromCatalog(): Promise<{
         price: null,
         sku: null,
         status: "needs_review",
-      })
+      }),
     ),
   ]);
 
   const syncSuccesses = syncResults.filter((r) => r.status === "fulfilled").length;
   const syncFailures = syncResults.filter((r) => r.status === "rejected").length;
 
-  console.log(
-    `[PopulateMetadata] Synced: ${syncSuccesses} success, ${syncFailures} failures`
-  );
+  console.log(`[PopulateMetadata] Synced: ${syncSuccesses} success, ${syncFailures} failures`);
 
   return {
     total: ghlProducts.length,
@@ -267,8 +254,6 @@ export async function getPopulationStats() {
   return {
     totalGHL: ghlProducts.length,
     validIds: ghlProducts.filter((p) => p.id && p.id !== "undefined").length,
-    missingIds: ghlProducts.filter(
-      (p) => !p.id || p.id === "undefined" || p.id === ""
-    ).length,
+    missingIds: ghlProducts.filter((p) => !p.id || p.id === "undefined" || p.id === "").length,
   };
 }

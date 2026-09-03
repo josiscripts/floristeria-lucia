@@ -4,22 +4,22 @@
  * Images are stored in Supabase Storage, metadata in product_images table
  */
 
-import { supabaseAdmin } from '@/integrations/supabase/client.server';
-import type { Database } from '@/integrations/supabase/types';
+import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import type { Database } from "@/integrations/supabase/types";
 
-type ProductImage = Database['public']['Tables']['product_images']['Row'];
-type ProductImageInsert = Database['public']['Tables']['product_images']['Insert'];
-type ProductImageUpdate = Database['public']['Tables']['product_images']['Update'];
+type ProductImage = Database["public"]["Tables"]["product_images"]["Row"];
+type ProductImageInsert = Database["public"]["Tables"]["product_images"]["Insert"];
+type ProductImageUpdate = Database["public"]["Tables"]["product_images"]["Update"];
 
 /**
  * Get all images for a product, ordered by sort_order
  */
 export async function getProductImages(ghlProductId: string): Promise<ProductImage[]> {
   const { data, error } = await supabaseAdmin
-    .from('product_images')
-    .select('*')
-    .eq('ghl_product_id', ghlProductId)
-    .order('sort_order', { ascending: true });
+    .from("product_images")
+    .select("*")
+    .eq("ghl_product_id", ghlProductId)
+    .order("sort_order", { ascending: true });
 
   if (error) {
     console.error(`[ProductImages] Error fetching images for ${ghlProductId}:`, error);
@@ -34,13 +34,13 @@ export async function getProductImages(ghlProductId: string): Promise<ProductIma
  */
 export async function getPrimaryProductImage(ghlProductId: string): Promise<ProductImage | null> {
   const { data, error } = await supabaseAdmin
-    .from('product_images')
-    .select('*')
-    .eq('ghl_product_id', ghlProductId)
-    .eq('is_primary', true)
+    .from("product_images")
+    .select("*")
+    .eq("ghl_product_id", ghlProductId)
+    .eq("is_primary", true)
     .single();
 
-  if (error && error.code !== 'PGRST116') {
+  if (error && error.code !== "PGRST116") {
     // PGRST116 = no rows found, which is expected
     console.error(`[ProductImages] Error fetching primary image for ${ghlProductId}:`, error);
   }
@@ -52,10 +52,10 @@ export async function getPrimaryProductImage(ghlProductId: string): Promise<Prod
  * Create a new product image record after upload to Storage
  */
 export async function createProductImage(
-  input: ProductImageInsert & { ghl_product_id: string; storage_path: string }
+  input: ProductImageInsert & { ghl_product_id: string; storage_path: string },
 ): Promise<ProductImage | null> {
   const { data, error } = await supabaseAdmin
-    .from('product_images')
+    .from("product_images")
     .insert([
       {
         ...input,
@@ -78,10 +78,7 @@ export async function createProductImage(
  * Delete a product image
  */
 export async function deleteProductImage(imageId: string): Promise<boolean> {
-  const { error } = await supabaseAdmin
-    .from('product_images')
-    .delete()
-    .eq('id', imageId);
+  const { error } = await supabaseAdmin.from("product_images").delete().eq("id", imageId);
 
   if (error) {
     console.error(`[ProductImages] Error deleting image ${imageId}:`, error);
@@ -97,14 +94,14 @@ export async function deleteProductImage(imageId: string): Promise<boolean> {
  */
 export async function setPrimaryProductImage(
   imageId: string,
-  ghlProductId: string
+  ghlProductId: string,
 ): Promise<boolean> {
   // Step 1: Unset all other primary images for this product
   const { error: unsetError } = await supabaseAdmin
-    .from('product_images')
+    .from("product_images")
     .update({ is_primary: false })
-    .eq('ghl_product_id', ghlProductId)
-    .neq('id', imageId);
+    .eq("ghl_product_id", ghlProductId)
+    .neq("id", imageId);
 
   if (unsetError) {
     console.error(`[ProductImages] Error unsetting primary images:`, unsetError);
@@ -113,9 +110,9 @@ export async function setPrimaryProductImage(
 
   // Step 2: Set the specified image as primary
   const { error: setError } = await supabaseAdmin
-    .from('product_images')
+    .from("product_images")
     .update({ is_primary: true })
-    .eq('id', imageId);
+    .eq("id", imageId);
 
   if (setError) {
     console.error(`[ProductImages] Error setting primary image:`, setError);
@@ -130,14 +127,14 @@ export async function setPrimaryProductImage(
  * Input: array of {id, sort_order}
  */
 export async function reorderProductImages(
-  items: Array<{ id: string; sort_order: number }>
+  items: Array<{ id: string; sort_order: number }>,
 ): Promise<boolean> {
   // Update each item's sort_order
   for (const item of items) {
     const { error } = await supabaseAdmin
-      .from('product_images')
+      .from("product_images")
       .update({ sort_order: item.sort_order })
-      .eq('id', item.id);
+      .eq("id", item.id);
 
     if (error) {
       console.error(`[ProductImages] Error reordering image ${item.id}:`, error);
@@ -153,10 +150,10 @@ export async function reorderProductImages(
  */
 export async function getNextSortOrder(ghlProductId: string): Promise<number> {
   const { data, error } = await supabaseAdmin
-    .from('product_images')
-    .select('sort_order')
-    .eq('ghl_product_id', ghlProductId)
-    .order('sort_order', { ascending: false })
+    .from("product_images")
+    .select("sort_order")
+    .eq("ghl_product_id", ghlProductId)
+    .order("sort_order", { ascending: false })
     .limit(1);
 
   if (error) {
@@ -177,9 +174,9 @@ export async function getNextSortOrder(ghlProductId: string): Promise<number> {
  */
 export async function deleteAllProductImages(ghlProductId: string): Promise<boolean> {
   const { error } = await supabaseAdmin
-    .from('product_images')
+    .from("product_images")
     .delete()
-    .eq('ghl_product_id', ghlProductId);
+    .eq("ghl_product_id", ghlProductId);
 
   if (error) {
     console.error(`[ProductImages] Error deleting all images for ${ghlProductId}:`, error);
@@ -194,9 +191,9 @@ export async function deleteAllProductImages(ghlProductId: string): Promise<bool
  */
 export async function getProductImageCount(ghlProductId: string): Promise<number> {
   const { count, error } = await supabaseAdmin
-    .from('product_images')
-    .select('*', { count: 'exact', head: true })
-    .eq('ghl_product_id', ghlProductId);
+    .from("product_images")
+    .select("*", { count: "exact", head: true })
+    .eq("ghl_product_id", ghlProductId);
 
   if (error) {
     console.error(`[ProductImages] Error counting images:`, error);

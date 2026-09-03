@@ -160,12 +160,11 @@ export function Footer() {
     <ul className="space-y-2.5">
       {helpLinks.map((l) => (
         <li key={l.key}>
-          <Link
-            to={l.to}
-            {...(l.params ? { params: l.params } : {})}
-            className={helpLinkClass}
-          >
-            <l.icon className="size-3.5 shrink-0 text-gold/80 dark:text-gold/85" strokeWidth={1.5} />
+          <Link to={l.to} {...(l.params ? { params: l.params } : {})} className={helpLinkClass}>
+            <l.icon
+              className="size-3.5 shrink-0 text-gold/80 dark:text-gold/85"
+              strokeWidth={1.5}
+            />
             <span>{t(`footer.helpLinks.${l.key}`)}</span>
           </Link>
         </li>
@@ -177,7 +176,10 @@ export function Footer() {
     <>
       <ul className="space-y-3 text-sm text-primary-foreground/72 dark:text-surface-foreground/80">
         <li className="flex gap-2.5">
-          <MapPin className="mt-0.5 size-4 shrink-0 text-gold/80 dark:text-gold/85" strokeWidth={1.5} />
+          <MapPin
+            className="mt-0.5 size-4 shrink-0 text-gold/80 dark:text-gold/85"
+            strokeWidth={1.5}
+          />
           <a
             href={mapsUrl}
             target="_blank"
@@ -192,7 +194,10 @@ export function Footer() {
           </a>
         </li>
         <li className="flex gap-2.5">
-          <Phone className="mt-0.5 size-4 shrink-0 text-gold/80 dark:text-gold/85" strokeWidth={1.5} />
+          <Phone
+            className="mt-0.5 size-4 shrink-0 text-gold/80 dark:text-gold/85"
+            strokeWidth={1.5}
+          />
           <a
             href="tel:+34919953880"
             className="underline-offset-4 transition-colors hover:text-gold hover:underline dark:hover:text-gold"
@@ -201,7 +206,10 @@ export function Footer() {
           </a>
         </li>
         <li className="flex gap-2.5">
-          <MessageSquare className="mt-0.5 size-4 shrink-0 text-gold/80 dark:text-gold/85" strokeWidth={1.5} />
+          <MessageSquare
+            className="mt-0.5 size-4 shrink-0 text-gold/80 dark:text-gold/85"
+            strokeWidth={1.5}
+          />
           <a
             href={`https://wa.me/${company.whatsapp.replace(/[^\d]/g, "")}`}
             target="_blank"
@@ -213,7 +221,10 @@ export function Footer() {
           </a>
         </li>
         <li className="flex min-w-0 gap-2.5">
-          <Mail className="mt-0.5 size-4 shrink-0 text-gold/80 dark:text-gold/85" strokeWidth={1.5} />
+          <Mail
+            className="mt-0.5 size-4 shrink-0 text-gold/80 dark:text-gold/85"
+            strokeWidth={1.5}
+          />
           <a
             href={`mailto:${company.email}`}
             className="min-w-0 break-words underline-offset-4 transition-colors hover:text-gold hover:underline dark:hover:text-gold"
@@ -224,7 +235,10 @@ export function Footer() {
       </ul>
 
       <div className="mt-6 flex gap-2.5">
-        <Clock className="mt-0.5 size-4 shrink-0 text-gold/80 dark:text-gold/85" strokeWidth={1.5} />
+        <Clock
+          className="mt-0.5 size-4 shrink-0 text-gold/80 dark:text-gold/85"
+          strokeWidth={1.5}
+        />
         <div>
           <p className="text-sm font-medium text-primary-foreground dark:text-surface-foreground">
             {t("footer.schedule.title")}
@@ -429,7 +443,10 @@ export function Footer() {
       <div className="border-t border-primary-foreground/12 dark:border-surface-foreground/15">
         <div className="mx-auto flex w-full max-w-[1600px] flex-col gap-5 px-4 py-7 sm:px-8 lg:flex-row lg:items-center lg:justify-between lg:px-12">
           <div className="flex items-start gap-3">
-            <ShieldCheck className="mt-0.5 size-5 shrink-0 text-gold/90 dark:text-gold/90" strokeWidth={1.5} />
+            <ShieldCheck
+              className="mt-0.5 size-5 shrink-0 text-gold/90 dark:text-gold/90"
+              strokeWidth={1.5}
+            />
             <div>
               <p className="font-display text-lg leading-none text-primary-foreground dark:text-surface-foreground">
                 {t("footer.payments.title")}

@@ -133,7 +133,10 @@ export const pages: LocaleBundle = {
         },
         madrid: {
           title: "Madrid Capital",
-          rates: ["Pedidos hasta 110€: 18€ de portes.", "Pedidos superiores a 120€: Envío incluido"],
+          rates: [
+            "Pedidos hasta 110€: 18€ de portes.",
+            "Pedidos superiores a 120€: Envío incluido",
+          ],
         },
       },
       conditions: [
@@ -201,8 +204,7 @@ export const pages: LocaleBundle = {
       location: {
         badge: "Dónde estamos",
         title: "Encuéntranos",
-        intro:
-          "Visítanos en San Fernando de Henares y estaremos encantados de atenderte.",
+        intro: "Visítanos en San Fernando de Henares y estaremos encantados de atenderte.",
         mapTitle: "Mapa de la ubicación de floristeria lucia",
         addressLine1: "Calle de Motrico 9",
         addressLine2: "28830 San Fernando de Henares, Madrid",
@@ -327,10 +329,7 @@ export const pages: LocaleBundle = {
         limitrofes: {
           title: "Neighbouring Towns",
           towns: "Vicálvaro, Torrejón de Ardoz, Coslada",
-          rates: [
-            "Orders up to €55: €9 shipping.",
-            "Orders over €55: Free shipping (included).",
-          ],
+          rates: ["Orders up to €55: €9 shipping.", "Orders over €55: Free shipping (included)."],
         },
         cercanas: {
           title: "Other Nearby Towns",
@@ -410,8 +409,7 @@ export const pages: LocaleBundle = {
       location: {
         badge: "Where we are",
         title: "Find us",
-        intro:
-          "Visit us in San Fernando de Henares and we will be delighted to help you.",
+        intro: "Visit us in San Fernando de Henares and we will be delighted to help you.",
         mapTitle: "Map with floristeria lucia's location",
         addressLine1: "Calle de Motrico 9",
         addressLine2: "28830 San Fernando de Henares, Madrid",
@@ -524,14 +522,21 @@ export const pages: LocaleBundle = {
       generalItems: {
         min: { amount: "25 €", label: "Cost inclòs", note: "Comanda mínima" },
         s35: { amount: "35 €", label: "Enviament inclòs", note: "En comandes superiors a 35 €." },
-        s120: { amount: "120 €", label: "Enviament inclòs", note: "En comandes superiors a 120 €." },
+        s120: {
+          amount: "120 €",
+          label: "Enviament inclòs",
+          note: "En comandes superiors a 120 €.",
+        },
       },
       towns: "Localitats",
       conditionsTitle: "Condicions generals",
       zones: {
         "san-fernando": {
           title: "San Fernando de Henares",
-          rates: ["Comandes fins a 25€: 6€ de ports.", "Comandes superiors a 35€: Enviament inclòs."],
+          rates: [
+            "Comandes fins a 25€: 6€ de ports.",
+            "Comandes superiors a 35€: Enviament inclòs.",
+          ],
         },
         limitrofes: {
           title: "Pobles Limítrofs",
@@ -551,7 +556,10 @@ export const pages: LocaleBundle = {
         },
         madrid: {
           title: "Madrid Capital",
-          rates: ["Comandes fins a 110€: 18€ de ports.", "Comandes superiors a 120€: Enviament inclòs"],
+          rates: [
+            "Comandes fins a 110€: 18€ de ports.",
+            "Comandes superiors a 120€: Enviament inclòs",
+          ],
         },
       },
       conditions: [
@@ -619,8 +627,7 @@ export const pages: LocaleBundle = {
       location: {
         badge: "On som",
         title: "Troba'ns",
-        intro:
-          "Visita'ns a San Fernando de Henares i estarem encantats d'atendre't.",
+        intro: "Visita'ns a San Fernando de Henares i estarem encantats d'atendre't.",
         mapTitle: "Mapa de la ubicació de floristeria lucia",
         addressLine1: "Calle de Motrico 9",
         addressLine2: "28830 San Fernando de Henares, Madrid",

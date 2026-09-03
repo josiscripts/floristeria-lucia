@@ -64,9 +64,10 @@ export function normalizeGHLProduct(
   const category: CategoryId = mappedCategory || "ramos";
 
   // Price: use from metadata first (where it's actually stored), fallback to GHL
-  const priceMin = (metadata?.price !== undefined && metadata.price !== null)
-    ? metadata.price
-    : (ghlProduct.price ?? 0);
+  const priceMin =
+    metadata?.price !== undefined && metadata.price !== null
+      ? metadata.price
+      : (ghlProduct.price ?? 0);
 
   // SKU: use from metadata (where it's actually stored)
   const sku = metadata?.sku ?? ghlProduct.sku;

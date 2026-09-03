@@ -14,7 +14,8 @@ export const cart: LocaleBundle = {
     addOne: "Añadir una unidad",
     removeFromCart: "Eliminar del carrito",
     orderReservedTitle: "Pedido reservado",
-    orderReservedDescription: "Te llamamos al {{phone}} para confirmar fecha de entrega y dedicatoria.",
+    orderReservedDescription:
+      "Te llamamos al {{phone}} para confirmar fecha de entrega y dedicatoria.",
     pageEyebrow: "Tu pedido",
     pageTitle: "Revisa tu carrito",
     pageIntro: "Comprueba tus flores, cantidades y total antes de continuar con tu pedido.",
@@ -73,7 +74,8 @@ export const cart: LocaleBundle = {
     addOne: "Afegir una unitat",
     removeFromCart: "Eliminar de la cistella",
     orderReservedTitle: "Comanda reservada",
-    orderReservedDescription: "Et truquem al {{phone}} per confirmar la data de lliurament i la dedicatòria.",
+    orderReservedDescription:
+      "Et truquem al {{phone}} per confirmar la data de lliurament i la dedicatòria.",
     pageEyebrow: "La teva comanda",
     pageTitle: "Revisa la teva cistella",
     pageIntro: "Comprova les flors, quantitats i total abans de continuar amb la comanda.",

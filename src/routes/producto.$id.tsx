@@ -286,7 +286,9 @@ function ProductPage() {
                     addLine({
                       productId: `${product.id}-cinta`,
                       name: t("product.ribbonCartName"),
-                      size: ribbonFree ? t("product.ribbonIncluded") : t("product.ribbonSectionTitle"),
+                      size: ribbonFree
+                        ? t("product.ribbonIncluded")
+                        : t("product.ribbonSectionTitle"),
                       category: categoryLabels[product.category],
                       price: ribbonCost(subtotal),
                       image: product.image,

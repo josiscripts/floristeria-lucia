@@ -13,7 +13,7 @@ async function GET() {
     }
 
     const ghlProducts = ghlResult.products || [];
-    const ghlIds = ghlProducts.map(p => p.id);
+    const ghlIds = ghlProducts.map((p) => p.id);
 
     // Try to get metadata
     const metadata = await getFullProductMetadataByIds(ghlIds);
@@ -25,22 +25,24 @@ async function GET() {
       .in("ghl_product_id", ghlIds.slice(0, 5));
 
     return json({
-      ghlProducts: ghlProducts.slice(0, 3).map(p => ({
+      ghlProducts: ghlProducts.slice(0, 3).map((p) => ({
         id: p.id,
         name: p.name,
       })),
       metadataFromFunction: {
         total: metadata.size,
-        sample: Array.from(metadata.entries()).slice(0, 2).map(([id, record]) => ({
-          ghlId: id,
-          category: record.category,
-          price_min: record.price_min,
-          sku: record.sku,
-        })),
+        sample: Array.from(metadata.entries())
+          .slice(0, 2)
+          .map(([id, record]) => ({
+            ghlId: id,
+            category: record.category,
+            price_min: record.price_min,
+            sku: record.sku,
+          })),
       },
       directSupabaseQuery: {
         error: directError?.message,
-        records: directData?.slice(0, 3).map(r => ({
+        records: directData?.slice(0, 3).map((r) => ({
           ghlId: r.ghl_product_id,
           category: r.category,
           price_min: r.price_min,

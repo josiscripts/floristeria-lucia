@@ -7,7 +7,11 @@ interface ColorVariantsSectionProps {
   onDelete: (colorId: string) => void;
 }
 
-export default function ColorVariantsSection({ colors, onAdd, onDelete }: ColorVariantsSectionProps) {
+export default function ColorVariantsSection({
+  colors,
+  onAdd,
+  onDelete,
+}: ColorVariantsSectionProps) {
   const [newColorName, setNewColorName] = useState("");
 
   const handleAddColor = () => {

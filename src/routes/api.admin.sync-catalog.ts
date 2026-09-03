@@ -132,10 +132,7 @@ const POST = withAdminGuard(async (request, admin) => {
               status: "active",
             };
 
-            const updateResult = await updateGHLProduct(
-              existingMeta.ghl_product_id,
-              updatePayload,
-            );
+            const updateResult = await updateGHLProduct(existingMeta.ghl_product_id, updatePayload);
 
             if ("code" in updateResult && "statusCode" in updateResult) {
               throw new Error(`GHL update failed: ${updateResult.message}`);
@@ -202,9 +199,7 @@ const POST = withAdminGuard(async (request, admin) => {
 
             if (priceResult.success) {
               ghlPriceId = priceResult.ghlPriceId ?? null;
-              console.log(
-                `[SYNC_CATALOG] Created price for ${ghlProductId}: ${ghlPriceId}`,
-              );
+              console.log(`[SYNC_CATALOG] Created price for ${ghlProductId}: ${ghlPriceId}`);
             } else {
               console.warn(`[SYNC_CATALOG] Price creation failed: ${priceResult.error}`);
             }
@@ -295,10 +290,7 @@ const POST = withAdminGuard(async (request, admin) => {
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
     console.error("[API] /api/admin/sync-catalog error:", message);
-    return json(
-      { error: message, code: "API_ERROR" } as any,
-      { status: 500 },
-    );
+    return json({ error: message, code: "API_ERROR" } as any, { status: 500 });
   }
 });
 

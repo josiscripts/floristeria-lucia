@@ -97,19 +97,22 @@ export const services: Service[] = [
       {
         id: "centros-composiciones",
         name: "Centros y composiciones",
-        description: "Composiciones florales diseñadas a medida para aniversarios, celebraciones empresariales y eventos especiales, con flor de temporada y diseño personalizado.",
+        description:
+          "Composiciones florales diseñadas a medida para aniversarios, celebraciones empresariales y eventos especiales, con flor de temporada y diseño personalizado.",
         image: decoracionCentros,
       },
       {
         id: "entradas-accesos",
         name: "Entradas y accesos",
-        description: "Decoración floral personalizada para entradas, puertas y accesos de eventos, celebraciones y espacios, realzando la primera impresión con flor natural.",
+        description:
+          "Decoración floral personalizada para entradas, puertas y accesos de eventos, celebraciones y espacios, realzando la primera impresión con flor natural.",
         image: decoracionPuerta,
       },
       {
         id: "ambientacion-espacios",
         name: "Ambientación de espacios",
-        description: "Ambientación floral completa de espacios, locales, escaparates y zonas de eventos, transformando el ambiente con diseño floral de impacto.",
+        description:
+          "Ambientación floral completa de espacios, locales, escaparates y zonas de eventos, transformando el ambiente con diseño floral de impacto.",
         image: decoracionEspacios,
       },
     ],

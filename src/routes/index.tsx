@@ -7,7 +7,6 @@ import { ProductsServicesEditorial } from "@/components/ProductsServicesEditoria
 import { StoreHighlights } from "@/components/StoreHighlights";
 import { SeasonalCollection } from "@/components/SeasonalCollection";
 
-
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -35,17 +34,13 @@ function Index() {
 
       <ProductsServicesEditorial />
 
-
       <CollectionsCarousel />
 
-
       <SeasonalCollection />
-
 
       <StoreHighlights />
 
       <AboutEditorial />
-
     </>
   );
 }

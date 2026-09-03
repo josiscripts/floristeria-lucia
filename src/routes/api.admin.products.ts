@@ -62,7 +62,7 @@ const GET = withAdminGuard(async (request) => {
       result.data.map(async (product) => {
         const full = await getProductWithOptions(product.id);
         return full.data || product;
-      })
+      }),
     );
 
     return json(
@@ -71,7 +71,7 @@ const GET = withAdminGuard(async (request) => {
         products,
         total: products.length,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
@@ -117,7 +117,7 @@ const POST = withAdminGuard(async (request, admin) => {
     if ("code" in ghlResult && "statusCode" in ghlResult) {
       return json(
         { error: ghlResult.message, code: ghlResult.code },
-        { status: ghlResult.statusCode || 500 }
+        { status: ghlResult.statusCode || 500 },
       );
     }
 
@@ -180,7 +180,7 @@ const POST = withAdminGuard(async (request, admin) => {
     }
 
     // Step 4: Create color variants if applicable
-    let createdColors = [];
+    const createdColors = [];
     if (body.has_color_variants && body.color_variants) {
       for (let i = 0; i < body.color_variants.length; i++) {
         const colorRes = await createColorVariant({
@@ -217,7 +217,7 @@ const POST = withAdminGuard(async (request, admin) => {
         success: true,
         product: fullProduct.data,
       },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";

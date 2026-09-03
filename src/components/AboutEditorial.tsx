@@ -22,8 +22,12 @@ function BotanicalLine({ className }: { className?: string }) {
         const y = 215 - i * 32;
         return (
           <g key={i}>
-            <path d={`M${78 - i * 4} ${y} C ${52 - i * 4} ${y - 6}, ${36 - i * 3} ${y - 24}, ${42 - i * 3} ${y - 36}`} />
-            <path d={`M${78 - i * 4} ${y} C ${104 - i * 4} ${y - 8}, ${120 - i * 3} ${y - 22}, ${114 - i * 3} ${y - 38}`} />
+            <path
+              d={`M${78 - i * 4} ${y} C ${52 - i * 4} ${y - 6}, ${36 - i * 3} ${y - 24}, ${42 - i * 3} ${y - 36}`}
+            />
+            <path
+              d={`M${78 - i * 4} ${y} C ${104 - i * 4} ${y - 8}, ${120 - i * 3} ${y - 22}, ${114 - i * 3} ${y - 38}`}
+            />
           </g>
         );
       })}
@@ -118,7 +122,6 @@ export function AboutEditorial() {
               {t("home.about.quote")}
             </p>
 
-
             <div className="mt-12 flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-0">
               {values.map(({ key, Icon }, i) => (
                 <div
@@ -137,7 +140,14 @@ export function AboutEditorial() {
 
             <div className="mt-12 flex items-center gap-3 text-gold">
               <span className="h-px w-10 bg-gradient-to-r from-gold/70 to-transparent" />
-              <svg aria-hidden viewBox="0 0 24 24" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="1.1">
+              <svg
+                aria-hidden
+                viewBox="0 0 24 24"
+                className="size-3.5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.1"
+              >
                 <path d="M12 20V8M12 8c-3 0-5-2-5-4 3 0 5 1.8 5 4Zm0 0c3 0 5-2 5-4-3 0-5 1.8-5 4Z" />
               </svg>
             </div>
