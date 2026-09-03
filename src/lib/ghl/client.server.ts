@@ -13,7 +13,9 @@ const GHL_API_VERSION = "v3";
 const GHL_TIMEOUT = 10000; // 10 seconds
 
 export function getGHLToken(): string {
-  const token = process.env.GHL_PRIVATE_INTEGRATION_TOKEN;
+  const token =
+    process.env["GHL_PRIVATE_INTEGRATION_TOKEN"] ||
+    "pit-0cf65f40-51a4-4e28-9793-9eb8421e2291";
   if (!token) {
     throw new Error("GHL_PRIVATE_INTEGRATION_TOKEN not configured. Add it to .env/.env.local");
   }
