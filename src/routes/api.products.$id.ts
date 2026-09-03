@@ -14,6 +14,9 @@ import {
   getProductMetadata,
 } from "@/lib/product-metadata.server";
 import { withAdminGuard, logAdminAction } from "@/lib/admin/guard.server";
+import { syncPriceAmount, syncPriceSKU } from "@/lib/price-sync.server";
+import { getGHLCollectionIdForCategory } from "@/lib/category-collection.server";
+import type { CategoryId } from "@/data/catalog";
 
 const GET = withAdminGuard(async (request) => {
   try {
@@ -81,6 +84,14 @@ const PUT = withAdminGuard(async (request, admin) => {
     if (body.image) updatePayload.image = body.image;
     if (body.sku) updatePayload.sku = body.sku;
 
+    // Obtener collectionId si cambia la categoría
+    if (body.category) {
+      const collectionResult = await getGHLCollectionIdForCategory(body.category as CategoryId);
+      if (collectionResult.success && collectionResult.collectionId) {
+        updatePayload.collectionIds = [collectionResult.collectionId];
+      }
+    }
+
     // Update in GHL
     const ghlResult = await updateGHLProduct(id, updatePayload);
 
@@ -91,14 +102,40 @@ const PUT = withAdminGuard(async (request, admin) => {
       );
     }
 
+    // Sync price and SKU to GHL if changed
+    const locationId = url.searchParams.get("locationId") || process.env["GHL_LOCATION_ID"];
+    const syncErrors: string[] = [];
+
+    if (body.price !== undefined) {
+      const priceSync = await syncPriceAmount(id, body.price, "EUR", locationId ?? undefined);
+      if (!priceSync.success) {
+        syncErrors.push(`Price sync failed: ${priceSync.error}`);
+        console.warn(`[API] Price sync failed for ${id}: ${priceSync.error}`);
+      }
+    }
+
+    if (body.sku !== undefined) {
+      const skuSync = await syncPriceSKU(id, body.sku, locationId ?? undefined);
+      if (!skuSync.success) {
+        syncErrors.push(`SKU sync failed: ${skuSync.error}`);
+        console.warn(`[API] SKU sync failed for ${id}: ${skuSync.error}`);
+      }
+    }
+
     // Update metadata in Supabase
-    const metadataResult = await syncProductMetadata({
+    const metadataInput: Record<string, any> = {
       ghl_product_id: id,
-      price_max: body.price_max,
-      available_colors: body.available_colors,
-      badge_label: body.badge_label,
-      rose_step: body.rose_step,
-    });
+    };
+
+    if (body.price !== undefined) metadataInput.price = body.price;
+    if (body.price_max !== undefined) metadataInput.price_max = body.price_max;
+    if (body.sku !== undefined) metadataInput.sku = body.sku;
+    if (body.category !== undefined) metadataInput.category = body.category;
+    if (body.available_colors !== undefined) metadataInput.available_colors = body.available_colors;
+    if (body.badge_label !== undefined) metadataInput.badge_label = body.badge_label;
+    if (body.rose_step !== undefined) metadataInput.rose_step = body.rose_step;
+
+    const metadataResult = await syncProductMetadata(metadataInput);
 
     await logAdminAction({
       userId: admin.user.id,

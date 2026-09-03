@@ -8,7 +8,11 @@ import { json } from "@tanstack/react-start";
 import { createGHLProduct, getGHLProducts } from "@/lib/ghl/client.server";
 import { syncProductMetadata, getFullProductMetadataByIds } from "@/lib/product-metadata.server";
 import { withAdminGuard, logAdminAction } from "@/lib/admin/guard.server";
+import { ensureProductPrice } from "@/lib/price-sync.server";
+import { generateSKU } from "@/lib/sku-generator.server";
+import { getGHLCollectionIdForCategory } from "@/lib/category-collection.server";
 import type { GHLProduct } from "@/lib/ghl/types";
+import type { CategoryId } from "@/data/catalog";
 
 interface CreateProductRequest {
   name: string;
@@ -108,16 +112,40 @@ const POST = withAdminGuard(async (request, admin) => {
       return json({ error: "Missing required field: name" }, { status: 400 });
     }
 
+    // Generate SKU if not provided
+    let finalSku = body.sku;
+    if (!finalSku && body.category) {
+      const skuGenResult = await generateSKU(body.category);
+      if (skuGenResult.success) {
+        finalSku = skuGenResult.sku;
+      }
+    }
+
+    // Obtener collectionId si existe mapping de categoría
+    let collectionIds: string[] | undefined;
+    if (body.category) {
+      const collectionResult = await getGHLCollectionIdForCategory(body.category as CategoryId);
+      if (collectionResult.success && collectionResult.collectionId) {
+        collectionIds = [collectionResult.collectionId];
+      }
+    }
+
     // Create in GHL first
-    const ghlResult = await createGHLProduct({
+    const ghlPayload: Record<string, any> = {
       name: body.name,
       description: body.description,
       price: body.price,
       category: body.category,
       image: body.image,
-      sku: body.sku,
+      sku: finalSku,
       status: "active",
-    });
+    };
+
+    if (collectionIds) {
+      ghlPayload.collectionIds = collectionIds;
+    }
+
+    const ghlResult = await createGHLProduct(ghlPayload);
 
     // Check if GHL creation failed
     if ("code" in ghlResult && "statusCode" in ghlResult) {
@@ -127,19 +155,43 @@ const POST = withAdminGuard(async (request, admin) => {
       );
     }
 
+    // Ensure product has price in GHL (creates Price record with SKU)
+    const locationId = url.searchParams.get("locationId") || process.env["GHL_LOCATION_ID"];
+    let ghlPriceId: string | null = null;
+    let priceError: string | null = null;
+
+    if (body.price !== undefined || finalSku) {
+      const priceResult = await ensureProductPrice({
+        ghlProductId: ghlResult.id,
+        amount: body.price ?? 0,
+        currency: "EUR",
+        sku: finalSku,
+        priceName: body.name,
+        locationId: locationId ?? undefined,
+      });
+
+      if (priceResult.success) {
+        ghlPriceId = priceResult.ghlPriceId ?? null;
+      } else {
+        priceError = priceResult.error ?? "Unknown price sync error";
+        console.warn(`[API] Price sync failed: ${priceError}`);
+      }
+    }
+
     // Create metadata in Supabase - critical fields that GHL doesn't persist
     const metadataInput: Record<string, any> = {
       ghl_product_id: ghlResult.id,
       // Store category and price in metadata since GHL doesn't persist them
       category: body.category ?? null,
       price: body.price ?? null,
-      sku: body.sku ?? null,
+      price_max: body.price_max ?? null,
+      sku: finalSku ?? null,
+      ghl_price_id: ghlPriceId,
       requires_quote: false,
       status: "active",
     };
 
     // Add optional fields only if provided
-    if (body.price_max !== undefined) metadataInput.price_max = body.price_max;
     if (body.available_colors !== undefined) metadataInput.available_colors = body.available_colors;
     if (body.badge_label !== undefined) metadataInput.badge_label = body.badge_label;
     if (body.rose_step !== undefined) metadataInput.rose_step = body.rose_step;

@@ -1,23 +1,26 @@
-import type { GHLProduct, GHLProductsResponse, GHLError, GHLContact, GHLContactsResponse, GHLOpportunity, GHLOpportunitiesResponse } from "./types";
+import type {
+  GHLProduct,
+  GHLProductsResponse,
+  GHLError,
+  GHLContact,
+  GHLContactsResponse,
+  GHLOpportunity,
+  GHLOpportunitiesResponse,
+} from "./types";
 
 const GHL_API_BASE = "https://services.leadconnectorhq.com";
 const GHL_API_VERSION = "v3";
 const GHL_TIMEOUT = 10000; // 10 seconds
 
-function getGHLToken(): string {
+export function getGHLToken(): string {
   const token = process.env.GHL_PRIVATE_INTEGRATION_TOKEN;
   if (!token) {
-    throw new Error(
-      "GHL_PRIVATE_INTEGRATION_TOKEN not configured. Add it to .env/.env.local"
-    );
+    throw new Error("GHL_PRIVATE_INTEGRATION_TOKEN not configured. Add it to .env/.env.local");
   }
   return token;
 }
 
-async function ghlFetch<T>(
-  endpoint: string,
-  options?: RequestInit
-): Promise<T> {
+export async function ghlFetch<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const token = getGHLToken();
   const url = `${GHL_API_BASE}${endpoint}`;
   const headers = new Headers(options?.headers || {});
@@ -65,7 +68,7 @@ export async function getGHLProducts(
     limit?: number;
     skip?: number;
     filter?: Record<string, unknown>;
-  }
+  },
 ): Promise<GHLProductsResponse | GHLError> {
   try {
     // Build query parameters
@@ -106,8 +109,7 @@ export async function getGHLProducts(
     return normalizedResponse;
   } catch (error) {
     const ghlError: GHLError = {
-      message:
-        error instanceof Error ? error.message : "Unknown error fetching GHL products",
+      message: error instanceof Error ? error.message : "Unknown error fetching GHL products",
       code: "GHL_FETCH_PRODUCTS_FAILED",
     };
     console.error(`[GHL] Error fetching products:`, ghlError);
@@ -121,7 +123,7 @@ export async function getGHLProducts(
  */
 export async function getGHLProduct(
   productId: string,
-  locationId?: string
+  locationId?: string,
 ): Promise<GHLProduct | GHLError> {
   try {
     const params = new URLSearchParams();
@@ -131,7 +133,8 @@ export async function getGHLProduct(
     const endpoint = `/products/?${params.toString()}`;
 
     const response = await ghlFetch<any>(endpoint);
-    const product = (response.items && response.items[0]) || (response.products && response.products[0]);
+    const product =
+      (response.items && response.items[0]) || (response.products && response.products[0]);
 
     if (!product) {
       return { message: "Product not found", code: "NOT_FOUND" };
@@ -147,8 +150,7 @@ export async function getGHLProduct(
     return normalizedProduct;
   } catch (error) {
     const ghlError: GHLError = {
-      message:
-        error instanceof Error ? error.message : "Unknown error fetching GHL product",
+      message: error instanceof Error ? error.message : "Unknown error fetching GHL product",
       code: "GHL_FETCH_PRODUCT_FAILED",
     };
     console.error(`[GHL] Error fetching product ${productId}:`, ghlError);
@@ -180,10 +182,7 @@ export async function testGHLConnection(): Promise<{
     return {
       connected: false,
       message: "GHL connection failed",
-      error:
-        error instanceof Error
-          ? error.message
-          : "Unknown connection error",
+      error: error instanceof Error ? error.message : "Unknown connection error",
     };
   }
 }
@@ -203,7 +202,7 @@ export async function createGHLProduct(
     status?: "active" | "inactive";
     [key: string]: unknown; // Allow custom fields
   },
-  locationId?: string
+  locationId?: string,
 ): Promise<GHLProduct | GHLError> {
   try {
     const finalLocationId = locationId || process.env["GHL_LOCATION_ID"];
@@ -232,8 +231,7 @@ export async function createGHLProduct(
     return normalizedProduct;
   } catch (error) {
     const ghlError: GHLError = {
-      message:
-        error instanceof Error ? error.message : "Unknown error creating GHL product",
+      message: error instanceof Error ? error.message : "Unknown error creating GHL product",
       code: "GHL_CREATE_PRODUCT_FAILED",
     };
     console.error(`[GHL] Error creating product:`, ghlError);
@@ -257,7 +255,7 @@ export async function updateGHLProduct(
     status?: "active" | "inactive";
     [key: string]: unknown; // Allow custom fields
   },
-  locationId?: string
+  locationId?: string,
 ): Promise<GHLProduct | GHLError> {
   try {
     const endpoint = locationId
@@ -273,8 +271,7 @@ export async function updateGHLProduct(
     return response;
   } catch (error) {
     const ghlError: GHLError = {
-      message:
-        error instanceof Error ? error.message : "Unknown error updating GHL product",
+      message: error instanceof Error ? error.message : "Unknown error updating GHL product",
       code: "GHL_UPDATE_PRODUCT_FAILED",
     };
     console.error(`[GHL] Error updating product ${productId}:`, ghlError);
@@ -289,7 +286,7 @@ export async function updateGHLProduct(
  */
 export async function deleteGHLProduct(
   productId: string,
-  locationId?: string
+  locationId?: string,
 ): Promise<GHLProduct | GHLError> {
   try {
     const endpoint = locationId
@@ -306,8 +303,7 @@ export async function deleteGHLProduct(
     return response;
   } catch (error) {
     const ghlError: GHLError = {
-      message:
-        error instanceof Error ? error.message : "Unknown error deleting GHL product",
+      message: error instanceof Error ? error.message : "Unknown error deleting GHL product",
       code: "GHL_DELETE_PRODUCT_FAILED",
     };
     console.error(`[GHL] Error deleting product ${productId}:`, ghlError);
@@ -324,7 +320,7 @@ export async function getGHLContacts(
   options?: {
     limit?: number;
     startAfter?: [number, string];
-  }
+  },
 ): Promise<GHLContactsResponse | GHLError> {
   try {
     const params = new URLSearchParams();
@@ -342,8 +338,7 @@ export async function getGHLContacts(
     return response;
   } catch (error) {
     const ghlError: GHLError = {
-      message:
-        error instanceof Error ? error.message : "Unknown error fetching GHL contacts",
+      message: error instanceof Error ? error.message : "Unknown error fetching GHL contacts",
       code: "GHL_FETCH_CONTACTS_FAILED",
     };
     console.error(`[GHL] Error fetching contacts:`, ghlError);
@@ -358,7 +353,7 @@ export async function getGHLContacts(
  */
 export async function findGHLContactByEmail(
   email: string,
-  locationId: string
+  locationId: string,
 ): Promise<GHLContact | null> {
   try {
     const response = await getGHLContacts(locationId, { limit: 100 });
@@ -369,7 +364,7 @@ export async function findGHLContactByEmail(
     }
 
     const contact = response.contacts?.find(
-      (c: GHLContact) => c.email?.toLowerCase() === email.toLowerCase()
+      (c: GHLContact) => c.email?.toLowerCase() === email.toLowerCase(),
     );
 
     if (contact) {
@@ -389,32 +384,26 @@ export async function findGHLContactByEmail(
  * Create a new contact in GHL
  * WRITE operation - server-side only
  */
-export async function createGHLContact(
-  contactData: {
-    locationId: string;
-    firstName: string;
-    lastName: string;
-    email?: string;
-    phone?: string;
-    [key: string]: unknown;
-  }
-): Promise<GHLContact | GHLError> {
+export async function createGHLContact(contactData: {
+  locationId: string;
+  firstName: string;
+  lastName: string;
+  email?: string;
+  phone?: string;
+  [key: string]: unknown;
+}): Promise<GHLContact | GHLError> {
   try {
-    const response = await ghlFetch<{ contact: GHLContact }>(
-      "/contacts",
-      {
-        method: "POST",
-        body: JSON.stringify(contactData),
-      }
-    );
+    const response = await ghlFetch<{ contact: GHLContact }>("/contacts", {
+      method: "POST",
+      body: JSON.stringify(contactData),
+    });
 
     const contact = (response as any).contact || response;
     console.log(`[GHL] Successfully created contact: ${contact.id} (${contact.email})`);
     return contact as GHLContact;
   } catch (error) {
     const ghlError: GHLError = {
-      message:
-        error instanceof Error ? error.message : "Unknown error creating GHL contact",
+      message: error instanceof Error ? error.message : "Unknown error creating GHL contact",
       code: "GHL_CREATE_CONTACT_FAILED",
     };
     console.error(`[GHL] Error creating contact:`, ghlError);
@@ -434,7 +423,7 @@ export async function syncGHLContact(
     lastName: string;
     phone?: string;
   },
-  locationId: string
+  locationId: string,
 ): Promise<string | null> {
   try {
     // Step 1: Try to find existing contact by email
@@ -484,11 +473,11 @@ export async function syncGHLContact(
  */
 export async function findGHLOpportunityByName(
   orderNumber: string,
-  locationId: string
+  locationId: string,
 ): Promise<GHLOpportunity | null> {
   try {
     const response = await ghlFetch<any>(
-      `/opportunities/?locationId=${locationId}&name=${encodeURIComponent(orderNumber)}&limit=10`
+      `/opportunities/?locationId=${locationId}&name=${encodeURIComponent(orderNumber)}&limit=10`,
     );
 
     if ("code" in response) {
@@ -515,16 +504,14 @@ export async function findGHLOpportunityByName(
  * Create a new Opportunity in GHL
  * Associates opportunity with contact, pipeline, and stage
  */
-export async function createGHLOpportunity(
-  opportunityData: {
-    locationId: string;
-    contactId: string;
-    pipelineId: string;
-    name: string;
-    monetaryValue?: number;
-    customFields?: Array<{ fieldId: string; value: string | number | boolean | null }>;
-  }
-): Promise<GHLOpportunity | GHLError> {
+export async function createGHLOpportunity(opportunityData: {
+  locationId: string;
+  contactId: string;
+  pipelineId: string;
+  name: string;
+  monetaryValue?: number;
+  customFields?: Array<{ fieldId: string; value: string | number | boolean | null }>;
+}): Promise<GHLOpportunity | GHLError> {
   try {
     // GHL API v3 requires status field (open, won, lost, abandoned)
     const payload = {
@@ -532,21 +519,17 @@ export async function createGHLOpportunity(
       status: "open",
     };
 
-    const response = await ghlFetch<{ opportunity: GHLOpportunity }>(
-      "/opportunities/",
-      {
-        method: "POST",
-        body: JSON.stringify(payload),
-      }
-    );
+    const response = await ghlFetch<{ opportunity: GHLOpportunity }>("/opportunities/", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
 
     const opportunity = (response as any).opportunity || response;
     console.log(`[GHL] Successfully created opportunity: ${opportunity.id}`);
     return opportunity as GHLOpportunity;
   } catch (error) {
     const ghlError: GHLError = {
-      message:
-        error instanceof Error ? error.message : "Unknown error creating GHL opportunity",
+      message: error instanceof Error ? error.message : "Unknown error creating GHL opportunity",
       code: "GHL_CREATE_OPPORTUNITY_FAILED",
     };
     console.error(`[GHL] Error creating opportunity:`, ghlError);
@@ -574,7 +557,7 @@ export async function syncGHLOpportunity(
     notes?: string | null;
   },
   ghlContactId: string,
-  locationId: string
+  locationId: string,
 ): Promise<string | null> {
   try {
     // Constants for GHL pipeline
@@ -622,4 +605,3 @@ export async function syncGHLOpportunity(
     return null;
   }
 }
-
