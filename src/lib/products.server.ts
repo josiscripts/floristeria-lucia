@@ -93,7 +93,7 @@ export async function listProducts(filters?: {
   search?: string;
 }) {
   try {
-    let query = supabase.from("products").select("*").eq("deleted_at", null);
+    let query = supabase.from("products").select("*").is("deleted_at", null);
 
     if (filters?.category) {
       query = query.eq("category", filters.category);
@@ -242,7 +242,7 @@ export async function listProductOptions(productId: string) {
       .from("product_options")
       .select("*")
       .eq("product_id", productId)
-      .eq("deleted_at", null)
+      .is("deleted_at", null)
       .order("created_at", { ascending: true });
 
     if (error) throw error;
