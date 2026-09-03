@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { CreateProductRequest, ProductWithOptions } from "~/integrations/supabase/types";
+import type { CreateProductRequest } from "@/lib/admin/api";
 import ProductOptionsSection from "./ProductOptionsSection";
 import ColorVariantsSection from "./ColorVariantsSection";
 import ProductImagesSection from "./ProductImagesSection";
 
 interface ProductFormNewProps {
-  initialProduct?: ProductWithOptions | null;
+  initialProduct?: any | null;
   onSubmit: (data: CreateProductRequest) => Promise<void>;
   isLoading?: boolean;
   error?: string | null;

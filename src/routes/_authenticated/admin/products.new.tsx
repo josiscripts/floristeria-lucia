@@ -5,8 +5,8 @@ import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import { ProductForm, type ProductFormValues } from "@/components/admin/ProductForm";
-import { createProduct } from "@/lib/admin/api";
+import ProductFormNew from "@/components/admin/ProductFormNew";
+import { createProductNew, type CreateProductRequest } from "@/lib/admin/api";
 
 export const Route = createFileRoute("/_authenticated/admin/products/new")({
   component: NewProductPage,
@@ -16,17 +16,21 @@ function NewProductPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = async (values: ProductFormValues) => {
+  const handleSubmit = async (values: CreateProductRequest) => {
     setSubmitting(true);
+    setError(null);
     try {
-      const result = await createProduct(values);
-      const productName = result.product.name || values.name || "Producto";
+      await createProductNew(values);
+      const productName = values.name || "Producto";
       toast.success(`${productName} creado correctamente`);
       await queryClient.invalidateQueries({ queryKey: ["admin", "products"] });
       navigate({ to: "/admin/products" });
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : "No se pudo crear el producto");
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "No se pudo crear el producto";
+      setError(message);
+      toast.error(message);
     } finally {
       setSubmitting(false);
     }
@@ -50,7 +54,7 @@ function NewProductPage() {
         </p>
       </div>
 
-      <ProductForm onSubmit={handleSubmit} submitting={submitting} submitLabel="Crear producto" />
+      <ProductFormNew onSubmit={handleSubmit} isLoading={submitting} error={error} />
     </div>
   );
 }

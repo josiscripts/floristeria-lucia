@@ -1,19 +1,17 @@
 {
-  "timestamp": "2026-08-26T18:50:33.612Z",
+  "timestamp": "2026-09-03T12:29:14.038Z",
   "projectId": "leksmflinhohnekbgmgj",
   "tables": {
-    "profiles": {
-      "exists": false,
-      "records": 0,
-      "status": "NO_EXISTE"
-    },
     "product_metadata": {
-      "exists": false,
+      "exists": true,
       "records": 0,
-      "status": "NO_EXISTE"
+      "status": "REVISAR",
+      "classification": "Tabla para metadatos GHL - revisar si fue migrada de proyecto anterior"
     }
   },
   "storageBuckets": [],
   "notes": [],
-  "warnings": []
+  "warnings": [
+    "Error checking profiles: Unauthorized"
+  ]
 }

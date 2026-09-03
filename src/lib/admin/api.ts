@@ -2,6 +2,22 @@ import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
 import type { GHLProduct } from "@/lib/ghl/types";
 
+export interface CreateProductRequest {
+  name: string;
+  description?: string;
+  category?: string;
+  active?: boolean;
+  cover_image_url?: string;
+  has_color_variants?: boolean;
+  options: Array<{
+    name: string;
+    price_amount: number;
+    discount_percent?: number;
+    stock_quantity?: number | null;
+  }>;
+  color_variants?: string[];
+}
+
 export type OrderRow = Tables<"orders">;
 export type OrderItemRow = Tables<"order_items">;
 export type WebhookEventRow = Tables<"webhook_events">;
@@ -166,6 +182,21 @@ export function deactivateProduct(id: string) {
   return fetchJson<{ success: boolean }>(`/api/products/${encodeURIComponent(id)}`, {
     method: "DELETE",
   });
+}
+
+/**
+ * Create a new product using the BLOQUE 4 redesigned schema
+ * POST /api/admin/products
+ */
+export function createProductNew(input: CreateProductRequest) {
+  return fetchJson<{ success: boolean; product: any }>(
+    "/api/admin/products",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(input),
+    },
+  );
 }
 
 // --- Webhook events ---

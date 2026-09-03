@@ -1,0 +1,30 @@
+{
+  "total": [
+    {
+      "total": 128
+    }
+  ],
+  "products_count": 100,
+  "first_products": [
+    {
+      "id": "6a99179f324935c27b7ffacb",
+      "name": "TEST BLOQUE 4 � CRUD REAL"
+    },
+    {
+      "id": "6a9917939450f2c344b64646",
+      "name": "TEST BLOQUE 4 � CRUD REAL"
+    },
+    {
+      "id": "6a990e4a9450f2c344b4c8fe",
+      "name": "Ramos Variados Premium"
+    },
+    {
+      "id": "6a990e48973de9c5b87974ed",
+      "name": "Ramo Rosa Simple"
+    },
+    {
+      "id": "6a990df8973de9c5b8796783",
+      "name": "Rosa Eterna Preservada"
+    }
+  ]
+}
