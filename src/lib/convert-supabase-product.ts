@@ -53,10 +53,7 @@ export function getSupabasePriceTiers(options: SupabaseProductOption[]) {
 /**
  * Get image for a specific color variant
  */
-export function getImageForColor(
-  supabaseProduct: SupabaseProduct,
-  colorVariantId: string | null,
-) {
+export function getImageForColor(supabaseProduct: SupabaseProduct, colorVariantId: string | null) {
   if (colorVariantId) {
     const colorImage = supabaseProduct.product_images.find(
       (img) => img.color_variant_id === colorVariantId && !img.is_primary,

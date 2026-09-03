@@ -89,9 +89,8 @@ function CatalogPage() {
   const activeCategory = categoria;
 
   // Convert Supabase products to legacy format, fallback to local catalog
-  const productsToUse = supabaseData.length > 0
-    ? supabaseData.map(supabaseProductToLegacy)
-    : fallbackProducts;
+  const productsToUse =
+    supabaseData.length > 0 ? supabaseData.map(supabaseProductToLegacy) : fallbackProducts;
 
   const filtered = useMemo(() => {
     const query = (q ?? "").trim().toLowerCase();

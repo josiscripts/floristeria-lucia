@@ -120,7 +120,11 @@ function ProductPage() {
       <div className="mt-8 grid gap-10 lg:grid-cols-2 lg:gap-16">
         <div className="relative overflow-hidden rounded-xl border border-border/70 bg-card">
           <img
-            src={isSupabaseProduct && supabaseProduct ? getImageForColor(supabaseProduct, colorVariantId) : product.image}
+            src={
+              isSupabaseProduct && supabaseProduct
+                ? getImageForColor(supabaseProduct, colorVariantId)
+                : product.image
+            }
             alt={name}
             width={1024}
             height={1024}
@@ -173,7 +177,9 @@ function ProductPage() {
                   <button
                     key={variant.id}
                     type="button"
-                    onClick={() => setColorVariantId(colorVariantId === variant.id ? undefined : variant.id)}
+                    onClick={() =>
+                      setColorVariantId(colorVariantId === variant.id ? undefined : variant.id)
+                    }
                     className={cn(
                       "rounded-full border px-4 py-2 text-sm transition-colors",
                       colorVariantId === variant.id
@@ -312,12 +318,17 @@ function ProductPage() {
                   // Get color name if using Supabase color variant
                   let colorLabel: string | undefined = undefined;
                   if (isSupabaseProduct && supabaseProduct && colorVariantId) {
-                    colorLabel = supabaseProduct.color_variants.find((v) => v.id === colorVariantId)?.name;
+                    colorLabel = supabaseProduct.color_variants.find(
+                      (v) => v.id === colorVariantId,
+                    )?.name;
                   } else if (!isSupabaseProduct && colorVariantId) {
                     colorLabel = colorVariantId;
                   }
 
-                  const displayImage = isSupabaseProduct && supabaseProduct ? getImageForColor(supabaseProduct, colorVariantId) : product.image;
+                  const displayImage =
+                    isSupabaseProduct && supabaseProduct
+                      ? getImageForColor(supabaseProduct, colorVariantId)
+                      : product.image;
 
                   addLine(
                     {

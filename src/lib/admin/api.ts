@@ -189,14 +189,11 @@ export function deactivateProduct(id: string) {
  * POST /api/admin/products
  */
 export function createProductNew(input: CreateProductRequest) {
-  return fetchJson<{ success: boolean; product: any }>(
-    "/api/admin/products",
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(input),
-    },
-  );
+  return fetchJson<{ success: boolean; product: any }>("/api/admin/products", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input),
+  });
 }
 
 // --- Webhook events ---

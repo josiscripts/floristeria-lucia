@@ -6,7 +6,10 @@ interface UseSupabaseProductOptions {
   enabled?: boolean;
 }
 
-export function useSupabaseProduct(productId: string | undefined, options: UseSupabaseProductOptions = {}) {
+export function useSupabaseProduct(
+  productId: string | undefined,
+  options: UseSupabaseProductOptions = {},
+) {
   const { enabled = !!productId } = options;
 
   return useQuery({
