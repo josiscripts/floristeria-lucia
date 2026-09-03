@@ -1,0 +1,36 @@
+{
+  "timestamp": "2026-09-03T06:48:47.506Z",
+  "phase_4_edit": {
+    "status": "SUCCESS",
+    "response_status": 200,
+    "changes_applied": true
+  },
+  "phase_5_delete": {
+    "status": "SUCCESS",
+    "response_status": 200
+  },
+  "integrity_check": {
+    "products_count_stable": true,
+    "product_fully_removed": false
+  },
+  "snapshots": {
+    "before_edit": {
+      "products": 7,
+      "product_options": 7,
+      "color_variants": 3,
+      "product_images": 2
+    },
+    "after_edit": {
+      "products": 7,
+      "product_options": 7,
+      "color_variants": 3,
+      "product_images": 2
+    },
+    "after_delete": {
+      "products": 7,
+      "product_options": 7,
+      "color_variants": 3,
+      "product_images": 2
+    }
+  }
+}

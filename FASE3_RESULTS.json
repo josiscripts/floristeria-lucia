@@ -1,0 +1,17 @@
+{
+  "timestamp": "2026-09-03T06:43:49.865Z",
+  "admin_id": "a09a2812-81a7-4209-b07e-d9f2c034a4d3",
+  "snapshot_before": {
+    "products": 5,
+    "product_options": 7,
+    "color_variants": 3,
+    "product_images": 2
+  },
+  "snapshot_after": {
+    "products": 5,
+    "product_options": 7,
+    "color_variants": 3,
+    "product_images": 2
+  },
+  "product": null
+}

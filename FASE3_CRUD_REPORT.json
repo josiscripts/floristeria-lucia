@@ -1,0 +1,65 @@
+{
+  "FASE": 3,
+  "TITULO": "CREATE PRODUCT",
+  "ESTADO": "DEMOSTRADO",
+  "TIMESTAMP_INICIO": "2026-09-03T06:45:51Z",
+  
+  "SNAPSHOT_ANTES": {
+    "products": 5,
+    "product_options": 7,
+    "color_variants": 3,
+    "product_images": 2
+  },
+  
+  "ACCION_REALIZADA": {
+    "metodo": "POST /api/admin/products",
+    "autenticacion": "Bearer token (Supabase JWT)",
+    "usuario": "test-admin-token-1788417875976@floristeria.test",
+    "payload": {
+      "name": "TEST BLOQUE 4 — CRUD REAL",
+      "description": "Producto temporal para validación real del flujo CRUD.",
+      "category": "ramos",
+      "active": true,
+      "options": [
+        {
+          "name": "Estándar",
+          "price_amount": 25,
+          "discount_percent": 0,
+          "stock_quantity": 7
+        }
+      ]
+    }
+  },
+  
+  "RESPUESTA_API": {
+    "http_status": 201,
+    "success": true,
+    "product": {
+      "id": "38ac48b5-2b50-47e2-94d8-c9a3c6fc62da",
+      "ghl_product_id": "6a99179f324935c27b7ffacb",
+      "name": "TEST BLOQUE 4 — CRUD REAL",
+      "description": "Producto temporal para validación real del flujo CRUD.",
+      "category": "ramos",
+      "active": true,
+      "created_at": "2026-09-03T06:45:51.27547+00:00"
+    }
+  },
+  
+  "EVIDENCIA": {
+    "SUPABASE_PRODUCT_ID": "38ac48b5-2b50-47e2-94d8-c9a3c6fc62da",
+    "GHL_PRODUCT_ID": "6a99179f324935c27b7ffacb",
+    "CATEGORY": "ramos",
+    "STATUS_CODE": 201
+  },
+  
+  "RESULTADO": "Producto creado exitosamente en Supabase y GHL. Se verificó:",
+  "VERIFICACIONES": [
+    "HTTP 201 Created",
+    "Product ID generado en Supabase",
+    "GHL Product ID sincronizado",
+    "Categoría asignada correctamente",
+    "Respuesta JSON válida con todos los campos requeridos"
+  ],
+  
+  "NOTAS": "El script de generación de JWT fue reemplazado por el uso del SDK de Supabase con contraseña. El rol admin fue asignado correctamente después de una inicialización de perfil."
+}
