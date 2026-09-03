@@ -1,9 +1,9 @@
-import imgRamos from "@/assets/cat-ramos.jpg";
+import imgRamos from "@/assets/imagen_ramo_3.png";
 import imgGirasoles from "@/assets/girasoles.jpg";
-import imgPlantas from "@/assets/cat-plantas.jpg";
-import imgRosasEternas from "@/assets/cat-rosas-eternas.jpg";
-import imgComplementos from "@/assets/cat-complementos.jpg";
-import imgCondolencias from "@/assets/cat-condolencias.jpg";
+import imgPlantas from "@/assets/imagen_plantas_3.png";
+import imgRosasEternas from "@/assets/imagen_rosas_eternas_3.png";
+import imgComplementos from "@/assets/complementos_imagen_3.png";
+import imgCondolencias from "@/assets/imagen_condolencias_3.png";
 
 // Productos de condolencias
 import imgProducto1 from "@/assets/producto_1.png";
@@ -26,12 +26,7 @@ import imgProducto14 from "@/assets/producto_14.png";
  * Bodas, eventos, arreglos para eventos, composiciones personalizadas,
  * encargos y condolencias personalizadas viven en `src/data/services.ts`.
  */
-export type CategoryId =
-  | "ramos"
-  | "plantas"
-  | "rosas-eternas"
-  | "complementos"
-  | "condolencias";
+export type CategoryId = "ramos" | "plantas" | "rosas-eternas" | "complementos" | "condolencias";
 
 export type Product = {
   id: string;
@@ -97,14 +92,7 @@ export const categoryLabels: Record<CategoryId, string> = {
   condolencias: "Condolencias",
 };
 
-export const roseColors = [
-  "Rojo",
-  "Rosa",
-  "Blanco",
-  "Azul",
-  "Lila",
-  "Amarillo",
-] as const;
+export const roseColors = ["Rojo", "Rosa", "Blanco", "Azul", "Lila", "Amarillo"] as const;
 
 export const products: Product[] = [
   // Ramos (producto de compra directa)
@@ -437,7 +425,8 @@ export const products: Product[] = [
     category: "condolencias",
     priceMin: 90,
     image: imgProducto1,
-    description: "Centro funerario con flor natural variada, se puede elegir entre tono claro u oscuro.",
+    description:
+      "Centro funerario con flor natural variada, se puede elegir entre tono claro u oscuro.",
   },
   {
     id: "centro-lagrima",
@@ -445,7 +434,8 @@ export const products: Product[] = [
     category: "condolencias",
     priceMin: 95,
     image: imgProducto2,
-    description: "Centro funerario de flor natural con rosas, lisianthus, astromelias, clavel y lilium.",
+    description:
+      "Centro funerario de flor natural con rosas, lisianthus, astromelias, clavel y lilium.",
   },
   {
     id: "almohadon-f21",
@@ -453,7 +443,8 @@ export const products: Product[] = [
     category: "condolencias",
     priceMin: 75,
     image: imgProducto3,
-    description: "Centro funerario de flor natural con rosas, lilium, solidago y crisantemos. Se puede añadir cinta con texto.",
+    description:
+      "Centro funerario de flor natural con rosas, lilium, solidago y crisantemos. Se puede añadir cinta con texto.",
   },
   {
     id: "centro-redondo-f19",
@@ -461,7 +452,8 @@ export const products: Product[] = [
     category: "condolencias",
     priceMin: 55,
     image: imgProducto4,
-    description: "Centro funerario de flor natural con margaritas y claveles. Blanco o de flor variada.",
+    description:
+      "Centro funerario de flor natural con margaritas y claveles. Blanco o de flor variada.",
   },
   {
     id: "centro-almohadon-f22",
@@ -477,7 +469,8 @@ export const products: Product[] = [
     category: "condolencias",
     priceMin: 120,
     image: imgProducto6,
-    description: "Centro funerario de flor natural. Variada o de un color con detalle en otro tono.",
+    description:
+      "Centro funerario de flor natural. Variada o de un color con detalle en otro tono.",
   },
   {
     id: "centro-redondo-f3",
@@ -485,7 +478,8 @@ export const products: Product[] = [
     category: "condolencias",
     priceMin: 65,
     image: imgProducto7,
-    description: "Centro funerario de flor natural con rosas, margaritas, lisianthus/astromelias/gerberas y claveles.",
+    description:
+      "Centro funerario de flor natural con rosas, margaritas, lisianthus/astromelias/gerberas y claveles.",
   },
   {
     id: "centro-redondo-f20",
@@ -501,7 +495,8 @@ export const products: Product[] = [
     category: "condolencias",
     priceMin: 190,
     image: imgProducto9,
-    description: "Corona funeraria de flor natural variada en tono blanco-verde con lilium, rosas, gerberas, margaritas, claveles y paniculata.",
+    description:
+      "Corona funeraria de flor natural variada en tono blanco-verde con lilium, rosas, gerberas, margaritas, claveles y paniculata.",
   },
   {
     id: "corona-f25",
@@ -517,7 +512,8 @@ export const products: Product[] = [
     category: "condolencias",
     priceMin: 230,
     image: imgProducto11,
-    description: "Centro funerario extra grande con rosas, gerberas, anastasias, lisianthus, alhelíes y paniculata.",
+    description:
+      "Centro funerario extra grande con rosas, gerberas, anastasias, lisianthus, alhelíes y paniculata.",
   },
   {
     id: "centro-50-rosas",
@@ -525,7 +521,8 @@ export const products: Product[] = [
     category: "condolencias",
     priceMin: 200,
     image: imgProducto12,
-    description: "Centro almohadón grande con rosas rojas naturales de máxima calidad. Colores a elegir.",
+    description:
+      "Centro almohadón grande con rosas rojas naturales de máxima calidad. Colores a elegir.",
   },
   {
     id: "centro-f24",
@@ -533,7 +530,8 @@ export const products: Product[] = [
     category: "condolencias",
     priceMin: 110,
     image: imgProducto13,
-    description: "Centro funerario de una cara con flor natural. Rosas, pitimini, antirrhinum/lisianthus y clavel.",
+    description:
+      "Centro funerario de una cara con flor natural. Rosas, pitimini, antirrhinum/lisianthus y clavel.",
   },
   {
     id: "corona-f26",
