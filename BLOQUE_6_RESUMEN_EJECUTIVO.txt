@@ -1,0 +1,231 @@
+================================================================================
+BLOQUE 6 - AUDITORÍA FINAL Y VERIFICACIÓN EXTREMO A EXTREMO
+RESUMEN EJECUTIVO
+================================================================================
+
+FECHA: 2026-09-03
+ESTADO FINAL: ❌ INCOMPLETO - Faltan componentes de infraestructura
+BUILD: ✓ EXITOSO (sin errores)
+
+================================================================================
+METRICAS CLAVE
+================================================================================
+
+Catálogo Sincronizado:      50 / 51 productos (98%)
+Precios con GHL:            0 / 50 opciones (0% - CRÍTICO)
+Imágenes de Productos:      0 / 50 (0% - CRÍTICO)
+Variantes de Color:         4 (solo para Rosas Eternas)
+Datos de Prueba:            6 productos legacy a limpiar
+SKU Generados:              7 (válidos y únicos)
+
+================================================================================
+PUNTOS DE AUDITORÍA - CLASIFICACIÓN FINAL
+================================================================================
+
+PUNTO 1:  Snapshot Estado Actual     ⚠️  PARCIAL (GHL API inaccesible)
+PUNTO 2:  Catálogo Base              ⚠️  PARCIAL (1 producto falta)
+PUNTO 3:  Productos Supabase         ❌  FALLIDO (sin imágenes)
+PUNTO 4:  Opciones / Precios         ❌  FALLIDO (ghl_price_id NULL x7)
+PUNTO 5:  Consultar GHL              ❌  FALLIDO (HTTP 404)
+PUNTO 6:  SKU                        ✅  DEMOSTRADO (válidos)
+PUNTO 7:  Múltiples Precios          ❌  FALLIDO (sin sincronización GHL)
+PUNTO 8:  Rosas Eternas              ❌  FALLIDO (sin imágenes de color)
+PUNTO 9:  Imágenes                   ❌  FALLIDO (tabla vacía)
+PUNTO 10: Frontend Rutas             ❌  NO DEMOSTRADO (servidor n/a)
+PUNTO 11: Admin Panel                ❌  NO DEMOSTRADO (servidor n/a)
+PUNTO 12: CRUD Controlado            ❌  NO DEMOSTRADO (servidor n/a)
+PUNTO 13: Idempotencia               ❌  FALLIDO (datos de prueba presentes)
+PUNTO 14: Regresión Visual           ❌  NO DEMOSTRADO (servidor n/a)
+PUNTO 15: Producción Vercel          ❌  NO DEMOSTRADO (no verificado)
+PUNTO 16: Seguridad                  ⚠️  PARCIAL (revisar scripts)
+
+RESUMEN:
+  ✅ DEMOSTRADO:          1 punto
+  ⚠️  PARCIAL:            3 puntos
+  ❌ FALLIDO:             8 puntos
+  ❌ NO DEMOSTRADO:       5 puntos
+
+================================================================================
+HALLAZGOS CRÍTICOS
+================================================================================
+
+1. SÍNCRONIZACIÓN CON GHL - ❌ FALLIDO
+   ├─ PROBLEMA: Todas las 7 opciones/precios tiene ghl_price_id = NULL
+   ├─ REGLA VIOLADA: "Ningún product_option puede quedar con ghl_price_id NULL"
+   ├─ IMPACTO: No hay sincronización de múltiples precios con GHL
+   └─ CAUSA: Falta mapeo entre product_options y GHL prices
+
+2. TABLA PRODUCT_IMAGES - ❌ CRÍTICO
+   ├─ ESTADO: Tabla completamente vacía (0 registros)
+   ├─ REQUERIDO: Mínimo 50 imágenes (1 por producto)
+   ├─ IMPACTO: Frontend no puede mostrar imágenes
+   └─ ACCIONES: Crear schema + cargar 50+ imágenes
+
+3. GHL API INACCESIBLE - ❌ CRÍTICO
+   ├─ ERROR: HTTP 404 GET /v3/products
+   ├─ TOKEN: pit-0cf65f40-51a4-4e28-9793-9eb8421e2291
+   ├─ LOCATION: vOq7yOWR63XGU4qQ7XWd
+   ├─ CAUSA: Token expirado, endpoint removido, o permisos insuficientes
+   └─ BLOQUEA: Verificación de sincronización GHL
+
+4. DATOS DE PRUEBA NO LIMPIOS - ❌ FALLIDO
+   ├─ DETECTADOS: 6 productos legacy en tabla "products"
+   │  ├─ MANUAL TEST MULTIOPT
+   │  ├─ REPARACIÓN PUNTO 7 - TEST MULTIPRECIOS (x2)
+   │  ├─ Caja de Rosas Eternas (posible duplicado)
+   │  ├─ Orquídea Phalaenopsis (posible duplicado)
+   │  └─ Ramo Silvestre (en ambas tablas)
+   ├─ IMPACTO: Falta de idempotencia, posibles duplicados
+   └─ ACCIÓN: Purgar tabla legacy
+
+5. CATÁLOGO INCOMPLETO - ⚠️ PARCIAL
+   ├─ SINCRONIZADOS: 50 / 51 productos
+   ├─ FALTANTE: 1 producto (posiblemente "Ramo de Rosas" variante)
+   └─ CAUSA: Desconocida (revisar sync logic)
+
+================================================================================
+ESTADO DE COMPONENTES
+================================================================================
+
+✅ SUPABASE CONECTADO
+   └─ product_metadata: 50 registros
+   └─ product_options: 7 registros
+   └─ color_variants: 4 registros
+   └─ product_images: 0 registros (VACÍO)
+
+❌ GHL INACCESIBLE
+   └─ Token retorna HTTP 404
+   └─ No se pudo verificar sincronización
+   └─ No se pudo verificar precios
+
+⚠️  SERVIDOR DEV N/A
+   └─ No se pudo iniciar npm run dev
+   └─ No se pudo verificar rutas frontend
+   └─ No se pudo verificar admin panel
+   └─ No se pudo verificar producción
+
+✅ BUILD VERIFICADO
+   └─ npm run build: ✓ EXITOSO (sin errores)
+   └─ Output: .vercel/output/functions/
+   └─ Tamaño: ~655 KB gzipped (router principal)
+
+================================================================================
+ACCIONES REQUERIDAS - ROADMAP
+================================================================================
+
+BLOQUEANTES (MÁXIMA PRIORIDAD - Impiden BLOQUE 6):
+────────────────────────────────────────────────
+
+1. [ ] Resolver GHL API (HTTP 404)
+   ├─ Verificar token está vigente
+   ├─ Verificar Location ID es correcto
+   ├─ Probar endpoint GET /v3/products
+   ├─ Revisar documentación GHL v3 API
+   └─ CRÍTICO: Sin esto no se verifica sincronización
+
+2. [ ] Crear tabla product_images + cargar datos
+   ├─ Schema: id, product_id, image_url, color_variant_id, is_primary, sort_order
+   ├─ Cargar: 50+ imágenes (mínimo 1 por producto)
+   ├─ Validar: URLs funcionan y cargan correctamente
+   └─ CRÍTICO: Frontend depende de esto
+
+3. [ ] Mapear ghl_price_id para todas las opciones
+   ├─ Para cada product_option → obtener ghl_price_id
+   ├─ Actualizar 7 registros en product_options
+   ├─ Verificar sincronización bidireccional
+   └─ CRÍTICO: Múltiples precios dependen de esto
+
+4. [ ] Limpiar datos de prueba
+   ├─ Eliminar 6 productos legacy en tabla "products"
+   ├─ Verificar no hay duplicados
+   ├─ Validar integridad referencial
+   └─ CRÍTICO: Idempotencia depende de esto
+
+IMPORTANTE (Después de bloqueantes):
+────────────────────────────────────
+
+5. [ ] Sincronizar producto faltante (total 51)
+6. [ ] Crear imágenes específicas por color (Rosas Eternas)
+7. [ ] Iniciar servidor dev e verificar rutas
+8. [ ] Verificar admin panel completamente funcional
+9. [ ] Verificar https://floristeria-lucia.vercel.app
+10. [ ] Auditoría final de seguridad
+
+================================================================================
+CONCLUSIÓN
+================================================================================
+
+STATUS: ❌ BLOQUE 6 NO PUEDE COMPLETARSE
+
+RAZÓN:
+  El proyecto está en estado "en desarrollo" y le faltan componentes
+  fundamentales de infraestructura que son REQUISITOS PREVIOS para
+  ejecutar una auditoría de sincronización extremo a extremo.
+
+BLOQUEADORES PRINCIPALES (ORDER BY CRITICIDAD):
+  1. CRÍTICO: Sin tabla de imágenes (product_images vacía)
+     └─ Frontend no puede mostrar productos
+
+  2. CRÍTICO: Sin sincronización GHL (ghl_price_id NULL en 7 opciones)
+     └─ Múltiples precios no sincronizados
+
+  3. CRÍTICO: GHL API inaccesible (HTTP 404)
+     └─ No se puede verificar sincronización GHL
+
+  4. CRÍTICO: Datos de prueba sin limpiar (6 productos legacy)
+     └─ Inconsistencia de datos, falta idempotencia
+
+  5. IMPORTANTE: Servidor dev no estable
+     └─ No se puede verificar frontend end-to-end
+
+ESTADO DEL PROYECTO:
+  Catálogo sincronizado:       98% (50/51)
+  Infraestructura completada:  20%
+  Componentes en desarrollo:   60%
+  Faltantes bloqueantes:       20%
+
+RECOMENDACIÓN:
+  BLOQUEAR BLOQUE 7 hasta que los 4 BLOQUEADORES CRÍTICOS sean resueltos.
+  Tiempo estimado para desbloquear: 6-10 horas de ingeniería backend.
+
+  El proyecto NO está listo para auditoría extremo a extremo sin:
+  - Tabla de imágenes de productos
+  - Sincronización correcta con GHL
+  - Limpieza de datos de prueba
+  - Verificación de API GHL
+
+================================================================================
+PRÓXIMOS PASOS
+================================================================================
+
+1. INMEDIATAMENTE:
+   a) Revisar y resolver el error GHL HTTP 404
+   b) Crear schema de product_images e importar datos
+   c) Mapear ghl_price_id para las 7 opciones
+
+2. LUEGO:
+   d) Limpiar tabla legacy products
+   e) Re-ejecutar auditoría BLOQUE 6
+
+3. CUANDO ESTÉ LISTO:
+   f) Proceder con BLOQUE 7
+
+================================================================================
+DOCUMENTACIÓN GENERADA
+================================================================================
+
+Este reporte:
+  /BLOQUE_6_RESUMEN_EJECUTIVO.txt (este archivo)
+
+Reporte detallado:
+  /BLOQUE_6_AUDIT_REPORT.md (análisis punto por punto)
+
+Scripts de auditoría:
+  /scripts/bloque-6-audit.mjs (auditoría básica)
+  /scripts/bloque-6-detailed-audit.mjs (auditoría detallada)
+
+================================================================================
+AUTOR: Claude Haiku 4.5
+FECHA: 2026-09-03
+VERSIÓN: BLOQUE 6 - Auditoría Inicial (v1.0)
+================================================================================

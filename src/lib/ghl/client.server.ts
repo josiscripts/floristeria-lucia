@@ -78,7 +78,7 @@ export async function getGHLProducts(
     if (options?.skip) params.append("skip", String(options.skip));
     if (options?.filter?.status) params.append("status", String(options.filter.status));
 
-    // API v3 uses /products/ endpoint with locationId as query parameter
+    // API v3 uses /products endpoint (NOT /v3/products - v3 is in header)
     const queryString = params.toString();
     const fullEndpoint = queryString ? `/products/?${queryString}` : "/products/";
 

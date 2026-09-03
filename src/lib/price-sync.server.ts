@@ -50,15 +50,16 @@ export async function ensureProductPrice(options: {
     }
 
     // GHL v3 API endpoint for creating prices
-    // Endpoint: POST /v3/products/{productId}/prices
-    const endpoint = `/products/${ghlProductId}/prices?locationId=${finalLocationId}`;
+    // Correct endpoint: POST /products/{productId}/price
+    const endpoint = `/products/${ghlProductId}/price`;
 
     const payload = {
       name: priceName,
       amount: amount,
       currency: currency,
       sku: sku,
-      status: "active",
+      type: "one_time",
+      locationId: finalLocationId,
     };
 
     try {
@@ -67,16 +68,21 @@ export async function ensureProductPrice(options: {
         body: JSON.stringify(payload),
       });
 
-      const priceId = response.id || response._id;
+      // GHL returns price ID in response._id
+      const priceId = response._id || response.id;
       if (!priceId) {
-        console.warn(`[PriceSync] Created price but no ID returned`, { response });
+        console.error(`[PriceSync] GHL did not return price ID in response`, {
+          response,
+          ghlProductId,
+          priceName,
+        });
         return {
-          success: true,
-          ghlPriceId: `price_${Date.now()}`, // Fallback ID
+          success: false,
+          error: "GHL did not return price ID in response",
         };
       }
 
-      console.log(`[PriceSync] Created price ${priceId} for product ${ghlProductId}`);
+      console.log(`[PriceSync] Successfully created price ${priceId} for product ${ghlProductId}`);
       return {
         success: true,
         ghlPriceId: priceId,
@@ -85,11 +91,11 @@ export async function ensureProductPrice(options: {
       // If error is GHL-specific, check if it's a 409 (already exists)
       const errorMsg = error instanceof Error ? error.message : String(error);
       if (errorMsg.includes("409") || errorMsg.includes("already exists")) {
-        // Price already exists - this is acceptable for idempotency
-        console.log(`[PriceSync] Price already exists for ${ghlProductId}, proceeding...`);
+        // Price already exists - return error but mark as non-fatal
+        console.warn(`[PriceSync] Price already exists for ${ghlProductId} with SKU ${sku}`);
         return {
-          success: true,
-          ghlPriceId: `price_existing`, // Placeholder for existing price
+          success: false,
+          error: "Price already exists for this SKU",
         };
       }
       throw error;
