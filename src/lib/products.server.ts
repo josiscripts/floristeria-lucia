@@ -212,8 +212,8 @@ export async function createProductOption(input: CreateProductOptionInput) {
 
     return { success: true, data };
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown error";
-    console.error("[ProductsLib] createProductOption error:", message);
+    const message = error instanceof Error ? error.message : String(error);
+    console.error("[ProductsLib] createProductOption error:", message, { error });
     return { success: false, error: message };
   }
 }

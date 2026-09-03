@@ -62,9 +62,9 @@ export async function generateSKU(
 
     // Query all SKUs with this prefix to find the next sequence number
     const { data: existingSkus, error: queryError } = await supabaseAdmin
-      .from("product_metadata")
+      .from("product_options")
       .select("sku")
-      .like("sku", `FL-${prefix as string}-%`)
+      .like("sku", `FL-${prefix}-%`)
       .is("deleted_at", null);
 
     if (queryError && queryError.code !== "PGRST116") {
