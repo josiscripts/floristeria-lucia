@@ -24,7 +24,12 @@ import {
   supportsRibbon,
   products,
 } from "@/data/catalog";
-import { useGHLProduct } from "@/hooks/useGHLProduct";
+import { useSupabaseProduct } from "@/hooks/useSupabaseProduct";
+import {
+  supabaseProductToLegacy,
+  getSupabasePriceTiers,
+  getImageForColor,
+} from "@/lib/convert-supabase-product";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/producto/$id")({
@@ -54,14 +59,24 @@ function ProductPage() {
   const { productName, productDescription, productBadge, tierLabel } = useCatalogText();
   const { addLine, setCartOpen, toggleFavorite, isFavorite } = useShop();
 
-  // Fetch product from GHL, with fallback to local catalog
-  const { data: ghlProduct } = useGHLProduct(id);
+  // Fetch product from Supabase, with fallback to local catalog
+  const { data: supabaseProduct } = useSupabaseProduct(id);
   const fallbackProduct = findProduct(id);
-  const product = ghlProduct || fallbackProduct;
 
-  const tiers = useMemo(() => (product ? priceTiers(product) : []), [product]);
+  // Use Supabase product if available, otherwise use legacy product
+  const isSupabaseProduct = !!supabaseProduct;
+  const product = supabaseProduct ? supabaseProductToLegacy(supabaseProduct) : fallbackProduct;
+
+  // Get tiers from Supabase product options or use legacy priceTiers
+  const tiers = useMemo(() => {
+    if (isSupabaseProduct && supabaseProduct) {
+      return getSupabasePriceTiers(supabaseProduct.product_options);
+    }
+    return product ? priceTiers(product) : [];
+  }, [product, isSupabaseProduct, supabaseProduct]);
+
   const [tierIndex, setTierIndex] = useState(0);
-  const [color, setColor] = useState<string | undefined>(undefined);
+  const [colorVariantId, setColorVariantId] = useState<string | undefined>(undefined);
   const [qty, setQty] = useState(1);
   const [ribbonSelected, setRibbonSelected] = useState(false);
   const [justAdded, setJustAdded] = useState(false);
@@ -105,7 +120,7 @@ function ProductPage() {
       <div className="mt-8 grid gap-10 lg:grid-cols-2 lg:gap-16">
         <div className="relative overflow-hidden rounded-xl border border-border/70 bg-card">
           <img
-            src={product.image}
+            src={isSupabaseProduct && supabaseProduct ? getImageForColor(supabaseProduct, colorVariantId) : product.image}
             alt={name}
             width={1024}
             height={1024}
@@ -150,7 +165,30 @@ function ProductPage() {
             </div>
           )}
 
-          {product.colors && product.colors.length > 0 && (
+          {isSupabaseProduct && supabaseProduct && supabaseProduct.color_variants.length > 0 && (
+            <div className="mt-6">
+              <p className="text-sm font-medium">{t("product.color")}</p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {supabaseProduct.color_variants.map((variant) => (
+                  <button
+                    key={variant.id}
+                    type="button"
+                    onClick={() => setColorVariantId(colorVariantId === variant.id ? undefined : variant.id)}
+                    className={cn(
+                      "rounded-full border px-4 py-2 text-sm transition-colors",
+                      colorVariantId === variant.id
+                        ? "border-primary bg-primary-soft text-accent-foreground"
+                        : "border-border text-muted-foreground hover:border-primary",
+                    )}
+                  >
+                    {variant.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {product.colors && product.colors.length > 0 && !isSupabaseProduct && (
             <div className="mt-6">
               <p className="text-sm font-medium">{t("product.color")}</p>
               <div className="mt-2 flex flex-wrap gap-2">
@@ -158,10 +196,10 @@ function ProductPage() {
                   <button
                     key={c}
                     type="button"
-                    onClick={() => setColor(color === c ? undefined : c)}
+                    onClick={() => setColorVariantId(colorVariantId === c ? undefined : c)}
                     className={cn(
                       "rounded-full border px-4 py-2 text-sm transition-colors",
-                      color === c
+                      colorVariantId === c
                         ? "border-primary bg-primary-soft text-accent-foreground"
                         : "border-border text-muted-foreground hover:border-primary",
                     )}
@@ -271,14 +309,24 @@ function ProductPage() {
                 size="lg"
                 className="min-w-56 flex-1"
                 onClick={() => {
+                  // Get color name if using Supabase color variant
+                  let colorLabel: string | undefined = undefined;
+                  if (isSupabaseProduct && supabaseProduct && colorVariantId) {
+                    colorLabel = supabaseProduct.color_variants.find((v) => v.id === colorVariantId)?.name;
+                  } else if (!isSupabaseProduct && colorVariantId) {
+                    colorLabel = colorVariantId;
+                  }
+
+                  const displayImage = isSupabaseProduct && supabaseProduct ? getImageForColor(supabaseProduct, colorVariantId) : product.image;
+
                   addLine(
                     {
                       productId: product.id,
                       name: product.name,
-                      size: [tier?.label ?? "Estándar", color].filter(Boolean).join(" · "),
+                      size: [tier?.label ?? "Estándar", colorLabel].filter(Boolean).join(" · "),
                       category: categoryLabels[product.category],
                       price: unitPrice,
-                      image: product.image,
+                      image: displayImage,
                     },
                     qty,
                   );
@@ -291,7 +339,7 @@ function ProductPage() {
                         : t("product.ribbonSectionTitle"),
                       category: categoryLabels[product.category],
                       price: ribbonCost(subtotal),
-                      image: product.image,
+                      image: displayImage,
                     });
                   }
                   setJustAdded(true);
