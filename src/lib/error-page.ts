@@ -18,7 +18,7 @@ export function renderErrorPage(): string {
   </head>
   <body>
     <div class="card">
-      <h1>Oops! Something went wrong</h1>
+      <h1>Hmm, something went wrong</h1>
       <p>We're working to fix this. Try refreshing or head back home.</p>
       <div class="actions">
         <button class="primary" onclick="location.reload()">Try again</button>
