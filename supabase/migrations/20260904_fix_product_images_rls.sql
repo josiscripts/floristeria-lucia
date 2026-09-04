@@ -8,6 +8,10 @@ DROP POLICY IF EXISTS "product_images_delete_authenticated" ON "public"."product
 DROP POLICY IF EXISTS "product_images_update_authenticated" ON "public"."product_images";
 DROP POLICY IF EXISTS "product_images_write_authenticated" ON "public"."product_images";
 
+-- Drop any existing new policies to ensure idempotent migration
+DROP POLICY IF EXISTS "product_images_read_active" ON "public"."product_images";
+DROP POLICY IF EXISTS "product_images_service_role" ON "public"."product_images";
+
 -- Create proper policies matching products/product_options/color_variants pattern
 CREATE POLICY "product_images_read_active" ON "public"."product_images"
   FOR SELECT
