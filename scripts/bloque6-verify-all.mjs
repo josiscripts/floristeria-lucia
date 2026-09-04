@@ -25,9 +25,7 @@ async function verify() {
   console.log("\n=== BLOQUE 6 - VERIFICACIÓN FINAL ===\n");
 
   // Products
-  const { data: products } = await supabase
-    .from("products")
-    .select("id");
+  const { data: products } = await supabase.from("products").select("id");
   console.log(`✅ Productos: ${products?.length || 0}`);
 
   // Test products
@@ -38,21 +36,15 @@ async function verify() {
   console.log(`✅ TEST products: ${test?.length || 0}`);
 
   // Images (no deleted_at filter)
-  const { data: images } = await supabase
-    .from("product_images")
-    .select("id");
+  const { data: images } = await supabase.from("product_images").select("id");
   console.log(`✅ Imágenes: ${images?.length || 0}`);
 
   // Colors (no deleted_at filter)
-  const { data: colors } = await supabase
-    .from("color_variants")
-    .select("id");
+  const { data: colors } = await supabase.from("color_variants").select("id");
   console.log(`✅ Colores: ${colors?.length || 0}`);
 
   // Options
-  const { data: options } = await supabase
-    .from("product_options")
-    .select("id");
+  const { data: options } = await supabase.from("product_options").select("id");
   console.log(`✅ Opciones: ${options?.length || 0}`);
 
   // Rosas Eternas
@@ -70,10 +62,7 @@ async function verify() {
   console.log(`Total opciones: ${options?.length}`);
 
   const allOk =
-    products?.length === 50 &&
-    test?.length === 0 &&
-    images?.length >= 50 &&
-    colors?.length >= 12;
+    products?.length === 50 && test?.length === 0 && images?.length >= 50 && colors?.length >= 12;
 
   console.log(`\n${allOk ? "✅ LISTO" : "⚠️ INCOMPLETO"}\n`);
 }

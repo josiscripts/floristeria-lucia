@@ -12,6 +12,7 @@
 **Floristería Lucía** es una aplicación e-commerce full-stack construida con **TanStack Start** (SSR) que sincroniza productos con **GoHighLevel (GHL)** para gestión CRM integrada. El proyecto está en **fase de consolidación** con trabajo activo en sincronización de órdenes y webhooks.
 
 ### Características principales:
+
 - ✅ E-commerce: catálogo dinámico, carrito, checkout, órdenes
 - ✅ Autenticación: Supabase Auth + admin panel
 - ✅ Integración GHL: sincronización bidireccional de productos y oportunidades
@@ -22,6 +23,7 @@
 - 🔄 En desarrollo: webhooks de órdenes (FASE 4)
 
 ### Deployado en:
+
 - **Frontend:** Vercel (https://floristeria-lucia.vercel.app)
 - **Backend/DB:** Supabase cloud
 - **Build:** Nitro 3.0 con preset Vercel
@@ -63,24 +65,25 @@ floristeria-lucia/
 
 ### Stack Técnico
 
-| Layer | Technology | Version |
-|-------|-----------|---------|
-| Framework | TanStack Start | 1.168.32 |
-| React | React + React DOM | 19.2.0 |
-| Router | TanStack Router | 1.170.18 |
-| State | TanStack Query | 5.101.1 |
-| Styling | Tailwind CSS + Radix UI | 4.2.1 |
-| Database | Supabase PostgreSQL | Cloud |
-| Auth | Supabase Auth | Built-in |
-| Server | Nitro | 3.0.260603-beta |
-| Deployment | Vercel | Node.js preset |
-| Build Tool | Vite | 8.2.0 |
-| Language | TypeScript | 5.8.3 |
-| Linting | ESLint + Prettier | Latest |
+| Layer      | Technology              | Version         |
+| ---------- | ----------------------- | --------------- |
+| Framework  | TanStack Start          | 1.168.32        |
+| React      | React + React DOM       | 19.2.0          |
+| Router     | TanStack Router         | 1.170.18        |
+| State      | TanStack Query          | 5.101.1         |
+| Styling    | Tailwind CSS + Radix UI | 4.2.1           |
+| Database   | Supabase PostgreSQL     | Cloud           |
+| Auth       | Supabase Auth           | Built-in        |
+| Server     | Nitro                   | 3.0.260603-beta |
+| Deployment | Vercel                  | Node.js preset  |
+| Build Tool | Vite                    | 8.2.0           |
+| Language   | TypeScript              | 5.8.3           |
+| Linting    | ESLint + Prettier       | Latest          |
 
 ### Dependencias importantes
 
 **Frontend UI:**
+
 - `@radix-ui/*` (50+ componentes)
 - `lucide-react` (iconografía)
 - `react-hook-form` + `zod` (formularios tipados)
@@ -89,11 +92,13 @@ floristeria-lucia/
 - `sonner` (notificaciones toast)
 
 **Backend/Data:**
+
 - `@supabase/supabase-js` (SDK Supabase)
 - `@tanstack/react-query` (data fetching)
 - `date-fns` (fechas)
 
 **Utilities:**
+
 - `clsx` + `tailwind-merge` (className utilities)
 - `class-variance-authority` (CVA para componentes)
 - `vite-tsconfig-paths` (path aliases)
@@ -118,12 +123,12 @@ Home
 
 **Imagen de fondo:**
 
-| Propiedad | Valor | Nota |
-|-----------|-------|------|
-| Imagen | `hero_1.png` | Ubicación: `src/assets/hero_1.png` |
-| Tipo | Imagen estática | Sin animación, zoom ni desplazamiento |
-| Formato | PNG | Optimizado para web |
-| Presentación | Única imagen | Cubre todo el viewport |
+| Propiedad    | Valor           | Nota                                  |
+| ------------ | --------------- | ------------------------------------- |
+| Imagen       | `hero_1.png`    | Ubicación: `src/assets/hero_1.png`    |
+| Tipo         | Imagen estática | Sin animación, zoom ni desplazamiento |
+| Formato      | PNG             | Optimizado para web                   |
+| Presentación | Única imagen    | Cubre todo el viewport                |
 
 **Escenas textuales (3 en total, rotación cada 7 segundos):**
 
@@ -169,12 +174,12 @@ Estado "stable" ──[300ms]──> "exiting" ──[300ms]──> "entering" �
 
 **Responsive:**
 
-| Breakpoint | Height | Image width | Layout |
-|------------|--------|-------------|--------|
-| Móvil | 50svh | 100% | Imagen arriba, texto abajo |
-| Tablet | 54svh | 100% | Imagen arriba, texto abajo |
+| Breakpoint   | Height | Image width | Layout                                        |
+| ------------ | ------ | ----------- | --------------------------------------------- |
+| Móvil        | 50svh  | 100%        | Imagen arriba, texto abajo                    |
+| Tablet       | 54svh  | 100%        | Imagen arriba, texto abajo                    |
 | Desktop (lg) | 100svh | Full screen | Imagen derecha, texto izquierda (superpuesto) |
-| Desktop (xl) | 100svh | Full screen | Padding izquierda aumentado |
+| Desktop (xl) | 100svh | Full screen | Padding izquierda aumentado                   |
 
 **Carga de imagen:**
 
@@ -202,37 +207,42 @@ Estado "stable" ──[300ms]──> "exiting" ──[300ms]──> "entering" �
 
 **Fuentes de datos:**
 
-| Elemento | Origen | Tipo |
-|----------|--------|------|
-| Imagen hero | `src/assets/hero_1.png` | Estático local |
-| Textos | i18n (LanguageContext) | Keys en `home.hero.slides.*` |
-| Botones | Static routes | Links a `/catalogo`, `/contacto` |
+| Elemento    | Origen                  | Tipo                             |
+| ----------- | ----------------------- | -------------------------------- |
+| Imagen hero | `src/assets/hero_1.png` | Estático local                   |
+| Textos      | i18n (LanguageContext)  | Keys en `home.hero.slides.*`     |
+| Botones     | Static routes           | Links a `/catalogo`, `/contacto` |
 
 ---
 
 ### 2.2 Otras secciones del HOME
 
 #### ProductsServicesEditorial
+
 - **Ubicación:** src/components/ProductsServicesEditorial.tsx
 - **Propósito:** Showcase de productos y servicios
 - **Componentes:** Usa ProductCard para mostrar items destacados
 - **Datos:** Del context de Shop
 
 #### CollectionsCarousel
+
 - **Ubicación:** src/components/CollectionsCarousel.tsx
 - **Propósito:** Carrusel de colecciones
 - **Animación:** Embla carousel
 
 #### SeasonalCollection
+
 - **Ubicación:** src/components/SeasonalCollection.tsx
 - **Propósito:** Campañas estacionales
 - **Datos:** `src/data/seasonalCampaigns.ts`
 
 #### StoreHighlights
+
 - **Ubicación:** src/components/StoreHighlights.tsx
 - **Propósito:** Destacados de la tienda
 
 #### AboutEditorial
+
 - **Ubicación:** src/components/AboutEditorial.tsx
 - **Propósito:** Sección "Sobre nosotros"
 - **Imagen:** `src/assets/sobre_nosotros_hero.jpeg`
@@ -246,19 +256,14 @@ Estado "stable" ──[300ms]──> "exiting" ──[300ms]──> "entering" �
 **Confirmado por código (Tailwind):**
 
 ```css
---primary: HSL (variable - típicamente #D4A574 oro)
---primary-foreground: white/dark
---secondary: (variable)
---accent: (variable)
---background: #fafaf9 (light) / #0f0f0f (dark)
---foreground: #1a1a1a (light) / #fafaf9 (dark)
---muted-foreground: #737373
---gold: Variable (usado en eyebrows, dividers)
---border: rgba(border-color, 0.4)
---card: rgba(255, 255, 255, 0.05)
+--primary: HSL (variable - típicamente #d4a574 oro) --primary-foreground: white/dark
+  --secondary: (variable) --accent: (variable) --background: #fafaf9 (light) / #0f0f0f (dark)
+  --foreground: #1a1a1a (light) / #fafaf9 (dark) --muted-foreground: #737373 --gold: Variable
+  (usado en eyebrows, dividers) --border: rgba(border-color, 0.4) --card: rgba(255, 255, 255, 0.05);
 ```
 
 **Tema:**
+
 - Light mode (default)
 - Dark mode (togglable via ThemeContext)
 - Transición suave entre temas
@@ -281,12 +286,14 @@ font-sans       /* Body y UI (Tailwind default sans) */
 ### Espaciados
 
 **Sistema de padding/margin:**
+
 - Usa Tailwind spacing scale (0.25rem increments)
 - Desktop: padding 12 (48px) en containers
 - Móvil: padding 5 (20px)
 - Tablet: padding 8 (32px)
 
 **Gaps:**
+
 - Entre secciones: `gap-8` a `gap-12`
 - Dentro de cards: `gap-3` a `gap-6`
 
@@ -305,20 +312,25 @@ hover:shadow-petal     /* On hover */
 ### Botones
 
 **Variantes:**
+
 - Primary: `bg-primary text-primary-foreground`
 - Outline: `border border-input`
 - Ghost: Sin fondo
 
 **Ejemplos:**
+
 ```jsx
 <Button asChild size="lg" className="h-12">
-  <Link to="/catalogo">Catálogo <ArrowRight /></Link>
+  <Link to="/catalogo">
+    Catálogo <ArrowRight />
+  </Link>
 </Button>
 ```
 
 ### Sistema responsive
 
 **Breakpoints (Tailwind):**
+
 ```
 sm: 640px
 md: 768px
@@ -343,11 +355,13 @@ className="text-[2.5rem] sm:text-5xl lg:text-[3.5rem] xl:text-[4.25rem]"
 ### Componentes reutilizables
 
 **UI Base (shadcn/ui):**
+
 - Button, Input, Card, Dialog, Dropdown, Popover, etc. (50+)
 - Estilos consistentes
 - Accesibilidad incluida (Radix primitives)
 
 **Business Components:**
+
 - ProductCard: Mostrar productos con imagen, nombre, precio
 - CartDrawer: Carrito deslizable
 - Navbar: Navegación principal
@@ -366,6 +380,7 @@ className="text-[2.5rem] sm:text-5xl lg:text-[3.5rem] xl:text-[4.25rem]"
 - Admin panel protegido (guard en `src/lib/admin/guard.server.ts`)
 
 **Rutas autenticadas:**
+
 ```
 _authenticated/
 ├── mi-cuenta/
@@ -409,13 +424,13 @@ GHL Product ──[API sync]──> Supabase
 
 **Categorías:**
 
-| ID | Nombre | Imagen | Descripción |
-|----|----|--------|-------------|
-| ramos | Ramos y arreglos florales | imagen_ramo_3.png | Montados a mano cada mañana |
-| plantas | Plantas y Composiciones | imagen_plantas_3.png | Interior, orquídeas, cestas |
-| rosas-eternas | Rosas eternas | imagen_rosas_eternas_3.png | Duran 7-10 años |
-| complementos | Complementos | complementos_imagen_3.png | Bombones, vino, globos, etc. |
-| condolencias | Condolencias | imagen_condolencias_3.png | Cruces, ramos, aros |
+| ID            | Nombre                    | Imagen                     | Descripción                  |
+| ------------- | ------------------------- | -------------------------- | ---------------------------- |
+| ramos         | Ramos y arreglos florales | imagen_ramo_3.png          | Montados a mano cada mañana  |
+| plantas       | Plantas y Composiciones   | imagen_plantas_3.png       | Interior, orquídeas, cestas  |
+| rosas-eternas | Rosas eternas             | imagen_rosas_eternas_3.png | Duran 7-10 años              |
+| complementos  | Complementos              | complementos_imagen_3.png  | Bombones, vino, globos, etc. |
+| condolencias  | Condolencias              | imagen_condolencias_3.png  | Cruces, ramos, aros          |
 
 ### 4.3 Carrito y Favoritos
 
@@ -427,11 +442,13 @@ GHL Product ──[API sync]──> Supabase
 - Persistencia: localStorage (carrito, favoritos)
 
 **CartDrawer:**
+
 - Componente: `src/components/CartDrawer.tsx`
 - Muestra items, totales, CTA checkout
 - Responsive: drawer en móvil, panel en desktop
 
 **ProductCard:**
+
 - Botón ❤️ para favoritos
 - Se rellena si está en favoritos
 
@@ -494,13 +511,13 @@ GHL Product ──[API sync]──> Supabase
 
 **API Endpoints:**
 
-| Endpoint | Método | Propósito |
-|----------|--------|-----------|
-| `/api/orders` | POST | Crear orden |
-| `/api/orders` | GET | Listar órdenes |
-| `/api/orders/$id` | GET | Detalle de orden |
-| `/api/confirmation` | POST | Obtener confirmación |
-| `/api/webhooks/ghl-opportunity` | POST | Webhook de cambio de stage |
+| Endpoint                        | Método | Propósito                  |
+| ------------------------------- | ------ | -------------------------- |
+| `/api/orders`                   | POST   | Crear orden                |
+| `/api/orders`                   | GET    | Listar órdenes             |
+| `/api/orders/$id`               | GET    | Detalle de orden           |
+| `/api/confirmation`             | POST   | Obtener confirmación       |
+| `/api/webhooks/ghl-opportunity` | POST   | Webhook de cambio de stage |
 
 ### 4.5 Personalizador de ramos
 
@@ -509,6 +526,7 @@ GHL Product ──[API sync]──> Supabase
 **Componente:** `src/components/CustomOrderBuilder.tsx`
 
 **Funcionalidad:**
+
 - Construcción personalizada de ramos
 - Selección de flores
 - Colores disponibles
@@ -525,6 +543,7 @@ GHL Product ──[API sync]──> Supabase
 - **Ordenamiento:** (Pendiente de verificar)
 
 **Backend:**
+
 - `useSupabaseProducts()` hook
 - Query en Supabase: filtra por categoría, busca en nombre
 
@@ -555,16 +574,16 @@ GHL Product ──[API sync]──> Supabase
 
 ### 5.1 Origen de datos
 
-| Datos | Origen | Tipo | Caching |
-|-------|--------|------|---------|
-| Catálogo de productos | Supabase + GHL | Dinámico | React Query |
-| Órdenes | Supabase | Dinámico | Query backend |
-| Usuarios | Supabase Auth | Dinámico | Session storage |
-| Textos (i18n) | `src/i18n/` | Estático | Memory |
-| Configuración tienda | `src/data/` | Estático | Memory |
-| Imágenes hero frames | Supabase Storage | Dinámico | Browser cache |
-| Imágenes productos | Supabase Storage | Dinámico | Browser cache |
-| Campañas estacionales | `src/data/seasonalCampaigns.ts` | Estático | Memory |
+| Datos                 | Origen                          | Tipo     | Caching         |
+| --------------------- | ------------------------------- | -------- | --------------- |
+| Catálogo de productos | Supabase + GHL                  | Dinámico | React Query     |
+| Órdenes               | Supabase                        | Dinámico | Query backend   |
+| Usuarios              | Supabase Auth                   | Dinámico | Session storage |
+| Textos (i18n)         | `src/i18n/`                     | Estático | Memory          |
+| Configuración tienda  | `src/data/`                     | Estático | Memory          |
+| Imágenes hero frames  | Supabase Storage                | Dinámico | Browser cache   |
+| Imágenes productos    | Supabase Storage                | Dinámico | Browser cache   |
+| Campañas estacionales | `src/data/seasonalCampaigns.ts` | Estático | Memory          |
 
 ### 5.2 Supabase
 
@@ -695,47 +714,48 @@ POST /api/orders
 #### GoHighLevel (GHL)
 
 **Variables de env:**
+
 ```
 GHL_PRIVATE_INTEGRATION_TOKEN (secreto, backend only)
 ```
 
 **Funciones:**
 
-| Función | Ubicación | Propósito |
-|---------|-----------|-----------|
-| `syncGHLContact()` | `lib/ghl/client.server.ts` | Crea/obtiene contacto en GHL |
-| `syncGHLOpportunity()` | `lib/ghl/client.server.ts` | Crea oportunidad + mapea 9 campos |
-| Webhook handler | `routes/api.webhooks.ghl-product.ts` | Sincroniza productos GHL → Supabase |
-| Webhook handler | `routes/api.webhooks.ghl-opportunity.ts` | Sincroniza stage changes → order status |
+| Función                | Ubicación                                | Propósito                               |
+| ---------------------- | ---------------------------------------- | --------------------------------------- |
+| `syncGHLContact()`     | `lib/ghl/client.server.ts`               | Crea/obtiene contacto en GHL            |
+| `syncGHLOpportunity()` | `lib/ghl/client.server.ts`               | Crea oportunidad + mapea 9 campos       |
+| Webhook handler        | `routes/api.webhooks.ghl-product.ts`     | Sincroniza productos GHL → Supabase     |
+| Webhook handler        | `routes/api.webhooks.ghl-opportunity.ts` | Sincroniza stage changes → order status |
 
 **Tipos:**
 
 ```typescript
 type GHLProduct = {
-  id: string
-  name: string
-  price?: number
-  sku?: string
-  [key: string]: unknown
-}
+  id: string;
+  name: string;
+  price?: number;
+  sku?: string;
+  [key: string]: unknown;
+};
 
 type GHLContact = {
-  id: string
-  locationId: string
-  firstName: string
-  lastName: string
-  email?: string
-  phone?: string
-  type: "lead" | "customer"
-}
+  id: string;
+  locationId: string;
+  firstName: string;
+  lastName: string;
+  email?: string;
+  phone?: string;
+  type: "lead" | "customer";
+};
 
 type GHLOpportunity = {
-  id: string
-  contactId: string
-  pipelineId: string
-  stageId: string
-  [key: string]: unknown
-}
+  id: string;
+  contactId: string;
+  pipelineId: string;
+  stageId: string;
+  [key: string]: unknown;
+};
 ```
 
 **Mapeo: GHL Stage → Order Status**
@@ -755,6 +775,7 @@ type GHLOpportunity = {
 **Status:** Variables de env definidas pero integración no confirmada en código
 
 **Variables:**
+
 ```
 STRIPE_PUBLIC_KEY (si existe)
 STRIPE_SECRET_KEY (si existe)
@@ -763,6 +784,7 @@ STRIPE_SECRET_KEY (si existe)
 #### Google OAuth
 
 **Variables:**
+
 ```
 VITE_GOOGLE_CLIENT_ID (frontend)
 ```
@@ -785,21 +807,22 @@ export const Route = createFileRoute("/")({
       { title: "floristeria lucia · Flores, plantas y emociones" },
       { name: "description", content: "..." },
       { property: "og:title", content: "..." },
-      { property: "og:description", content: "..." }
-    ]
-  })
-})
+      { property: "og:description", content: "..." },
+    ],
+  }),
+});
 ```
 
 **Títulos encontrados:**
 
-| Página | Title | Meta description |
-|--------|-------|------------------|
-| Home | "floristeria lucia · Flores, plantas y emociones" | "ramos, plantas, cestas, flores preservadas..." |
-| Catálogo | "Catálogo de flores y plantas · floristeria lucia" | "Ramos de temporada, plantas, rosas eternas..." |
-| Servicios | (Requiere verificación) | (Requiere verificación) |
+| Página    | Title                                              | Meta description                                |
+| --------- | -------------------------------------------------- | ----------------------------------------------- |
+| Home      | "floristeria lucia · Flores, plantas y emociones"  | "ramos, plantas, cestas, flores preservadas..." |
+| Catálogo  | "Catálogo de flores y plantas · floristeria lucia" | "Ramos de temporada, plantas, rosas eternas..." |
+| Servicios | (Requiere verificación)                            | (Requiere verificación)                         |
 
 **Open Graph:**
+
 - ✅ og:title presente
 - ✅ og:description presente
 - ⚠️ og:image (pendiente verificación)
@@ -808,9 +831,7 @@ export const Route = createFileRoute("/")({
 
 ```html
 <!-- Home: h1 → Hero title -->
-<h1 className="font-display text-[3.5rem]">
-  {t("home.hero.slides.${scene}.title")}
-</h1>
+<h1 className="font-display text-[3.5rem]">{t("home.hero.slides.${scene}.title")}</h1>
 
 <!-- Secciones: h2 para encabezados -->
 ```
@@ -874,17 +895,20 @@ export const Route = createFileRoute("/")({
 #### 🔴 CRÍTICO: Animación hero con 205 frames
 
 **Problema:**
+
 - 205 imágenes = potencialmente 80-100 MB de descarga
 - Aunque estén lazy-loaded, cuando se cargan todas usan mucha memoria
 - Canvas rendering: 40ms entre frames = sincrónico
 
 **Impacto:**
+
 - First paint: OK (imagen de portada carga rápido)
 - Total page load: Puede ser lento si usuario ve todo
 - Mobile: Puede causar memory pressure
 - Bandwidth: Costoso en conexiones lentas
 
 **Recomendaciones:**
+
 - Considerar reducir a 100-150 frames
 - Usar WebP en lugar de JPEG (mejor compresión)
 - Implementar preload selectivo (solo siguientes frames)
@@ -893,20 +917,24 @@ export const Route = createFileRoute("/")({
 #### ⚠️ PERFORMANCE: Catálogo con muchos productos
 
 **Problema:**
+
 - Si hay 100+ productos: productCard renderiza imagen en cada one
 - Lazy loading ayuda pero puede causar layout shift
 
 **Impacto:**
+
 - CLS (Cumulative Layout Shift) si imágenes cargan sin fixed height
 - Images con `aspect-square` deberían mitigar
 
 #### ⚠️ PERFORMANCE: Estado global (ShopContext)
 
 **Problema:**
+
 - Carrito en localStorage: actualización sincrónica
 - Favoritos en estado: toda lista re-renderiza
 
 **Recomendación:**
+
 - Implementar React Query para cart state
 - Memoizar ProductCard
 
@@ -917,7 +945,7 @@ export const Route = createFileRoute("/")({
 ✅ React Query caching  
 ✅ Async/await para GHL sync (no bloquea UI)  
 ✅ requestAnimationFrame para animaciones  
-✅ Signed URLs con TTL  
+✅ Signed URLs con TTL
 
 ---
 
@@ -938,6 +966,7 @@ xl: 1280px  (desktop)
 #### Hero (AnimatedFlowerHero)
 
 **Móvil (0-640px):**
+
 - Height: 50svh (mitad de viewport)
 - Canvas arriba
 - Texto abajo
@@ -945,11 +974,13 @@ xl: 1280px  (desktop)
 - Gradient degradado de legibilidad en parte inferior
 
 **Tablet (640-1024px):**
+
 - Height: 54svh
 - Aumenta padding: 32px (sm:px-8)
 - Canvas sigue arriba
 
 **Desktop (lg: 1024px+):**
+
 - Height: 100svh (full screen)
 - Layout: Canvas derecha, texto izquierda
 - Canvas: 100% altura, object-cover
@@ -958,11 +989,13 @@ xl: 1280px  (desktop)
 #### Navbar
 
 **Móvil:**
+
 - Menu hamburguesa (Sheet)
 - Busca visible solo en banner
 - Cart drawer
 
 **Desktop:**
+
 - Menu horizontal
 - Todos los links visibles
 - Dropdown para idioma
@@ -970,6 +1003,7 @@ xl: 1280px  (desktop)
 #### ProductCard
 
 **Responsive:**
+
 - Tamaño: Adapta a grid del container
 - Grid típicamente: 2 cols mobile, 3 cols tablet, 4 cols desktop
 - Imagen: aspect-square, scale on hover
@@ -977,6 +1011,7 @@ xl: 1280px  (desktop)
 #### Catálogo
 
 **Grid:**
+
 ```
 sm: grid-cols-2   (2 productos por fila)
 md: grid-cols-2   (2 productos)
@@ -985,6 +1020,7 @@ xl: grid-cols-4   (4 productos)
 ```
 
 **Padding:**
+
 ```
 px-5 (móvil: 20px)
 sm:px-8 (tablet: 32px)
@@ -1005,13 +1041,13 @@ lg:px-12 (desktop: 48px)
 
 ### 9.1 Cambios sin impacto directo (safe)
 
-| Cambio | Razón |
-|--------|-------|
-| Modificar textos en i18n | Cambio aislado, no rompe lógica |
-| Añadir nuevos idiomas | Sistema i18n está preparado |
-| Cambiar colores Tailwind | Solo CSS, no lógica |
-| Modificar contenido estático (aboutEditorial, etc.) | Contenido independiente |
-| Añadir nuevas rutas de página | Router permite dinámicamente |
+| Cambio                                              | Razón                           |
+| --------------------------------------------------- | ------------------------------- |
+| Modificar textos en i18n                            | Cambio aislado, no rompe lógica |
+| Añadir nuevos idiomas                               | Sistema i18n está preparado     |
+| Cambiar colores Tailwind                            | Solo CSS, no lógica             |
+| Modificar contenido estático (aboutEditorial, etc.) | Contenido independiente         |
+| Añadir nuevas rutas de página                       | Router permite dinámicamente    |
 
 ### 9.2 Cambios de ALTO RIESGO (revisar dependencias)
 
@@ -1020,12 +1056,14 @@ lg:px-12 (desktop: 48px)
 **Riesgo:** Rompe toda la experiencia hero
 
 **Dependencias a revisar:**
+
 - ✅ i18n keys: `home.hero.slides.*`
 - ✅ Supabase bucket: `hero-animation/` (205 imágenes)
 - ✅ useT() hook
 - ✅ CSS clases Tailwind
 
 **Impacto potencial:**
+
 - Si cambias número de frames: recargar todos los archivos
 - Si cambias paradas: ajustar i18n keys
 - Si cambias delays: puede afectar sincronización
@@ -1035,11 +1073,13 @@ lg:px-12 (desktop: 48px)
 **Riesgo:** Rompe TODA la aplicación
 
 **Tablas críticas:**
+
 - `products` → Catálogo
 - `orders` → Checkout/confirmación
 - `product_options`, `color_variants` → Detalles de producto
 
 **Antes de modificar DB:**
+
 1. Verificar todas las queries en `src/lib/*.server.ts`
 2. Verificar todos los hooks `useSupabase*`
 3. Verificar RLS policies
@@ -1050,6 +1090,7 @@ lg:px-12 (desktop: 48px)
 **Riesgo:** Rompe carrito y favoritos
 
 **Dependencias:**
+
 - CartDrawer
 - ProductCard (favoritos)
 - checkout.tsx
@@ -1060,11 +1101,13 @@ lg:px-12 (desktop: 48px)
 **Riesgo:** Rompe sincronización de productos y órdenes
 
 **Dependencias:**
+
 - `src/lib/ghl/client.server.ts`
 - Webhooks: `api.webhooks.ghl-*.ts`
 - Tipos: `ghl/types.ts`
 
 **Antes de modificar:**
+
 1. Verificar todas las funciones de sync
 2. Probar webhook signature validation
 3. Verificar idempotencia (delivery_id deduplicación)
@@ -1074,20 +1117,21 @@ lg:px-12 (desktop: 48px)
 **Riesgo:** Pierde acceso admin
 
 **Dependencias:**
+
 - `useAuth()` hook
 - Guard: `admin/guard.server.ts`
 - Rutas autenticadas: `_authenticated/**`
 
 ### 9.3 Componentes reutilizables (NO duplicar)
 
-| Componente | Ubicación | Uso |
-|------------|-----------|-----|
-| ProductCard | `src/components/ProductCard.tsx` | Catálogo, home, servicios |
-| Button | `src/components/ui/button.tsx` | Todo el sitio |
-| Card | `src/components/ui/card.tsx` | Contenedores |
-| Input | `src/components/ui/input.tsx` | Formularios |
-| Dialog | `src/components/ui/dialog.tsx` | Modales |
-| Dropdown | `src/components/ui/dropdown-menu.tsx` | Menus |
+| Componente  | Ubicación                             | Uso                       |
+| ----------- | ------------------------------------- | ------------------------- |
+| ProductCard | `src/components/ProductCard.tsx`      | Catálogo, home, servicios |
+| Button      | `src/components/ui/button.tsx`        | Todo el sitio             |
+| Card        | `src/components/ui/card.tsx`          | Contenedores              |
+| Input       | `src/components/ui/input.tsx`         | Formularios               |
+| Dialog      | `src/components/ui/dialog.tsx`        | Modales                   |
+| Dropdown    | `src/components/ui/dropdown-menu.tsx` | Menus                     |
 
 **Regla:** Modificar componentes base puede tener impacto en toda la aplicación
 
@@ -1215,10 +1259,12 @@ Admin Dashboard (routes/_authenticated/admin/index.tsx)
 
 ```tsx
 // ✅ BIEN: Cambiar estilos
-className="text-blue-500 hover:text-blue-600"  // ← solo Tailwind
+className = "text-blue-500 hover:text-blue-600"; // ← solo Tailwind
 
 // ❌ MAL: Cambiar estructura
-{/* Cambió <div> por <section> sin motivo */}
+{
+  /* Cambió <div> por <section> sin motivo */
+}
 ```
 
 **Tipografía:**
@@ -1387,36 +1433,36 @@ export type Product = {
 
 ## 12. INVENTARIO DE PÁGINAS
 
-| Ruta | Archivo | Autenticación | Propósito |
-|------|---------|----------------|-----------|
-| `/` | `routes/index.tsx` | No | Home |
-| `/catalogo` | `routes/catalogo.tsx` | No | Listado productos |
-| `/producto/:id` | `routes/producto.$id.tsx` | No | Detalle producto |
-| `/carrito` | `routes/carrito.tsx` | No | Vista carrito |
-| `/checkout` | `routes/checkout.tsx` | No | Formulario checkout |
-| `/confirmation/:orderId` | `routes/confirmation.$orderId.tsx` | No | Confirmación orden |
-| `/personalizar-ramo` | `routes/personalizar-ramo.tsx` | No | Personalizador |
-| `/rosas-eternas` | `routes/rosas-eternas.tsx` | No | Rosas eternas |
-| `/favoritos` | `routes/favoritos.tsx` | No | Lista favoritos |
-| `/servicios` | `routes/servicios.tsx` | No | Listado servicios |
-| `/servicios/:slug` | `routes/servicios.$slug.tsx` | No | Detalle servicio |
-| `/sobre-nosotros` | `routes/sobre-nosotros.tsx` | No | Sobre nosotros |
-| `/contacto` | `routes/contacto.tsx` | No | Formulario contacto |
-| `/envios` | `routes/envios.tsx` | No | Info envíos |
-| `/legal/:slug` | `routes/legal.$slug.tsx` | No | Páginas legales |
-| `/auth` | `routes/auth.tsx` | No | Login/Register |
-| `/mi-cuenta` | `routes/_authenticated/mi-cuenta.tsx` | ✅ Sí | Mi cuenta |
-| `/admin` | `routes/_authenticated/admin/index.tsx` | ✅ Sí | Dashboard admin |
-| `/admin/dashboard` | `routes/_authenticated/admin/dashboard.tsx` | ✅ Sí | Analytics |
-| `/admin/orders` | `routes/_authenticated/admin/orders.tsx` | ✅ Sí | Gestión órdenes |
-| `/admin/orders/:id` | `routes/_authenticated/admin/orders.$id.tsx` | ✅ Sí | Detalle orden |
-| `/admin/products` | `routes/_authenticated/admin/products.tsx` | ✅ Sí | Gestión productos |
-| `/admin/products/:id` | `routes/_authenticated/admin/products.$id.tsx` | ✅ Sí | Editar producto |
-| `/admin/products/new` | `routes/_authenticated/admin/products.new.tsx` | ✅ Sí | Crear producto |
-| `/admin/reports` | `routes/_authenticated/admin/reports.tsx` | ✅ Sí | Reportes |
-| `/admin/settings` | `routes/_authenticated/admin/settings.tsx` | ✅ Sí | Configuración |
-| `/admin/webhooks` | `routes/_authenticated/admin/webhooks.tsx` | ✅ Sí | Eventos webhook |
-| `/debug/ghl-test` | `routes/debug.ghl-test.tsx` | No | Debug GHL |
+| Ruta                     | Archivo                                        | Autenticación | Propósito           |
+| ------------------------ | ---------------------------------------------- | ------------- | ------------------- |
+| `/`                      | `routes/index.tsx`                             | No            | Home                |
+| `/catalogo`              | `routes/catalogo.tsx`                          | No            | Listado productos   |
+| `/producto/:id`          | `routes/producto.$id.tsx`                      | No            | Detalle producto    |
+| `/carrito`               | `routes/carrito.tsx`                           | No            | Vista carrito       |
+| `/checkout`              | `routes/checkout.tsx`                          | No            | Formulario checkout |
+| `/confirmation/:orderId` | `routes/confirmation.$orderId.tsx`             | No            | Confirmación orden  |
+| `/personalizar-ramo`     | `routes/personalizar-ramo.tsx`                 | No            | Personalizador      |
+| `/rosas-eternas`         | `routes/rosas-eternas.tsx`                     | No            | Rosas eternas       |
+| `/favoritos`             | `routes/favoritos.tsx`                         | No            | Lista favoritos     |
+| `/servicios`             | `routes/servicios.tsx`                         | No            | Listado servicios   |
+| `/servicios/:slug`       | `routes/servicios.$slug.tsx`                   | No            | Detalle servicio    |
+| `/sobre-nosotros`        | `routes/sobre-nosotros.tsx`                    | No            | Sobre nosotros      |
+| `/contacto`              | `routes/contacto.tsx`                          | No            | Formulario contacto |
+| `/envios`                | `routes/envios.tsx`                            | No            | Info envíos         |
+| `/legal/:slug`           | `routes/legal.$slug.tsx`                       | No            | Páginas legales     |
+| `/auth`                  | `routes/auth.tsx`                              | No            | Login/Register      |
+| `/mi-cuenta`             | `routes/_authenticated/mi-cuenta.tsx`          | ✅ Sí         | Mi cuenta           |
+| `/admin`                 | `routes/_authenticated/admin/index.tsx`        | ✅ Sí         | Dashboard admin     |
+| `/admin/dashboard`       | `routes/_authenticated/admin/dashboard.tsx`    | ✅ Sí         | Analytics           |
+| `/admin/orders`          | `routes/_authenticated/admin/orders.tsx`       | ✅ Sí         | Gestión órdenes     |
+| `/admin/orders/:id`      | `routes/_authenticated/admin/orders.$id.tsx`   | ✅ Sí         | Detalle orden       |
+| `/admin/products`        | `routes/_authenticated/admin/products.tsx`     | ✅ Sí         | Gestión productos   |
+| `/admin/products/:id`    | `routes/_authenticated/admin/products.$id.tsx` | ✅ Sí         | Editar producto     |
+| `/admin/products/new`    | `routes/_authenticated/admin/products.new.tsx` | ✅ Sí         | Crear producto      |
+| `/admin/reports`         | `routes/_authenticated/admin/reports.tsx`      | ✅ Sí         | Reportes            |
+| `/admin/settings`        | `routes/_authenticated/admin/settings.tsx`     | ✅ Sí         | Configuración       |
+| `/admin/webhooks`        | `routes/_authenticated/admin/webhooks.tsx`     | ✅ Sí         | Eventos webhook     |
+| `/debug/ghl-test`        | `routes/debug.ghl-test.tsx`                    | No            | Debug GHL           |
 
 ---
 
@@ -1424,52 +1470,52 @@ export type Product = {
 
 ### Componentes de negocio
 
-| Componente | Ubicación | Props | Propósito |
-|-----------|-----------|-------|-----------|
-| AnimatedFlowerHero | `components/AnimatedFlowerHero.tsx` | None | Hero con animación 205 frames |
-| HeroSlider | `components/HeroSlider.tsx` | None | Hero alternativo (estático) |
-| ProductCard | `components/ProductCard.tsx` | `product`, `hideTiers?` | Tarjeta de producto |
-| CartDrawer | `components/CartDrawer.tsx` | None | Drawer carrito |
-| Navbar | `components/Navbar.tsx` | None | Barra navegación |
-| Footer | `components/Footer.tsx` | None | Pie página |
-| CollectionsCarousel | `components/CollectionsCarousel.tsx` | None | Carrusel colecciones |
-| StoreHighlights | `components/StoreHighlights.tsx` | None | Destacados tienda |
-| SeasonalCollection | `components/SeasonalCollection.tsx` | None | Colección estacional |
-| ProductsServicesEditorial | `components/ProductsServicesEditorial.tsx` | None | Editorial productos |
-| CustomOrderBuilder | `components/CustomOrderBuilder.tsx` | None | Personalizador |
-| AboutEditorial | `components/AboutEditorial.tsx` | None | Sección about |
-| CookieNotice | `components/CookieNotice.tsx` | None | Aviso cookies |
-| CookiePreferences | `components/CookiePreferences.tsx` | None | Preferencias cookies |
-| CoverageSearch | `components/CoverageSearch.tsx` | None | Búsqueda cobertura |
+| Componente                | Ubicación                                  | Props                   | Propósito                     |
+| ------------------------- | ------------------------------------------ | ----------------------- | ----------------------------- |
+| AnimatedFlowerHero        | `components/AnimatedFlowerHero.tsx`        | None                    | Hero con animación 205 frames |
+| HeroSlider                | `components/HeroSlider.tsx`                | None                    | Hero alternativo (estático)   |
+| ProductCard               | `components/ProductCard.tsx`               | `product`, `hideTiers?` | Tarjeta de producto           |
+| CartDrawer                | `components/CartDrawer.tsx`                | None                    | Drawer carrito                |
+| Navbar                    | `components/Navbar.tsx`                    | None                    | Barra navegación              |
+| Footer                    | `components/Footer.tsx`                    | None                    | Pie página                    |
+| CollectionsCarousel       | `components/CollectionsCarousel.tsx`       | None                    | Carrusel colecciones          |
+| StoreHighlights           | `components/StoreHighlights.tsx`           | None                    | Destacados tienda             |
+| SeasonalCollection        | `components/SeasonalCollection.tsx`        | None                    | Colección estacional          |
+| ProductsServicesEditorial | `components/ProductsServicesEditorial.tsx` | None                    | Editorial productos           |
+| CustomOrderBuilder        | `components/CustomOrderBuilder.tsx`        | None                    | Personalizador                |
+| AboutEditorial            | `components/AboutEditorial.tsx`            | None                    | Sección about                 |
+| CookieNotice              | `components/CookieNotice.tsx`              | None                    | Aviso cookies                 |
+| CookiePreferences         | `components/CookiePreferences.tsx`         | None                    | Preferencias cookies          |
+| CoverageSearch            | `components/CoverageSearch.tsx`            | None                    | Búsqueda cobertura            |
 
 ### Componentes admin
 
-| Componente | Ubicación | Propósito |
-|-----------|-----------|-----------|
-| AdminHeader | `components/admin/AdminHeader.tsx` | Header admin |
-| AdminSidebar | `components/admin/AdminSidebar.tsx` | Sidebar menu |
-| OrdersTable | `components/admin/OrdersTable.tsx` | Tabla órdenes |
-| OrderDetail | `components/admin/OrderDetail.tsx` | Detalle orden |
-| ProductsTable | `components/admin/ProductsTable.tsx` | Tabla productos |
-| ProductForm | `components/admin/ProductForm.tsx` | Editar producto |
-| ProductFormNew | `components/admin/ProductFormNew.tsx` | Crear producto |
-| ProductOptionsSection | `components/admin/ProductOptionsSection.tsx` | Gestión opciones |
-| ProductImagesSection | `components/admin/ProductImagesSection.tsx` | Gestión imágenes |
-| ColorVariantsSection | `components/admin/ColorVariantsSection.tsx` | Gestión colores |
-| SalesChart | `components/admin/SalesChart.tsx` | Gráfico ventas |
+| Componente              | Ubicación                                      | Propósito           |
+| ----------------------- | ---------------------------------------------- | ------------------- |
+| AdminHeader             | `components/admin/AdminHeader.tsx`             | Header admin        |
+| AdminSidebar            | `components/admin/AdminSidebar.tsx`            | Sidebar menu        |
+| OrdersTable             | `components/admin/OrdersTable.tsx`             | Tabla órdenes       |
+| OrderDetail             | `components/admin/OrderDetail.tsx`             | Detalle orden       |
+| ProductsTable           | `components/admin/ProductsTable.tsx`           | Tabla productos     |
+| ProductForm             | `components/admin/ProductForm.tsx`             | Editar producto     |
+| ProductFormNew          | `components/admin/ProductFormNew.tsx`          | Crear producto      |
+| ProductOptionsSection   | `components/admin/ProductOptionsSection.tsx`   | Gestión opciones    |
+| ProductImagesSection    | `components/admin/ProductImagesSection.tsx`    | Gestión imágenes    |
+| ColorVariantsSection    | `components/admin/ColorVariantsSection.tsx`    | Gestión colores     |
+| SalesChart              | `components/admin/SalesChart.tsx`              | Gráfico ventas      |
 | StatusDistributionChart | `components/admin/StatusDistributionChart.tsx` | Distribución estado |
-| SalesEvolutionChart | `components/admin/SalesEvolutionChart.tsx` | Evolución ventas |
-| TopProductsTable | `components/admin/TopProductsTable.tsx` | Productos top |
-| StatusBadge | `components/admin/StatusBadge.tsx` | Badge estado |
-| GHLStatusBadge | `components/admin/GHLStatusBadge.tsx` | Badge GHL |
-| WebhookPayloadDialog | `components/admin/WebhookPayloadDialog.tsx` | Payload viewer |
-| WebhookEventsTable | `components/admin/WebhookEventsTable.tsx` | Tabla eventos |
-| AuditLogTable | `components/admin/AuditLogTable.tsx` | Audit log |
-| KpiCard | `components/admin/KpiCard.tsx` | Card KPI |
-| LoadingState | `components/admin/LoadingState.tsx` | Loading state |
-| EmptyState | `components/admin/EmptyState.tsx` | Empty state |
-| ErrorState | `components/admin/ErrorState.tsx` | Error state |
-| Pagination | `components/admin/Pagination.tsx` | Paginación |
+| SalesEvolutionChart     | `components/admin/SalesEvolutionChart.tsx`     | Evolución ventas    |
+| TopProductsTable        | `components/admin/TopProductsTable.tsx`        | Productos top       |
+| StatusBadge             | `components/admin/StatusBadge.tsx`             | Badge estado        |
+| GHLStatusBadge          | `components/admin/GHLStatusBadge.tsx`          | Badge GHL           |
+| WebhookPayloadDialog    | `components/admin/WebhookPayloadDialog.tsx`    | Payload viewer      |
+| WebhookEventsTable      | `components/admin/WebhookEventsTable.tsx`      | Tabla eventos       |
+| AuditLogTable           | `components/admin/AuditLogTable.tsx`           | Audit log           |
+| KpiCard                 | `components/admin/KpiCard.tsx`                 | Card KPI            |
+| LoadingState            | `components/admin/LoadingState.tsx`            | Loading state       |
+| EmptyState              | `components/admin/EmptyState.tsx`              | Empty state         |
+| ErrorState              | `components/admin/ErrorState.tsx`              | Error state         |
+| Pagination              | `components/admin/Pagination.tsx`              | Paginación          |
 
 ### Componentes UI (shadcn/ui)
 
@@ -1592,6 +1638,7 @@ Supabase Storage:
 **Tipo:** BaaS (Backend-as-a-Service)
 
 **Servicios:**
+
 - PostgreSQL database
 - Authentication (email/OAuth)
 - Storage (buckets for images)
@@ -1599,6 +1646,7 @@ Supabase Storage:
 - Edge functions (optional)
 
 **Endpoints:**
+
 - Base URL: `https://leksmflinhohnekbgmgj.supabase.co`
 - REST API: Auto-generated
 - WebSocket: `wss://leksmflinhohnekbgmgj.supabase.co`
@@ -1640,6 +1688,7 @@ Supabase Storage:
 ### 🟢 RESUELTO (2026-09-04)
 
 **Animación hero con 205 frames** ✅ RESUELTO
+
 - **Cambio:** Reemplazado sistema de 205 frames por imagen estática `hero_1.png`
 - **Beneficio:** Eliminado consumo de datos (80-100 MB), mejorado LCP
 - **Ubicación:** `src/components/AnimatedFlowerHero.tsx`
@@ -1648,16 +1697,19 @@ Supabase Storage:
 ### ⚠️ IMPORTANTE
 
 **Verificar CORS en Supabase Storage signed URLs**
+
 - **Problema:** Si hay restricción de CORS, imágenes pueden no cargar
 - **Ubicación:** Supabase dashboard → Settings → CORS
 - **Solución:** Configurar CORS para dominio Vercel
 
 **RLS en webhook_events table**
+
 - **Problema:** Si RLS no está correctamente configurado, webhooks pueden fallar
 - **Ubicación:** Supabase → SQL editor → RLS on webhook_events
 - **Solución:** Verificar que service_role pueda insertar/actualizar
 
 **Falta de error logging en GHL sync**
+
 - **Problema:** Si sync falla, no se sabe por qué
 - **Ubicación:** `src/lib/ghl/client.server.ts` y `src/lib/orders.server.ts`
 - **Solución:** Añadir try-catch y logging
@@ -1741,10 +1793,10 @@ Supabase Storage:
 
 Este historial se actualiza cada vez que se hace una modificación significativa al proyecto.
 
-| Fecha | Versión | Cambio | Autor |
-|-------|---------|--------|-------|
-| 2026-09-04 | v1.1 | **Hero refactor:** Eliminado sistema de 205 frames, implementado imagen estática `hero_1.png` con rotación de textos cada 7 segundos. Mejora: eliminado 80-100 MB de datos, optimizado LCP. | Claude |
-| 2026-09-03 | v1.0 | Documento de referencia inicial | Auditoría 2026-09-03 |
+| Fecha      | Versión | Cambio                                                                                                                                                                                      | Autor                |
+| ---------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
+| 2026-09-04 | v1.1    | **Hero refactor:** Eliminado sistema de 205 frames, implementado imagen estática `hero_1.png` con rotación de textos cada 7 segundos. Mejora: eliminado 80-100 MB de datos, optimizado LCP. | Claude               |
+| 2026-09-03 | v1.0    | Documento de referencia inicial                                                                                                                                                             | Auditoría 2026-09-03 |
 
 ---
 

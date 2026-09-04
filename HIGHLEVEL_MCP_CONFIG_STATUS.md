@@ -32,6 +32,7 @@ Status: ! Needs authentication
 Since this is an HTTP MCP requiring OAuth, you need to authenticate through HighLevel's official OAuth flow:
 
 **Option 1: Via Claude Code IDE Interface (Recommended)**
+
 1. Open Claude Code
 2. Look for authentication prompt or MCP settings
 3. Click "Authenticate" or "Connect to HighLevel"
@@ -42,6 +43,7 @@ Since this is an HTTP MCP requiring OAuth, you need to authenticate through High
 8. Browser redirects back with authorization token
 
 **Option 2: Manual Configuration (if Option 1 doesn't work)**
+
 1. Visit: https://services.leadconnectorhq.com/auth/oauth
 2. Complete HighLevel OAuth flow manually
 3. Copy returned authorization token
@@ -55,6 +57,7 @@ Since this is an HTTP MCP requiring OAuth, you need to authenticate through High
 ## What Will Happen After OAuth
 
 Once authenticated, the MCP will:
+
 - ✅ Provide access to HighLevel API v3
 - ✅ Allow reading opportunities, contacts, pipelines
 - ✅ Allow reading webhooks configuration
@@ -66,6 +69,7 @@ Once authenticated, the MCP will:
 ## Expected Scopes
 
 Based on HighLevel MCP v2 documentation, likely scopes include:
+
 - `opportunities.read` - Read opportunities
 - `contacts.read` - Read contacts
 - `pipelines.read` - Read pipelines
@@ -123,15 +127,15 @@ Once you've authenticated:
 
 ## Status Summary
 
-| Component | Status |
-|-----------|--------|
-| MCP Server Added | ✅ Yes |
-| Endpoint Configured | ✅ Yes |
-| Connection Status | 🟡 Awaiting OAuth |
-| Authentication | 🟡 REQUIRED |
+| Component                | Status                       |
+| ------------------------ | ---------------------------- |
+| MCP Server Added         | ✅ Yes                       |
+| Endpoint Configured      | ✅ Yes                       |
+| Connection Status        | 🟡 Awaiting OAuth            |
+| Authentication           | 🟡 REQUIRED                  |
 | Herramientas disponibles | 🔒 Unknown (blocked on auth) |
-| Lectura HL Data | 🔒 Unknown (blocked on auth) |
-| Permisos de escritura | 🔒 Unknown (blocked on auth) |
+| Lectura HL Data          | 🔒 Unknown (blocked on auth) |
+| Permisos de escritura    | 🔒 Unknown (blocked on auth) |
 
 ---
 
@@ -149,4 +153,3 @@ Once you've authenticated:
 ---
 
 **Once authenticated, I will verify capabilities and create final status report.**
-

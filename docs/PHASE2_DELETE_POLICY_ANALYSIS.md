@@ -1,7 +1,7 @@
 # FASE 2: Análisis de DELETE Policy para Soft Delete
 
 **Fecha:** 2026-08-26  
-**Tema:** ¿Es necesaria la policy DELETE o debe usarse solo UPDATE?  
+**Tema:** ¿Es necesaria la policy DELETE o debe usarse solo UPDATE?
 
 ---
 
@@ -18,6 +18,7 @@ CREATE POLICY "delete_product_metadata_service_role"
 ```
 
 Pero la arquitectura usa **soft delete** con:
+
 - `status = 'active'` o `status = 'deleted'`
 - `deleted_at = now()`
 
@@ -35,11 +36,13 @@ DELETE FROM product_metadata WHERE id = 'xxx';
 ```
 
 **Ventajas:**
+
 - ✅ Recupera espacio en BD
 - ✅ Útil para datos sensibles (GDPR)
 - ✅ Limpia datos de prueba
 
 **Desventajas:**
+
 - ❌ Pierde auditoría histórica
 - ❌ Puede romper reportes
 - ❌ Irreversible
@@ -50,13 +53,14 @@ DELETE FROM product_metadata WHERE id = 'xxx';
 ### Opción B: Usar UPDATE solamente (soft delete puro)
 
 ```sql
-UPDATE product_metadata 
-SET status = 'deleted', deleted_at = now() 
+UPDATE product_metadata
+SET status = 'deleted', deleted_at = now()
 WHERE id = 'xxx';
 -- Fila EXISTE pero oculta
 ```
 
 **Ventajas:**
+
 - ✅ Mantiene auditoría completa
 - ✅ Reversible (cambiar status a 'active')
 - ✅ RLS oculta automáticamente (status != 'active')
@@ -64,6 +68,7 @@ WHERE id = 'xxx';
 - ✅ Datos preservados para reportes
 
 **Desventajas:**
+
 - ❌ Acumula datos "eliminados"
 - ❌ Requiere limpieza manual después
 
@@ -79,7 +84,8 @@ Búsqueda en repositorio de operaciones DELETE:
 grep -r "DELETE FROM product_metadata" src/
 ```
 
-**Resultado esperado:** 
+**Resultado esperado:**
+
 ```
 (Sin resultados - no hay código de DELETE)
 ```
@@ -92,6 +98,7 @@ grep -r "status.*deleted" src/
 ```
 
 **Resultado esperado:**
+
 - Código que hace: `UPDATE ... SET status = 'deleted'`
 - No hay DELETE directo
 
@@ -120,9 +127,10 @@ grep -r "status.*deleted" src/
 **La eliminación de productos debe ser SIEMPRE UPDATE a status='deleted'**, nunca DELETE directo.
 
 El código que sincroniza con GHL debe hacer:
+
 ```sql
-UPDATE product_metadata 
-SET status = 'deleted', deleted_at = now() 
+UPDATE product_metadata
+SET status = 'deleted', deleted_at = now()
 WHERE ghl_product_id = 'xxx'
 -- NO: DELETE FROM product_metadata ...
 ```
@@ -144,13 +152,15 @@ WHERE ghl_product_id = 'xxx'
 Cuando se implemente webhook/polling de GHL para eliminar productos:
 
 **CORRECTO (soft delete):**
+
 ```sql
-UPDATE product_metadata 
+UPDATE product_metadata
 SET status = 'deleted', deleted_at = now()
 WHERE ghl_product_id = $1 AND status = 'active';
 ```
 
 **INCORRECTO (hard delete):**
+
 ```sql
 DELETE FROM product_metadata WHERE ghl_product_id = $1;
 ```
@@ -164,4 +174,3 @@ DELETE FROM product_metadata WHERE ghl_product_id = $1;
 La policy DELETE permite flexibility futura sin comprometer el soft delete actual.
 
 El control real está en el código que use UPDATE vs DELETE.
-

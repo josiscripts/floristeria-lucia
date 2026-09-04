@@ -6,9 +6,7 @@
   "functions": [],
   "triggers": [],
   "policies": [],
-  "warnings": [
-    "No storage buckets found"
-  ],
+  "warnings": ["No storage buckets found"],
   "errors": [
     "Tables audit failed: Could not find the table 'public.information_schema.tables' in the schema cache"
   ]

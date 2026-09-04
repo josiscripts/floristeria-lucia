@@ -46,7 +46,7 @@ async function main() {
       password: testPassword,
       email_confirm: true,
     },
-    { skipConfirmation: true }
+    { skipConfirmation: true },
   );
 
   if (createError) {
@@ -68,14 +68,12 @@ async function main() {
   // Step 2: Assign admin role
   console.log("\nStep 2: Assigning admin role...");
 
-  const { error: profileError } = await supabaseAdmin
-    .from("profiles")
-    .upsert({
-      id: user.id,
-      email: user.email,
-      role: "admin",
-      updated_at: new Date().toISOString(),
-    });
+  const { error: profileError } = await supabaseAdmin.from("profiles").upsert({
+    id: user.id,
+    email: user.email,
+    role: "admin",
+    updated_at: new Date().toISOString(),
+  });
 
   if (profileError) {
     console.error(`Error setting role: ${profileError.message}`);
@@ -129,8 +127,8 @@ async function main() {
         token_first_30: token.substring(0, 30) + "...",
       },
       null,
-      2
-    )
+      2,
+    ),
   );
   console.log(`User info saved to: ${infoFile}`);
 }

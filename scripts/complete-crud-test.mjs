@@ -106,7 +106,7 @@ async function main() {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(editPayload),
     });
@@ -149,7 +149,7 @@ async function main() {
     const deleteRes = await fetch(`http://localhost:3000/api/admin/products/${product.id}`, {
       method: "DELETE",
       headers: {
-        "Authorization": `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -205,10 +205,10 @@ async function main() {
     console.log("RESULT SUMMARY");
     console.log("=".repeat(60));
     console.log(
-      `FASE 4 (EDIT):   ${report.phase_4_edit.status} (HTTP ${report.phase_4_edit.response_status})`
+      `FASE 4 (EDIT):   ${report.phase_4_edit.status} (HTTP ${report.phase_4_edit.response_status})`,
     );
     console.log(
-      `FASE 5 (DELETE): ${report.phase_5_delete.status} (HTTP ${report.phase_5_delete.response_status})`
+      `FASE 5 (DELETE): ${report.phase_5_delete.status} (HTTP ${report.phase_5_delete.response_status})`,
     );
     console.log(`No duplicates:   ${report.integrity_check.products_count_stable ? "✓" : "✗"}`);
     console.log(`Product removed: ${report.integrity_check.product_fully_removed ? "✓" : "✗"}`);

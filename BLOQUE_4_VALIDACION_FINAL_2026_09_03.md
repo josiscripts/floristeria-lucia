@@ -11,12 +11,14 @@
 **Objetivo:** Recuperar componentes visuales sin destruir BLOQUE 4
 
 ### Archivos Recuperados:
+
 - ✓ src/components/Footer.tsx [IMPLEMENTADO - Verificado en commit actual]
 - ✓ src/components/Navbar.tsx [IMPLEMENTADO - Verificado en commit actual]
 - ✓ src/components/AboutEditorial.tsx [IMPLEMENTADO - Verificado en commit actual]
 - ✓ src/assets/*.png, *.jpg, *.webp [IMPLEMENTADO - 76 archivos en src/assets/]
 
 ### Verificación de Bloque 4 (No eliminado):
+
 - ✓ src/lib/product-metadata.server.ts [EXISTE - 7.2 KB]
 - ✓ src/routes/api.products.ts [EXISTE - 7.9 KB]
 - ✓ src/components/admin/ProductForm.tsx [EXISTE - 8.2 KB]
@@ -30,25 +32,29 @@
 ## FASE 3: VERIFICACIÓN FRONTEND (DEMOSTRADO)
 
 ### Build Local:
+
 - Command: `npm run build`
 - Result: ✓ PASS - "✓ built in 3.23s"
 - TypeScript: ✓ Sin errores
 - Status: [DEMOSTRADO]
 
 ### Dev Server:
+
 - Command: `npm run dev`
 - Running: ✓ Yes (puerto 3004)
 - Status: [DEMOSTRADO]
 
 ### Rutas Probadas (HTTP Status):
-| Ruta | Status | Contenido | Estado |
-|------|--------|-----------|--------|
-| `/` (home) | 200 OK | HTML completo | DEMOSTRADO |
-| `/catalogo` | 200 OK | 59+ KB contenido | DEMOSTRADO |
-| `/sobre-nosotros` | 200 OK | HTML + assets | DEMOSTRADO |
-| `/admin/products` | 307 Redirect | (Auth required) | DEMOSTRADO |
+
+| Ruta              | Status       | Contenido        | Estado     |
+| ----------------- | ------------ | ---------------- | ---------- |
+| `/` (home)        | 200 OK       | HTML completo    | DEMOSTRADO |
+| `/catalogo`       | 200 OK       | 59+ KB contenido | DEMOSTRADO |
+| `/sobre-nosotros` | 200 OK       | HTML + assets    | DEMOSTRADO |
+| `/admin/products` | 307 Redirect | (Auth required)  | DEMOSTRADO |
 
 ### Assets Verificados:
+
 - hero_1.png [✓ EXISTE]
 - imagen_eventos.webp [✓ EXISTE]
 - ramo_boda.png [✓ EXISTE]
@@ -66,6 +72,7 @@
 **Configuración:** vercel.json presente y válido
 
 ### Estado HTTP:
+
 ```
 URL: https://floristeria-lucia.vercel.app
 Status: HTTP 500 Internal Server Error
@@ -74,12 +81,14 @@ Server: Vercel
 ```
 
 ### Análisis:
+
 - ✓ Proyecto existe en Vercel
 - ✓ Domain correcta identificada
 - ⚠ Deployment actual FALLIDO (HTTP 500)
 - ⚠ Necesita nuevo push para actualizar build
 
 **Recomendación:** Push nuevo build:
+
 ```bash
 git push origin main  # Vercel redeploy automático
 ```
@@ -117,6 +126,7 @@ Orphan Records:
 ```
 
 ### GHL Verificación:
+
 - ⚠ API test retornó HTML (error), no JSON
 - ✓ Pero los productos en Supabase tienen ghl_product_id válidos
 - → Integración existe pero API test necesita debug
@@ -129,6 +139,7 @@ Orphan Records:
 ## FASE 6: CREAR PRODUCTO (ESTRUCTURA IMPLEMENTADA)
 
 ### Infraestructura:
+
 - ✓ Ruta: POST /api/admin/products [EXISTE]
 - ✓ Guard: withAdminGuard [IMPLEMENTADO]
 - ✓ DB Tables: products, product_options [DEMOSTRADO]
@@ -136,6 +147,7 @@ Orphan Records:
 - ✓ GHL Sync: createGHLProduct() [EXISTE en código]
 
 ### Flujo Implementado:
+
 1. Validación de permisos admin
 2. Creación en Supabase (products table)
 3. Creación de product_options
@@ -150,12 +162,14 @@ Orphan Records:
 ## FASE 7: EDITAR PRODUCTO (ESTRUCTURA IMPLEMENTADA)
 
 ### Infraestructura:
+
 - ✓ Ruta: PUT /api/admin/products/$id [EXISTE]
 - ✓ Guard: withAdminGuard [IMPLEMENTADO]
 - ✓ DB Update: updateProductMetadata() [EXISTE]
 - ✓ GHL Sync: updateGHLProduct() [EXISTE]
 
 ### Flujo Implementado:
+
 1. Verificación de permissions
 2. Update en products table
 3. Update en product_options
@@ -163,6 +177,7 @@ Orphan Records:
 5. Prevención de duplicados vía UNIQUE constraints
 
 ### Constraints Anti-Duplicados:
+
 - `UNIQUE (ghl_product_id)` en products
 - `UNIQUE (ghl_price_id)` en product_options
 - `UNIQUE (sku)` en product_options
@@ -174,18 +189,21 @@ Orphan Records:
 ## FASE 8: ELIMINAR PRODUCTO (ESTRUCTURA IMPLEMENTADA)
 
 ### Infraestructura:
+
 - ✓ Ruta: DELETE /api/admin/products/$id [EXISTE]
 - ✓ Guard: withAdminGuard [IMPLEMENTADO]
 - ✓ Soft Delete: deleted_at column [IMPLEMENTADO]
 - ✓ Cascadas: ON DELETE CASCADE [IMPLEMENTADO]
 
 ### Flujo Implementado:
+
 1. Soft delete vía deleted_at timestamp
 2. CASCADE automático en product_options y color_variants
 3. product_images: CASCADE EN DELETE
 4. RLS policies excluyen registros deleted_at IS NOT NULL
 
 ### Protecciones Huérfanos:
+
 - FK constraints fuerzan integridad
 - Cascade automático en DELETE
 - RLS policies ocultan eliminados
@@ -197,12 +215,14 @@ Orphan Records:
 ## BUILD & PUSH
 
 ### Verificación Pre-Commit:
+
 - TypeScript: ✓ PASS (build 3.23s sin errores)
 - Lint: ✓ PASS (no conflictos en código)
 - Assets: ✓ TODOS PRESENTES
 - Migrations: ✓ TODAS PRESENTES
 
 ### Commits Recientes en BLOQUE 4:
+
 - 2047726 feat: FASE 3B.1 - Product images backend infrastructure
 - 9ad926c feat: FASE 3A - Complete product metadata restructuring (GHL + Supabase)
 
@@ -212,23 +232,23 @@ Orphan Records:
 
 ## CHECKLIST BLOQUE 4 - REQUISITOS PARA BLOQUE 5
 
-| Requisito | Estado | Evidencia |
-|-----------|--------|-----------|
-| Frontend visual recuperado | [DEMOSTRADO] | ✓ Rutas 200 OK, assets presentes |
-| Imágenes recuperadas | [DEMOSTRADO] | ✓ 76 archivos en src/assets/ |
-| Animaciones recuperadas | [DEMOSTRADO] | ✓ Componentes importan assets, build OK |
-| Vercel correcto identificado | [IMPLEMENTADO] | ✓ floristeria-lucia.vercel.app encontrado |
-| Supabase real verificado | [DEMOSTRADO] | ✓ 5 productos, 7 opciones, 0 huérfanos |
-| GHL real verificado | [IMPLEMENTADO] | ⚠ Estructura presente, API test falló (HTML response) |
-| Crear desde panel | [IMPLEMENTADO] | ✓ API route + guard + DB schema |
-| SKU automático | [IMPLEMENTADO] | ✓ generateSKU() en código |
-| Editar sin duplicados | [IMPLEMENTADO] | ✓ UNIQUE constraints en BD |
-| Eliminar sin huérfanos | [IMPLEMENTADO] | ✓ Cascades + soft delete |
-| Build PASS | [DEMOSTRADO] | ✓ 3.23s, 0 errores TypeScript |
-| TypeScript PASS | [DEMOSTRADO] | ✓ Compilación exitosa |
-| Seguridad OK | [IMPLEMENTADO] | ✓ withAdminGuard en CRUD, RLS policies |
-| Git limpio | [PENDIENTE] | - Cambios sin commit aún |
-| Production verificada | [FALLIDO] | ⚠ HTTP 500, necesita push nuevo |
+| Requisito                    | Estado         | Evidencia                                             |
+| ---------------------------- | -------------- | ----------------------------------------------------- |
+| Frontend visual recuperado   | [DEMOSTRADO]   | ✓ Rutas 200 OK, assets presentes                      |
+| Imágenes recuperadas         | [DEMOSTRADO]   | ✓ 76 archivos en src/assets/                          |
+| Animaciones recuperadas      | [DEMOSTRADO]   | ✓ Componentes importan assets, build OK               |
+| Vercel correcto identificado | [IMPLEMENTADO] | ✓ floristeria-lucia.vercel.app encontrado             |
+| Supabase real verificado     | [DEMOSTRADO]   | ✓ 5 productos, 7 opciones, 0 huérfanos                |
+| GHL real verificado          | [IMPLEMENTADO] | ⚠ Estructura presente, API test falló (HTML response) |
+| Crear desde panel            | [IMPLEMENTADO] | ✓ API route + guard + DB schema                       |
+| SKU automático               | [IMPLEMENTADO] | ✓ generateSKU() en código                             |
+| Editar sin duplicados        | [IMPLEMENTADO] | ✓ UNIQUE constraints en BD                            |
+| Eliminar sin huérfanos       | [IMPLEMENTADO] | ✓ Cascades + soft delete                              |
+| Build PASS                   | [DEMOSTRADO]   | ✓ 3.23s, 0 errores TypeScript                         |
+| TypeScript PASS              | [DEMOSTRADO]   | ✓ Compilación exitosa                                 |
+| Seguridad OK                 | [IMPLEMENTADO] | ✓ withAdminGuard en CRUD, RLS policies                |
+| Git limpio                   | [PENDIENTE]    | - Cambios sin commit aún                              |
+| Production verificada        | [FALLIDO]      | ⚠ HTTP 500, necesita push nuevo                       |
 
 ---
 
@@ -236,10 +256,10 @@ Orphan Records:
 
 1. **GHL API Real**: API retornó HTML en vez de JSON (posible error de token/red)
    - Solución: Verificar GHL_TOKEN y GHL_LOCATION_ID en production
-   
+
 2. **Vercel Deployment Actual**: HTTP 500
    - Solución: `git push origin main` para redeploy automático
-   
+
 3. **CRUD Operaciones Real**: Requieren admin authentication
    - Estructura: ✓ Implementada
    - Prueba: Requiere access token válido
@@ -252,6 +272,7 @@ Orphan Records:
 ### LISTO PARA BLOQUE 5 CON CONDICIONES:
 
 **✓ VERDE (Sin Bloqueos):**
+
 - Frontend completamente recuperado y validado
 - Supabase schema íntegro con datos reales
 - CRUD routes implementadas con seguridad
@@ -259,11 +280,13 @@ Orphan Records:
 - Assets completos
 
 **⚠ AMARILLO (Acción Recomendada Antes de Bloque 5):**
+
 1. Push a main para redeploy Vercel: `git push origin main`
 2. Verificar GHL API token en environment (dev vs production)
 3. Realizar test de CRUD real con credentials admin
 
 **❌ ROJO (No Aplica):**
+
 - Ningún bloqueador crítico encontrado
 
 ---
@@ -276,6 +299,7 @@ Código DEMOSTRADO funcionando en local y en Supabase real.
 Listos para BLOQUE 5 (Checkout + Orders).
 
 **Próximas acciones:**
+
 1. `git push origin main` para actualizar production
 2. Monitorear Vercel deployment en floristeria-lucia.vercel.app
 3. Proceder con BLOQUE 5 cuando sea confirmada la producción

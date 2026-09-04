@@ -9,27 +9,29 @@ try {
   const response = await fetch(endpoint, {
     method: "GET",
     headers: {
-      "Authorization": `Bearer ${ghlToken}`,
+      Authorization: `Bearer ${ghlToken}`,
       "Content-Type": "application/json",
-      "Version": "v3",
+      Version: "v3",
     },
   });
 
   const text = await response.text();
   console.log(`Status: ${response.status}`);
-  
+
   if (response.status === 200) {
     const data = JSON.parse(text);
     console.log(`Total products: ${data.total || data.products?.length || 0}`);
-    
+
     if (data.products && data.products.length > 0) {
       console.log(`\nProducts:`);
       data.products.forEach((p, i) => {
         console.log(`  ${i + 1}. ${p.name} (ID: ${p.id})`);
       });
-      
+
       // Look for our test product
-      const testProduct = data.products.find(p => p.name.includes("REPARACIÓN") || p.name.includes("TEST"));
+      const testProduct = data.products.find(
+        (p) => p.name.includes("REPARACIÓN") || p.name.includes("TEST"),
+      );
       if (testProduct) {
         console.log(`\n✓ Found test product: ${testProduct.id}`);
       } else {

@@ -2,13 +2,14 @@
 
 **Fecha:** 2026-08-27  
 **Status:** DIAGNÓSTICO SOLO LECTURA - SIN CAMBIOS APLICADOS  
-**Metodología:** Auditoría de versiones y compatibilidad  
+**Metodología:** Auditoría de versiones y compatibilidad
 
 ---
 
 ## A. POR QUÉ vite.config.ts INTENTA IMPORTAR "@tanstack/react-start/config"
 
 ### Línea problemática (vite.config.ts:4)
+
 ```typescript
 import { defineConfig } from "@tanstack/react-start/config";
 ```
@@ -24,6 +25,7 @@ import { defineConfig } from "@tanstack/react-start/config";
 ### Evidencia
 
 **En TanStack Start v1.168.49 (instalado actualmente):**
+
 ```
 Exportes disponibles:
   ✓ "."
@@ -40,13 +42,14 @@ Exportes disponibles:
 ```
 
 **Documentación oficial de TanStack Start (en node_modules/skills/):**
+
 ```typescript
 // CORRECTO (según docs)
-import { defineConfig } from 'vite'
-import { tanstackStart } from '@tanstack/react-start/plugin/vite'
+import { defineConfig } from "vite";
+import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 
 // INCORRECTO (lo que tienes)
-import { defineConfig } from "@tanstack/react-start/config"
+import { defineConfig } from "@tanstack/react-start/config";
 ```
 
 ---
@@ -55,13 +58,13 @@ import { defineConfig } from "@tanstack/react-start/config"
 
 ### Declared vs Installed
 
-| Paquete | package.json | package-lock.json | node_modules |
-|---------|--------------|-------------------|--------------|
-| @tanstack/react-start | ^1.168.32 | 1.168.49 | 1.168.49 ✓ |
-| @tanstack/router-plugin | ^1.168.23 | 1.168.35 | 1.168.35 ✓ |
-| @tanstack/react-router | ^1.170.18 | 1.170.18 | 1.170.18 ✓ |
-| vite | ^8.2.0 | 8.2.2 | 8.2.2 ✓ |
-| react | ^19.2.0 | 19.2.0 | 19.2.0 ✓ |
+| Paquete                 | package.json | package-lock.json | node_modules |
+| ----------------------- | ------------ | ----------------- | ------------ |
+| @tanstack/react-start   | ^1.168.32    | 1.168.49          | 1.168.49 ✓   |
+| @tanstack/router-plugin | ^1.168.23    | 1.168.35          | 1.168.35 ✓   |
+| @tanstack/react-router  | ^1.170.18    | 1.170.18          | 1.170.18 ✓   |
+| vite                    | ^8.2.0       | 8.2.2             | 8.2.2 ✓      |
+| react                   | ^19.2.0      | 19.2.0            | 19.2.0 ✓     |
 
 ### Cómo se actualizó
 
@@ -88,8 +91,8 @@ Instaló: 1.168.49 (porque es compatible con ^1.168.32)
 
 ```typescript
 // vite.config.ts - PATRÓN CORRECTO
-import { defineConfig } from 'vite'
-import { tanstackStart } from '@tanstack/react-start/plugin/vite'
+import { defineConfig } from "vite";
+import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 
 export default defineConfig({
   plugins: [
@@ -97,19 +100,21 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      "@": "/src",  // Tu path alias se mantiene
+      "@": "/src", // Tu path alias se mantiene
     },
   },
-})
+});
 ```
 
 **Ventajas:**
+
 - ✅ Soportado oficialmente
 - ✅ Actualización futura garantizada
 - ✅ Simplifica configuración
 - ✅ tanstackStart() hace todo lo que necesitas
 
 **Incluye automáticamente:**
+
 - React Plugin
 - Router Plugin
 - Server Plugin
@@ -119,11 +124,12 @@ export default defineConfig({
 
 ```typescript
 // vite.config.ts - CAMBIO MÍNIMO
-import { defineConfig } from 'vite'  // ← CAMBIO: de "vite" no "@tanstack/react-start/config"
+import { defineConfig } from "vite"; // ← CAMBIO: de "vite" no "@tanstack/react-start/config"
 import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
 
 export default defineConfig({
-  vite: {  // ← PROBLEMA: "vite" es inválido aquí, debería ser "plugins"
+  vite: {
+    // ← PROBLEMA: "vite" es inválido aquí, debería ser "plugins"
     plugins: [TanStackRouterVite({ autoCodeSplitting: true })],
     resolve: {
       alias: {
@@ -135,6 +141,7 @@ export default defineConfig({
 ```
 
 **Problema con esta opción:**
+
 - La estructura `vite: { ... }` está mal formada
 - defineConfig espera config de Vite directamente, no envuelto en un objeto "vite"
 
@@ -142,7 +149,7 @@ export default defineConfig({
 
 ```typescript
 // vite.config.ts - CAMBIO MÍNIMO CORRECTO
-import { defineConfig } from 'vite'  // ← CAMBIO
+import { defineConfig } from "vite"; // ← CAMBIO
 import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
 
 export default defineConfig({
@@ -164,6 +171,7 @@ export default defineConfig({
 **SÍ, 100%.**
 
 **No es necesario:**
+
 - ❌ Actualizar package.json
 - ❌ Cambiar package-lock.json
 - ❌ Ejecutar npm install de nuevo
@@ -173,6 +181,7 @@ export default defineConfig({
 - ❌ Modificar código TypeScript
 
 **Solo necesario:**
+
 - ✅ Modificar vite.config.ts (4 líneas)
 
 ---
@@ -181,14 +190,14 @@ export default defineConfig({
 
 ### Análisis de compatibilidad
 
-| Paquete | Versión | Compatibilidad | Notas |
-|---------|---------|---|---|
-| @tanstack/react-start | 1.168.49 | ✅ SÍ | Soporta vite 8.2.2 |
-| @tanstack/router-plugin | 1.168.35 | ✅ SÍ | Compatible con react-start |
-| @tanstack/react-router | 1.170.18 | ✅ SÍ | Minor version ahead, pero compatible |
-| vite | 8.2.2 | ✅ SÍ | Supported by tanstack-start |
-| react | 19.2.0 | ✅ SÍ | Full ESM support |
-| typescript | 5.8.3 | ✅ SÍ | Moderno |
+| Paquete                 | Versión  | Compatibilidad | Notas                                |
+| ----------------------- | -------- | -------------- | ------------------------------------ |
+| @tanstack/react-start   | 1.168.49 | ✅ SÍ          | Soporta vite 8.2.2                   |
+| @tanstack/router-plugin | 1.168.35 | ✅ SÍ          | Compatible con react-start           |
+| @tanstack/react-router  | 1.170.18 | ✅ SÍ          | Minor version ahead, pero compatible |
+| vite                    | 8.2.2    | ✅ SÍ          | Supported by tanstack-start          |
+| react                   | 19.2.0   | ✅ SÍ          | Full ESM support                     |
+| typescript              | 5.8.3    | ✅ SÍ          | Moderno                              |
 
 ### Conclusión
 
@@ -208,11 +217,11 @@ package.json es correcto. Las versiones declaradas son correctas.
 
 ```json
 {
-  "@tanstack/react-start": "^1.168.32",    // ✅ OK
-  "@tanstack/react-router": "^1.170.18",   // ✅ OK
-  "@tanstack/router-plugin": "^1.168.23",  // ✅ OK
-  "vite": "^8.2.0",                        // ✅ OK
-  "react": "^19.2.0",                      // ✅ OK
+  "@tanstack/react-start": "^1.168.32", // ✅ OK
+  "@tanstack/react-router": "^1.170.18", // ✅ OK
+  "@tanstack/router-plugin": "^1.168.23", // ✅ OK
+  "vite": "^8.2.0", // ✅ OK
+  "react": "^19.2.0" // ✅ OK
 }
 ```
 
@@ -242,12 +251,14 @@ Instalado:     1.168.49 ← Es un patch válido de ^1.168.32
 **Cambio en vite.config.ts:**
 
 De:
+
 ```typescript
-import { defineConfig } from "@tanstack/react-start/config";  // ← LÍNEA 1
+import { defineConfig } from "@tanstack/react-start/config"; // ← LÍNEA 1
 import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
 
 export default defineConfig({
-  vite: {  // ← LÍNEA 6
+  vite: {
+    // ← LÍNEA 6
     plugins: [TanStackRouterVite({ autoCodeSplitting: true })],
     resolve: {
       alias: {
@@ -259,8 +270,9 @@ export default defineConfig({
 ```
 
 A:
+
 ```typescript
-import { defineConfig } from 'vite';  // ← CAMBIO: línea 1
+import { defineConfig } from "vite"; // ← CAMBIO: línea 1
 import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
 
 export default defineConfig({
@@ -276,6 +288,7 @@ export default defineConfig({
 ```
 
 **Cambios específicos:**
+
 - Línea 1: `"@tanstack/react-start/config"` → `'vite'`
 - Línea 6: Quitar `vite: {` (sacar 1 nivel de indentación)
 - Último `}` cambiar a `}` solo
@@ -287,6 +300,7 @@ export default defineConfig({
 **Cambio completo en vite.config.ts:**
 
 De:
+
 ```typescript
 import { defineConfig } from "@tanstack/react-start/config";
 import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
@@ -304,14 +318,13 @@ export default defineConfig({
 ```
 
 A:
+
 ```typescript
-import { defineConfig } from 'vite';
-import { tanstackStart } from '@tanstack/react-start/plugin/vite';
+import { defineConfig } from "vite";
+import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 
 export default defineConfig({
-  plugins: [
-    tanstackStart(),
-  ],
+  plugins: [tanstackStart()],
   resolve: {
     alias: {
       "@": "/src",
@@ -321,6 +334,7 @@ export default defineConfig({
 ```
 
 **Ventajas:**
+
 - ✅ Patrón oficial de TanStack
 - ✅ Garantizado funcionar
 - ✅ Mejor mantenibilidad
@@ -332,22 +346,22 @@ export default defineConfig({
 
 ### Riesgo de Opción A (Mínimo cambio)
 
-| Riesgo | Probabilidad | Mitigación |
-|--------|-------------|-----------|
-| Estructura de vite.config mal interpretada | Media | Verificar con `npm run build` inmediatamente |
-| Auto code splitting rompa | Baja | TanStackRouterVite sigue funcionando |
-| Alias @ se pierda | Muy baja | Lo mantenemos en resolve.alias |
-| Otros plugins se rompan | Baja | Solo afecta TanStackRouterVite |
+| Riesgo                                     | Probabilidad | Mitigación                                   |
+| ------------------------------------------ | ------------ | -------------------------------------------- |
+| Estructura de vite.config mal interpretada | Media        | Verificar con `npm run build` inmediatamente |
+| Auto code splitting rompa                  | Baja         | TanStackRouterVite sigue funcionando         |
+| Alias @ se pierda                          | Muy baja     | Lo mantenemos en resolve.alias               |
+| Otros plugins se rompan                    | Baja         | Solo afecta TanStackRouterVite               |
 
 **Riesgo general: BAJO**
 
 ### Riesgo de Opción B (Plugin oficial)
 
-| Riesgo | Probabilidad | Mitigación |
-|--------|-------------|-----------|
-| TanStackRouterVite no se cargue | Muy baja | tanstackStart() lo incluye automáticamente |
-| Auto code splitting se pierda | Muy baja | tanstackStart() lo habilita |
-| Comportamiento diferente | Muy baja | Oficialmente soportado |
+| Riesgo                          | Probabilidad | Mitigación                                 |
+| ------------------------------- | ------------ | ------------------------------------------ |
+| TanStackRouterVite no se cargue | Muy baja     | tanstackStart() lo incluye automáticamente |
+| Auto code splitting se pierda   | Muy baja     | tanstackStart() lo habilita                |
+| Comportamiento diferente        | Muy baja     | Oficialmente soportado                     |
 
 **Riesgo general: MUY BAJO**
 
@@ -402,6 +416,7 @@ npm run preview
 ```
 
 Si todos ✅, entonces:
+
 - ✅ vite.config.ts está correcto
 - ✅ Listo para deployment a Vercel
 - ✅ Listo para obtener URL pública
@@ -411,16 +426,16 @@ Si todos ✅, entonces:
 
 ## RESUMEN COMPARATIVO
 
-| Aspecto | Opción A | Opción B |
-|---------|----------|----------|
-| **Cambios** | 2-3 líneas | Reemplazar 5 líneas |
-| **Complejidad** | Baja | Baja |
-| **Riesgo** | Bajo | Muy bajo |
-| **Funcionalidad** | ✅ Igual | ✅ Igual + mejor |
-| **Mantenibilidad** | Media | Alta |
-| **Futuro proof** | Media | Alta |
-| **Tiempo** | 2 min | 2 min |
-| **Recomendación** | Si confías | MEJOR |
+| Aspecto            | Opción A   | Opción B            |
+| ------------------ | ---------- | ------------------- |
+| **Cambios**        | 2-3 líneas | Reemplazar 5 líneas |
+| **Complejidad**    | Baja       | Baja                |
+| **Riesgo**         | Bajo       | Muy bajo            |
+| **Funcionalidad**  | ✅ Igual   | ✅ Igual + mejor    |
+| **Mantenibilidad** | Media      | Alta                |
+| **Futuro proof**   | Media      | Alta                |
+| **Tiempo**         | 2 min      | 2 min               |
+| **Recomendación**  | Si confías | MEJOR               |
 
 ---
 
@@ -436,7 +451,7 @@ Espero tu aprobación y decisión:
 OPCIÓN A: Cambio mínimo (2-3 líneas)
   import { defineConfig } from 'vite'
   Quitar "vite: { ... }"
-  
+
 OPCIÓN B: Usar plugin oficial (reemplazar 5 líneas)
   import { defineConfig } from 'vite'
   import { tanstackStart } from '@tanstack/react-start/plugin/vite'
@@ -444,7 +459,7 @@ OPCIÓN B: Usar plugin oficial (reemplazar 5 líneas)
 
 Responde:
   "Opción A"  o  "Opción B"
-  
+
 O si tienes otra pregunta sobre el diagnóstico, pregunta ahora
 antes de que haga cualquier cambio.
 ```
@@ -452,4 +467,3 @@ antes de que haga cualquier cambio.
 ---
 
 **Status:** ✅ DIAGNÓSTICO COMPLETADO - ESPERANDO APROBACIÓN
-

@@ -27,24 +27,24 @@ try {
   const response = await fetch(`https://services.leadconnectorhq.com${endpoint}`, {
     method: "PUT",
     headers: {
-      "Authorization": `Bearer ${ghlToken}`,
+      Authorization: `Bearer ${ghlToken}`,
       "Content-Type": "application/json",
-      "Version": "v3",
+      Version: "v3",
     },
     body: JSON.stringify(payload),
   });
 
   const text = await response.text();
   console.log(`Status: ${response.status}`);
-  
+
   if (text) {
     try {
       const data = JSON.parse(text);
       console.log("Response:", JSON.stringify(data, null, 2).substring(0, 500));
-      
+
       if (data.variants) {
         console.log(`\n✓ Variants created: ${data.variants.length}`);
-        data.variants.forEach(v => {
+        data.variants.forEach((v) => {
           console.log(`  - ${v.name}: ${v.price} (ID: ${v._id || v.id})`);
         });
       }

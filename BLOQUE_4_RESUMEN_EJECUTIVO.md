@@ -10,14 +10,14 @@
 
 ### Hallazgos Clave
 
-| Aspecto | Resultado |
-|---------|-----------|
-| Productos en catálogo | 54 productos (ramos 10, plantas 13, rosas-eternas 4, complementos 13, condolencias 14) |
-| Infraestructura GHL | ✓ Funciones CRUD completas (create, read, update, delete) |
-| Infraestructura Precios | ✓ ensureProductPrice() con soporte para idempotencia |
-| Infraestructura Metadata | ✓ syncProductMetadata() con upsert por ghl_product_id |
-| Generador SKU | ✓ generateSKU() con prefijos únicos por categoría |
-| Endpoint de Sincronización | ✗ NO EXISTÍA → CREADO EN ESTA FASE |
+| Aspecto                    | Resultado                                                                              |
+| -------------------------- | -------------------------------------------------------------------------------------- |
+| Productos en catálogo      | 54 productos (ramos 10, plantas 13, rosas-eternas 4, complementos 13, condolencias 14) |
+| Infraestructura GHL        | ✓ Funciones CRUD completas (create, read, update, delete)                              |
+| Infraestructura Precios    | ✓ ensureProductPrice() con soporte para idempotencia                                   |
+| Infraestructura Metadata   | ✓ syncProductMetadata() con upsert por ghl_product_id                                  |
+| Generador SKU              | ✓ generateSKU() con prefijos únicos por categoría                                      |
+| Endpoint de Sincronización | ✗ NO EXISTÍA → CREADO EN ESTA FASE                                                     |
 
 ### Capacidades Verificadas
 
@@ -73,13 +73,13 @@ Para cada producto en `catalog.ts`:
 
 #### B. Garantías de Seguridad
 
-| Garantía | Mecanismo |
-|----------|-----------|
-| **Idempotencia** | Búsqueda por legacy_catalog_id + upsert en metadata |
-| **No duplicados** | Constraint único en ghl_product_id en Supabase |
-| **Rollback seguro** | dryRun=true simula sin crear (pre-flight check) |
-| **Auditabilidad** | Logs completos en cada paso + respuesta detallada |
-| **Recuperación** | Errores no bloqueantes: continúa con siguiente producto |
+| Garantía            | Mecanismo                                               |
+| ------------------- | ------------------------------------------------------- |
+| **Idempotencia**    | Búsqueda por legacy_catalog_id + upsert en metadata     |
+| **No duplicados**   | Constraint único en ghl_product_id en Supabase          |
+| **Rollback seguro** | dryRun=true simula sin crear (pre-flight check)         |
+| **Auditabilidad**   | Logs completos en cada paso + respuesta detallada       |
+| **Recuperación**    | Errores no bloqueantes: continúa con siguiente producto |
 
 #### C. Modos de Operación
 
@@ -106,7 +106,7 @@ Proporciona análisis pre-sync:
 ```typescript
 diagnoseSyncState() → {
   catalog: { total: 54, byCategory: {...} },
-  supabase: { 
+  supabase: {
     total_metadata_records,
     with_ghl_product_id,
     with_ghl_price_id,
@@ -142,7 +142,7 @@ curl -X POST http://localhost:3000/api/admin/sync-catalog \
   -H "Content-Type: application/json" \
   -d '{"dryRun": true}'
 
-# Expected: 
+# Expected:
 # - summary: { total: 54, created: 54, failed: 0 }
 # - results: todos con status "created" (simulado)
 # - errors: []
@@ -176,11 +176,11 @@ FROM product_metadata;
 -- Expected: 54 | 54 | 54 | 54
 
 -- Detectar duplicados
-SELECT ghl_product_id, COUNT(*) as cnt 
+SELECT ghl_product_id, COUNT(*) as cnt
 FROM product_metadata GROUP BY ghl_product_id HAVING COUNT(*) > 1;
 -- Expected: (empty)
 
-SELECT sku, COUNT(*) as cnt 
+SELECT sku, COUNT(*) as cnt
 FROM product_metadata WHERE sku IS NOT NULL
 GROUP BY sku HAVING COUNT(*) > 1;
 -- Expected: (empty)
@@ -218,6 +218,7 @@ SELECT COUNT(*) FROM product_metadata;  -- Expected: 54 (MISMO)
 ### Fase 7: Verificación Final
 
 Checklist de cierre:
+
 - [ ] npm run build exitoso
 - [ ] Endpoint responde correctamente
 - [ ] 54 productos en Supabase con ghl_product_id + sku
@@ -258,7 +259,7 @@ Checklist de cierre:
       "ghlProductId": "GHL_ID_002",
       "ghlPriceId": "GHL_PRICE_002",
       "sku": "FL-RAM-0002"
-    },
+    }
     // ... 52 más
   ],
   "errors": []
@@ -273,20 +274,20 @@ Checklist de cierre:
   "dryRun": false,
   "summary": {
     "total": 54,
-    "created": 0,      // ← NINGUNO NUEVO
+    "created": 0, // ← NINGUNO NUEVO
     "updated": 0,
-    "already_synchronized": 54,  // ← TODOS ENCONTRADOS
+    "already_synchronized": 54, // ← TODOS ENCONTRADOS
     "failed": 0
   },
   "results": [
     {
       "id": "ramo-silvestre",
       "name": "Ramo Silvestre",
-      "status": "already_synchronized",  // ← MISMO ESTADO
+      "status": "already_synchronized", // ← MISMO ESTADO
       "ghlProductId": "GHL_ID_001",
       "ghlPriceId": "GHL_PRICE_001",
       "sku": "FL-RAM-0001"
-    },
+    }
     // ... 53 más
   ],
   "errors": []
@@ -299,12 +300,12 @@ Checklist de cierre:
 
 ### Nuevos Archivos
 
-| Archivo | Líneas | Descripción |
-|---------|--------|-------------|
-| `src/routes/api.admin.sync-catalog.ts` | 339 | Endpoint de sincronización segura e idempotente |
-| `src/lib/admin/diagnose-sync.server.ts` | 170 | Herramientas de diagnóstico pre-sync |
-| `BLOQUE_4_PLAN_EJECUCION.md` | 450+ | Plan detallado de 7 fases |
-| `BLOQUE_4_RESUMEN_EJECUTIVO.md` | Este archivo | Resumen ejecutivo |
+| Archivo                                 | Líneas       | Descripción                                     |
+| --------------------------------------- | ------------ | ----------------------------------------------- |
+| `src/routes/api.admin.sync-catalog.ts`  | 339          | Endpoint de sincronización segura e idempotente |
+| `src/lib/admin/diagnose-sync.server.ts` | 170          | Herramientas de diagnóstico pre-sync            |
+| `BLOQUE_4_PLAN_EJECUCION.md`            | 450+         | Plan detallado de 7 fases                       |
+| `BLOQUE_4_RESUMEN_EJECUTIVO.md`         | Este archivo | Resumen ejecutivo                               |
 
 ### Commits
 
@@ -345,14 +346,14 @@ Antes de proceder con la sincronización real, verificar:
 
 ## 7. RIESGOS Y MITIGACIONES
 
-| Riesgo | Mitigación |
-|--------|-----------|
-| **Duplicados en GHL** | Búsqueda por legacy_catalog_id + upsert en Supabase |
-| **Errores parciales** | dryRun=true para simular; errores per-product sin stop |
-| **Pérdida de datos** | legacy_catalog_id se guarda; rollback por legacy_id |
-| **Precios no creados** | ensureProductPrice es idempotente; retry seguro |
-| **Colecciones bloqueadas** | 401 no bloqueante; marcado como PENDIENTE |
-| **Timeout GHL** | Timeout configurable (10s); retry logic sin lock |
+| Riesgo                     | Mitigación                                             |
+| -------------------------- | ------------------------------------------------------ |
+| **Duplicados en GHL**      | Búsqueda por legacy_catalog_id + upsert en Supabase    |
+| **Errores parciales**      | dryRun=true para simular; errores per-product sin stop |
+| **Pérdida de datos**       | legacy_catalog_id se guarda; rollback por legacy_id    |
+| **Precios no creados**     | ensureProductPrice es idempotente; retry seguro        |
+| **Colecciones bloqueadas** | 401 no bloqueante; marcado como PENDIENTE              |
+| **Timeout GHL**            | Timeout configurable (10s); retry logic sin lock       |
 
 ---
 
@@ -363,6 +364,7 @@ Después de ejecutar la sincronización real:
 ### Queries SQL Obligatorias
 
 Ver sección 4 de `BLOQUE_4_PLAN_EJECUCION.md`:
+
 - COUNT de registros totales
 - Presencia de campos críticos (ghl_product_id, sku, etc)
 - Detección de duplicados
@@ -371,6 +373,7 @@ Ver sección 4 de `BLOQUE_4_PLAN_EJECUCION.md`:
 ### API Calls Spot-Check
 
 Ver sección 4.2 de plan:
+
 - Verificar 5 productos al azar en GHL
 - Confirmar SKU, nombre, precio coinciden
 
@@ -386,6 +389,7 @@ Ver sección 4.2 de plan:
 ### Para Proceder
 
 1. **Ejecutar en servidor**:
+
    ```bash
    npm run dev  # o build + deploy a Vercel
    ```
@@ -424,7 +428,7 @@ Ver sección 4.2 de plan:
 ✓ Herramientas de diagnóstico creadas  
 ✓ Verificaciones post-sync definidas  
 ✓ Prueba de idempotencia documentada  
-✓ Rollback/recuperación posible  
+✓ Rollback/recuperación posible
 
 **Tiempo estimado de ejecución**: 30-45 minutos (todas las fases)
 

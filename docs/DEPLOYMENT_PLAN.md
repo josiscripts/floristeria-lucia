@@ -3,7 +3,7 @@
 **Proyecto:** Floristería Lucía  
 **Fecha:** 2026-08-27  
 **Status:** PLAN SOLO LECTURA - NO EJECUTADO  
-**Auditoría:** Completada  
+**Auditoría:** Completada
 
 ---
 
@@ -14,6 +14,7 @@
 **Ruta física:** `src/assets/`
 
 **Imágenes de catálogo (6 totales):**
+
 ```
 src/assets/cat-ramos.jpg          (127 KB) - Ramos
 src/assets/girasoles.jpg          (77 KB)  - Girasoles
@@ -24,12 +25,14 @@ src/assets/cat-condolencias.jpg   (122 KB) - Condolencias
 ```
 
 **Otras imágenes (27 totales):**
+
 - Banners, héroes, logos, campañas, etc.
 - Total proyecto: ~33 archivos en src/assets/
 
 ### 2. CÓMO SE IMPORTAN ACTUALMENTE
 
 **catalog.ts (líneas 1-6):**
+
 ```typescript
 import imgRamos from "@/assets/cat-ramos.jpg";
 import imgGirasoles from "@/assets/girasoles.jpg";
@@ -40,6 +43,7 @@ import imgCondolencias from "@/assets/cat-condolencias.jpg";
 ```
 
 **Cómo se usan:**
+
 ```typescript
 const categories = [
   {
@@ -62,27 +66,28 @@ const products = [
 
 **Archivos que importan desde assets:**
 
-| Archivo | Importa | Uso |
-|---------|---------|-----|
-| `src/data/catalog.ts` | 6 imágenes de categoría | Categorías + todos los 41 productos |
-| `src/data/services.ts` | Otras imágenes | Servicios (no catálogo) |
-| `src/components/ProductsServicesEditorial.tsx` | 5 imágenes | UI editorial |
-| `src/components/SeasonalCollection.tsx` | 4 imágenes de campaña | Colecciones estacionales |
+| Archivo                                        | Importa                 | Uso                                 |
+| ---------------------------------------------- | ----------------------- | ----------------------------------- |
+| `src/data/catalog.ts`                          | 6 imágenes de categoría | Categorías + todos los 41 productos |
+| `src/data/services.ts`                         | Otras imágenes          | Servicios (no catálogo)             |
+| `src/components/ProductsServicesEditorial.tsx` | 5 imágenes              | UI editorial                        |
+| `src/components/SeasonalCollection.tsx`        | 4 imágenes de campaña   | Colecciones estacionales            |
 
 **Rutas que usan imágenes de catálogo:**
 
-| Ruta | Usa | Contexto |
-|------|-----|---------|
-| `/catalogo` | `product.image` | Listado de productos |
-| `/producto/$id` | `product.image` | Detalle de producto |
-| `/carrito` | `cartLine.image` | Carrito de compras |
-| `/` (homepage) | Imágenes varias | Secciones editoriales |
+| Ruta            | Usa              | Contexto              |
+| --------------- | ---------------- | --------------------- |
+| `/catalogo`     | `product.image`  | Listado de productos  |
+| `/producto/$id` | `product.image`  | Detalle de producto   |
+| `/carrito`      | `cartLine.image` | Carrito de compras    |
+| `/` (homepage)  | Imágenes varias  | Secciones editoriales |
 
 ### 4. IMPACTO DE MOVER A public/
 
 #### Opción A: Mantener en src/assets/ (RECOMENDADO)
 
 ✅ **Ventajas:**
+
 - Vite maneja los imports automáticamente
 - Sin cambios en el código
 - Build genera URLs públicas en .output/
@@ -90,6 +95,7 @@ const products = [
 - Es el patrón estándar en Vite + TanStack Start
 
 ❌ **Desventajas:**
+
 - Ninguna
 
 #### Opción B: Mover a public/
@@ -107,6 +113,7 @@ import imgRamos from "@/assets/cat-ramos.jpg";
 ```
 
 **Archivos a cambiar:**
+
 - `src/data/catalog.ts` (6 imports)
 - `src/data/services.ts` (varios imports)
 - `src/components/ProductsServicesEditorial.tsx` (5 imports)
@@ -123,20 +130,21 @@ import imgRamos from "@/assets/cat-ramos.jpg";
 
 Los 41 productos se distribuyen así:
 
-| Categoría | Productos | Imagen | Reutilizada |
-|-----------|-----------|--------|-------------|
-| ramos | 6 | imgRamos | Sí (todos) |
-| plantas | 13 | imgPlantas | Sí (todos) |
-| rosas-eternas | 4 | imgRosasEternas | Sí (todos) |
-| complementos | 13 | imgComplementos | Sí (todos) |
-| condolencias | 5 | imgCondolencias | Sí (todos) |
-| TOTAL | 41 | 6 únicas | 100% reutilizado |
+| Categoría     | Productos | Imagen          | Reutilizada      |
+| ------------- | --------- | --------------- | ---------------- |
+| ramos         | 6         | imgRamos        | Sí (todos)       |
+| plantas       | 13        | imgPlantas      | Sí (todos)       |
+| rosas-eternas | 4         | imgRosasEternas | Sí (todos)       |
+| complementos  | 13        | imgComplementos | Sí (todos)       |
+| condolencias  | 5         | imgCondolencias | Sí (todos)       |
+| TOTAL         | 41        | 6 únicas        | 100% reutilizado |
 
 **Implicación para FASE 4A:**
 
 Actualmente en catalog.ts, todos los 41 productos comparten las 6 imágenes de categoría.
 
 **Cuando migremos a GHL:**
+
 - GHL permite 1 imagen por producto
 - Opción A: Mantener las 6 imágenes (sin cambios)
 - Opción B: Crear imágenes individuales por producto (futura mejora)
@@ -158,7 +166,7 @@ Build (npm run build):
   ↓ Vite procesa
   dist/assets/cat-ramos-ABC123.jpg (hash incluido)
   .output/server/assets/cat-ramos-ABC123.jpg
-  
+
 Vercel deployment:
   .output/ sube a Vercel
   ↓ Vercel asigna dominio
@@ -183,18 +191,19 @@ Vercel deployment:
 
 #### Stack actual
 
-| Componente | Versión | Vercel Support |
-|-----------|---------|--------|
-| Node.js | 18+ recomendado | ✅ Soportado |
-| TanStack Start | 1.168.32 | ✅ Soportado nativamente |
-| Vite | 8.2.0 | ✅ Soportado |
-| Nitro | 3.0.260603-beta | ✅ Soportado |
-| React | 19.2.0 | ✅ Soportado |
-| TypeScript | 5.8.3 | ✅ Soportado |
+| Componente     | Versión         | Vercel Support           |
+| -------------- | --------------- | ------------------------ |
+| Node.js        | 18+ recomendado | ✅ Soportado             |
+| TanStack Start | 1.168.32        | ✅ Soportado nativamente |
+| Vite           | 8.2.0           | ✅ Soportado             |
+| Nitro          | 3.0.260603-beta | ✅ Soportado             |
+| React          | 19.2.0          | ✅ Soportado             |
+| TypeScript     | 5.8.3           | ✅ Soportado             |
 
 #### Build configuration actual
 
 **vite.config.ts (líneas 1-13):**
+
 ```typescript
 import { defineConfig } from "@tanstack/react-start/config";
 import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
@@ -212,6 +221,7 @@ export default defineConfig({
 ```
 
 **Análisis:**
+
 - ✅ Usa `defineConfig` de TanStack Start
 - ✅ TanStack Router automático (file-based)
 - ✅ Auto code splitting habilitado
@@ -219,6 +229,7 @@ export default defineConfig({
 - ✅ No requiere cambios para Vercel
 
 **package.json build commands:**
+
 ```json
 {
   "scripts": {
@@ -233,6 +244,7 @@ export default defineConfig({
 ```
 
 **Análisis:**
+
 - ✅ Build command es `vite build`
 - ✅ Output automático a .output/
 - ✅ Vercel detecta automáticamente
@@ -240,6 +252,7 @@ export default defineConfig({
 #### Vercel detection
 
 Vercel detectará automáticamente:
+
 ```
 Framework: TanStack Start
 Build Command: npm run build (detected from package.json)
@@ -254,13 +267,13 @@ Node.js Version: Latest LTS (18+)
 
 #### Variables necesarias
 
-| Variable | Tipo | Necesaria | Valor |
-|----------|------|-----------|-------|
-| `VITE_SUPABASE_URL` | Pública | ✅ SÍ | Ya en .env |
-| `VITE_SUPABASE_ANON_KEY` | Pública | ✅ SÍ | Ya en .env |
-| `VITE_GOOGLE_CLIENT_ID` | Pública | ⚠️ Opcional | Si OAuth Google |
-| `GHL_PRIVATE_INTEGRATION_TOKEN` | Privada | ✅ SÍ (para FASE 4A) | En .env |
-| `GHL_LOCATION_ID` | Privada | ✅ SÍ (para FASE 4A) | Ya en .env |
+| Variable                        | Tipo    | Necesaria            | Valor           |
+| ------------------------------- | ------- | -------------------- | --------------- |
+| `VITE_SUPABASE_URL`             | Pública | ✅ SÍ                | Ya en .env      |
+| `VITE_SUPABASE_ANON_KEY`        | Pública | ✅ SÍ                | Ya en .env      |
+| `VITE_GOOGLE_CLIENT_ID`         | Pública | ⚠️ Opcional          | Si OAuth Google |
+| `GHL_PRIVATE_INTEGRATION_TOKEN` | Privada | ✅ SÍ (para FASE 4A) | En .env         |
+| `GHL_LOCATION_ID`               | Privada | ✅ SÍ (para FASE 4A) | Ya en .env      |
 
 #### Cómo configurar en Vercel
 
@@ -275,7 +288,8 @@ GHL_LOCATION_ID = vOq7yOWR63XGU4qQ7XWd
 
 **Nota:** Las variables `VITE_*` son públicas (frontend). Las otras son privadas (server).
 
-**Seguridad:** 
+**Seguridad:**
+
 - ✅ GHL_PRIVATE_INTEGRATION_TOKEN nunca se expone al frontend
 - ✅ Solo se usa en server-side (src/lib/ghl/client.server.ts)
 - ✅ Vercel mantiene privadas las variables sin prefijo VITE_
@@ -289,6 +303,7 @@ GHL_LOCATION_ID = vOq7yOWR63XGU4qQ7XWd
 **Ninguno.** El proyecto está listo para Vercel tal como está.
 
 ✅ **No requiere cambios:**
+
 - vite.config.ts
 - package.json
 - tsconfig.json
@@ -299,6 +314,7 @@ GHL_LOCATION_ID = vOq7yOWR63XGU4qQ7XWd
 ### B. Archivos que NO deben modificarse
 
 ❌ **Crítico - No tocar:**
+
 - `.env` (credenciales)
 - `src/lib/ghl/client.server.ts` (token handling)
 - `src/data/catalog.ts` (41 productos)
@@ -309,6 +325,7 @@ GHL_LOCATION_ID = vOq7yOWR63XGU4qQ7XWd
 **Decisión:** Mantener en `src/assets/`
 
 **Proceso:**
+
 ```
 Actual (desarrollo):
   import imgRamos from "@/assets/cat-ramos.jpg"
@@ -341,6 +358,7 @@ https://floristeria-lucia.vercel.app/assets/cat-condolencias.jpg
 ### E. Configuración de Vercel requerida
 
 **Paso 1: Crear proyecto en Vercel**
+
 ```bash
 # Si no tienes cuenta Vercel
 npm install -g vercel
@@ -348,6 +366,7 @@ vercel login
 ```
 
 **Paso 2: Link proyecto con Vercel**
+
 ```bash
 vercel link
 # Responde preguntas:
@@ -357,18 +376,21 @@ vercel link
 ```
 
 **Paso 3: Configurar variables de entorno**
+
 ```
 Dashboard → Settings → Environment Variables
 Añadir 4 variables (ver sección 8 arriba)
 ```
 
 **Paso 4: Deploy**
+
 ```bash
 vercel --prod
 # O desde GitHub: push → automático
 ```
 
 **Resultado:**
+
 ```
 ✓ Deployment successful!
 ┌ https://floristeria-lucia.vercel.app [PRODUCTION]
@@ -438,6 +460,7 @@ GHL_LOCATION_ID        | vOq7yOWR63XGU4qQ7XWd                    | Production
 ```
 
 **Resultado después de guardar:**
+
 - Vercel inyecta automáticamente en build
 - Disponibles en process.env en servidor
 - `VITE_*` también disponibles en cliente
@@ -475,6 +498,7 @@ Paso 4: Verificar base de datos
 **Comprobar imagen de catálogo:**
 
 **Opción A: En navegador**
+
 ```
 1. Ir a https://floristeria-lucia.vercel.app/catalogo
 2. Buscar sección de Ramos
@@ -486,6 +510,7 @@ Paso 4: Verificar base de datos
 ```
 
 **Opción B: Direct test**
+
 ```
 1. Copiar URL: https://floristeria-lucia.vercel.app/assets/cat-ramos.jpg
 2. Pegar en navegador
@@ -494,6 +519,7 @@ Paso 4: Verificar base de datos
 ```
 
 **Opción C: Server logs**
+
 ```
 # En Vercel dashboard
 Proyecto → Deployments → [latest] → Logs
@@ -501,6 +527,7 @@ Buscar "assets" o "cat-ramos"
 ```
 
 **Esperado:**
+
 ```
 GET /assets/cat-ramos-XXXXX.jpg 200 1.2 KB
 GET /assets/girasoles-XXXXX.jpg 200 0.9 KB
@@ -520,6 +547,7 @@ Imagen de prueba: https://floristeria-lucia.vercel.app/assets/cat-ramos.jpg
 **Guardar esta información:**
 
 Para continuar con FASE 4A, necesitaremos:
+
 ```
 PRODUCTION_URL=https://floristeria-lucia.vercel.app
 ASSETS_PATH=/assets/
@@ -533,7 +561,7 @@ const payload = {
   price: 30,
   image: `${PRODUCTION_URL}/assets/cat-ramos.jpg`,
   // imagen: https://floristeria-lucia.vercel.app/assets/cat-ramos.jpg
-}
+};
 ```
 
 ---
@@ -542,15 +570,15 @@ const payload = {
 
 ### Resumen ejecutivo
 
-| Aspecto | Estado | Cambios |
-|---------|--------|---------|
-| **Código** | ✅ LISTO | 0 cambios |
-| **Configuración** | ✅ LISTO | 0 cambios |
-| **Imágenes** | ✅ LISTO | 0 cambios (mantener en src/assets/) |
-| **vite.config.ts** | ✅ LISTO | 0 cambios |
-| **package.json** | ✅ LISTO | 0 cambios |
-| **.env** | ✅ LISTO | Copiar a Vercel variables |
-| **Vercel setup** | ⏳ NECESARIO | Crear proyecto + env vars |
+| Aspecto            | Estado       | Cambios                             |
+| ------------------ | ------------ | ----------------------------------- |
+| **Código**         | ✅ LISTO     | 0 cambios                           |
+| **Configuración**  | ✅ LISTO     | 0 cambios                           |
+| **Imágenes**       | ✅ LISTO     | 0 cambios (mantener en src/assets/) |
+| **vite.config.ts** | ✅ LISTO     | 0 cambios                           |
+| **package.json**   | ✅ LISTO     | 0 cambios                           |
+| **.env**           | ✅ LISTO     | Copiar a Vercel variables           |
+| **Vercel setup**   | ⏳ NECESARIO | Crear proyecto + env vars           |
 
 ### Cambios en Vercel (UI, no código)
 
@@ -575,12 +603,12 @@ const payload = {
 
 ### Riesgos identificados
 
-| Riesgo | Probabilidad | Impacto | Mitigación |
-|--------|-------------|---------|-----------|
-| Env vars incompletas | Media | Alto | Copiar exactamente de .env |
-| Imagen con hash no resuelta | Baja | Bajo | Vite lo maneja automáticamente |
-| Dominio no configurado correctamente | Baja | Bajo | Vercel genera automáticamente |
-| Build falla | Baja | Alto | Probar `npm run build` antes |
+| Riesgo                               | Probabilidad | Impacto | Mitigación                     |
+| ------------------------------------ | ------------ | ------- | ------------------------------ |
+| Env vars incompletas                 | Media        | Alto    | Copiar exactamente de .env     |
+| Imagen con hash no resuelta          | Baja         | Bajo    | Vite lo maneja automáticamente |
+| Dominio no configurado correctamente | Baja         | Bajo    | Vercel genera automáticamente  |
+| Build falla                          | Baja         | Alto    | Probar `npm run build` antes   |
 
 ### Mitigación pre-deployment
 
@@ -607,6 +635,7 @@ Una vez que Vercel esté listo:
 1. **Obtener URL:** https://floristeria-lucia.vercel.app
 
 2. **Verificar imagen:**
+
    ```
    https://floristeria-lucia.vercel.app/assets/cat-ramos.jpg
    → Debe cargar la imagen
@@ -648,5 +677,4 @@ Después de deployment:
 **Cambios de código:** 0  
 **Cambios de configuración:** 4 env vars en Vercel  
 **Tiempo estimado:** 10 minutos  
-**Riesgo:** BAJO  
-
+**Riesgo:** BAJO

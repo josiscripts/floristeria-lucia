@@ -7,13 +7,13 @@
 
 ## RESUMEN EJECUTIVO
 
-| Métrica | Estado | Detalle |
-|---------|--------|---------|
-| Productos Sincronizados | 50/51 | 98% - Casi completo |
-| Precios con GHL | 0/50 | ❌ CRÍTICO - Todos NULL |
-| Imágenes de Productos | 0/50 | ❌ CRÍTICO - Ninguna |
-| Variantes de Color | 4 | ⚠️ Solo para Rosas Eternas |
-| Datos de Prueba | 6 productos | ⚠️ Necesitan limpieza |
+| Métrica                 | Estado      | Detalle                    |
+| ----------------------- | ----------- | -------------------------- |
+| Productos Sincronizados | 50/51       | 98% - Casi completo        |
+| Precios con GHL         | 0/50        | ❌ CRÍTICO - Todos NULL    |
+| Imágenes de Productos   | 0/50        | ❌ CRÍTICO - Ninguna       |
+| Variantes de Color      | 4           | ⚠️ Solo para Rosas Eternas |
+| Datos de Prueba         | 6 productos | ⚠️ Necesitan limpieza      |
 
 ---
 
@@ -21,16 +21,17 @@
 
 ### SUPABASE - Snapshot
 
-| Tabla | Registros | Estado |
-|-------|-----------|--------|
-| product_metadata | 50 | ✓ Sincronizados |
-| product_options | 7 | ⚠️ Sin GHL mapping |
-| color_variants | 4 | ✓ Presentes |
-| product_images | 0 | ❌ Faltantes |
+| Tabla            | Registros | Estado             |
+| ---------------- | --------- | ------------------ |
+| product_metadata | 50        | ✓ Sincronizados    |
+| product_options  | 7         | ⚠️ Sin GHL mapping |
+| color_variants   | 4         | ✓ Presentes        |
+| product_images   | 0         | ❌ Faltantes       |
 
 ### GHL - Snapshot
 
 **Error:** HTTP 404 - Endpoint no accesible
+
 - Token: pit-0cf65f40-51a4-4e28-9793-9eb8421e2291
 - Location ID: vOq7yOWR63XGU4qQ7XWd
 - Endpoint: GET /v3/products → HTTP 404
@@ -42,21 +43,25 @@
 ## PUNTO 2: CATÁLOGO BASE ⚠️ PARCIALMENTE DEMOSTRADO
 
 ### CATALOG.TS
+
 - Total: 51 productos
 - Categorías: ramos (6), plantas (13), rosas-eternas (4), complementos (12), condolencias (14)
 - Estructura: Array de objetos con id, name, category, priceMin, priceMax, image, description
 
 ### SUPABASE (product_metadata)
+
 - Total: 50 productos
 - Categorías coinciden ✓
 - Falta: 1 producto (posiblemente "Ramo de Rosas" o similar)
 
 ### DIFERENCIAS
+
 - En catalog pero NO en Supabase: 1 (❌)
 - En Supabase pero NO en catalog: 0 (✓)
 - Duplicados: 0 (✓)
 
 ### Productos por Categoría (Supabase)
+
 ```
 ramos: 6 ✓
 plantas: 13 ✓
@@ -74,15 +79,16 @@ TOTAL: 50 / 51
 
 ### Verificación por Producto (muestra)
 
-| Producto | ID | Category | Active | GHL Product ID | Options | Images | Colors |
-|----------|-----|----------|--------|-----------------|---------|--------|--------|
-| Ramo Silvestre | ramo-silvestre | ramos | ✓ | 6a98f9fb... | 3 | 0 | 0 |
-| Ramo Felicidad | ramo-felicidad | ramos | ✓ | 6a98f9fb... | 0 | 0 | 0 |
-| Ramo de Rosas | ramo-rosas | ramos | ✓ | 6a98f9fd... | 0 | 0 | 6 |
-| Anthurium | anthurium | plantas | ✓ | 6a98f9fe... | 0 | 0 | 0 |
-| Caja Rosas Eternas | caja-rosas-eternas | rosas-eternas | ✓ | (metadata) | 3 | 0 | 4 |
+| Producto           | ID                 | Category      | Active | GHL Product ID | Options | Images | Colors |
+| ------------------ | ------------------ | ------------- | ------ | -------------- | ------- | ------ | ------ |
+| Ramo Silvestre     | ramo-silvestre     | ramos         | ✓      | 6a98f9fb...    | 3       | 0      | 0      |
+| Ramo Felicidad     | ramo-felicidad     | ramos         | ✓      | 6a98f9fb...    | 0       | 0      | 0      |
+| Ramo de Rosas      | ramo-rosas         | ramos         | ✓      | 6a98f9fd...    | 0       | 0      | 6      |
+| Anthurium          | anthurium          | plantas       | ✓      | 6a98f9fe...    | 0       | 0      | 0      |
+| Caja Rosas Eternas | caja-rosas-eternas | rosas-eternas | ✓      | (metadata)     | 3       | 0      | 4      |
 
 ### Problemas Detectados
+
 1. ❌ CRÍTICO: `has_color_variants=true` pero algunos productos NO tienen color_variants registrados
 2. ❌ CRÍTICO: 0 imágenes en la tabla `product_images`
 3. ⚠️ Algunos productos tienen opciones pero registradas en tabla legacy `products`
@@ -94,17 +100,20 @@ TOTAL: 50 / 51
 ## PUNTO 4: OPCIONES / PRECIOS ❌ FALLIDO
 
 ### Estado de product_options
+
 - Total opciones: 7
 - ghl_price_id NULL: 7 (**100% CRÍTICO**)
 - SKUs únicos: 7 ✓
 - Stock NULL: todos (⚠️)
 
 ### Regla Crítica: VIOLADA ✗
+
 > "NINGÚN product_option puede quedar con ghl_price_id NULL si debe estar sincronizado con GHL."
 
 **Todas las 7 opciones violan esta regla.**
 
 ### Opciones Detectadas
+
 ```
 1. Ramo Silvestre - Estándar: €30 → FL-RAM-0001 (ghl_price_id: NULL)
 2. Ramo Silvestre - Especial: €37.50 → FL-RAM-0002 (ghl_price_id: NULL)
@@ -116,6 +125,7 @@ TOTAL: 50 / 51
 ```
 
 ### Análisis de SKUs
+
 - Formato: FL-{PREFIJO}-{NÚMERO} ✓
 - Duplicados: 0 ✓
 - Secuencia correcta: ✓
@@ -127,14 +137,17 @@ TOTAL: 50 / 51
 ## PUNTO 5: CONSULTAR GHL REALMENTE ❌ FALLIDO
 
 ### Resultado
+
 ```
 ❌ HTTP 404 - Endpoint no accesible
 ```
 
 ### Verificación
+
 No fue posible verificar la correspondencia Supabase ↔ GHL porque la API de GHL no responde.
 
 **Posibles causas:**
+
 1. Token expirado o inválido
 2. Endpoint v3 discontinuado o removido
 3. Location ID incorrecto
@@ -149,12 +162,14 @@ No fue posible verificar la correspondencia Supabase ↔ GHL porque la API de GH
 ## PUNTO 6: SKU ✓ DEMOSTRADO
 
 ### Análisis
+
 - Total SKUs únicos: 7
 - Duplicados: 0 ✓
 - NULL values: 0 ✓
 - Formato correcto: ✓
 
 ### Estructura Observada
+
 ```
 FL-RAM-0001 (Ramo Silvestre)
 FL-RAM-0002 (Ramo Silvestre - Especial)
@@ -171,12 +186,14 @@ FL-ROSA-ETE-M-001 (Caja Rosas - Mediana)
 ## PUNTO 7: MÚLTIPLES PRECIOS ❌ FALLIDO
 
 ### Estado
+
 - Total productos con 2+ opciones: 2 detectados
 - Precios mapeados a GHL: 0 / 2
 
 ### Productos Analizados
 
 **Producto 1: Ramo Silvestre**
+
 - Opción 1: Estándar - €30 (ghl_price_id: NULL)
 - Opción 2: Especial - €37.50 (ghl_price_id: NULL)
 - Opción 3: Premium - €45 (ghl_price_id: NULL)
@@ -195,6 +212,7 @@ FL-ROSA-ETE-M-001 (Caja Rosas - Mediana)
 ### Producto: Caja de Rosas Eternas
 
 **Colores en DB:**
+
 ```
 ✓ Rojo
 ✓ Rosa
@@ -204,6 +222,7 @@ FL-ROSA-ETE-M-001 (Caja Rosas - Mediana)
 ```
 
 **Imágenes por Color:**
+
 ```
 ❌ Rojo: 0 imágenes
 ❌ Rosa: 0 imágenes
@@ -215,6 +234,7 @@ FL-ROSA-ETE-M-001 (Caja Rosas - Mediana)
 No verificable - servidor no accesible
 
 **Problemas:**
+
 1. ❌ Sin imágenes específicas por color
 2. ❌ No se puede verificar selector de colores en UI
 3. ⚠️ Color_variants registrados pero sin imágenes asociadas
@@ -226,15 +246,18 @@ No verificable - servidor no accesible
 ## PUNTO 9: IMÁGENES ❌ FALLIDO
 
 ### Estado
+
 - Productos con imagen primaria: 0 / 50
 - Productos sin imagen: 50 / 50
 - URLs válidas: 0
 - Imágenes rotas en UI: No verificable
 
 ### Análisis
+
 La tabla `product_images` está VACÍA. No hay ni una sola imagen registrada.
 
 **Regla violada:**
+
 > "Cada producto debe tener una imagen principal (is_primary = true)"
 
 **Clasificación:** ❌ FALLIDO (Tabla completamente vacía)
@@ -244,9 +267,11 @@ La tabla `product_images` está VACÍA. No hay ni una sola imagen registrada.
 ## PUNTO 10: FRONTEND - RUTAS PRINCIPALES ❌ NO DEMOSTRADO
 
 ### Estado del Servidor
+
 Servidor no disponible - no se pudo verificar rutas
 
 **Rutas a verificar:**
+
 - [ ] / (home)
 - [ ] /catalogo
 - [ ] /catalogo?categoria=ramos
@@ -264,6 +289,7 @@ Servidor no disponible - no se pudo verificar rutas
 ## PUNTO 11: ADMIN PANEL ❌ NO DEMOSTRADO
 
 ### Estado
+
 - Servidor no accesible
 - No se pudo verificar listado, detalle, o edición
 
@@ -274,6 +300,7 @@ Servidor no disponible - no se pudo verificar rutas
 ## PUNTO 12: PRUEBA CONTROLADA CRUD ❌ NO DEMOSTRADO
 
 ### Estado
+
 - Servidor no accesible
 - No se pudo crear producto temporal
 
@@ -284,7 +311,9 @@ Servidor no disponible - no se pudo verificar rutas
 ## PUNTO 13: IDEMPOTENCIA ❌ FALLIDO
 
 ### Problema: Datos de Prueba Detectados
+
 En la tabla `products` (legacy) hay 6 productos que parecen ser de test/prueba:
+
 ```
 1. MANUAL TEST MULTIOPT
 2. REPARACIÓN PUNTO 7 - TEST MULTIPRECIOS (x2)
@@ -294,6 +323,7 @@ En la tabla `products` (legacy) hay 6 productos que parecen ser de test/prueba:
 ```
 
 **Problemas de idempotencia:**
+
 - ❌ Datos de prueba no limpiados
 - ❌ Posibles duplicados entre `products` y `product_metadata`
 - ⚠️ Inconsistencia en estructura de datos
@@ -305,6 +335,7 @@ En la tabla `products` (legacy) hay 6 productos que parecen ser de test/prueba:
 ## PUNTO 14: REGRESIÓN VISUAL ❌ NO DEMOSTRADO
 
 ### Estado
+
 - Servidor no accesible
 - No se pudo verificar home, catálogo, detalle, responsive
 
@@ -315,6 +346,7 @@ En la tabla `products` (legacy) hay 6 productos que parecen ser de test/prueba:
 ## PUNTO 15: PRODUCCIÓN VERCEL ❌ NO DEMOSTRADO
 
 ### Estado
+
 - No se verificó https://floristeria-lucia.vercel.app
 - Estado desconocido
 
@@ -327,27 +359,34 @@ En la tabla `products` (legacy) hay 6 productos que parecen ser de test/prueba:
 ### Verificación
 
 **1. Tokens hardcodeados:**
+
 ```bash
 grep -r "Bearer " src/ --include="*.ts" --include="*.tsx"
 ```
+
 Resultado: No encontrados en código fuente (tokens solo en .env)
 
 **2. Secrets en frontend:**
+
 ```bash
 grep -r "process.env" src/ --include="*.tsx" | grep -v "NODE_ENV"
 ```
+
 Resultado: Revisar - pendiente verificación completa
 
 **3. Endpoints admin sin autenticación:**
 Todos los endpoints `/api/admin/*` usan `withAdminGuard` ✓
 
 **4. Credenciales en Git:**
+
 ```bash
 git log --all --oneline --grep="token\|secret\|password\|key"
 ```
+
 Resultado: Pendiente verificación
 
 **Hallazgos:**
+
 - ✓ Tokens NO hardcodeados en código
 - ⚠️ Credenciales en .env (normal)
 - ✓ Admin endpoints protegidos
@@ -359,24 +398,24 @@ Resultado: Pendiente verificación
 
 ## PUNTO 17: CLASIFICACIÓN FINAL
 
-| Punto | Estado | Razón |
-|-------|--------|-------|
-| 1. Snapshot | ⚠️ PARCIAL | GHL API inaccesible |
-| 2. Catálogo Base | ⚠️ PARCIAL | 1 producto falta |
-| 3. Productos | ❌ FALLIDO | Sin imágenes |
-| 4. Opciones/Precios | ❌ FALLIDO | ghl_price_id NULL |
-| 5. GHL Verificación | ❌ FALLIDO | API 404 |
-| 6. SKU | ✅ DEMOSTRADO | Válidos |
-| 7. Múltiples Precios | ❌ FALLIDO | Sin sincronización |
-| 8. Rosas Eternas | ❌ FALLIDO | Sin imágenes |
-| 9. Imágenes | ❌ FALLIDO | Tabla vacía |
-| 10. Frontend Rutas | ❌ NO DEMOSTRADO | Servidor inaccesible |
-| 11. Admin Panel | ❌ NO DEMOSTRADO | Servidor inaccesible |
-| 12. CRUD | ❌ NO DEMOSTRADO | Servidor inaccesible |
-| 13. Idempotencia | ❌ FALLIDO | Datos de prueba |
-| 14. Regresión | ❌ NO DEMOSTRADO | Servidor inaccesible |
-| 15. Producción | ❌ NO DEMOSTRADO | No verificado |
-| 16. Seguridad | ⚠️ PARCIAL | Revisar scripts |
+| Punto                | Estado           | Razón                |
+| -------------------- | ---------------- | -------------------- |
+| 1. Snapshot          | ⚠️ PARCIAL       | GHL API inaccesible  |
+| 2. Catálogo Base     | ⚠️ PARCIAL       | 1 producto falta     |
+| 3. Productos         | ❌ FALLIDO       | Sin imágenes         |
+| 4. Opciones/Precios  | ❌ FALLIDO       | ghl_price_id NULL    |
+| 5. GHL Verificación  | ❌ FALLIDO       | API 404              |
+| 6. SKU               | ✅ DEMOSTRADO    | Válidos              |
+| 7. Múltiples Precios | ❌ FALLIDO       | Sin sincronización   |
+| 8. Rosas Eternas     | ❌ FALLIDO       | Sin imágenes         |
+| 9. Imágenes          | ❌ FALLIDO       | Tabla vacía          |
+| 10. Frontend Rutas   | ❌ NO DEMOSTRADO | Servidor inaccesible |
+| 11. Admin Panel      | ❌ NO DEMOSTRADO | Servidor inaccesible |
+| 12. CRUD             | ❌ NO DEMOSTRADO | Servidor inaccesible |
+| 13. Idempotencia     | ❌ FALLIDO       | Datos de prueba      |
+| 14. Regresión        | ❌ NO DEMOSTRADO | Servidor inaccesible |
+| 15. Producción       | ❌ NO DEMOSTRADO | No verificado        |
+| 16. Seguridad        | ⚠️ PARCIAL       | Revisar scripts      |
 
 ---
 
@@ -417,6 +456,7 @@ Resultado: Pendiente verificación
 ## ACCIONES REQUERIDAS PARA COMPLETAR BLOQUE 6
 
 ### PRIORITARIO (Bloqueantes)
+
 1. [ ] **Resolver GHL API (HTTP 404)**
    - Verificar token: `pit-0cf65f40-51a4-4e28-9793-9eb8421e2291`
    - Verificar Location ID: `vOq7yOWR63XGU4qQ7XWd`
@@ -435,6 +475,7 @@ Resultado: Pendiente verificación
    - Verificar no hay duplicados
 
 ### IMPORTANTE (Después de bloqueantes)
+
 5. [ ] Sincronizar producto faltante (total 51)
 6. [ ] Crear imágenes de color para Rosas Eternas
 7. [ ] Iniciar servidor dev y verificar rutas
@@ -449,6 +490,7 @@ Resultado: Pendiente verificación
 **BLOQUE 6 NO PUEDE COMPLETARSE en su forma actual** porque faltan componentes fundamentales de la arquitectura (tabla de imágenes, sincronización GHL, datos limpios).
 
 El proyecto está en estado **"en desarrollo"** y necesita:
+
 - 30% más de trabajo de backend (GHL, imágenes, sincronización)
 - 10% más de trabajo de limpieza de datos
 - 20% más de verificación de integración

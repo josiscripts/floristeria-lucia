@@ -22,7 +22,7 @@ try {
   const response = await fetch(endpoint, {
     method: "POST",
     headers: {
-      "Authorization": `Bearer ${ghlToken}`,
+      Authorization: `Bearer ${ghlToken}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify(payload),
@@ -30,7 +30,7 @@ try {
 
   const contentType = response.headers.get("content-type");
   const text = await response.text();
-  
+
   console.log(`Status: ${response.status} ${response.statusText}`);
   console.log(`Content-Type: ${contentType}`);
   console.log(`Response Body (first 500 chars):\n${text.substring(0, 500)}`);
@@ -38,7 +38,7 @@ try {
   if (contentType && contentType.includes("application/json")) {
     const data = JSON.parse(text);
     console.log(`\nParsed JSON:`, JSON.stringify(data, null, 2));
-    
+
     if (data._id) {
       console.log(`✓ Price ID (response._id): ${data._id}`);
     } else if (data.id) {

@@ -69,12 +69,13 @@ psql -h db.xxxx.supabase.co -U postgres -d postgres -f migrations.sql
 Verify tables were created:
 
 ```sql
-SELECT table_name FROM information_schema.tables 
-WHERE table_schema = 'public' 
+SELECT table_name FROM information_schema.tables
+WHERE table_schema = 'public'
 AND table_name IN ('orders', 'order_items');
 ```
 
 Should return:
+
 ```
 orders
 order_items

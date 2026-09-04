@@ -2,7 +2,7 @@
 
 **Proyecto:** leksmflinhohnekbgmgj  
 **URL:** https://leksmflinhohnekbgmgj.supabase.co  
-**Fecha:** 2026-08-26  
+**Fecha:** 2026-08-26
 
 ---
 
@@ -95,6 +95,7 @@ FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 ```
 
 **¿Qué crea?**
+
 - ✅ Tabla: `public.profiles` (5 columnas)
 - ✅ Función: `update_updated_at_column()`
 - ✅ Trigger: `update_profiles_updated_at`
@@ -103,6 +104,7 @@ FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 - ✅ RLS: HABILITADO con 3 policies
 
 **Resultado esperado:**
+
 ```
 Query executed successfully (took XXms)
 ```
@@ -127,11 +129,13 @@ REVOKE EXECUTE ON FUNCTION public.handle_new_user() FROM anon, authenticated, PU
 ```
 
 **¿Qué hace?**
+
 - ✅ Revoca permiso EXECUTE para usuarios anónimos y autenticados
 - ✅ Función solo se ejecuta vía trigger (automático)
 - ✅ Mejora seguridad
 
 **Resultado esperado:**
+
 ```
 Query executed successfully (took XXms)
 ```
@@ -154,6 +158,7 @@ Si ves error, **DETENTE y reporta** sin continuar.
 4. Click: **Create Bucket**
 
 **Resultado esperado:**
+
 ```
 Bucket created successfully
 ```
@@ -179,12 +184,14 @@ USING (bucket_id = 'hero-animation');
 ```
 
 **¿Qué hace?**
+
 - ✅ Permite a usuarios anónimos y autenticados **LEER** archivos
 - ✅ Solo lectura (SELECT)
 - ✅ Solo en bucket `hero-animation`
 - ❌ No pueden escribir/borrar
 
 **Resultado esperado:**
+
 ```
 Query executed successfully (took XXms)
 ```
@@ -200,7 +207,7 @@ Después de ejecutar todos los pasos anteriores, ejecuta estas queries para veri
 ### Verificación 1: Tabla profiles existe
 
 ```sql
-SELECT 
+SELECT
   table_name,
   table_schema
 FROM information_schema.tables
@@ -209,6 +216,7 @@ AND table_schema = 'public';
 ```
 
 **Resultado esperado:**
+
 ```
 table_name  | table_schema
 profiles    | public
@@ -221,7 +229,7 @@ Si NO aparece nada, la tabla NO se creó. Reporta.
 ### Verificación 2: Estructura de profiles
 
 ```sql
-SELECT 
+SELECT
   column_name,
   data_type,
   is_nullable,
@@ -232,11 +240,12 @@ ORDER BY ordinal_position;
 ```
 
 **Resultado esperado:**
+
 ```
 column_name  | data_type                    | is_nullable | column_default
-id           | uuid                         | NO          | 
-full_name    | text                         | YES         | 
-phone        | text                         | YES         | 
+id           | uuid                         | NO          |
+full_name    | text                         | YES         |
+phone        | text                         | YES         |
 created_at   | timestamp with time zone     | NO          | now()
 updated_at   | timestamp with time zone     | NO          | now()
 ```
@@ -246,7 +255,7 @@ updated_at   | timestamp with time zone     | NO          | now()
 ### Verificación 3: RLS habilitado
 
 ```sql
-SELECT 
+SELECT
   schemaname,
   tablename,
   rowsecurity
@@ -255,6 +264,7 @@ WHERE tablename = 'profiles';
 ```
 
 **Resultado esperado:**
+
 ```
 schemaname | tablename | rowsecurity
 public     | profiles  | true
@@ -267,7 +277,7 @@ Si `rowsecurity = false`, RLS no está habilitado. Reporta.
 ### Verificación 4: RLS Policies
 
 ```sql
-SELECT 
+SELECT
   schemaname,
   tablename,
   policyname,
@@ -280,6 +290,7 @@ ORDER BY policyname;
 ```
 
 **Resultado esperado:** 3 policies
+
 ```
 schemaname | tablename | policyname                          | roles         | ...
 public     | profiles  | Users can insert their own profile  | {authenticated}
@@ -294,7 +305,7 @@ Si menos de 3, falta alguna. Reporta.
 ### Verificación 5: Funciones creadas
 
 ```sql
-SELECT 
+SELECT
   routine_schema,
   routine_name,
   routine_type
@@ -305,6 +316,7 @@ ORDER BY routine_name;
 ```
 
 **Resultado esperado:** 2 funciones
+
 ```
 routine_schema | routine_name                | routine_type
 public         | handle_new_user             | FUNCTION
@@ -318,7 +330,7 @@ Si faltan, reporta.
 ### Verificación 6: Triggers creados
 
 ```sql
-SELECT 
+SELECT
   trigger_schema,
   trigger_name,
   event_manipulation,
@@ -330,6 +342,7 @@ ORDER BY trigger_name;
 ```
 
 **Resultado esperado:** 2 triggers
+
 ```
 trigger_schema | trigger_name                      | event_manipulation | event_object_table
 public         | on_auth_user_created              | INSERT             | users
@@ -343,24 +356,25 @@ Si faltan, reporta.
 ### Verificación 7: Permisos en handle_new_user
 
 ```sql
-SELECT 
+SELECT
   grantee,
   privilege_type
 FROM information_schema.role_table_grants
 WHERE table_name = 'profiles'
 UNION
-SELECT 
+SELECT
   grantee,
   privilege_type
 FROM aclexplode((
-  SELECT proacl FROM pg_proc 
-  WHERE proname = 'handle_new_user' 
+  SELECT proacl FROM pg_proc
+  WHERE proname = 'handle_new_user'
   AND pronamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'public')
 )) x(grantor, grantee, privileges)
 WHERE privileges & 4 != 0; -- EXECUTE
 ```
 
 **Resultado esperado:**
+
 ```
 Sin resultados (o solo service_role con EXECUTE)
 ```
@@ -372,7 +386,7 @@ Si aparecen permisos EXECUTE para authenticated o anon, reporta.
 ### Verificación 8: Storage bucket existe
 
 ```sql
-SELECT 
+SELECT
   id,
   name,
   public
@@ -381,6 +395,7 @@ WHERE name = 'hero-animation';
 ```
 
 **Resultado esperado:**
+
 ```
 id               | name             | public
 [uuid]           | hero-animation   | true
@@ -393,7 +408,7 @@ Si no aparece, el bucket NO existe. Reporta.
 ### Verificación 9: Storage policy existe
 
 ```sql
-SELECT 
+SELECT
   schemaname,
   tablename,
   policyname,
@@ -406,6 +421,7 @@ AND policyname LIKE '%hero%';
 ```
 
 **Resultado esperado:**
+
 ```
 schemaname | tablename | policyname                              | permissive | ...
 storage    | objects   | Anyone can read hero animation frames   | true       | ...
@@ -417,13 +433,13 @@ Si no aparece, la policy NO existe. Reporta.
 
 ## 📋 RESUMEN DE PASOS
 
-| Paso | Acción | Dónde | SQL |
-|------|--------|-------|-----|
-| 1 | Crear profiles | SQL Editor | Migration 1 |
-| 2 | Revoke permisos | SQL Editor | Migration 2 |
-| 3 | Crear bucket | Dashboard Storage | Manual |
-| 4 | Crear policy storage | SQL Editor | Storage Policy |
-| 5+ | Verificar (9 queries) | SQL Editor | READ-ONLY |
+| Paso | Acción                | Dónde             | SQL            |
+| ---- | --------------------- | ----------------- | -------------- |
+| 1    | Crear profiles        | SQL Editor        | Migration 1    |
+| 2    | Revoke permisos       | SQL Editor        | Migration 2    |
+| 3    | Crear bucket          | Dashboard Storage | Manual         |
+| 4    | Crear policy storage  | SQL Editor        | Storage Policy |
+| 5+   | Verificar (9 queries) | SQL Editor        | READ-ONLY      |
 
 ---
 
@@ -483,4 +499,3 @@ leksmflinhohnekbgmgj
 **FASE 1 - LISTA PARA EJECUCIÓN MANUAL**
 
 Cuando hayas completado todos los pasos y verificaciones, reporta los resultados.
-

@@ -2,7 +2,7 @@
 
 **Fecha:** 2026-08-31  
 **Status:** ✅ COMPLETADA Y VERIFICADA  
-**Autor:** Claude  
+**Autor:** Claude
 
 ---
 
@@ -14,7 +14,7 @@ FASE 3A está completamente cerrada. Se verificó que:
 ✅ **Metadata completa y accesible** (category, price_min, sku)  
 ✅ **API devuelve datos reales** (no defaults)  
 ✅ **Catálogo integrado correctamente**  
-✅ **Build sin errores**  
+✅ **Build sin errores**
 
 ---
 
@@ -23,7 +23,8 @@ FASE 3A está completamente cerrada. Se verificó que:
 ### 1. ✅ Tabla product_metadata en Supabase (Correcto)
 
 **Project ID:** `leksmflinhohnekbgmgj`  
-**Columnas:** 
+**Columnas:**
+
 - `ghl_product_id` (FK → GHL)
 - `category` (varchar)
 - `price_min` (numeric)
@@ -33,6 +34,7 @@ FASE 3A está completamente cerrada. Se verificó que:
 - `auto_created`, `created_at`, `updated_at`
 
 **Restricciones:**
+
 - ✅ status only accepts 'active' or NULL
 - ✅ ghl_product_id is UNIQUE
 - ✅ sku is UNIQUE
@@ -45,14 +47,14 @@ FASE 3A está completamente cerrada. Se verificó que:
 PASO 1: Limpieza
   Registros antes: 3 (vacíos)
   Registros después: 0
-  
+
 PASO 2: Fetch GHL
   Total GHL: 68 productos
-  
+
 PASO 3: Match y generación
   Matched con catalog.ts: 58
   Orphans sin match: 10
-  
+
 PASO 4: Inserción
   Total insertados: 68
   Total errores: 0
@@ -61,15 +63,16 @@ PASO 4: Inserción
 
 **Distribución de 58 productos matched:**
 
-| Categoría | Cantidad | Ejemplos |
-|-----------|----------|----------|
-| condolencias | 14 | Corona F26 ($260), Centro F24 ($110), Centro lágrima ($95) |
-| complementos | 13 | Globos ($4), Chocolate Belga ($12-15), Oso Peluche ($12.5) |
-| plantas | 13 | Anthurium ($25), Calathea ($35), Bonsái ($25) |
-| ramos | 6 | Ramo Silvestre ($30), Ramo Felicidad ($35) |
-| rosas-eternas | 4 | Caja de Rosas Eternas ($40), Cupido ($55) |
+| Categoría     | Cantidad | Ejemplos                                                   |
+| ------------- | -------- | ---------------------------------------------------------- |
+| condolencias  | 14       | Corona F26 ($260), Centro F24 ($110), Centro lágrima ($95) |
+| complementos  | 13       | Globos ($4), Chocolate Belga ($12-15), Oso Peluche ($12.5) |
+| plantas       | 13       | Anthurium ($25), Calathea ($35), Bonsái ($25)              |
+| ramos         | 6        | Ramo Silvestre ($30), Ramo Felicidad ($35)                 |
+| rosas-eternas | 4        | Caja de Rosas Eternas ($40), Cupido ($55)                  |
 
 **Orphans (10 productos sin match):**
+
 1. yhfgbeuhfuiehuf (test data)
 2. E2E TEST 2 - Plantas
 3. E2E TEST - Ramo
@@ -121,7 +124,7 @@ PASO 4: Inserción
 ✅ **68 registros encontrados**  
 ✅ **Categorías reales recuperadas**  
 ✅ **Precios recuperados**  
-✅ **SKUs únicos generados**  
+✅ **SKUs únicos generados**
 
 ---
 
@@ -186,6 +189,7 @@ El catálogo ahora agrupa productos por categorías reales:
 **Verificación de precios:**
 
 Los precios mostrados en catálogo corresponden a `price_min` de Supabase:
+
 - Corona F26: $260 ✅
 - Globos: $4 ✅
 - Anthurium: $25 ✅
@@ -203,6 +207,7 @@ npm run build
 ```
 
 **Resultado:**
+
 ```
 ✓ built in 1.63s
 Generated .vercel/output/nitro.json
@@ -210,7 +215,7 @@ Generated .vercel/output/nitro.json
 
 ✅ **TypeScript compilation successful**  
 ✅ **No warnings or errors**  
-✅ **Bundle optimized**  
+✅ **Bundle optimized**
 
 ---
 
@@ -251,7 +256,7 @@ FL-ROS-0001  → Caja de Rosas Eternas (rosas-eternas)
 
 ✅ **Format correcto**  
 ✅ **Únicos**  
-✅ **Legible**  
+✅ **Legible**
 
 ### Category Mapping
 
@@ -266,20 +271,20 @@ condolencias → Condolencias
 
 ✅ **Consistent**  
 ✅ **Real**  
-✅ **Readable**  
+✅ **Readable**
 
 ### Price Ranges
 
-| Categoría | Min | Max |
-|-----------|-----|-----|
-| ramos | $24 | $35 |
-| plantas | $25 | $80 |
-| rosas-eternas | $22 | $55 |
-| complementos | $1.50 | $18 |
-| condolencias | $55 | $260 |
+| Categoría     | Min   | Max  |
+| ------------- | ----- | ---- |
+| ramos         | $24   | $35  |
+| plantas       | $25   | $80  |
+| rosas-eternas | $22   | $55  |
+| complementos  | $1.50 | $18  |
+| condolencias  | $55   | $260 |
 
 ✅ **Ranges accurate**  
-✅ **Pricing strategy visible**  
+✅ **Pricing strategy visible**
 
 ---
 
@@ -317,13 +322,14 @@ condolencias → Condolencias
 
 ✅ **Architecture clean and functional**  
 ✅ **Data flows correctly**  
-✅ **No data loss or corruption**  
+✅ **No data loss or corruption**
 
 ---
 
 ## CAMBIOS REALIZADOS EN FASE 3A
 
 ### Ficheros modificados:
+
 1. `src/lib/ghl/client.server.ts` - Normalización _id → id
 2. `src/routes/api.ghl.products.ts` - Lectura de metadata correcta
 3. `src/integrations/supabase/types.ts` - Types actualizados con category, sku
@@ -331,6 +337,7 @@ condolencias → Condolencias
 5. `.env.local` - Variables de entorno correctas
 
 ### Ficheros creados:
+
 1. `supabase/migrations/20260831140000_add_category_sku_to_product_metadata.sql` - Schema migration
 2. `SUPABASE_MIGRATION_EXECUTE_NOW.sql` - Manual execution script
 3. `scripts/clean-and-populate.cjs` - Production-ready population script
@@ -341,6 +348,7 @@ condolencias → Condolencias
 8. `src/routes/api.admin.debug-env.ts` - Environment debug endpoint
 
 ### Ficheros NO modificados (as per requirements):
+
 - ❌ `src/data/catalog.ts` - Catálogo original intacto
 - ❌ `src/data/services.ts` - Servicios intactos
 - ❌ `src/components/ProductCard.tsx` - Card component sin cambios
@@ -353,17 +361,17 @@ condolencias → Condolencias
 
 ## CRITERIOS DE CIERRE FASE 3A
 
-| # | Criterio | Status | Evidencia |
-|---|----------|--------|-----------|
-| 1 | 68 registros en Supabase | ✅ | `totalCount: 68` en debug endpoint |
-| 2 | 58 con category, price_min, sku | ✅ | Corona F26: condolencias, 260, FL-CON-0002 |
-| 3 | 10 orphans sin categoría | ✅ | yhfgbeuhfuiehuf, E2E TEST 2... con status: NULL |
-| 4 | 0 registros corruptos | ✅ | Todos tienen ghl_product_id válido |
-| 5 | 0 SKU duplicados | ✅ | FL-{CAT}-{NUM} genera únicos automáticamente |
-| 6 | getFullProductMetadataByIds() ✅ | ✅ | /api/admin/debug-metadata → 68 records |
-| 7 | /api/ghl/products datos reales | ✅ | Corona F26 → condolencias, 260 |
-| 8 | /catalogo categorías y precios | ✅ | Agrupa por categoría real, precios correctos |
-| 9 | Build sin errores | ✅ | npm run build → ✓ built in 1.63s |
+| #   | Criterio                         | Status | Evidencia                                       |
+| --- | -------------------------------- | ------ | ----------------------------------------------- |
+| 1   | 68 registros en Supabase         | ✅     | `totalCount: 68` en debug endpoint              |
+| 2   | 58 con category, price_min, sku  | ✅     | Corona F26: condolencias, 260, FL-CON-0002      |
+| 3   | 10 orphans sin categoría         | ✅     | yhfgbeuhfuiehuf, E2E TEST 2... con status: NULL |
+| 4   | 0 registros corruptos            | ✅     | Todos tienen ghl_product_id válido              |
+| 5   | 0 SKU duplicados                 | ✅     | FL-{CAT}-{NUM} genera únicos automáticamente    |
+| 6   | getFullProductMetadataByIds() ✅ | ✅     | /api/admin/debug-metadata → 68 records          |
+| 7   | /api/ghl/products datos reales   | ✅     | Corona F26 → condolencias, 260                  |
+| 8   | /catalogo categorías y precios   | ✅     | Agrupa por categoría real, precios correctos    |
+| 9   | Build sin errores                | ✅     | npm run build → ✓ built in 1.63s                |
 
 ---
 
@@ -408,12 +416,14 @@ Bundle size:                 ~2.5MB (optimized)
 FASE 3A está completamente cerrada y verificada. FASE 3B puede proceder con:
 
 ### 3B.1 - Imágenes (cuando esté autorizado)
+
 - [ ] Crear tabla `product_images`
 - [ ] Implementar upload endpoint
 - [ ] Integrar con ProductCard
 - [ ] Render galería en catálogo
 
 ### 3B.2 - Sincronización bidireccional (fase posterior)
+
 - [ ] Sync precios: Supabase → GHL
 - [ ] Webhook listener para cambios en GHL
 - [ ] Cron job para sync inverso
@@ -425,6 +435,7 @@ FASE 3A está completamente cerrada y verificada. FASE 3B puede proceder con:
 ✅ **FASE 3A COMPLETADA Y CERRADA**
 
 El sistema de productos está completamente funcional con:
+
 - GHL como fuente autoritativa de identidad (id, name, description)
 - Supabase como fuente de metadata (category, price, sku)
 - API integrado que combina ambas fuentes

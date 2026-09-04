@@ -14,6 +14,7 @@ FASE 4.1 implementada exitosamente con tipos tipados y mapping para webhooks de 
 ## 1. ARCHIVO MODIFICADO
 
 **Único archivo modificado:**
+
 - ✅ `src/lib/ghl/types.ts`
 
 **Líneas agregadas:** 123 (líneas 79-201)  
@@ -26,7 +27,7 @@ FASE 4.1 implementada exitosamente con tipos tipados y mapping para webhooks de 
 
 ### 1. **Mapping GHL Stage ID → Supabase Order Status**
 
-```typescript
+````typescript
 export const GHL_STAGE_TO_ORDER_STATUS = {
   "1de8d7dc-deac-45a6-a87e-e7198c3ef4a5": "pending",      // Recibido
     "a737a3b9-98fd-4446-8f15-eb26333cc6f3": "confirmed",    // Confirmado
@@ -326,4 +327,5 @@ export const GHL_STAGE_TO_ORDER_STATUS = {
 
                                                                                                                                                                      Aguardando autorización para FASE 4.2.
 
-                                                                                                                                                                     
+
+````

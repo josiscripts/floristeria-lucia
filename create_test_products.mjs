@@ -25,11 +25,11 @@ async function ghlFetch(endpoint, method = "GET", body = null) {
   try {
     const res = await fetch(url, options);
     const data = await res.json();
-    
+
     if (!res.ok) {
       return { error: true, status: res.status, data };
     }
-    
+
     return { error: false, data };
   } catch (err) {
     return { error: true, message: err.message };
@@ -44,13 +44,15 @@ async function createTestProducts() {
     {
       name: "TEST - Ramo Silvestre",
       category: "ramos",
-      description: "Producto de prueba: Ramo silvestre para verificar sincronización GHL ↔ catálogo",
+      description:
+        "Producto de prueba: Ramo silvestre para verificar sincronización GHL ↔ catálogo",
       price: 35,
     },
     {
       name: "TEST - Planta Decorativa",
       category: "plantas",
-      description: "Producto de prueba: Planta decorativa para verificar sincronización GHL ↔ catálogo",
+      description:
+        "Producto de prueba: Planta decorativa para verificar sincronización GHL ↔ catálogo",
       price: 40,
     },
     {
@@ -62,13 +64,15 @@ async function createTestProducts() {
     {
       name: "TEST - Complemento Floral",
       category: "complementos",
-      description: "Producto de prueba: Complemento floral para verificar sincronización GHL ↔ catálogo",
+      description:
+        "Producto de prueba: Complemento floral para verificar sincronización GHL ↔ catálogo",
       price: 15,
     },
     {
       name: "TEST - Condolencias",
       category: "condolencias",
-      description: "Producto de prueba: Centro de condolencias para verificar sincronización GHL ↔ catálogo",
+      description:
+        "Producto de prueba: Centro de condolencias para verificar sincronización GHL ↔ catálogo",
       price: 85,
     },
   ];
@@ -77,12 +81,9 @@ async function createTestProducts() {
 
   for (const product of testProducts) {
     console.log(`\nCreating: ${product.name}`);
-    
+
     // Try both endpoint formats
-    const endpoints = [
-      `/locations/${locationId}/products`,
-      `/products/?locationId=${locationId}`,
-    ];
+    const endpoints = [`/locations/${locationId}/products`, `/products/?locationId=${locationId}`];
 
     let created = false;
     let createdProduct = null;
@@ -131,13 +132,13 @@ async function createTestProducts() {
       });
     }
 
-    await new Promise(r => setTimeout(r, 500));
+    await new Promise((r) => setTimeout(r, 500));
   }
 
   // Summary
   console.log("\n=== SUMMARY ===\n");
-  const successful = results.filter(r => r.success);
-  const failed = results.filter(r => !r.success);
+  const successful = results.filter((r) => r.success);
+  const failed = results.filter((r) => !r.success);
 
   console.log(`✓ Created: ${successful.length}/${results.length}`);
   if (failed.length > 0) {
@@ -146,7 +147,7 @@ async function createTestProducts() {
 
   fs.writeFileSync("create_test_products_results.json", JSON.stringify(results, null, 2));
   console.log("\n✓ Results saved to create_test_products_results.json");
-  
+
   return results;
 }
 

@@ -18,8 +18,7 @@ envContent.split("\n").forEach((line) => {
 });
 
 const supabaseUrl = env.SUPABASE_URL || env.VITE_SUPABASE_URL;
-const supabaseServiceKey =
-  env.SUPABASE_SERVICE_ROLE_KEY || env.VITE_SUPABASE_SERVICE_ROLE_KEY;
+const supabaseServiceKey = env.SUPABASE_SERVICE_ROLE_KEY || env.VITE_SUPABASE_SERVICE_ROLE_KEY;
 
 if (!supabaseUrl || !supabaseServiceKey) {
   console.error("Missing Supabase credentials");
@@ -37,9 +36,7 @@ async function cleanupTestProducts() {
   const { data: testProducts } = await supabase
     .from("products")
     .select("id")
-    .or(
-      `ghl_product_id.like.test-product-%,name.ilike.%TEST%,name.ilike.%TEMP%`
-    );
+    .or(`ghl_product_id.like.test-product-%,name.ilike.%TEST%,name.ilike.%TEMP%`);
 
   if (!testProducts || testProducts.length === 0) {
     console.log("No hay productos TEST para eliminar");
@@ -52,28 +49,19 @@ async function cleanupTestProducts() {
 
   // Step 2: Delete product_options
   console.log("Eliminando product_options asociadas...");
-  const { error: e1 } = await supabase
-    .from("product_options")
-    .delete()
-    .in("product_id", testIds);
+  const { error: e1 } = await supabase.from("product_options").delete().in("product_id", testIds);
   if (e1) console.error("Error eliminando options:", e1);
   else console.log("✓ product_options eliminadas");
 
   // Step 3: Delete product_images
   console.log("Eliminando product_images asociadas...");
-  const { error: e2 } = await supabase
-    .from("product_images")
-    .delete()
-    .in("product_id", testIds);
+  const { error: e2 } = await supabase.from("product_images").delete().in("product_id", testIds);
   if (e2) console.error("Error eliminando images:", e2);
   else console.log("✓ product_images eliminadas");
 
   // Step 4: Delete color_variants
   console.log("Eliminando color_variants asociadas...");
-  const { error: e3 } = await supabase
-    .from("color_variants")
-    .delete()
-    .in("product_id", testIds);
+  const { error: e3 } = await supabase.from("color_variants").delete().in("product_id", testIds);
   if (e3) console.error("Error eliminando colors:", e3);
   else console.log("✓ color_variants eliminadas");
 
@@ -92,9 +80,7 @@ async function cleanupTestProducts() {
   const { data: remaining } = await supabase
     .from("products")
     .select("COUNT(*) as count", { count: "exact" })
-    .or(
-      `ghl_product_id.like.test-product-%,name.ilike.%TEST%,name.ilike.%TEMP%`
-    );
+    .or(`ghl_product_id.like.test-product-%,name.ilike.%TEST%,name.ilike.%TEMP%`);
 
   const { count: prodCount } = await supabase
     .from("products")

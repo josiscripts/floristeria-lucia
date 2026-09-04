@@ -18,8 +18,7 @@ envContent.split("\n").forEach((line) => {
 });
 
 const supabaseUrl = env.SUPABASE_URL || env.VITE_SUPABASE_URL;
-const supabaseServiceKey =
-  env.SUPABASE_SERVICE_ROLE_KEY || env.VITE_SUPABASE_SERVICE_ROLE_KEY;
+const supabaseServiceKey = env.SUPABASE_SERVICE_ROLE_KEY || env.VITE_SUPABASE_SERVICE_ROLE_KEY;
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey, {
   auth: { persistSession: false },
@@ -47,31 +46,19 @@ async function hardDeleteTestProducts() {
   const testIds = testProducts.map((p) => p.id);
 
   // Hard delete: options
-  const { error: e1 } = await supabase
-    .from("product_options")
-    .delete()
-    .in("product_id", testIds);
+  const { error: e1 } = await supabase.from("product_options").delete().in("product_id", testIds);
   console.log(`\nDeleting product_options: ${e1 ? "ERROR" : "✓"}`);
 
   // Hard delete: images
-  const { error: e2 } = await supabase
-    .from("product_images")
-    .delete()
-    .in("product_id", testIds);
+  const { error: e2 } = await supabase.from("product_images").delete().in("product_id", testIds);
   console.log(`Deleting product_images: ${e2 ? "ERROR" : "✓"}`);
 
   // Hard delete: colors
-  const { error: e3 } = await supabase
-    .from("color_variants")
-    .delete()
-    .in("product_id", testIds);
+  const { error: e3 } = await supabase.from("color_variants").delete().in("product_id", testIds);
   console.log(`Deleting color_variants: ${e3 ? "ERROR" : "✓"}`);
 
   // Hard delete: products
-  const { error: e4 } = await supabase
-    .from("products")
-    .delete()
-    .in("id", testIds);
+  const { error: e4 } = await supabase.from("products").delete().in("id", testIds);
   console.log(`Deleting products: ${e4 ? "ERROR" : "✓"}`);
 
   // Verify
@@ -82,9 +69,7 @@ async function hardDeleteTestProducts() {
 
   console.log(`\nRemaining TEST products: ${remaining?.length || 0}`);
 
-  const { data: allProducts } = await supabase
-    .from("products")
-    .select("id");
+  const { data: allProducts } = await supabase.from("products").select("id");
 
   console.log(`Total products now: ${allProducts?.length || 0}`);
 }

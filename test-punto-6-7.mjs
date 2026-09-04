@@ -5,13 +5,13 @@
  * Script de prueba directa contra Supabase + GHL
  */
 
-import fetch from 'node-fetch';
-import dotenv from 'dotenv';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import fetch from "node-fetch";
+import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 
 // Load env
-dotenv.config({ path: '.env.local' });
+dotenv.config({ path: ".env.local" });
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -20,34 +20,31 @@ const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const GHL_TOKEN = process.env.GHL_PRIVATE_INTEGRATION_TOKEN;
 const GHL_LOCATION_ID = process.env.GHL_LOCATION_ID;
 
-console.log('='.repeat(60));
-console.log('VALIDACIÓN PUNTOS 6-7: SKU AUTOMÁTICO + MULTIPRECIOS');
-console.log('='.repeat(60));
-console.log('');
+console.log("=".repeat(60));
+console.log("VALIDACIÓN PUNTOS 6-7: SKU AUTOMÁTICO + MULTIPRECIOS");
+console.log("=".repeat(60));
+console.log("");
 
 if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-  console.error('ERROR: Falta SUPABASE_URL o SUPABASE_SERVICE_ROLE_KEY');
+  console.error("ERROR: Falta SUPABASE_URL o SUPABASE_SERVICE_ROLE_KEY");
   process.exit(1);
 }
 
 if (!GHL_TOKEN || !GHL_LOCATION_ID) {
-  console.error('ERROR: Falta GHL_TOKEN o GHL_LOCATION_ID');
+  console.error("ERROR: Falta GHL_TOKEN o GHL_LOCATION_ID");
   process.exit(1);
 }
 
 // Helper functions
 async function supabaseQuery(query, values = []) {
-  const response = await fetch(
-    `${SUPABASE_URL}/rest/v1/rpc/exec_sql`,
-    {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ query, values }),
-    }
-  );
+  const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/exec_sql`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ query, values }),
+  });
   const data = await response.json();
   return data;
 }
@@ -61,7 +58,7 @@ async function supabaseSelect(table, filters = {}) {
 
   const response = await fetch(query, {
     headers: {
-      'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+      Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
     },
   });
 
@@ -73,10 +70,10 @@ async function ghlGetPrices(productId) {
     `https://services.higherlevel.com/v1/products/${productId}/prices?locationId=${GHL_LOCATION_ID}`,
     {
       headers: {
-        'Authorization': `Bearer ${GHL_TOKEN}`,
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${GHL_TOKEN}`,
+        "Content-Type": "application/json",
       },
-    }
+    },
   );
   const data = await response.json();
   return data;
@@ -84,34 +81,31 @@ async function ghlGetPrices(productId) {
 
 // Test functions
 async function testSKUGeneration() {
-  console.log('PASO 1: PROBAR GENERACIÓN DE SKU');
-  console.log('-'.repeat(60));
+  console.log("PASO 1: PROBAR GENERACIÓN DE SKU");
+  console.log("-".repeat(60));
 
   // Create test product with options using direct DB
   const testProduct = {
     name: `TEST PUNTO 6 - SKU SECUENCIAL - ${Date.now()}`,
     ghl_product_id: `test-sku-${Date.now()}`,
-    category: 'ramos',
+    category: "ramos",
     active: true,
   };
 
-  console.log('Creando producto test en Supabase...');
+  console.log("Creando producto test en Supabase...");
   try {
-    const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/products`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(testProduct),
-      }
-    );
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/products`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(testProduct),
+    });
 
     const product = await res.json();
     if (!product[0]) {
-      console.error('ERROR: No se pudo crear producto');
+      console.error("ERROR: No se pudo crear producto");
       return false;
     }
 
@@ -124,17 +118,17 @@ async function testSKUGeneration() {
       `${SUPABASE_URL}/rest/v1/product_options?select=sku&sku=like.FL-RAM-%&order=sku`,
       {
         headers: {
-          'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+          Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
         },
-      }
+      },
     );
 
     const existingSKUs = await skusRes.json();
     console.log(`\nSKUs existentes para categoría ramos: ${existingSKUs.length}`);
 
     if (Array.isArray(existingSKUs) && existingSKUs.length > 0) {
-      console.log('Últimos 3 SKUs:');
-      existingSKUs.slice(-3).forEach(row => {
+      console.log("Últimos 3 SKUs:");
+      existingSKUs.slice(-3).forEach((row) => {
         console.log(`  - ${row.sku}`);
       });
     }
@@ -147,8 +141,8 @@ async function testSKUGeneration() {
 }
 
 async function validateCurrentProducts() {
-  console.log('\nPASO 2: VALIDAR PRODUCTOS EXISTENTES');
-  console.log('-'.repeat(60));
+  console.log("\nPASO 2: VALIDAR PRODUCTOS EXISTENTES");
+  console.log("-".repeat(60));
 
   try {
     // Get all test products
@@ -156,15 +150,15 @@ async function validateCurrentProducts() {
       `${SUPABASE_URL}/rest/v1/products?select=id,name,category,ghl_product_id&name=like.TEST%&order=created_at.desc&limit=10`,
       {
         headers: {
-          'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+          Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
         },
-      }
+      },
     );
 
     const testProducts = await res.json();
 
     if (!Array.isArray(testProducts) || testProducts.length === 0) {
-      console.log('No hay productos test existentes');
+      console.log("No hay productos test existentes");
       return [];
     }
 
@@ -182,9 +176,9 @@ async function validateCurrentProducts() {
         `${SUPABASE_URL}/rest/v1/product_options?select=id,name,price_amount,discount_percent,stock_quantity,sku,ghl_price_id&product_id=eq.${product.id}&order=price_amount`,
         {
           headers: {
-            'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+            Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
           },
-        }
+        },
       );
 
       const options = await optRes.json();
@@ -196,7 +190,9 @@ async function validateCurrentProducts() {
         const ghlPrices = [];
 
         for (const opt of options) {
-          console.log(`    - ${opt.name}: ${opt.price_amount}EUR (-${opt.discount_percent}%) | Stock: ${opt.stock_quantity}`);
+          console.log(
+            `    - ${opt.name}: ${opt.price_amount}EUR (-${opt.discount_percent}%) | Stock: ${opt.stock_quantity}`,
+          );
           console.log(`      SKU: ${opt.sku}`);
           console.log(`      GHL Price ID: ${opt.ghl_price_id}`);
 
@@ -229,10 +225,10 @@ async function validateCurrentProducts() {
           pricesUnique: uniquePrices.size === ghlPrices.length,
         });
       } else {
-        console.log('  Sin opciones');
+        console.log("  Sin opciones");
       }
 
-      console.log('');
+      console.log("");
     }
 
     return results;
@@ -244,10 +240,10 @@ async function validateCurrentProducts() {
 
 async function checkGHLSync(ghlProductId) {
   console.log(`\nPASO 3: VERIFICAR SINCRONIZACIÓN CON GHL - ${ghlProductId}`);
-  console.log('-'.repeat(60));
+  console.log("-".repeat(60));
 
   if (!ghlProductId) {
-    console.log('Saltando: Sin GHL Product ID');
+    console.log("Saltando: Sin GHL Product ID");
     return null;
   }
 
@@ -255,7 +251,7 @@ async function checkGHLSync(ghlProductId) {
     const prices = await ghlGetPrices(ghlProductId);
 
     if (!prices.prices || prices.prices.length === 0) {
-      console.log('No hay precios en GHL');
+      console.log("No hay precios en GHL");
       return null;
     }
 
@@ -267,7 +263,7 @@ async function checkGHLSync(ghlProductId) {
       console.log(`  Compare At Price: ${price.compareAtPrice}`);
       console.log(`  Available Quantity: ${price.availableQuantity}`);
       console.log(`  SKU: ${price.sku}`);
-      console.log('');
+      console.log("");
     }
 
     return prices.prices;
@@ -278,36 +274,33 @@ async function checkGHLSync(ghlProductId) {
 }
 
 async function getDatabaseStats() {
-  console.log('\nPASO 4: ESTADÍSTICAS GLOBALES DE PRODUCTOS TEST');
-  console.log('-'.repeat(60));
+  console.log("\nPASO 4: ESTADÍSTICAS GLOBALES DE PRODUCTOS TEST");
+  console.log("-".repeat(60));
 
   try {
     // Count test products
-    const productsRes = await fetch(
-      `${SUPABASE_URL}/rest/v1/products?select=id&name=like.TEST%`,
-      {
-        method: 'HEAD',
-        headers: {
-          'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
-        },
-      }
-    );
+    const productsRes = await fetch(`${SUPABASE_URL}/rest/v1/products?select=id&name=like.TEST%`, {
+      method: "HEAD",
+      headers: {
+        Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+      },
+    });
 
     // Get stats via RPC or direct query
     const optionsRes = await fetch(
       `${SUPABASE_URL}/rest/v1/product_options?select=id,sku,ghl_price_id&product_id=in.(SELECT id FROM products WHERE name LIKE 'TEST%')`,
       {
         headers: {
-          'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+          Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
         },
-      }
+      },
     );
 
     const options = await optionsRes.json();
 
     if (Array.isArray(options)) {
-      const skus = options.map(o => o.sku).filter(Boolean);
-      const prices = options.map(o => o.ghl_price_id).filter(Boolean);
+      const skus = options.map((o) => o.sku).filter(Boolean);
+      const prices = options.map((o) => o.ghl_price_id).filter(Boolean);
 
       console.log(`Total opciones de productos TEST: ${options.length}`);
       console.log(`Total SKUs: ${skus.length}`);
@@ -316,11 +309,11 @@ async function getDatabaseStats() {
       console.log(`GHL Price IDs únicos: ${new Set(prices).size}`);
 
       if (skus.length > 0 && new Set(skus).size < skus.length) {
-        console.log('\n⚠ ALERTA: Hay SKUs duplicados en la base de datos');
+        console.log("\n⚠ ALERTA: Hay SKUs duplicados en la base de datos");
       }
 
       if (prices.length > 0 && new Set(prices).size < prices.length) {
-        console.log('⚠ ALERTA: Hay GHL Price IDs duplicados en la base de datos');
+        console.log("⚠ ALERTA: Hay GHL Price IDs duplicados en la base de datos");
       }
     }
   } catch (error) {
@@ -344,16 +337,16 @@ async function main() {
       }
     }
 
-    console.log('\n' + '='.repeat(60));
-    console.log('VALIDACIÓN COMPLETADA');
-    console.log('='.repeat(60));
+    console.log("\n" + "=".repeat(60));
+    console.log("VALIDACIÓN COMPLETADA");
+    console.log("=".repeat(60));
   } catch (error) {
-    console.error('Error fatal:', error);
+    console.error("Error fatal:", error);
     process.exit(1);
   }
 }
 
-main().catch(error => {
-  console.error('Error en main:', error);
+main().catch((error) => {
+  console.error("Error en main:", error);
   process.exit(1);
 });

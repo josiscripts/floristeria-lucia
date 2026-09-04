@@ -21,6 +21,7 @@
 ### 2. EVENTO ESPERADO POR CÓDIGO
 
 **En tipos:** `src/lib/ghl/types.ts` línea 123
+
 ```typescript
 export type GHLOpportunityStageChangeWebhook = {
   event: "opportunity.stage_change";  // ← EVENTO ESPERADO
@@ -39,11 +40,13 @@ export type GHLOpportunityStageChangeWebhook = {
 ### 3. DISCREPANCIA: DOCUMENTACIÓN OFICIAL HL vs CÓDIGO
 
 #### Según documentación oficial actual de HighLevel:
+
 - Webhooks de Marketplace OAuth Apps se configuran en: `Marketplace App → Advanced Settings → Webhooks`
 - Evento para cambio de stage: `OpportunityStageUpdate` (CamelCase, sin underscore)
 - Payload incluye: `webhookId`, `X-GHL-Signature` (Ed25519), etc.
 
 #### Según código actual (FASE 4.3.2):
+
 - Espera evento: `opportunity.stage_change` (dot-notation, con underscore)
 - Maneja: `webhookId`, `X-GHL-Signature` (Ed25519) ✅
 
@@ -54,6 +57,7 @@ export type GHLOpportunityStageChangeWebhook = {
 ### 4. TIPO DE INTEGRACIÓN
 
 **Según auditoría FASE 4:**
+
 ```
 Token actual: pit-0cf65f40-51a4-4e28-9793-9eb8421e2291 (Private Integration)
 Location ID: vOq7yOWR63XGU4qQ7XWd
@@ -61,7 +65,8 @@ Location ID: vOq7yOWR63XGU4qQ7XWd
 
 **Configuración actual:** Private Integration (NO Marketplace OAuth App)
 
-**Implicación:** 
+**Implicación:**
+
 - Los webhooks se configuran en: GHL Dashboard → Settings → Integrations → Webhooks
 - No en Marketplace App settings
 
@@ -101,6 +106,7 @@ Location ID: vOq7yOWR63XGU4qQ7XWd
 ### 6. AUTENTICACIÓN/FIRMA
 
 **Configuración actual:**
+
 - Ed25519 ✅
 - X-GHL-Signature header ✅
 - Clave pública oficial hardcoded ✅
@@ -117,6 +123,7 @@ Location ID: vOq7yOWR63XGU4qQ7XWd
 **Status:** 🔍 Desconocido (usuario debe verificar en HL Dashboard)
 
 **Necesidad:** Depende de la integración:
+
 - Private Integration: NO requiere Workflow (webhooks se disparan automáticamente)
 - Marketplace OAuth App: Podría requerir Workflow
 
@@ -127,6 +134,7 @@ Location ID: vOq7yOWR63XGU4qQ7XWd
 **Conclusión:** El código está diseñado para **Private Integration**, NO para Marketplace OAuth App
 
 **Evidencia:**
+
 1. Token en auditoría es Private Integration (`pit-...`)
 2. No hay referencias a OAuth
 3. La estructura de payload corresponde a Private Integration
@@ -139,18 +147,21 @@ Location ID: vOq7yOWR63XGU4qQ7XWd
 ## ANÁLISIS DE DISCREPANCIAS
 
 ### Discrepancia 1: Nombre del Evento
+
 - **Documentación Marketplace App:** `OpportunityStageUpdate`
 - **Código actual:** `opportunity.stage_change`
 - **Integración actual:** Private Integration
 - **Resolución:** Verificar qué evento usa Private Integration (probablemente `opportunity.stage_change`)
 
 ### Discrepancia 2: Lugar de Configuración
+
 - **Documentación Marketplace App:** Marketplace App → Advanced Settings → Webhooks
 - **Código actual:** Preparado para cualquier webhook que envíe HL
 - **Integración actual:** Private Integration
 - **Resolución:** Configurar en GHL Dashboard (Settings → Integrations), no en Marketplace App
 
 ### Discrepancia 3: Documentación Consultada
+
 - **Usuario consultó:** Documentación de Marketplace OAuth Apps
 - **Código usa:** Private Integration
 - **Status:** Dos universos diferentes de documentación
@@ -175,7 +186,7 @@ Location ID: vOq7yOWR63XGU4qQ7XWd
 1. **¿Cuál es la integración oficial del proyecto?**
    - Private Integration: token `pit-...`
    - Marketplace OAuth App: diferentes credenciales
-   
+
 2. **¿Qué evento se debe registrar?**
    - `opportunity.stage_change` (Private Integration)
    - `OpportunityStageUpdate` (Marketplace App)
@@ -211,9 +222,9 @@ Location ID: vOq7yOWR63XGU4qQ7XWd
 🔴 **NO PROCEDER A CONFIGURAR WEBHOOK**
 
 Existe una confusión entre dos tipos de integración de HighLevel con diferentes:
+
 - Ubicaciones de configuración
 - Nombres de eventos
 - Estructuras de payload
 
 **Requiere clarificación antes de registrar.**
-

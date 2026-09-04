@@ -20,6 +20,7 @@
 ## ARCHIVOS MODIFICADOS/CREADOS
 
 ### Nuevo Archivo
+
 **Ruta:** `src/routes/api.webhooks.ghl-opportunity.ts`  
 **Tamaño:** ~7.8 KB  
 **Líneas:** 380+ (código + comentarios extensos)  
@@ -144,14 +145,14 @@ Reenvío del mismo evento:
 ```
 Layer 1 (Primaria):
   SELECT * FROM orders WHERE ghl_opportunity_id = opportunityId
-  
+
   ✅ Rápida, directa, segura
   ✅ Usada desde FASE 3 cuando creamos oportunidad
 
 Layer 2 (Fallback):
   IF custom_fields CONTAINS (fieldId='WWKLWHR7EUDeGPi7zlOH'):
     SELECT * FROM orders WHERE id = customField.value
-  
+
   ✅ Si opportunity ID no se guardó bien
   ✅ Usa UUID de Supabase como backup
   ✅ Almacenado en custom field de GHL
@@ -161,6 +162,7 @@ NOT USED:
 ```
 
 **Resultado de búsqueda:**
+
 - ✅ Encontrado → Proceder con update
 - ❌ No encontrado → Registrar en webhook_events como no procesado, responder 200 OK
 
@@ -179,12 +181,14 @@ bedbab33-62f0-41fd-b51e-a6b2ad0aa8ed → "cancelled"
 ```
 
 **Comportamiento:**
+
 - Mapping encontrado → Proceder con actualización
 - Mapping NO encontrado → No actualizar, registrar error, responder 200 OK
 
 ### 5. Actualización de Orden
 
 **Campos actualizados:**
+
 ```sql
 UPDATE orders SET
   status = newStatus,
@@ -193,6 +197,7 @@ WHERE id = orderId
 ```
 
 **Campos NOT modificados:**
+
 - ✅ Protegidos: total, customer_*, delivery_date, dedicatory, notes
 - ✅ Protegidos: ghl_contact_id, ghl_opportunity_id
 - ✅ Protegidos: created_at, deleted_at
@@ -225,27 +230,32 @@ Campos:
 ## CÓDIGOS HTTP Y RESPUESTAS
 
 ### 401 Unauthorized
+
 ```json
 {
   "error": "Invalid webhook signature"
 }
 ```
+
 **Cuándo:** Signature verification falló  
 **Acción GHL:** Reintentará después  
 **Datos Supabase:** No modificados
 
 ### 400 Bad Request
+
 ```json
 {
   "error": "Invalid webhook payload"
 }
 ```
+
 **Cuándo:** Payload inválido o estructura incompleta  
 **Acción GHL:** Reintentará después  
 **Datos Supabase:** No modificados  
 **Registro:** Si delivery_id disponible, se registra error
 
 ### 200 OK (Éxito)
+
 ```json
 {
   "success": true,
@@ -257,11 +267,13 @@ Campos:
   "timestamp": "2026-08-28T16:00:00Z"
 }
 ```
+
 **Cuándo:** Webhook procesado exitosamente  
 **Acción GHL:** No reintentará  
 **Datos Supabase:** order.status actualizado, webhook_events registrado
 
 ### 200 OK (Duplicado/Idempotent)
+
 ```json
 {
   "success": true,
@@ -269,11 +281,13 @@ Campos:
   "deliveryId": "ghl-delivery-abc123"
 }
 ```
+
 **Cuándo:** Mismo delivery_id ya procesado  
 **Acción GHL:** No reintentará  
 **Datos Supabase:** No modificados
 
 ### 200 OK (Evento válido, no procesado)
+
 ```json
 {
   "success": true,
@@ -283,11 +297,13 @@ Campos:
   "timestamp": "2026-08-28T16:00:00Z"
 }
 ```
+
 **Cuándo:** Evento válido pero orden no encontrada / stage no mapeado  
 **Acción GHL:** No reintentará (error permanente)  
 **Datos Supabase:** webhook_events registrado con error_message
 
 ### 200 OK (Error interno)
+
 ```json
 {
   "success": false,
@@ -297,6 +313,7 @@ Campos:
   "timestamp": "2026-08-28T16:00:00Z"
 }
 ```
+
 **Cuándo:** Excepción no capturada  
 **Acción GHL:** No reintentará (200 OK devuelto)  
 **Datos Supabase:** webhook_events registrado con error  
@@ -314,7 +331,7 @@ GHL_WEBHOOK_SECRET
   Valor: Generado en GHL Dashboard (Webhook → Secret)
   Dónde: .env.local (desarrollo), Vercel Secrets (producción)
   Status: NO YET CONFIGURED (Usuario debe generar en FASE 4.4)
-  
+
   Si falta:
     - Firma verification fallará (siempre 401)
     - Webhooks NO procesar
@@ -345,24 +362,25 @@ process.env.GHL_WEBHOOK_SECRET
 ### Tipos Utilizados
 
 **De FASE 4.1 (`src/lib/ghl/types.ts`):**
+
 ```typescript
-import {
-  getOrderStatusFromGHLStage,
-  type GHLOpportunityWebhookPayload
-} from "@/lib/ghl/types";
+import { getOrderStatusFromGHLStage, type GHLOpportunityWebhookPayload } from "@/lib/ghl/types";
 ```
 
 **Reutilizados:**
+
 - `GHLOpportunityWebhookPayload` (union type)
 - `getOrderStatusFromGHLStage()` (función helper)
 
 ### ✅ Sin `as any`
+
 - Payload tipado como `GHLOpportunityWebhookPayload`
 - Type guards para event type checks
 - Todos los campos con tipos explícitos
 - 0 `any` implicitos
 
 ### Type Narrowing
+
 ```typescript
 // Discriminated union (event type narrowing)
 switch (payload.event) {
@@ -389,6 +407,7 @@ Build Status: SUCCESS ✅
 ```
 
 **Verificaciones:**
+
 - ✅ Imports correctos
 - ✅ Sin `as any` nuevos
 - ✅ Tipos resueltos
@@ -401,56 +420,66 @@ Build Status: SUCCESS ✅
 ## FUNCIONES IMPLEMENTADAS
 
 ### 1. `verifyWebhookSignature()`
+
 ```typescript
 function verifyWebhookSignature(
   rawBody: string | Buffer,
   signatureHeader: string | null | undefined,
-  secret: string
-): boolean
+  secret: string,
+): boolean;
 ```
+
 **Propósito:** HMAC-SHA256 verification  
 **Algoritmo:** crypto.createHmac("sha256", secret)  
 **Seguridad:** timingSafeEqual() para prevenir timing attacks  
 **Errores:** Retorna false (no throws) para fácil manejo
 
 ### 2. `findOrderByOpportunity()`
+
 ```typescript
 async function findOrderByOpportunity(
   opportunityId: string,
-  customFields?: Array<{fieldId, value}>
-): Promise<Order | null>
+  customFields?: Array<{ fieldId; value }>,
+): Promise<Order | null>;
 ```
+
 **Estrategia:** 2 capas (ghl_opportunity_id, fallback custom field)  
 **Seguridad:** NO usa order_number  
 **Performance:** Busca UNIQUE indexed field (ghl_opportunity_id)
 
 ### 3. `processStageChangeEvent()`
+
 ```typescript
 async function processStageChangeEvent(
-  payload: GHLOpportunityWebhookPayload
-): Promise<{success, orderId?, previousStatus?, newStatus?, error?}>
+  payload: GHLOpportunityWebhookPayload,
+): Promise<{ success; orderId?; previousStatus?; newStatus?; error? }>;
 ```
+
 **Responsabilidad:** Lógica de procesamiento de stage_change  
 **Validaciones:** Pipeline ID, stage mapping, order exists  
 **Actualización:** orders.status + updated_at (SOLO)
 
 ### 4. `recordWebhookEvent()`
+
 ```typescript
 async function recordWebhookEvent(
   payload: GHLOpportunityWebhookPayload,
   orderId: string | null,
   processed: boolean,
-  errorMessage: string | null
-): Promise<void>
+  errorMessage: string | null,
+): Promise<void>;
 ```
+
 **Responsabilidad:** Auditoría y logging a webhook_events  
 **No throws:** Fallos de registro no afectan response  
 **Siempre ejecuta:** Éxito, error, no-procesado
 
 ### 5. Main Handler: `POST()`
+
 ```typescript
-export async function POST(request: Request)
+export async function POST(request: Request);
 ```
+
 **Responsabilidad:** Orquestación principal  
 **Flujo:** Raw body → signature verify → parse → dedup check → process → record → respond  
 **Error handling:** try-catch con logging
@@ -460,24 +489,29 @@ export async function POST(request: Request)
 ## SEGURIDAD
 
 ### Verificación de Firma
+
 ✅ HMAC-SHA256 verificado antes de procesar payload  
 ✅ Timing-safe comparison (previene timing attacks)  
 ✅ Raw body usado (no JSON pre-parseado)  
 ✅ Header requerido (no header = 401)
 
 ### RLS y Permisos
+
 ✅ Supabase service_role usado (backend-only)  
 ✅ webhook_events RLS protege tablas (service_role only)  
 ✅ No public acceso
 
 ### Inyección SQL
+
 ✅ Supabase query builder usado (typed, parameterized)  
 ✅ Sin string concatenation en queries
 
 ### Rate Limiting
+
 ⚠️ NO implementado (GHL maneja reintentos, no DOS prevention)
 
 ### Replay Attacks
+
 ✅ delivery_id UNIQUE previene procesamiento múltiple de mismo webhook
 
 ---
@@ -485,6 +519,7 @@ export async function POST(request: Request)
 ## LOGGING Y OBSERVABILIDAD
 
 ### Logs Importantes
+
 ```
 [Webhook] Invalid webhook signature from: <IP>
 [Webhook] Missing X-GHL-Signature header
@@ -506,6 +541,7 @@ export async function POST(request: Request)
 ## DEDUPLICACIÓN - FLUJO COMPLETO
 
 ### Escenario 1: Primer Webhook
+
 ```
 1. Webhook llega: delivery_id="abc123"
 2. Signature: ✅ válida
@@ -518,6 +554,7 @@ export async function POST(request: Request)
 ```
 
 ### Escenario 2: Reintento (Mismo Webhook)
+
 ```
 1. Webhook llega: delivery_id="abc123"
 2. Signature: ✅ válida
@@ -529,6 +566,7 @@ export async function POST(request: Request)
 ```
 
 ### Escenario 3: Nuevo Evento
+
 ```
 1. Webhook llega: delivery_id="xyz789"
 2. Signature: ✅ válida
@@ -551,12 +589,14 @@ export async function POST(request: Request)
 **Estado:** Implementado según auditoría FASE 4, pero no verificado con GHL API v3 oficial
 
 **Acción:** Validar con GHL docs:
+
 - ¿Header es `X-GHL-Signature`?
 - ¿Formato es `sha256=<hash>`?
 - ¿Algoritmo es HMAC-SHA256?
 - ¿Body raw o canonicalizado?
 
 **Impacto:** Si mechanism diferente:
+
 - Cambiar `verifyWebhookSignature()` función
 - Todos los webhooks fallarán con 401
 - Pero es fácil de ajustar
@@ -569,6 +609,7 @@ https://docs.gohighlevel.com/webhooks (DEBE verificar)
 **Estado:** Variable de entorno preparada pero no asignada
 
 **Acción:** En FASE 4.4, generar secret en GHL Dashboard y guardar en:
+
 - `.env.local` (desarrollo)
 - Vercel Secrets (producción)
 
@@ -577,9 +618,11 @@ https://docs.gohighlevel.com/webhooks (DEBE verificar)
 ### 🟡 Event Types Parcialmente Implementados
 
 **Implementado:**
+
 - `opportunity.stage_change` → Procesa (UPDATE status)
 
 **No implementado (reconocido pero no procesado):**
+
 - `opportunity.updated`
 - `opportunity.status_change`
 - `opportunity.created`
@@ -602,6 +645,7 @@ https://docs.gohighlevel.com/webhooks (DEBE verificar)
 ## TESTING MANUAL (Post-Deploy)
 
 ### Test 1: Signature Verification
+
 ```bash
 curl -X POST http://localhost:3000/api/webhooks/ghl-opportunity \
   -H "Content-Type: application/json" \
@@ -612,6 +656,7 @@ Expected: 401 Unauthorized
 ```
 
 ### Test 2: Valid Webhook (Require Real Secret)
+
 ```bash
 # After GHL_WEBHOOK_SECRET configured:
 # Calculate signature:
@@ -628,6 +673,7 @@ Expected: 200 OK (or 400 if payload invalid, etc.)
 ```
 
 ### Test 3: Idempotence
+
 ```bash
 # Send same webhook 2x (same delivery_id):
 
@@ -639,6 +685,7 @@ Verify: webhook_events has 1 record with delivery_id, processed=true
 ```
 
 ### Test 4: Duplicate Prevention
+
 ```bash
 # Verify UNIQUE(delivery_id) in webhook_events
 
@@ -653,6 +700,7 @@ Verify: Application logic catches this and returns 200 OK
 ## PRÓXIMOS PASOS
 
 ### FASE 4.4 (Manual Configuration in GHL)
+
 - [ ] Generar webhook secret en GHL Dashboard
 - [ ] Copiar secret a GHL_WEBHOOK_SECRET variable
 - [ ] Registrar webhook URL: https://floristeria-lucia.vercel.app/api/webhooks/ghl-opportunity
@@ -661,6 +709,7 @@ Verify: Application logic catches this and returns 200 OK
 - [ ] Verificar 200 OK response
 
 ### FASE 4.5 (E2E Testing)
+
 - [ ] Create test order en app
 - [ ] Change stage en GHL Dashboard
 - [ ] Wait for webhook delivery
@@ -673,14 +722,14 @@ Verify: Application logic catches this and returns 200 OK
 
 ## ARCHIVOS MODIFICADOS
 
-| Archivo | Status | Cambios |
-|---------|--------|---------|
-| `src/routes/api.webhooks.ghl-opportunity.ts` | CREADO | Nuevo endpoint webhook completo |
-| `src/lib/ghl/types.ts` | NO MODIFICADO | Tipos FASE 4.1 reutilizados |
-| `src/lib/orders.server.ts` | NO MODIFICADO | No modificar (como especificado) |
-| `.env.example` | PENDING | Agregar GHL_WEBHOOK_SECRET (usuario) |
-| `.env.local` | PENDING | Agregar GHL_WEBHOOK_SECRET (usuario en FASE 4.4) |
-| `vercel.json` | NO MODIFICADO | No requerido cambios |
+| Archivo                                      | Status        | Cambios                                          |
+| -------------------------------------------- | ------------- | ------------------------------------------------ |
+| `src/routes/api.webhooks.ghl-opportunity.ts` | CREADO        | Nuevo endpoint webhook completo                  |
+| `src/lib/ghl/types.ts`                       | NO MODIFICADO | Tipos FASE 4.1 reutilizados                      |
+| `src/lib/orders.server.ts`                   | NO MODIFICADO | No modificar (como especificado)                 |
+| `.env.example`                               | PENDING       | Agregar GHL_WEBHOOK_SECRET (usuario)             |
+| `.env.local`                                 | PENDING       | Agregar GHL_WEBHOOK_SECRET (usuario en FASE 4.4) |
+| `vercel.json`                                | NO MODIFICADO | No requerido cambios                             |
 
 ---
 
@@ -702,6 +751,7 @@ Status: SUCCESS ✅
 ## CONCLUSIÓN
 
 **FASE 4.3 completada exitosamente.** Endpoint webhook implementado con todas las características requeridas:
+
 - ✅ HMAC-SHA256 signature verification
 - ✅ Deduplicación vía delivery_id
 - ✅ Búsqueda de orden (2 capas)
@@ -721,5 +771,4 @@ Status: SUCCESS ✅
 **Build Time:** 2.82 segundos  
 **Archivos Nueva:** 1  
 **Archivos Modificados:** 0  
-**TypeScript Errors:** 0  
-
+**TypeScript Errors:** 0

@@ -45,7 +45,9 @@ HighLevel dispone actualmente de endpoints v3 para listar/eliminar productos y p
 Antes de borrar nada:
 
 ### GHL
+
 Obtén:
+
 - total de productos
 - IDs
 - nombres
@@ -55,7 +57,9 @@ Obtén:
 - colecciones relacionadas si existen
 
 ### SUPABASE
+
 Obtén:
+
 - products
 - product_options
 - color_variants
@@ -63,6 +67,7 @@ Obtén:
 - cualquier otra tabla directamente relacionada con catálogo
 
 Detecta:
+
 - huérfanos
 - duplicados
 - referencias GHL
@@ -109,6 +114,7 @@ Elimina todos los registros del subsistema de catálogo:
 Respeta las FK/cascadas existentes.
 
 NO elimines:
+
 - auth
 - users
 - profiles
@@ -139,11 +145,13 @@ Compruébalo realmente mediante la interfaz/rutas correspondientes.
 NO continúes hasta demostrar:
 
 ### GHL
+
 - 0 productos
 - 0 precios asociados
 - 0 productos antiguos recuperables mediante listado/paginación
 
 ### SUPABASE
+
 - 0 productos
 - 0 opciones
 - 0 variantes
@@ -151,6 +159,7 @@ NO continúes hasta demostrar:
 - 0 relaciones huérfanas
 
 ### PANEL
+
 - catálogo vacío
 
 Debes incluir:
@@ -229,24 +238,28 @@ Cada producto debe poder tener una o varias opciones comerciales.
 Ejemplo:
 
 ### Básico
+
 - precio
 - descuento
 - stock
 - SKU
 
 ### Estándar
+
 - precio
 - descuento
 - stock
 - SKU
 
 ### Premium
+
 - precio
 - descuento
 - stock
 - SKU
 
 El usuario debe poder:
+
 - añadir opción
 - editar opción
 - eliminar opción
@@ -296,6 +309,7 @@ Cada color puede tener sus propias imágenes.
 Cada producto debe poder gestionar hasta 10 imágenes.
 
 Debe soportar el flujo previsto por el proyecto para:
+
 - URL de imagen
 - archivo si el sistema actual lo soporta
 
@@ -314,6 +328,7 @@ La arquitectura debe funcionar:
 → `GHL`
 
 Cuando se crea:
+
 - producto
 - opción/precio
 - SKU
@@ -324,6 +339,7 @@ Cuando se crea:
 debe quedar correctamente persistido y sincronizado donde corresponda.
 
 Guarda las relaciones necesarias:
+
 - supabase product ID
 - GHL product ID
 - GHL price ID
@@ -344,6 +360,7 @@ Crea un producto temporal, por ejemplo:
 `TEST BLOQUE 4`
 
 con:
+
 - categoría
 - imagen
 - estado
@@ -354,9 +371,11 @@ con:
 Comprueba:
 
 ### SUPABASE
+
 Existe el producto y sus relaciones.
 
 ### GHL
+
 Existe el producto y sus precios.
 
 Guarda los IDs.
@@ -368,6 +387,7 @@ Guarda los IDs.
 Edita el mismo producto temporal desde la UI.
 
 Cambia:
+
 - nombre
 - descripción
 - precio
@@ -401,6 +421,7 @@ Debe demostrarse el flujo completo:
 Desde el panel crea un producto temporal de Rosas Eternas.
 
 Añade:
+
 - Rojo
 - Blanco
 - Rosa
@@ -408,6 +429,7 @@ Añade:
 Asocia imágenes diferentes a cada color.
 
 Comprueba:
+
 - Supabase
 - panel
 - GHL cuando corresponda
@@ -495,6 +517,7 @@ Verifica específicamente el dominio de producción:
 No confundas una URL de deployment/preview con el dominio de producción.
 
 Si producción falla:
+
 - diagnostica
 - corrige
 - build

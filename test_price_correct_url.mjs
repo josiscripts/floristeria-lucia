@@ -23,23 +23,23 @@ try {
   const response = await fetch(endpoint, {
     method: "POST",
     headers: {
-      "Authorization": `Bearer ${ghlToken}`,
+      Authorization: `Bearer ${ghlToken}`,
       "Content-Type": "application/json",
-      "Version": "v3",
+      Version: "v3",
     },
     body: JSON.stringify(payload),
   });
 
   const contentType = response.headers.get("content-type");
   const text = await response.text();
-  
+
   console.log(`Status: ${response.status} ${response.statusText}`);
   console.log(`Content-Type: ${contentType}`);
-  
+
   if (contentType && contentType.includes("application/json")) {
     const data = JSON.parse(text);
     console.log(`Response:`, JSON.stringify(data, null, 2));
-    
+
     if (data._id) {
       console.log(`\n✓ SUCCESS - Price ID: ${data._id}`);
     } else if (data.id) {

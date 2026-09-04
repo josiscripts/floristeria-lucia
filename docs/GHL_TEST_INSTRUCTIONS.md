@@ -14,6 +14,7 @@ Este método NO requiere iniciar el servidor de desarrollo.
 
 1. Abre terminal en la raíz del proyecto
 2. Ejecuta:
+
 ```bash
 node scripts/test-ghl-connection.mjs
 ```
@@ -72,11 +73,13 @@ Si quieres ver la interfaz visual, sigue estos pasos:
 ### Pasos:
 
 1. Terminal:
+
 ```bash
 npm run dev
 ```
 
 2. Abre navegador:
+
 ```
 http://localhost:5173/debug/ghl-test
 ```
@@ -86,11 +89,13 @@ http://localhost:5173/debug/ghl-test
 4. Espera respuesta
 
 ### Ventajas:
+
 - Interface visual
 - Puedes probar múltiples veces sin reiniciar
 - Ver estructura completa de productos
 
 ### Desventajas:
+
 - Requiere iniciar servidor
 - Más lento que script directo
 
@@ -99,44 +104,56 @@ http://localhost:5173/debug/ghl-test
 ## Posibles Errores y Soluciones
 
 ### Error: `.env.local not found`
+
 **Causa:** El archivo `.env.local` no existe  
-**Solución:** 
+**Solución:**
+
 ```bash
 # Crear .env.local con el token
 echo "GHL_PRIVATE_INTEGRATION_TOKEN=tu-token-aqui" > .env.local
 ```
 
 ### Error: `GHL_PRIVATE_INTEGRATION_TOKEN not found in .env.local`
+
 **Causa:** Variable no está configurada  
 **Solución:** Verificar que `.env.local` contiene:
+
 ```
 GHL_PRIVATE_INTEGRATION_TOKEN=tu-token-real
 ```
 
 ### Error: `API responded with status: 401`
+
 **Causa:** Token inválido o expirado  
 **Solución:**
+
 1. Verificar token en GHL Dashboard
 2. Regenerar si es necesario
 3. Actualizar `.env.local`
 
 ### Error: `API responded with status: 403`
+
 **Causa:** Token no tiene permisos  
 **Solución:**
+
 1. Verificar que es una Private Integration
 2. Verificar que tiene scope de "Products"
 3. En GHL Dashboard, revisar permisos de integración
 
 ### Error: `Cannot resolve api.gohighlevel.com`
+
 **Causa:** Problema de red  
 **Solución:**
+
 1. Verificar conexión a internet
 2. Verificar firewall/proxy
 3. Revisar si GHL API está operativa
 
 ### Error: `API request timed out`
+
 **Causa:** GHL API responde lentamente  
 **Solución:**
+
 1. Reintentar
 2. Verificar que el endpoint es correcto
 3. Revisar estado de GHL
@@ -179,6 +196,7 @@ Si ves ❌ Error:
 ## Seguridad
 
 **IMPORTANTE:** Este script:
+
 - ✅ Lee token desde `.env.local` (NUNCA lo hardcodea)
 - ✅ NO imprime el token completo (solo preview)
 - ✅ NO lo guarda en logs

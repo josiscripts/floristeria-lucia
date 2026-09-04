@@ -22,12 +22,12 @@ async function ghlFetch(endpoint, options = {}) {
   try {
     const res = await fetch(url, { ...options, headers });
     const data = await res.json();
-    
+
     if (!res.ok) {
       console.error(`[GHL] Error ${res.status}:`, data);
       return { error: true, status: res.status, data };
     }
-    
+
     console.log(`[GHL] Success`);
     return { error: false, data };
   } catch (err) {
@@ -47,7 +47,7 @@ async function audit() {
     locationId,
     products: {},
     collections: {},
-    audit: []
+    audit: [],
   };
 
   // 1. Test connection
@@ -62,12 +62,12 @@ async function audit() {
   // 2. Fetch products
   console.log("\n--- 2. Fetching Products ---");
   const productsRes = await ghlFetch(`/products/?locationId=${locationId}&limit=500`);
-  
+
   if (!productsRes.error && productsRes.data) {
     const items = productsRes.data.items || productsRes.data.products || [];
     report.products.count = items.length;
     report.products.total = productsRes.data.total;
-    report.products.items = items.slice(0, 10).map(p => ({
+    report.products.items = items.slice(0, 10).map((p) => ({
       id: p.id || p._id,
       name: p.name,
       category: p.category,
@@ -76,12 +76,12 @@ async function audit() {
       images: p.images ? p.images.length : 0,
       status: p.status,
     }));
-    
+
     report.audit.push(`✓ ${items.length} products found`);
-    
+
     // Analyze categories
     const categories = new Set();
-    items.forEach(p => {
+    items.forEach((p) => {
       if (p.category) categories.add(p.category);
     });
     report.products.categories = Array.from(categories);
@@ -89,9 +89,9 @@ async function audit() {
 
     // Analyze collections
     const collections = new Set();
-    items.forEach(p => {
+    items.forEach((p) => {
       if (p.collectionIds && Array.isArray(p.collectionIds)) {
-        p.collectionIds.forEach(c => collections.add(c));
+        p.collectionIds.forEach((c) => collections.add(c));
       }
     });
     report.products.collectionsUsed = Array.from(collections);
@@ -107,11 +107,11 @@ async function audit() {
   // 3. Try to fetch Product Collections
   console.log("\n--- 3. Fetching Product Collections ---");
   const collectionsRes = await ghlFetch(`/products/collections/?locationId=${locationId}`);
-  
+
   if (!collectionsRes.error && collectionsRes.data) {
     const collections = collectionsRes.data.collections || collectionsRes.data.items || [];
     report.collections.count = collections.length;
-    report.collections.items = collections.map(c => ({
+    report.collections.items = collections.map((c) => ({
       id: c.id || c._id,
       name: c.name,
       slug: c.slug,
@@ -120,7 +120,7 @@ async function audit() {
     report.audit.push(`✓ ${collections.length} collections found`);
   } else {
     report.audit.push("⚠ Product Collections endpoint might not exist or is empty");
-    
+
     // Try alternative endpoint
     console.log("[GHL] Trying alternative collections endpoint...");
     const altRes = await ghlFetch(`/collections/?locationId=${locationId}`);
@@ -140,7 +140,7 @@ async function audit() {
 
   // 5. Summary
   console.log("\n--- AUDIT SUMMARY ---");
-  report.audit.forEach(line => console.log(line));
+  report.audit.forEach((line) => console.log(line));
 
   // Save report
   fs.writeFileSync("audit_ghl_report.json", JSON.stringify(report, null, 2));

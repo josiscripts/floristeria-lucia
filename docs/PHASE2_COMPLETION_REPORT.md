@@ -2,7 +2,7 @@
 
 **Proyecto:** leksmflinhohnekbgmgj (Nuevo Supabase de Floristería Lucía)  
 **Fecha:** 2026-08-27  
-**Status:** ✅ COMPLETADA EXITOSAMENTE  
+**Status:** ✅ COMPLETADA EXITOSAMENTE
 
 ---
 
@@ -15,19 +15,23 @@ FASE 2 ha sido completada exitosamente. La tabla `public.product_metadata` ha si
 ## ✅ CHECKLIST DE EJECUCIÓN
 
 ### PASO 1: Comprobación Previa
+
 - ✅ product_metadata verificado: 0 registros
 - ✅ Proyecto correcto: leksmflinhohnekbgmgj
 - ✅ Lovable Supabase NO tocado
 
 ### PASO 2: Eliminación
+
 - ✅ DROP TABLE product_metadata ejecutado
 - ✅ Otros objetos preservados (profiles, auth.users, storage, funciones)
 
 ### PASO 3: Recreación
+
 - ✅ Migración 20260826000001_create_product_metadata.sql ejecutada
 - ✅ Query executed successfully
 
 ### PASO 4: Verificaciones (11 checks)
+
 - ✅ 1. Tabla `public.product_metadata` EXISTE
 - ✅ 2. Exactamente **15 columnas** presentes
 - ✅ 3. Tipos de datos CORRECTOS (uuid, text, numeric, timestamp with time zone, etc.)
@@ -62,20 +66,20 @@ FASE 2 ha sido completada exitosamente. La tabla `public.product_metadata` ha si
 
 ## 📊 ESTADO ACTUAL DE product_metadata
 
-| Aspecto | Status |
-|---------|--------|
-| Tabla existe | ✅ |
-| 15 columnas | ✅ |
-| Estructura correcta | ✅ |
-| Constraints | ✅ |
-| Índices | ✅ |
-| Trigger | ✅ |
-| RLS habilitado | ✅ |
-| 4 Policies | ✅ |
-| Permisos | ✅ |
-| Registros | 0 (vacía) |
+| Aspecto               | Status     |
+| --------------------- | ---------- |
+| Tabla existe          | ✅         |
+| 15 columnas           | ✅         |
+| Estructura correcta   | ✅         |
+| Constraints           | ✅         |
+| Índices               | ✅         |
+| Trigger               | ✅         |
+| RLS habilitado        | ✅         |
+| 4 Policies            | ✅         |
+| Permisos              | ✅         |
+| Registros             | 0 (vacía)  |
 | Errores de estructura | ❌ Ninguno |
-| Listo para datos | ✅ |
+| Listo para datos      | ✅         |
 
 ---
 
@@ -85,7 +89,7 @@ FASE 2 ha sido completada exitosamente. La tabla `public.product_metadata` ha si
 ✅ Frontend no puede escribir: Solo service_role (backend)  
 ✅ Soft delete protegido: `status = 'active' | 'deleted'`  
 ✅ No hay exposición de tokens en tabla  
-✅ Trigger usa función existente: `public.update_updated_at_column()`  
+✅ Trigger usa función existente: `public.update_updated_at_column()`
 
 ---
 
@@ -114,12 +118,14 @@ FASE 2 ha sido completada exitosamente. La tabla `public.product_metadata` ha si
 ## 🚀 ESTADO PARA FASE 3
 
 **product_metadata está listo para:**
+
 - ✅ Migración de datos históricos de catalog.ts
 - ✅ Integración de webhook de GHL
 - ✅ Sincronización de polling de GHL
 - ✅ Consultas del frontend
 
 **producto_metadata NO debería ser:**
+
 - ❌ Modificado directamente sin aprobación
 - ❌ Usado para datos que no sean metadatos de productos
 - ❌ Rellenado con datos manuales (solo GHL + migraciones)
@@ -149,4 +155,3 @@ La estructura de `public.product_metadata` está completa, correcta y lista para
 **Informe generado:** 2026-08-27  
 **Status:** ✅ COMPLETADO Y VERIFICADO  
 **Autorizado para continuar a:** GHL Integration Readiness Analysis
-

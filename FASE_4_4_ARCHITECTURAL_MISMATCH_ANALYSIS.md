@@ -22,11 +22,13 @@
 ### 1.1 Validación Real en Código
 
 **Línea 267:** Lee header específico
+
 ```typescript
 const signatureHeader = request.headers.get("x-ghl-signature");
 ```
 
 **Línea 268-272:** Valida firma Ed25519, RECHAZA si falta
+
 ```typescript
 const isSignatureValid = verifyWebhookSignature(rawBody, signatureHeader);
 
@@ -43,6 +45,7 @@ if (!isSignatureValid) {
 ### 1.2 Estructura Esperada (Post-validación de firma)
 
 **Línea 281:** Valida estructura JSON
+
 ```typescript
 if (!payload.event || !payload.locationId || !payload.data?.id) {
   return json({ error: "Invalid webhook payload" }, { status: 400 });
@@ -50,6 +53,7 @@ if (!payload.event || !payload.locationId || !payload.data?.id) {
 ```
 
 **Línea 228:** Valida webhookId obligatorio
+
 ```typescript
 if (!payload.webhookId) {
   console.error("[Webhook] Missing webhookId in payload - cannot record event safely");
@@ -58,6 +62,7 @@ if (!payload.webhookId) {
 ```
 
 **Línea 322-357:** Solo acepta eventos listados
+
 ```typescript
 switch (payload.event) {
   case "opportunity.stage_change": { ... }  // ← SOLO ESTE
@@ -76,6 +81,7 @@ switch (payload.event) {
 ```
 
 **CAMPOS REQUERIDOS:**
+
 - ✅ `event` = "opportunity.stage_change" (EXACTO)
 - ✅ `webhookId` = string (OBLIGATORIO)
 - ✅ `locationId` = string (OBLIGATORIO)
@@ -93,6 +99,7 @@ switch (payload.event) {
 ### 2.1 Payload Real del Workflow
 
 **Lo que el usuario reportó que envía:**
+
 ```json
 {
   "opportunity_id": "...",
@@ -110,6 +117,7 @@ switch (payload.event) {
 ```
 
 **Headers:**
+
 ```
 Content-Type: application/json
 Authorization: [token configurado en HighLevel]
@@ -127,12 +135,14 @@ Código espera:      X-GHL-Signature: Ed25519
 ```
 
 **Resultado en código:**
+
 ```typescript
-const signatureHeader = request.headers.get("x-ghl-signature");  // ← Retorna NULL
-const isSignatureValid = verifyWebhookSignature(rawBody, null);   // ← Retorna FALSE (línea 51)
+const signatureHeader = request.headers.get("x-ghl-signature"); // ← Retorna NULL
+const isSignatureValid = verifyWebhookSignature(rawBody, null); // ← Retorna FALSE (línea 51)
 ```
 
 **Línea 49-54:**
+
 ```typescript
 function verifyWebhookSignature(rawBody: string, signatureHeader: string | null | undefined): boolean {
   if (!signatureHeader) {
@@ -164,6 +174,7 @@ Código espera:      locationId: string (OBLIGATORIO)
 ```
 
 **Línea 281: Validación de estructura**
+
 ```typescript
 if (!payload.event || !payload.locationId || !payload.data?.id) {
   return json({ error: "Invalid webhook payload" }, { status: 400 });
@@ -176,19 +187,19 @@ if (!payload.event || !payload.locationId || !payload.data?.id) {
 
 **Punto 3: Campos Utilizados**
 
-| Campo Workflow | Campo Código | Presente | Compatible |
-|---|---|---|---|
-| opportunity_id | payload.data.id | ❌ NO | ❌ NO |
-| opportunity_name | payload.data.name | ✅ SÍ (pero es opportunity_name) | ❓ PARCIAL |
-| pipeline_name | payload.data.pipelineId | ❌ NO (envía nombre, no ID) | ❌ NO |
-| stage_name | payload.data.newStageId | ❌ NO (envía nombre, no ID) | ❌ NO |
-| status | payload.data.status | ✅ SÍ | ❓ PARCIAL |
-| lead_value | payload.data.monetaryValue | ❌ NO | ❌ NO |
-| forecast_probability | (no usado) | - | - |
-| expected_close_date | (no usado) | - | - |
-| lost_reason | (no usado) | - | - |
-| source | (no usado) | - | - |
-| assigned_to | (no usado) | - | - |
+| Campo Workflow       | Campo Código               | Presente                         | Compatible |
+| -------------------- | -------------------------- | -------------------------------- | ---------- |
+| opportunity_id       | payload.data.id            | ❌ NO                            | ❌ NO      |
+| opportunity_name     | payload.data.name          | ✅ SÍ (pero es opportunity_name) | ❓ PARCIAL |
+| pipeline_name        | payload.data.pipelineId    | ❌ NO (envía nombre, no ID)      | ❌ NO      |
+| stage_name           | payload.data.newStageId    | ❌ NO (envía nombre, no ID)      | ❌ NO      |
+| status               | payload.data.status        | ✅ SÍ                            | ❓ PARCIAL |
+| lead_value           | payload.data.monetaryValue | ❌ NO                            | ❌ NO      |
+| forecast_probability | (no usado)                 | -                                | -          |
+| expected_close_date  | (no usado)                 | -                                | -          |
+| lost_reason          | (no usado)                 | -                                | -          |
+| source               | (no usado)                 | -                                | -          |
+| assigned_to          | (no usado)                 | -                                | -          |
 
 **RESULTADO:** 🔴 **Campos fundamentales ausentes o incompatibles**
 
@@ -229,6 +240,7 @@ Cuando HighLevel Workflow envía su payload al endpoint:
 ### 4.1 Decisión Arquitectónica Original
 
 El código fue diseñado para **Private Integration** (FASE 4.3.2):
+
 - Mecanismo de firma Ed25519 (official HighLevel)
 - Estructura payload normalizada
 - Clave pública hardcoded
@@ -246,6 +258,7 @@ El código fue diseñado para **Private Integration** (FASE 4.3.2):
 ### 4.2 Workflow Webhook (Alternativa creada)
 
 El Workflow Webhook es un mecanismo diferente:
+
 - Autenticación via Authorization header
 - Payload personalizado según configuración
 - Campo names como `opportunity_id` (no estándar)
@@ -255,7 +268,7 @@ El Workflow Webhook es un mecanismo diferente:
 **Ventajas de Workflow Webhook:**
 ✅ Fácil de configurar en UI de HighLevel  
 ✅ No requiere validación criptográfica  
-✅ Flexible (campos personalizables)  
+✅ Flexible (campos personalizables)
 
 **Desventajas:**
 ❌ Menos seguro (solo Authorization header)  
@@ -273,6 +286,7 @@ El Workflow Webhook es un mecanismo diferente:
 **Acción:** Eliminar Workflow Webhook, usar Private Integration webhook
 
 **Cambios necesarios en HighLevel:**
+
 1. Ir a Settings → Integrations → Webhooks
 2. Register webhook (o usar Private Integration)
 3. URL: https://floristeria-lucia.vercel.app/api/webhooks/ghl-opportunity
@@ -281,6 +295,7 @@ El Workflow Webhook es un mecanismo diferente:
 
 **Cambios necesarios en código:** ✅ NINGUNO
 **Ventajas:**
+
 - Código está LISTO (ya implementado)
 - Seguridad Ed25519 verificada
 - Payload estándar
@@ -296,6 +311,7 @@ El Workflow Webhook es un mecanismo diferente:
 **Acción:** Aceptar Authorization header y payload de Workflow
 
 **Cambios necesarios en código:**
+
 1. ❌ Remover validación obligatoria de X-GHL-Signature
 2. ❌ Agregar validación de Authorization header
 3. ❌ Cambiar parseo de `payload.data.id` a `payload.opportunity_id`
@@ -310,6 +326,7 @@ El Workflow Webhook es un mecanismo diferente:
 **Ventajas:** No requiere cambios en HighLevel
 
 **Desventajas:**
+
 - Mayor complejidad de parseo
 - Menos seguro (Authorization vs Ed25519)
 - Sin deduplicación nativa
@@ -321,17 +338,17 @@ El Workflow Webhook es un mecanismo diferente:
 
 ## 6. EVALUACIÓN COMPARATIVA
 
-| Criterio | Opción 1: Private Int. | Opción 2: Workflow |
-|----------|----------------------|-------------------|
-| **Cambios en código** | 0 | 8+ |
-| **Cambios en HL** | 1 (registrar webhook) | 0 |
-| **Seguridad** | ✅ Ed25519 | ⚠️ Authorization |
-| **Estándar HL** | ✅ Official | ❌ Personalizado |
-| **Complejidad** | ✅ Baja | ❌ Alta |
-| **Deduplicación** | ✅ Integrada | ❌ Manual |
-| **Mantenibilidad** | ✅ Alta | ❌ Baja |
-| **Futuro-proofing** | ✅ Sí | ❌ No |
-| **Risk** | ✅ Bajo | ❌ Alto |
+| Criterio              | Opción 1: Private Int. | Opción 2: Workflow |
+| --------------------- | ---------------------- | ------------------ |
+| **Cambios en código** | 0                      | 8+                 |
+| **Cambios en HL**     | 1 (registrar webhook)  | 0                  |
+| **Seguridad**         | ✅ Ed25519             | ⚠️ Authorization   |
+| **Estándar HL**       | ✅ Official            | ❌ Personalizado   |
+| **Complejidad**       | ✅ Baja                | ❌ Alta            |
+| **Deduplicación**     | ✅ Integrada           | ❌ Manual          |
+| **Mantenibilidad**    | ✅ Alta                | ❌ Baja            |
+| **Futuro-proofing**   | ✅ Sí                  | ❌ No              |
+| **Risk**              | ✅ Bajo                | ❌ Alto            |
 
 ---
 
@@ -340,6 +357,7 @@ El Workflow Webhook es un mecanismo diferente:
 ### 🏆 **OPCIÓN 1: Modificar HighLevel (RECOMENDADA)**
 
 **Razones:**
+
 1. **Código ya está implementado** para Private Integration
 2. **Seguridad superior** con Ed25519
 3. **Estándar official de HighLevel**
@@ -372,6 +390,7 @@ EN CÓDIGO:
 **Cambios específicos necesarios en código:**
 
 ### Cambio 1: Remover validación de firma
+
 ```typescript
 // REMOVE:
 const signatureHeader = request.headers.get("x-ghl-signature");
@@ -390,6 +409,7 @@ const token = authHeader.substring(7);
 ```
 
 ### Cambio 2: Cambiar estructura de parseo
+
 ```typescript
 // REMOVE:
 const parsedPayload = JSON.parse(rawBody) as GHLOpportunityWebhookPayload;
@@ -409,28 +429,30 @@ const parsedPayload = {
     stageName: workflowPayload.stage_name,
     name: workflowPayload.opportunity_name,
     monetaryValue: workflowPayload.lead_value,
-    customFields: [] // NO INCLUIDO EN WORKFLOW
-  }
+    customFields: [], // NO INCLUIDO EN WORKFLOW
+  },
 };
 ```
 
 ### Cambio 3: Agregar función de mapeo
+
 ```typescript
 // NUEVA FUNCIÓN:
 function mapStageName(stageName: string): string {
   const mapping: Record<string, string> = {
-    "Recibido": "1de8d7dc-deac-45a6-a87e-e7198c3ef4a5",
-    "Confirmado": "a737a3b9-98fd-4446-8f15-eb26333cc6f3",
-    "Preparando": "72c6b0eb-a0ae-4cd5-b122-482add4dd6c7",
-    "Listo": "ba7e6913-7173-43cd-9d94-bf66e2add4a1",
-    "Entregado": "910fc366-8299-49a0-aaf4-99e15558fd07",
-    "Cancelado": "bedbab33-62f0-41fd-b51e-a6b2ad0aa8ed",
+    Recibido: "1de8d7dc-deac-45a6-a87e-e7198c3ef4a5",
+    Confirmado: "a737a3b9-98fd-4446-8f15-eb26333cc6f3",
+    Preparando: "72c6b0eb-a0ae-4cd5-b122-482add4dd6c7",
+    Listo: "ba7e6913-7173-43cd-9d94-bf66e2add4a1",
+    Entregado: "910fc366-8299-49a0-aaf4-99e15558fd07",
+    Cancelado: "bedbab33-62f0-41fd-b51e-a6b2ad0aa8ed",
   };
   return mapping[stageName] || "";
 }
 ```
 
 ### Cambio 4: Remover deduplicación (webhookId no disponible)
+
 ```typescript
 // REMOVE o BYPASS:
 if (webhookId) {
@@ -439,7 +461,7 @@ if (webhookId) {
     .select("id, processed")
     .eq("delivery_id", webhookId)
     .single();
-  
+
   if (existingEvent) { ... }
 }
 ```
@@ -467,12 +489,14 @@ El Workflow Webhook SERÁ RECHAZADO con 401 Unauthorized.
 ## PRÓXIMOS PASOS (A ESPERAR CONFIRMACIÓN)
 
 **SI confirmas Opción 1 (recomendada):**
+
 1. ✅ Código está listo (no requiere cambios)
 2. ✅ Eliminar Workflow Webhook actual en HighLevel
 3. ✅ Registrar Private Integration webhook en HighLevel Dashboard
 4. ✅ Realizar prueba de cambio de stage
 
 **SI confirmas Opción 2 (no recomendada):**
+
 1. ❌ Requiere modificaciones extensas al endpoint
 2. ❌ Requiere nuevas funciones de mapeo
 3. ❌ Requiere changes a tabla webhook_events
@@ -484,4 +508,3 @@ El Workflow Webhook SERÁ RECHAZADO con 401 Unauthorized.
 **Base:** Análisis de código real línea por línea  
 **Recomendación:** Opción 1 (Private Integration via HighLevel)  
 **Confianza:** 100% (basado en código fuente)
-

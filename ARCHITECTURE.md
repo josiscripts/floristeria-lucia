@@ -1,4 +1,5 @@
 # ARCHITECTURE
+
 ## Documentación de Arquitectura del Proyecto
 
 > Este documento debe generarse siguiendo `PROJECT_AUDIT_SPEC.md`.
@@ -11,6 +12,7 @@
 Documentar la arquitectura completa de floristeria lucia explicando cómo está construido el proyecto desde el punto de vista técnico y de flujo de datos.
 
 **Preguntas respondidas:**
+
 - ¿Dónde vive el frontend? React + TanStack Start en Vercel (probable)
 - ¿Dónde vive el backend? Supabase (PostgreSQL + Auth)
 - ¿Dónde está la base de datos? Supabase PostgreSQL
@@ -38,14 +40,17 @@ Documentar la arquitectura completa de floristeria lucia explicando cómo está 
 **Tipo de aplicación:** E-commerce de flores (tienda en línea)
 
 **Arquitectura:** Arquitectura separada frontend/backend (decoupled)
+
 - **Frontend:** SPA + SSR con TanStack Start + React
 - **Backend:** BaaS (Backend as a Service) con Supabase
 
-**Patrón arquitectónico:** 
+**Patrón arquitectónico:**
+
 - Frontend: Component-based con Context API para estado
 - Backend: Serverless con PostgreSQL y row-level security
 
 **Tecnologías principales:**
+
 - Frontend: React 19, TypeScript, Tailwind CSS, Radix UI
 - Backend: Supabase (PostgreSQL 14.15), Auth, Storage
 - Herramientas: Vite, TanStack Start, TanStack Router, TanStack Query
@@ -61,6 +66,7 @@ Documentar la arquitectura completa de floristeria lucia explicando cómo está 
 La arquitectación actual es una arquitectura moderna desacoplada donde:
 
 **Frontend (React):**
+
 - Aplicación React con SSR (Server-Side Rendering)
 - Estado global vía Context API
 - Enrutamiento con TanStack Router
@@ -68,12 +74,14 @@ La arquitectación actual es una arquitectura moderna desacoplada donde:
 - Estilos con Tailwind CSS
 
 **Backend (Supabase):**
+
 - PostgreSQL como base de datos relacional
 - Supabase Auth para autenticación
 - Row Level Security (RLS) para control de acceso
 - Storage para imágenes
 
 **Servicios externos:**
+
 - Google OAuth para autenticación social
 - Lovable para desarrollo y generación de código
 
@@ -82,7 +90,7 @@ La arquitectación actual es una arquitectura moderna desacoplada donde:
 ```mermaid
 flowchart TD
     User["👤 Usuario en navegador"]
-    
+
     subgraph Frontend["🎨 FRONTEND (Client-Side)"]
         SPA["React SPA + SSR<br/>TanStack Start"]
         Router["TanStack Router<br/>File-based routing"]
@@ -90,33 +98,33 @@ flowchart TD
         Query["TanStack React Query<br/>Data fetching & caching"]
         UI["UI Components<br/>Radix UI + Tailwind CSS"]
     end
-    
+
     subgraph Backend["⚙️ BACKEND (Supabase)"]
         Auth["Supabase Auth<br/>JWT + OAuth"]
         DB["PostgreSQL 14.15<br/>profiles table<br/>RLS Enabled"]
         Storage["Supabase Storage<br/>Image buckets"]
     end
-    
+
     subgraph External["🌐 EXTERNAL SERVICES"]
         Google["Google OAuth<br/>Sign-in provider"]
         Lovable["Lovable<br/>Development tool"]
     end
-    
+
     User -->|HTTP/HTTPS| SPA
     SPA --> Router
     SPA --> State
     SPA --> Query
     SPA --> UI
-    
+
     Query -->|REST API| Auth
     Query -->|Realtime| DB
     SPA -->|Upload| Storage
-    
+
     Auth -->|OAuth| Google
     Auth <-->|Manage| DB
-    
+
     SPA -.->|Development| Lovable
-    
+
     style Frontend fill:#e1f5ff
     style Backend fill:#f3e5f5
     style External fill:#e8f5e9
@@ -124,18 +132,18 @@ flowchart TD
 
 ## 2.3 Responsabilidades por capa
 
-| Capa | Tecnología | Responsabilidad |
-|------|------------|-----------------|
-| Presentación | React 19 + TypeScript | Renderizar UI, capturar entrada usuario |
-| Enrutamiento | TanStack Router | Navegar entre páginas, parámetros dinámicos |
-| Estado | Context API | Carrito, favoritos, idioma, tema |
-| Data Fetching | TanStack React Query | Cachear datos, sincronizar con servidor |
-| Estilos | Tailwind CSS + Radix UI | Componentes accesibles, responsive |
-| Autenticación | Supabase Auth | JWT, OAuth, gestión de sesiones |
-| Base de datos | PostgreSQL + RLS | Persistencia de perfiles, control de acceso |
-| Almacenamiento | Supabase Storage | Imágenes y assets |
-| Hosting Frontend | Vercel (presumido) | SSR, edge functions, CDN |
-| Hosting Backend | Supabase Cloud | Serverless PostgreSQL, Auth |
+| Capa             | Tecnología              | Responsabilidad                             |
+| ---------------- | ----------------------- | ------------------------------------------- |
+| Presentación     | React 19 + TypeScript   | Renderizar UI, capturar entrada usuario     |
+| Enrutamiento     | TanStack Router         | Navegar entre páginas, parámetros dinámicos |
+| Estado           | Context API             | Carrito, favoritos, idioma, tema            |
+| Data Fetching    | TanStack React Query    | Cachear datos, sincronizar con servidor     |
+| Estilos          | Tailwind CSS + Radix UI | Componentes accesibles, responsive          |
+| Autenticación    | Supabase Auth           | JWT, OAuth, gestión de sesiones             |
+| Base de datos    | PostgreSQL + RLS        | Persistencia de perfiles, control de acceso |
+| Almacenamiento   | Supabase Storage        | Imágenes y assets                           |
+| Hosting Frontend | Vercel (presumido)      | SSR, edge functions, CDN                    |
+| Hosting Backend  | Supabase Cloud          | Serverless PostgreSQL, Auth                 |
 
 ---
 
@@ -143,14 +151,14 @@ flowchart TD
 
 Crear una tabla:
 
-| Capa | Tecnología | Responsabilidad |
-|------|------------|-----------------|
-| Frontend | | |
-| Backend | | |
-| Database | | |
-| Auth | | |
-| Storage | | |
-| Payments | | |
+| Capa     | Tecnología | Responsabilidad |
+| -------- | ---------- | --------------- |
+| Frontend |            |                 |
+| Backend  |            |                 |
+| Database |            |                 |
+| Auth     |            |                 |
+| Storage  |            |                 |
+| Payments |            |                 |
 
 ---
 
@@ -159,25 +167,33 @@ Crear una tabla:
 Capas del proyecto:
 
 ### Capa de Presentación
+
 Componentes React reutilizables:
+
 - Componentes UI (Button, Input, Form, etc.)
 - Componentes de negocio (ProductCard, CartDrawer, Navbar)
 - Páginas (rutas)
 
 ### Capa de Aplicación
+
 Lógica de negocio:
+
 - Contextos (ShopContext, LanguageContext, ThemeContext)
 - Hooks (useAuth, useShop, useLanguage)
 - Utilidades (formatPrice, cn, translate)
 
 ### Capa de Datos
+
 Persistencia:
+
 - localStorage (carrito, favoritos, idioma)
 - Supabase (perfiles de usuario)
 - Datos estáticos (catálogo, servicios)
 
 ### Capa de Infraestructura
+
 Servicios cloud y despliegue:
+
 - Supabase Cloud (BD, Auth, Storage)
 - Google Cloud (OAuth)
 - Hosting Frontend (Vercel presumido)
@@ -285,13 +301,14 @@ Floristería prepara y entrega
 
 ## 5. ARQUITECTURA DE SERVICIOS
 
-| Servicio | Función | Datos | Comunicación |
-|----------|----------|-------|--------------|
-| **Supabase** | BD, Auth, Storage | Usuarios, perfiles, imágenes | REST API + Realtime |
-| **Google OAuth** | Autenticación social | Email, nombre | OAuth 2.0 |
-| **Lovable** | Desarrollo asistido | Código y generación | Web interface |
+| Servicio         | Función              | Datos                        | Comunicación        |
+| ---------------- | -------------------- | ---------------------------- | ------------------- |
+| **Supabase**     | BD, Auth, Storage    | Usuarios, perfiles, imágenes | REST API + Realtime |
+| **Google OAuth** | Autenticación social | Email, nombre                | OAuth 2.0           |
+| **Lovable**      | Desarrollo asistido  | Código y generación          | Web interface       |
 
 **Supabase en detalle:**
+
 - PostgreSQL para base de datos relacional
 - Supabase Auth para gestión de usuarios
 - JWT tokens para autenticación
@@ -309,17 +326,13 @@ Floristería prepara y entrega
 **Formato:** JSON request/response
 
 **Ejemplos de llamadas:**
+
 ```javascript
 // Lectura
-const { data } = await supabase
-  .from('profiles')
-  .select('*')
-  .eq('id', userId);
+const { data } = await supabase.from("profiles").select("*").eq("id", userId);
 
 // Escritura
-const { error } = await supabase
-  .from('profiles')
-  .upsert({ id: userId, full_name, phone });
+const { error } = await supabase.from("profiles").upsert({ id: userId, full_name, phone });
 
 // Auth
 const { error } = await supabase.auth.signUp({ email, password });
@@ -336,11 +349,13 @@ const { error } = await supabase.auth.signUp({ email, password });
 ### Backend → Servicios externos
 
 **Google OAuth:**
+
 - Flujo OAuth 2.0 estándar
 - Redirect URI: `{app-url}/auth/callback`
 - Credenciales: Client ID (público) + Secret (privado en servidor)
 
 **Lovable:**
+
 - No hay comunicación runtime (solo en desarrollo)
 - Integración vía sincronización de código
 
@@ -360,7 +375,7 @@ sequenceDiagram
 
     User->>Frontend: 1. Navega a /auth
     Frontend->>Frontend: 2. Renderiza LoginForm
-    
+
     rect rgb(200, 220, 255)
     Note over User,OAuth: Opción A: Email/Contraseña
     User->>Frontend: 3. Ingresa email + password
@@ -371,7 +386,7 @@ sequenceDiagram
     DB->>DB: 8. Crea perfil en profiles table
     SupaAuth-->>Frontend: 9. JWT token + session
     end
-    
+
     rect rgb(220, 255, 200)
     Note over User,OAuth: Opción B: Google OAuth
     User->>Frontend: 3. Clica "Google"
@@ -386,7 +401,7 @@ sequenceDiagram
     DB-->>SupaAuth: 12. User ID
     SupaAuth-->>Frontend: 13. JWT token Supabase
     end
-    
+
     rect rgb(255, 220, 200)
     Note over Frontend,DB: Sesión establecida
     Frontend->>Frontend: 14. localStorage.setItem(token)
@@ -398,6 +413,7 @@ sequenceDiagram
 ```
 
 **Componentes principales:**
+
 - **useAuth()** hook - Obtiene sesión actual
 - **Supabase Auth** - Gestiona JWT y refresh
 - **RLS Policies** - Asegura acceso solo a datos propios
@@ -409,16 +425,16 @@ sequenceDiagram
 
 Dónde se guarda cada tipo de información:
 
-| Información | Ubicación | Persistencia | Sincronización |
-|-------------|-----------|--------------|-----------------|
-| Usuarios | auth.users (Supabase) | Permanente | Automática |
-| Perfiles | profiles (PostgreSQL) | Permanente | Automática |
-| Carrito | localStorage | Sesión/Permanente | Manual (useEffect) |
-| Favoritos | localStorage | Permanente | Manual (useEffect) |
-| Sesión/Token | localStorage/cookies | Sesión | Supabase automática |
-| Preferencias (idioma) | localStorage | Permanente | Manual (useEffect) |
-| Productos | catalog.ts (código) | N/A | Requiere re-deploy |
-| Imágenes/assets | Supabase Storage | Permanente | CDN |
+| Información           | Ubicación             | Persistencia      | Sincronización      |
+| --------------------- | --------------------- | ----------------- | ------------------- |
+| Usuarios              | auth.users (Supabase) | Permanente        | Automática          |
+| Perfiles              | profiles (PostgreSQL) | Permanente        | Automática          |
+| Carrito               | localStorage          | Sesión/Permanente | Manual (useEffect)  |
+| Favoritos             | localStorage          | Permanente        | Manual (useEffect)  |
+| Sesión/Token          | localStorage/cookies  | Sesión            | Supabase automática |
+| Preferencias (idioma) | localStorage          | Permanente        | Manual (useEffect)  |
+| Productos             | catalog.ts (código)   | N/A               | Requiere re-deploy  |
+| Imágenes/assets       | Supabase Storage      | Permanente        | CDN                 |
 
 **Nota:** Los datos de carrito, favoritos e idioma están en localStorage sin sincronización con BD. Si usuario se registra, estos datos no se recuperan en otro dispositivo.
 
@@ -428,12 +444,12 @@ Dónde se guarda cada tipo de información:
 
 Eventos importantes detectados:
 
-| Evento | Disparador | Acción |
-|---------|------------|--------|
-| Usuario registrado | auth.users INSERT | Trigger crea perfil automáticamente |
-| Login completado | signIn() llamada | Sesión establecida, Redux state actualizado |
-| Carrito actualizado | addLine(), setQty() | localStorage sincroniza |
-| Idioma cambiado | setLanguage() | localStorage sincroniza, HTML lang se actualiza |
+| Evento              | Disparador          | Acción                                          |
+| ------------------- | ------------------- | ----------------------------------------------- |
+| Usuario registrado  | auth.users INSERT   | Trigger crea perfil automáticamente             |
+| Login completado    | signIn() llamada    | Sesión establecida, Redux state actualizado     |
+| Carrito actualizado | addLine(), setQty() | localStorage sincroniza                         |
+| Idioma cambiado     | setLanguage()       | localStorage sincroniza, HTML lang se actualiza |
 
 **Nota:** No hay eventos de pedidos, pagos o inventario porque no están implementados.
 
@@ -464,20 +480,24 @@ App disponible en producción
 ```
 
 **Build:**
+
 - `npm run build` ejecuta Vite
 - Output: `.output/` con bundles de client + server
 - Tamaño aproximado: no determinado
 
 **Variables:**
+
 - VITE_SUPABASE_URL → env file Vercel
 - VITE_SUPABASE_ANON_KEY → env file Vercel
 - VITE_GOOGLE_CLIENT_ID → env file Vercel
 
 **Dominio:**
+
 - No determinado (presumido: floristerialuciamotrico.com o similar)
 - DNS debe apuntar a Vercel
 
 **SSL:**
+
 - Automático vía Vercel (Let's Encrypt)
 
 ---
@@ -496,12 +516,14 @@ Esta sección describe mejoras sugeridas para escalabilidad y mantenimiento.
 ### Cambios recomendados
 
 **1. Agregar capa Backend REST propia**
+
 - Express.js o Next.js API Routes
 - Validar precios en servidor
 - Gestionar órdenes y pagos
 - Rate limiting
 
 **2. Persistencia completa en BD**
+
 - Tabla: orders (pedidos)
 - Tabla: order_items (ítems del pedido)
 - Tabla: addresses (direcciones de usuario)
@@ -509,17 +531,20 @@ Esta sección describe mejoras sugeridas para escalabilidad y mantenimiento.
 - Tabla: cart_items (carrito persisted)
 
 **3. Sistema de pagos**
+
 - Stripe integration
 - Webhooks para confirmación
 - Validación de transacciones
 
 **4. Admin Dashboard**
+
 - CRUD de productos
 - Gestión de órdenes
 - Estadísticas de ventas
 - Usuarios y roles
 
 **5. CI/CD + Testing**
+
 - GitHub Actions para testing
 - Linting automático
 - E2E tests con Playwright
@@ -530,27 +555,27 @@ Esta sección describe mejoras sugeridas para escalabilidad y mantenimiento.
 ```mermaid
 flowchart TD
     User["👤 Usuario"]
-    
+
     subgraph Frontend["🎨 Frontend"]
         React["React SPA"]
         LocalState["Context API"]
     end
-    
+
     subgraph Backend["⚙️ Backend"]
         API["REST API<br/>Express/Next.js"]
         Auth["Auth Service<br/>JWT Validation"]
         Business["Business Logic<br/>Orders, Payments"]
     end
-    
+
     subgraph Database["🗄️ Database"]
         PG["PostgreSQL<br/>Complete schema<br/>with RLS"]
     end
-    
+
     subgraph External["🌐 External"]
         Stripe["Stripe<br/>Payments"]
         Google["Google OAuth"]
     end
-    
+
     User -->|HTTP/HTTPS| Frontend
     React --> LocalState
     React -->|REST API| API
@@ -560,7 +585,7 @@ flowchart TD
     Business --> PG
     Business -->|Webhooks| Stripe
     API --> Google
-    
+
     style Frontend fill:#e1f5ff
     style Backend fill:#f3e5f5
     style Database fill:#fff3e0
@@ -680,6 +705,7 @@ flowchart TD
 ---
 
 Parte de la suite de auditoría:
+
 - PROJECT_AUDIT_SPEC.md (metodología)
 - PROJECT_AUDIT_REPORT.md (auditoría completa)
 - ARCHITECTURE.md (este documento)

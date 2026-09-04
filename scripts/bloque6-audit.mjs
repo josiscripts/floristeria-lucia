@@ -19,8 +19,7 @@ envContent.split("\n").forEach((line) => {
 });
 
 const supabaseUrl = env.SUPABASE_URL || env.VITE_SUPABASE_URL;
-const supabaseServiceKey =
-  env.SUPABASE_SERVICE_ROLE_KEY || env.VITE_SUPABASE_SERVICE_ROLE_KEY;
+const supabaseServiceKey = env.SUPABASE_SERVICE_ROLE_KEY || env.VITE_SUPABASE_SERVICE_ROLE_KEY;
 
 if (!supabaseUrl || !supabaseServiceKey) {
   console.error("Missing Supabase credentials");
@@ -39,9 +38,7 @@ async function auditTestProducts() {
   const { data: testProducts, error: error1 } = await supabase
     .from("products")
     .select("id, name, category, ghl_product_id, created_at")
-    .or(
-      `ghl_product_id.like.test-product-%,name.ilike.%TEST%,name.ilike.%TEMP%`
-    )
+    .or(`ghl_product_id.like.test-product-%,name.ilike.%TEST%,name.ilike.%TEMP%`)
     .order("created_at", { ascending: false });
 
   if (error1) {
@@ -53,9 +50,7 @@ async function auditTestProducts() {
   console.log(JSON.stringify(testProducts, null, 2));
 
   if (testProducts && testProducts.length > 0) {
-    console.log(
-      `\nTotal a revisar: ${testProducts.length} productos\n`
-    );
+    console.log(`\nTotal a revisar: ${testProducts.length} productos\n`);
 
     // Para cada uno, vamos a determinar si es realmente test
     for (const prod of testProducts) {
@@ -75,9 +70,7 @@ async function auditTestProducts() {
 
 // ACCIÓN 2: Verificar orfandad de datos
 async function checkOrphanData() {
-  console.log(
-    "\n=== VERIFICAR ORFANDAD DE DATOS (opciones, imágenes, colores) ===\n"
-  );
+  console.log("\n=== VERIFICAR ORFANDAD DE DATOS (opciones, imágenes, colores) ===\n");
 
   // Opciones huérfanas
   const { data: orphanOptions, error: e1 } = await supabase
@@ -97,15 +90,9 @@ async function checkOrphanData() {
     .select("id, product_id")
     .not("product_id", "in", `(SELECT id FROM products WHERE deleted_at IS NULL)`);
 
-  console.log(
-    `Opciones huérfanas: ${orphanOptions?.length || 0}`
-  );
-  console.log(
-    `Imágenes huérfanas: ${orphanImages?.length || 0}`
-  );
-  console.log(
-    `Colores huérfanos: ${orphanColors?.length || 0}`
-  );
+  console.log(`Opciones huérfanas: ${orphanOptions?.length || 0}`);
+  console.log(`Imágenes huérfanas: ${orphanImages?.length || 0}`);
+  console.log(`Colores huérfanos: ${orphanColors?.length || 0}`);
 
   return { orphanOptions, orphanImages, orphanColors };
 }
@@ -125,9 +112,7 @@ async function countRealProducts() {
     return [];
   }
 
-  console.log(
-    `Total de productos reales en Supabase: ${products.length}`
-  );
+  console.log(`Total de productos reales en Supabase: ${products.length}`);
   console.log("\nProductos por categoría:");
 
   const byCategory = {};
@@ -196,9 +181,7 @@ async function checkProductImages() {
   console.log(`Productos con imágenes: ${productsWithImages}`);
 
   // Verificar URLs válidas
-  const invalidUrls = images.filter(
-    (img) => !img.image_url || img.image_url.trim() === ""
-  );
+  const invalidUrls = images.filter((img) => !img.image_url || img.image_url.trim() === "");
   console.log(`Imágenes con URLs vacías: ${invalidUrls.length}`);
 
   if (invalidUrls.length > 0) {
@@ -277,24 +260,32 @@ async function checkDuplicates() {
     .order("count", { ascending: false });
 
   console.log("Productos con nombre duplicado:");
-  prodDups?.filter((d) => d.count > 1).forEach((d) => {
-    console.log(`  ${d.name}: ${d.count} veces`);
-  });
+  prodDups
+    ?.filter((d) => d.count > 1)
+    .forEach((d) => {
+      console.log(`  ${d.name}: ${d.count} veces`);
+    });
 
   console.log("\nSKUs duplicados:");
-  skuDups?.filter((d) => d.count > 1).forEach((d) => {
-    console.log(`  ${d.sku}: ${d.count} veces`);
-  });
+  skuDups
+    ?.filter((d) => d.count > 1)
+    .forEach((d) => {
+      console.log(`  ${d.sku}: ${d.count} veces`);
+    });
 
   console.log("\nghl_product_id duplicados:");
-  ghlProdDups?.filter((d) => d.count > 1).forEach((d) => {
-    console.log(`  ${d.ghl_product_id}: ${d.count} veces`);
-  });
+  ghlProdDups
+    ?.filter((d) => d.count > 1)
+    .forEach((d) => {
+      console.log(`  ${d.ghl_product_id}: ${d.count} veces`);
+    });
 
   console.log("\nghl_price_id duplicados:");
-  ghlPriceDups?.filter((d) => d.count > 1).forEach((d) => {
-    console.log(`  ${d.ghl_price_id}: ${d.count} veces`);
-  });
+  ghlPriceDups
+    ?.filter((d) => d.count > 1)
+    .forEach((d) => {
+      console.log(`  ${d.ghl_price_id}: ${d.count} veces`);
+    });
 }
 
 // Main

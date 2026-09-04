@@ -122,9 +122,7 @@ if (optError) {
 // Check color_variants
 console.log("\n\n5. COLOR_VARIANTS\n");
 
-const { data: colors } = await supabase
-  .from("color_variants")
-  .select("*");
+const { data: colors } = await supabase.from("color_variants").select("*");
 
 if (colors) {
   console.log(`Total: ${colors.length}`);
@@ -144,9 +142,7 @@ if (colors) {
 // Check product_images
 console.log("\n\n6. PRODUCT_IMAGES\n");
 
-const { data: images } = await supabase
-  .from("product_images")
-  .select("*");
+const { data: images } = await supabase.from("product_images").select("*");
 
 if (images) {
   console.log(`Total: ${images.length}`);

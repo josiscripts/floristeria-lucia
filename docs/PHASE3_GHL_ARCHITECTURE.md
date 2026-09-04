@@ -2,7 +2,7 @@
 
 **Proyecto:** Floristería Lucía  
 **Fecha:** 2026-08-27  
-**Status:** DESIGN ONLY - NO IMPLEMENTATION YET  
+**Status:** DESIGN ONLY - NO IMPLEMENTATION YET
 
 ---
 
@@ -33,47 +33,47 @@
 
 **Total de productos:** 41
 
-| Categoría | Count |
-|-----------|-------|
-| complementos | 13 |
-| plantas | 13 |
-| ramos | 6 |
-| rosas-eternas | 4 |
-| condolencias | 5 |
+| Categoría     | Count |
+| ------------- | ----- |
+| complementos  | 13    |
+| plantas       | 13    |
+| ramos         | 6     |
+| rosas-eternas | 4     |
+| condolencias  | 5     |
 
 ### Campos utilizados en catalog.ts
 
 ```typescript
 type Product = {
-  id: string;                    // "ramo-silvestre"
-  name: string;                  // "Ramo Silvestre"
-  category: CategoryId;          // "ramos"
-  priceMin: number;              // 30
-  priceMax?: number;             // 45
-  image: string;                 // asset path
-  description: string;           // HTML description
-  badge?: string;                // "Más vendido", "Premium"
-  quoteOnly?: boolean;           // FALSE (0 productos)
-  roseStep?: number;             // 6 (4 productos)
-  colors?: string[];             // array (5 productos)
+  id: string; // "ramo-silvestre"
+  name: string; // "Ramo Silvestre"
+  category: CategoryId; // "ramos"
+  priceMin: number; // 30
+  priceMax?: number; // 45
+  image: string; // asset path
+  description: string; // HTML description
+  badge?: string; // "Más vendido", "Premium"
+  quoteOnly?: boolean; // FALSE (0 productos)
+  roseStep?: number; // 6 (4 productos)
+  colors?: string[]; // array (5 productos)
 };
 ```
 
 ### Estadísticas
 
-| Campo | Productos | Status |
-|-------|-----------|--------|
-| id | 41/41 | ✅ Universal |
-| name | 41/41 | ✅ Universal |
-| category | 41/41 | ✅ Universal |
-| priceMin | 41/41 | ✅ Universal |
-| priceMax | 17/41 | ⚠️ Parcial |
-| image | 41/41 | ✅ Universal |
-| description | 41/41 | ✅ Universal |
-| badge | 3/41 | 🔴 Raro ("Más vendido", "Premium", "7-10 años") |
-| quoteOnly | 0/41 | ⏸️ No usado |
-| roseStep | 4/41 | 🔴 Muy raro |
-| colors | 5/41 | 🔴 Raro |
+| Campo       | Productos | Status                                          |
+| ----------- | --------- | ----------------------------------------------- |
+| id          | 41/41     | ✅ Universal                                    |
+| name        | 41/41     | ✅ Universal                                    |
+| category    | 41/41     | ✅ Universal                                    |
+| priceMin    | 41/41     | ✅ Universal                                    |
+| priceMax    | 17/41     | ⚠️ Parcial                                      |
+| image       | 41/41     | ✅ Universal                                    |
+| description | 41/41     | ✅ Universal                                    |
+| badge       | 3/41      | 🔴 Raro ("Más vendido", "Premium", "7-10 años") |
+| quoteOnly   | 0/41      | ⏸️ No usado                                     |
+| roseStep    | 4/41      | 🔴 Muy raro                                     |
+| colors      | 5/41      | 🔴 Raro                                         |
 
 ---
 
@@ -88,36 +88,36 @@ type Product = {
 ```typescript
 export async function getGHLProducts(
   locationId?: string,
-  options?: { limit?: number; skip?: number; filter?: Record<string, unknown> }
-): Promise<GHLProductsResponse | GHLError>
+  options?: { limit?: number; skip?: number; filter?: Record<string, unknown> },
+): Promise<GHLProductsResponse | GHLError>;
 ```
 
-| Aspect | Value |
-|--------|-------|
-| **Endpoint** | `/locations/{locationId}/products` |
-| **Method** | GET |
-| **Auth** | Bearer token from GHL_PRIVATE_INTEGRATION_TOKEN |
-| **Parameters** | limit, skip, filter (status) |
-| **Response** | GHLProductsResponse (products[], total, pageSize, currentPage) |
-| **Error Handling** | Returns GHLError object |
-| **Timeout** | 10 seconds |
+| Aspect             | Value                                                          |
+| ------------------ | -------------------------------------------------------------- |
+| **Endpoint**       | `/locations/{locationId}/products`                             |
+| **Method**         | GET                                                            |
+| **Auth**           | Bearer token from GHL_PRIVATE_INTEGRATION_TOKEN                |
+| **Parameters**     | limit, skip, filter (status)                                   |
+| **Response**       | GHLProductsResponse (products[], total, pageSize, currentPage) |
+| **Error Handling** | Returns GHLError object                                        |
+| **Timeout**        | 10 seconds                                                     |
 
 #### Función: getGHLProduct()
 
 ```typescript
 export async function getGHLProduct(
   productId: string,
-  locationId?: string
-): Promise<GHLProduct | GHLError>
+  locationId?: string,
+): Promise<GHLProduct | GHLError>;
 ```
 
-| Aspect | Value |
-|--------|-------|
-| **Endpoint** | `/locations/{locationId}/products/{productId}` |
-| **Method** | GET |
-| **Auth** | Bearer token |
-| **Response** | GHLProduct |
-| **Error Handling** | Returns GHLError object |
+| Aspect             | Value                                          |
+| ------------------ | ---------------------------------------------- |
+| **Endpoint**       | `/locations/{locationId}/products/{productId}` |
+| **Method**         | GET                                            |
+| **Auth**           | Bearer token                                   |
+| **Response**       | GHLProduct                                     |
+| **Error Handling** | Returns GHLError object                        |
 
 #### Función: testGHLConnection()
 
@@ -126,14 +126,14 @@ export async function testGHLConnection(): Promise<{
   connected: boolean;
   message: string;
   error?: string;
-}>
+}>;
 ```
 
-| Aspect | Value |
-|--------|-------|
-| **Endpoint** | `/contacts?limit=1` |
-| **Method** | GET |
-| **Purpose** | Health check, validate token |
+| Aspect       | Value                                 |
+| ------------ | ------------------------------------- |
+| **Endpoint** | `/contacts?limit=1`                   |
+| **Method**   | GET                                   |
+| **Purpose**  | Health check, validate token          |
 | **Response** | {connected: boolean, message: string} |
 
 ### 2.2 Type Definitions
@@ -210,24 +210,24 @@ useGHLConnectionTest(options)
 
 ### 3.1 Tabla de Campos
 
-| Field | GHL | catalog.ts | product_metadata | Frontend | Transform |
-|-------|-----|-----------|------------------|----------|-----------|
-| **id** | ✅ id | ✅ id | ❌ ghl_product_id | ✅ display | GHL ID as identifier |
-| **name** | ✅ name | ✅ name | ❌ - | ✅ display | Direct |
-| **description** | ✅ description | ✅ description | ❌ - | ✅ display | Direct |
-| **price** | ✅ price | ✅ priceMin | ❌ price_min | ✅ display | Use priceMin from GHL |
-| **priceMax** | ❌ - | ✅ priceMax | ✅ price_max | ✅ display | Store in product_metadata |
-| **image** | ✅ image | ✅ image | ❌ - | ✅ display | Direct |
-| **images** | ✅ images | ❌ - | ❌ - | ✅ display | TBD |
-| **category** | ❌ NO CUSTOM FIELDS | ✅ category | ❌ - | ✅ filter | Need solution |
-| **badge** | ❌ - | ✅ badge (3) | ✅ badge_label | ✅ display | Store in product_metadata |
-| **colors** | ❌ - | ✅ colors (5) | ✅ available_colors | ✅ display | Store in product_metadata |
-| **roseStep** | ❌ - | ✅ roseStep (4) | ✅ rose_step | ✅ quantity | Store in product_metadata |
-| **quoteOnly** | ❌ - | ❌ (0) | ✅ requires_quote | ✅ UI | Store in product_metadata |
-| **sku** | ✅ sku | ❌ - | ❌ - | ❌ - | TBD |
-| **status** | ✅ status | ❌ - | ✅ status | ✅ visibility | Use GHL status |
-| **inventory** | ✅ inventory | ❌ - | ❌ - | ❌ - | TBD |
-| **legacy_catalog_id** | ❌ - | ✅ id | ✅ legacy_catalog_id | ❌ - | Map catalog.ts id |
+| Field                 | GHL                 | catalog.ts      | product_metadata     | Frontend      | Transform                 |
+| --------------------- | ------------------- | --------------- | -------------------- | ------------- | ------------------------- |
+| **id**                | ✅ id               | ✅ id           | ❌ ghl_product_id    | ✅ display    | GHL ID as identifier      |
+| **name**              | ✅ name             | ✅ name         | ❌ -                 | ✅ display    | Direct                    |
+| **description**       | ✅ description      | ✅ description  | ❌ -                 | ✅ display    | Direct                    |
+| **price**             | ✅ price            | ✅ priceMin     | ❌ price_min         | ✅ display    | Use priceMin from GHL     |
+| **priceMax**          | ❌ -                | ✅ priceMax     | ✅ price_max         | ✅ display    | Store in product_metadata |
+| **image**             | ✅ image            | ✅ image        | ❌ -                 | ✅ display    | Direct                    |
+| **images**            | ✅ images           | ❌ -            | ❌ -                 | ✅ display    | TBD                       |
+| **category**          | ❌ NO CUSTOM FIELDS | ✅ category     | ❌ -                 | ✅ filter     | Need solution             |
+| **badge**             | ❌ -                | ✅ badge (3)    | ✅ badge_label       | ✅ display    | Store in product_metadata |
+| **colors**            | ❌ -                | ✅ colors (5)   | ✅ available_colors  | ✅ display    | Store in product_metadata |
+| **roseStep**          | ❌ -                | ✅ roseStep (4) | ✅ rose_step         | ✅ quantity   | Store in product_metadata |
+| **quoteOnly**         | ❌ -                | ❌ (0)          | ✅ requires_quote    | ✅ UI         | Store in product_metadata |
+| **sku**               | ✅ sku              | ❌ -            | ❌ -                 | ❌ -          | TBD                       |
+| **status**            | ✅ status           | ❌ -            | ✅ status            | ✅ visibility | Use GHL status            |
+| **inventory**         | ✅ inventory        | ❌ -            | ❌ -                 | ❌ -          | TBD                       |
+| **legacy_catalog_id** | ❌ -                | ✅ id           | ✅ legacy_catalog_id | ❌ -          | Map catalog.ts id         |
 
 ### 3.2 Problemas Identificados
 
@@ -236,11 +236,13 @@ useGHLConnectionTest(options)
 **Problem:** GHL Products API does NOT support custom fields.
 
 **Current state:**
+
 - catalog.ts has category field (ramos, plantas, etc.)
 - GHL Products have category field but it's a STRING, not a normalized list
 - How to maintain category filtering/organization?
 
 **Options (decide before implementation):**
+
 1. Store category in GHL's category field as string
 2. Create separate categories table in Supabase
 3. Use a mapping file (legacy_catalog_id → category)
@@ -252,6 +254,7 @@ useGHLConnectionTest(options)
 **Problem:** catalog.ts uses local image assets. GHL uses URLs.
 
 **Questions:**
+
 - Are images already uploaded to GHL?
 - How to handle image migrations?
 - Who manages image uploads going forward?
@@ -263,6 +266,7 @@ useGHLConnectionTest(options)
 **Problem:** catalog.ts has priceMin and priceMax. GHL has single price.
 
 **What to do:**
+
 - priceMin → store in GHL price
 - priceMax → store in product_metadata
 - Frontend displays both
@@ -555,7 +559,7 @@ Ensure single processing per event.
 
 Strategy: Event deduplication
   1. Before processing: Check if ghl_product_id exists
-  2. For INSERT: 
+  2. For INSERT:
      - SELECT count(*) WHERE ghl_product_id = X AND auto_created = true
      - If > 0: Return 200 (already processed)
   3. For UPDATE:
@@ -593,7 +597,7 @@ Purpose:
 
 ```
 Function: pollGHLProducts()
-  
+
   1. Load state
      ├─ SELECT MAX(updated_at) FROM product_metadata as lastSync
      └─ If null: Use 24 hours ago (don't refetch all on first run)
@@ -684,6 +688,7 @@ FINALLY:
 ### 8.3 Migration Rollback
 
 If migration fails:
+
 ```
 1. Stop webhook processing
 2. Truncate product_metadata (DELETE all)
@@ -699,6 +704,7 @@ If migration fails:
 ### 9.1 Token Management
 
 **GHL_PRIVATE_INTEGRATION_TOKEN:**
+
 - ✅ Stored in .env (server-side only)
 - ✅ Never in VITE_ prefixed variables
 - ✅ Only used in src/lib/ghl/client.server.ts
@@ -706,6 +712,7 @@ If migration fails:
 - ✅ Used only for server-side API calls
 
 **Risk Check:**
+
 ```
 ❌ NOT in .env.example? YES (only placeholder)
 ❌ NOT in any frontend imports? YES
@@ -717,6 +724,7 @@ If migration fails:
 ### 9.2 RLS Protection
 
 **product_metadata RLS:**
+
 ```
 READ (SELECT):
   ├─ anon: WHERE status = 'active' (via policy)
@@ -737,6 +745,7 @@ Risk:
 ### 9.3 Webhook Security
 
 **Signature Verification:**
+
 ```
 1. HMAC256 signature required
    ├─ GHL sends: X-GHL-Signature header
@@ -870,6 +879,7 @@ If webhook timestamp < polling timestamp:
 **Current Solutions:**
 
 #### Option 1: Store in GHL category field
+
 ```
 GHL: {category: "ramos"}
 Supabase: product_metadata (not needed)
@@ -881,6 +891,7 @@ Risk: May lose other GHL categorizations
 ```
 
 #### Option 2: Separate Supabase table
+
 ```
 Table: product_categories
   ├─ ghl_product_id (FK)
@@ -894,6 +905,7 @@ Recommended for now? NO - too complex before MVP
 ```
 
 #### Option 3: Mapping file (RECOMMENDED)
+
 ```
 File: src/data/ghl_category_mapping.json
 
@@ -937,6 +949,7 @@ Frontend strategy:
 ```
 
 **Recommendation for MVP:**
+
 ```
 1. Keep local images for now
 2. When GHL products available: Use GHL image if present
@@ -1013,34 +1026,34 @@ Tests:
 
 ## 14. ARCHIVOS A CREAR
 
-| File | Purpose | Lines |
-|------|---------|-------|
-| `src/routes/api.webhooks.ghl.ts` | Webhook endpoint | ~150 |
-| `src/lib/ghl/sync.server.ts` | Sync logic | ~200 |
-| `src/lib/ghl/webhook.server.ts` | Webhook utils | ~100 |
-| `src/lib/ghl/polling.server.ts` | Polling logic | ~100 |
-| `src/data/ghl_category_mapping.json` | Category mapping | 50 |
-| `scripts/migrate-catalog-to-ghl.mjs` | One-time migration | ~150 |
-| `scripts/sync-ghl-to-supabase.mjs` | One-time sync | ~150 |
-| `src/routes/admin/products.tsx` | Admin UI | ~300 |
-| `src/components/ProductMetadataForm.tsx` | Edit form | ~200 |
-| `docs/GHL_WEBHOOK_SETUP.md` | Webhook instructions | 100 |
-| `docs/GHL_MIGRATION_GUIDE.md` | Migration steps | 100 |
+| File                                     | Purpose              | Lines |
+| ---------------------------------------- | -------------------- | ----- |
+| `src/routes/api.webhooks.ghl.ts`         | Webhook endpoint     | ~150  |
+| `src/lib/ghl/sync.server.ts`             | Sync logic           | ~200  |
+| `src/lib/ghl/webhook.server.ts`          | Webhook utils        | ~100  |
+| `src/lib/ghl/polling.server.ts`          | Polling logic        | ~100  |
+| `src/data/ghl_category_mapping.json`     | Category mapping     | 50    |
+| `scripts/migrate-catalog-to-ghl.mjs`     | One-time migration   | ~150  |
+| `scripts/sync-ghl-to-supabase.mjs`       | One-time sync        | ~150  |
+| `src/routes/admin/products.tsx`          | Admin UI             | ~300  |
+| `src/components/ProductMetadataForm.tsx` | Edit form            | ~200  |
+| `docs/GHL_WEBHOOK_SETUP.md`              | Webhook instructions | 100   |
+| `docs/GHL_MIGRATION_GUIDE.md`            | Migration steps      | 100   |
 
 ---
 
 ## 15. ARCHIVOS A MODIFICAR
 
-| File | Changes | Impact |
-|------|---------|--------|
-| `src/lib/ghl/client.server.ts` | Add write operations: createGHLProduct(), updateGHLProduct() | createGHLProduct, updateGHLProduct functions |
-| `src/routes/api.ghl.products.ts` | Add POST handler for sync trigger | Support POST requests |
-| `src/hooks/useGHLProducts.ts` | Add mutation hooks: useSyncGHL(), useCreateProduct() | New hooks for mutations |
-| `src/components/ProductCard.tsx` | Query product_metadata for metadata | Show colors, badge, rose_step |
-| `src/routes/[category].tsx` | Combine GHL + product_metadata | Use both data sources |
-| `.env` | Add GHL_WEBHOOK_SECRET | New environment variable |
-| `.env.example` | Document webhook secret | Reference for setup |
-| `supabase/migrations/...ts` | Add migration for unique index on ghl_product_id+updated_at | New index for dedup |
+| File                             | Changes                                                      | Impact                                       |
+| -------------------------------- | ------------------------------------------------------------ | -------------------------------------------- |
+| `src/lib/ghl/client.server.ts`   | Add write operations: createGHLProduct(), updateGHLProduct() | createGHLProduct, updateGHLProduct functions |
+| `src/routes/api.ghl.products.ts` | Add POST handler for sync trigger                            | Support POST requests                        |
+| `src/hooks/useGHLProducts.ts`    | Add mutation hooks: useSyncGHL(), useCreateProduct()         | New hooks for mutations                      |
+| `src/components/ProductCard.tsx` | Query product_metadata for metadata                          | Show colors, badge, rose_step                |
+| `src/routes/[category].tsx`      | Combine GHL + product_metadata                               | Use both data sources                        |
+| `.env`                           | Add GHL_WEBHOOK_SECRET                                       | New environment variable                     |
+| `.env.example`                   | Document webhook secret                                      | Reference for setup                          |
+| `supabase/migrations/...ts`      | Add migration for unique index on ghl_product_id+updated_at  | New index for dedup                          |
 
 ---
 
@@ -1051,15 +1064,15 @@ Tests:
 ```
 1. ✅ Create src/lib/ghl/sync.server.ts
    └─ Implement: insertProduct, updateProduct, deleteProduct
-   
+
 2. ✅ Create src/lib/ghl/webhook.server.ts
    └─ Implement: validateSignature, validateSchema
-   
+
 3. ✅ Create src/routes/api.webhooks.ghl.ts
    └─ Implement: POST endpoint, route by event type
-   
+
 4. ✅ Test: Unit tests for sync and webhook
-   
+
 5. ✅ Add env var: GHL_WEBHOOK_SECRET
 ```
 
@@ -1068,9 +1081,9 @@ Tests:
 ```
 6. ✅ Create src/lib/ghl/polling.server.ts
    └─ Implement: pollGHLProducts cron job
-   
+
 7. ✅ Set up: Cron trigger (every 15 minutes)
-   
+
 8. ✅ Test: Polling + webhook together
 ```
 
@@ -1079,13 +1092,13 @@ Tests:
 ```
 9. ✅ Create migration script: scripts/migrate-catalog-to-ghl.mjs
    └─ If products not in GHL: Create them first
-   
+
 10. ✅ Create sync script: scripts/sync-ghl-to-supabase.mjs
     └─ Sync GHL → product_metadata
-    
+
 11. ✅ Create mapping: src/data/ghl_category_mapping.json
     └─ Map GHL products to catalog categories
-    
+
 12. ✅ Run migration (ONCE, carefully)
     └─ Verify: 41 products in product_metadata
 ```
@@ -1095,16 +1108,16 @@ Tests:
 ```
 13. ✅ Modify src/components/ProductCard.tsx
     └─ Show metadata from product_metadata
-    
+
 14. ✅ Modify src/routes/[category].tsx
     └─ Use GHL products + product_metadata
-    
+
 15. ✅ Update useGHLProducts hook
     └─ Add cache invalidation on webhook
-    
+
 16. ✅ Create admin panel: src/routes/admin/products.tsx
     └─ CRUD for product_metadata
-    
+
 17. ✅ Test: End-to-end workflows
 ```
 
@@ -1113,18 +1126,18 @@ Tests:
 ```
 18. ✅ Add integration tests
     └─ All sync scenarios
-    
+
 19. ✅ Add security tests
     └─ Token protection, RLS enforcement
-    
+
 20. ✅ Documentation
     └─ Webhook setup guide
     └─ Migration guide
     └─ Runbook
-    
+
 21. ✅ Staging: Deploy to staging
     └─ Full testing before production
-    
+
 22. ✅ Production: Gradual rollout
     └─ Monitor closely
 ```
@@ -1205,16 +1218,16 @@ Tests:
 
 ## 📊 SUMMARY METRICS
 
-| Aspect | Status | Effort | Risk |
-|--------|--------|--------|------|
-| Client library | ✅ Done | 0 | Low |
-| Webhook | 🔴 Create | High | Medium |
-| Sync logic | 🔴 Create | High | Medium |
-| Polling | 🔴 Create | Medium | Low |
-| Frontend | 🟡 Modify | Medium | Low |
-| Migration | 🔴 Create | High | High |
-| Testing | 🔴 Create | High | Medium |
-| Documentation | 🔴 Create | Low | Low |
+| Aspect         | Status    | Effort | Risk   |
+| -------------- | --------- | ------ | ------ |
+| Client library | ✅ Done   | 0      | Low    |
+| Webhook        | 🔴 Create | High   | Medium |
+| Sync logic     | 🔴 Create | High   | Medium |
+| Polling        | 🔴 Create | Medium | Low    |
+| Frontend       | 🟡 Modify | Medium | Low    |
+| Migration      | 🔴 Create | High   | High   |
+| Testing        | 🔴 Create | High   | Medium |
+| Documentation  | 🔴 Create | Low    | Low    |
 
 ---
 
@@ -1234,4 +1247,3 @@ Tests:
 **Status:** ✅ DESIGN COMPLETE - AWAITING APPROVAL FOR IMPLEMENTATION
 
 **Date:** 2026-08-27
-

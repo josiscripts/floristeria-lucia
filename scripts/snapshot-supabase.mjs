@@ -33,30 +33,22 @@ async function takeSnapshot() {
 
   try {
     // Products
-    const productsRes = await supabase
-      .from("products")
-      .select("id, name", { count: "exact" });
+    const productsRes = await supabase.from("products").select("id, name", { count: "exact" });
     console.log(`Products: ${productsRes.count || 0}`);
     if (productsRes.error) console.error("  Error:", productsRes.error);
 
     // Product Options
-    const optionsRes = await supabase
-      .from("product_options")
-      .select("id", { count: "exact" });
+    const optionsRes = await supabase.from("product_options").select("id", { count: "exact" });
     console.log(`Product Options: ${optionsRes.count || 0}`);
     if (optionsRes.error) console.error("  Error:", optionsRes.error);
 
     // Color Variants
-    const colorsRes = await supabase
-      .from("color_variants")
-      .select("id", { count: "exact" });
+    const colorsRes = await supabase.from("color_variants").select("id", { count: "exact" });
     console.log(`Color Variants: ${colorsRes.count || 0}`);
     if (colorsRes.error) console.error("  Error:", colorsRes.error);
 
     // Product Images
-    const imagesRes = await supabase
-      .from("product_images")
-      .select("id", { count: "exact" });
+    const imagesRes = await supabase.from("product_images").select("id", { count: "exact" });
     console.log(`Product Images: ${imagesRes.count || 0}`);
     if (imagesRes.error) console.error("  Error:", imagesRes.error);
 

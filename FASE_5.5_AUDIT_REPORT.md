@@ -11,6 +11,7 @@
 ### Productos (CRUD Completo)
 
 #### API Endpoints (PROTEGIDOS CON withAdminGuard)
+
 - ✅ **POST /api/products** - Crear producto
   - Campos: name* (requerido), description, price, category, image, sku, price_max, available_colors, badge_label, rose_step
   - Crea en GHL + sincroniza metadata en Supabase
@@ -30,6 +31,7 @@
   - Status HTTP 200
 
 #### UI Routes
+
 - ✅ **GET /admin/products** (products.index.tsx)
   - Lista paginada (default 20, max 100)
   - Filtros: status (active/inactive), búsqueda por nombre/SKU
@@ -55,6 +57,7 @@
   - Loading/Error states
 
 #### Cliente JavaScript (lib/admin/api.ts)
+
 - ✅ **createProduct(input: ProductFormInput)** - POST /api/products
 - ✅ **updateProduct(id: string, input: Partial<ProductFormInput>)** - PUT /api/products/[id]
 - ✅ **deactivateProduct(id: string)** - DELETE /api/products/[id]
@@ -62,6 +65,7 @@
 - ✅ **fetchProductById(id)** - GET /api/products/[id] (lectura)
 
 #### UX/Feedback
+
 - ✅ Loading states (LoadingState component con skeleton)
 - ✅ Error states (ErrorState component con retry)
 - ✅ Success toast (Sonner)
@@ -74,6 +78,7 @@
 ### Webhooks (Retry)
 
 #### API Endpoint (PROTEGIDO)
+
 - ✅ **POST /api/webhook-events/[id]/retry** (withAdminGuard)
   - Solo soporta event_type="opportunity.stage_change"
   - Re-procesa el evento usando processStageChangeEvent
@@ -82,6 +87,7 @@
   - Status HTTP 200 (éxito) o 422 (falló el reproceso)
 
 #### UI
+
 - ✅ **GET /admin/webhooks** (webhooks.tsx)
   - Lista paginada (default 20, max 100)
   - Filtros: tipo evento, estado (procesado/pendiente), búsqueda por opportunity ID
@@ -90,9 +96,11 @@
   - Loading/Error/Empty states
 
 #### Cliente JavaScript
+
 - ✅ **retryWebhookEvent(id: string)** - POST /api/webhook-events/[id]/retry
 
 #### UX/Feedback
+
 - ✅ Botón "Reintentar" solo visible si event_type="opportunity.stage_change"
 - ✅ Spinning icon durante retry (useMutation + pending state)
 - ✅ Toast notification (éxito o error específico)
@@ -103,6 +111,7 @@
 ### Auditoría (Lectura)
 
 #### API Endpoint (PROTEGIDO)
+
 - ✅ **GET /api/audit-logs** (withAdminGuard)
   - Paginado: page, limit (default 20, max 100)
   - Retorna: logs[], pagination { total, page, limit, totalPages }
@@ -110,6 +119,7 @@
   - Status HTTP 200
 
 #### UI
+
 - ✅ **GET /admin/settings** (settings.tsx)
   - Información de cuenta (read-only)
   - Visor de audit logs con paginación
@@ -118,6 +128,7 @@
   - Loading/Error states
 
 #### Cliente JavaScript
+
 - ✅ **fetchAuditLogs(params: AuditLogsListParams)** - GET /api/audit-logs
 
 ---
@@ -197,31 +208,37 @@ Tras auditar exhaustivamente el código:
 ## D. ARCHIVOS EXACTOS RELACIONADOS A ACCIONES DE ESCRITURA
 
 ### APIs de Escritura
+
 - `src/routes/api.products.ts` (POST: crear)
 - `src/routes/api.products.[id].ts` (PUT: editar, DELETE: desactivar)
 - `src/routes/api.webhook-events.[id].retry.ts` (POST: reintentar)
 
 ### UIs de Escritura
+
 - `src/routes/_authenticated/admin/products.new.tsx` (form crear)
 - `src/routes/_authenticated/admin/products.$id.tsx` (form editar + botón desactivar)
 - Webhook retry está en `src/components/admin/WebhookEventsTable.tsx` (RetryButton)
 
 ### Componentes Reutilizables
+
 - `src/components/admin/ProductForm.tsx` (form products - usado en new y edit)
 - `src/components/admin/WebhookEventsTable.tsx` (con RetryButton)
 
 ### Utilidades
+
 - `src/lib/admin/api.ts` (createProduct, updateProduct, deactivateProduct, retryWebhookEvent)
 - `src/lib/admin/guard.server.ts` (withAdminGuard, logAdminAction)
 - `src/lib/ghl/client.server.ts` (createGHLProduct, updateGHLProduct, deleteGHLProduct)
 - `src/lib/product-metadata.server.ts` (syncProductMetadata, deleteProductMetadata)
 
 ### Auditoría
+
 - `src/routes/api.audit-logs.ts` (GET: lectura de logs)
 - `src/routes/_authenticated/admin/settings.tsx` (visor de logs)
 - `src/components/admin/AuditLogTable.tsx` (tabla de logs)
 
 ### Migraciones
+
 - `supabase/migrations/20260831024811_add_admin_role_and_audit_logs.sql` (roles + audit_logs table + trigger)
 
 ---
@@ -244,6 +261,7 @@ Analizando el código completo, TODOS los archivos necesarios para FASE 5.5 **YA
 ## F. MIGRACIONES SQL NECESARIAS
 
 ✅ **COMPLETADAS EN FASE 5.4:**
+
 - `supabase/migrations/20260831024811_add_admin_role_and_audit_logs.sql`
   - Columna `role` en profiles
   - Tabla `audit_logs`
@@ -257,6 +275,7 @@ Analizando el código completo, TODOS los archivos necesarios para FASE 5.5 **YA
 ## G. DEPENDENCIAS NUEVAS
 
 **NINGUNA.** Todas las dependencias necesarias ya están en package.json:
+
 - @tanstack/react-query (para mutations)
 - sonner (para toasts)
 - @radix-ui components (para forms y dialogs)
@@ -296,15 +315,18 @@ Dado que FASE 5.5 ya está mayormente implementada, el orden para COMPLETAR es:
 ## I. RIESGOS DE REGRESIÓN
 
 ### Bajo Riesgo (cambios aislados)
+
 - ✓ Modificar UI de productos (no afecta checkout)
 - ✓ Modificar UI de webhooks (no afecta flujo de pedidos)
 - ✓ Agregar campos a ProductForm (compatible backward)
 
 ### Riesgo Medio (tocar APIs compartidas)
+
 - ⚠ Modificar `src/lib/admin/guard.server.ts` → verifica todas las rutas
 - ⚠ Modificar `src/lib/admin/api.ts` → verifica que fetchJson() include Bearer token
 
 ### Alto Riesgo (EVITAR)
+
 - ❌ Modificar `src/routes/api.orders.ts` POST → rompe checkout
 - ❌ Modificar `src/routes/api.webhooks.ghl-opportunity.ts` → rompe sincronización
 - ❌ Modificar `src/lib/ghl/client.server.ts` sin pruebas → puede romper sync
@@ -315,6 +337,7 @@ Dado que FASE 5.5 ya está mayormente implementada, el orden para COMPLETAR es:
 ## J. CRITERIOS PARA CONSIDERAR FASE 5.5 COMPLETADA
 
 ### Funcionalidad
+
 - [ ] Crear producto: form → GHL + Supabase metadata → audit log
 - [ ] Editar producto: form → actualiza GHL + metadata → audit log
 - [ ] Desactivar producto: botón + confirmación → soft delete GHL + metadata → audit log
@@ -322,12 +345,14 @@ Dado que FASE 5.5 ya está mayormente implementada, el orden para COMPLETAR es:
 - [ ] Ver audit logs: tabla paginada mostrando todas las acciones administrativas
 
 ### Seguridad
+
 - [ ] Todas las operaciones de escritura protegidas con withAdminGuard()
 - [ ] Validación de role='admin' en cada endpoint
 - [ ] Validación client-side + server-side en formularios
 - [ ] Audit logs registrados para cada acción (no swallow errors)
 
 ### UX
+
 - [ ] Loading states en todos los formularios (disabled buttons)
 - [ ] Error handling con retry (ErrorState component)
 - [ ] Success feedback con toast
@@ -335,6 +360,7 @@ Dado que FASE 5.5 ya está mayormente implementada, el orden para COMPLETAR es:
 - [ ] Prevención de doble submit
 
 ### Testing Manual
+
 - [ ] `npm run build` sin errores
 - [ ] `npm run lint` sin errores
 - [ ] `npx tsc --noEmit` sin errores
@@ -358,6 +384,7 @@ Dado que FASE 5.5 ya está mayormente implementada, el orden para COMPLETAR es:
 ✅ UX con loading/error/success states
 
 ❌ LO QUE FALTA:
+
 - **Pruebas exhaustivas** (manual + E2E si existen)
 - **Posibles capacidades opcionales no requeridas:**
   - Edición de información de pedidos (si se requiere)

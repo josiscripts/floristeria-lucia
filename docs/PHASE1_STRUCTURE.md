@@ -30,16 +30,16 @@
 
 ### Columnas Clave Explicadas
 
-| Columna | Propósito | Editable | Quién |
-|---------|-----------|----------|-------|
-| `ghl_product_id` | Link a producto de GHL | ❌ No | Webhook/Polling |
-| `legacy_catalog_id` | Link a catalog.ts | ❌ No | Migración inicial |
-| `price_max` | Rango de precios | ✅ Sí | /admin/products |
-| `available_colors` | Colores disponibles | ✅ Sí | /admin/products |
-| `badge_label` | Etiqueta visual | ✅ Sí | /admin/products |
-| `rose_step` | Multiplicador rosas | ❌ No | Migración inicial |
-| `requires_quote` | Requiere cotización | ❌ No | Futuro |
-| `status` | Soft delete | ❌ No | Webhook/Polling |
+| Columna             | Propósito              | Editable | Quién             |
+| ------------------- | ---------------------- | -------- | ----------------- |
+| `ghl_product_id`    | Link a producto de GHL | ❌ No    | Webhook/Polling   |
+| `legacy_catalog_id` | Link a catalog.ts      | ❌ No    | Migración inicial |
+| `price_max`         | Rango de precios       | ✅ Sí    | /admin/products   |
+| `available_colors`  | Colores disponibles    | ✅ Sí    | /admin/products   |
+| `badge_label`       | Etiqueta visual        | ✅ Sí    | /admin/products   |
+| `rose_step`         | Multiplicador rosas    | ❌ No    | Migración inicial |
+| `requires_quote`    | Requiere cotización    | ❌ No    | Futuro            |
+| `status`            | Soft delete            | ❌ No    | Webhook/Polling   |
 
 ---
 
@@ -48,16 +48,16 @@
 ### UNIQUE Constraints
 
 ```sql
-CONSTRAINT unique_ghl_product_id 
+CONSTRAINT unique_ghl_product_id
   UNIQUE(location_id, ghl_product_id)
-  
+
   └─ Garantiza un registro por cada producto GHL
 ```
 
 ```sql
-CONSTRAINT unique_legacy_catalog_id 
+CONSTRAINT unique_legacy_catalog_id
   UNIQUE(legacy_catalog_id)
-  
+
   └─ Mapeo único a ID original de catalog.ts
 ```
 
@@ -245,19 +245,19 @@ Frontend:
   "location_id": "vOq7yOWR63XGU4qQ7XWd",
   "ghl_product_id": "6a87b91004c302157108f01d",
   "legacy_catalog_id": "ramo-rosas",
-  
+
   "price_min": 24,
   "price_max": 48,
-  
+
   "available_colors": ["Rojo", "Rosa", "Blanco", "Azul", "Lila", "Amarillo"],
   "badge_label": null,
-  
+
   "rose_step": 6,
   "requires_quote": false,
-  
+
   "status": "active",
   "auto_created": false,
-  
+
   "created_at": "2026-08-26T10:00:00Z",
   "updated_at": "2026-08-26T10:00:00Z",
   "deleted_at": null
@@ -283,10 +283,10 @@ Frontend:
 ## 🚀 LISTO PARA APLICAR
 
 Documentos creados:
+
 1. ✅ Migration SQL: `supabase/migrations/20260826000001_create_product_metadata.sql`
 2. ✅ Instrucciones: `docs/PHASE1_SUPABASE_SETUP.md`
 3. ✅ Estructura: `docs/PHASE1_STRUCTURE.md` (este archivo)
 
-**PRÓXIMO PASO:** 
+**PRÓXIMO PASO:**
 Esperar aprobación para aplicar la migración a Supabase.
-

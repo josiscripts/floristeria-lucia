@@ -11,7 +11,8 @@ const testProducts = [
   {
     name: "TEST - Planta Decorativa",
     category: "plantas",
-    description: "Producto de prueba: Planta decorativa para verificar sincronización GHL ↔ catálogo",
+    description:
+      "Producto de prueba: Planta decorativa para verificar sincronización GHL ↔ catálogo",
     price: 40,
   },
   {
@@ -23,13 +24,15 @@ const testProducts = [
   {
     name: "TEST - Complemento Floral",
     category: "complementos",
-    description: "Producto de prueba: Complemento floral para verificar sincronización GHL ↔ catálogo",
+    description:
+      "Producto de prueba: Complemento floral para verificar sincronización GHL ↔ catálogo",
     price: 15,
   },
   {
     name: "TEST - Condolencias",
     category: "condolencias",
-    description: "Producto de prueba: Centro de condolencias para verificar sincronización GHL ↔ catálogo",
+    description:
+      "Producto de prueba: Centro de condolencias para verificar sincronización GHL ↔ catálogo",
     price: 85,
   },
 ];
@@ -43,7 +46,7 @@ async function create(product) {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
-          "Version": "v3",
+          Version: "v3",
         },
         body: JSON.stringify({
           locationId,
@@ -55,7 +58,7 @@ async function create(product) {
           status: "active",
           sku: `TEST-${product.category.substring(0, 3).toUpperCase()}-001`,
         }),
-      }
+      },
     );
 
     const data = await res.json();
@@ -75,22 +78,24 @@ async function create(product) {
 async function main() {
   console.log("=== CREATING TEST PRODUCTS ===\n");
   const results = [];
-  
+
   for (const product of testProducts) {
     const result = await create(product);
     results.push(result);
-    await new Promise(r => setTimeout(r, 500));
+    await new Promise((r) => setTimeout(r, 500));
   }
 
-  const success = results.filter(r => r.success).length;
+  const success = results.filter((r) => r.success).length;
   console.log(`\n=== SUMMARY ===`);
   console.log(`✓ Created: ${success}/${results.length}`);
-  
+
   if (success > 0) {
     console.log("\nCreated Products:");
-    results.filter(r => r.success).forEach(r => {
-      console.log(`  - ${r.name} (${r.category}) → ${r.ghl_id}`);
-    });
+    results
+      .filter((r) => r.success)
+      .forEach((r) => {
+        console.log(`  - ${r.name} (${r.category}) → ${r.ghl_id}`);
+      });
   }
 }
 

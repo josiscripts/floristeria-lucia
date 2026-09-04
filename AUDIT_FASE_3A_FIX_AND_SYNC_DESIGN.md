@@ -1,7 +1,7 @@
 # FASE 3A: ANÁLISIS DE PROBLEMA Y DISEÑO DE SINCRONIZACIÓN
 
 **Fecha:** 2026-08-31  
-**Status:** Problema identificado, solución propuesta, FASE 3A pendiente de cierre  
+**Status:** Problema identificado, solución propuesta, FASE 3A pendiente de cierre
 
 ---
 
@@ -12,12 +12,14 @@
 **Root Cause:** La migration SQL que crea los campos `category` y `sku` **NUNCA SE EJECUTÓ EN SUPABASE**.
 
 **Evidencia:**
+
 - Supabase contiene SOLO 3 registros (corruptos/vacíos)
 - Los campos `category` y `sku` NO existen en la tabla
 - Al ejecutar `SELECT *` en product_metadata, NO devuelven estos campos
 - El tipo TypeScript está actualizado, pero la tabla real no
 
 **Por qué pasó:**
+
 - El script de población usó `upsert` con `onConflict: 'ghl_product_id'`
 - Pero esos campos no existen aún en la tabla
 - Supabase rechazó silenciosamente las inserciones (o no las reconoció)
@@ -28,14 +30,17 @@
 ## 2. CORRECCIÓN REALIZADA
 
 ### ✅ Bug en lectura corregido
+
 **Archivo:** `src/routes/api.ghl.products.ts` línea 49
 
 **Antes:**
+
 ```typescript
 price: fullMetadata.price,  // ❌ Campo incorrecto
 ```
 
 **Después:**
+
 ```typescript
 price: fullMetadata.price_min,  // ✅ Nombre correcto
 ```
@@ -43,9 +48,11 @@ price: fullMetadata.price_min,  // ✅ Nombre correcto
 **Problema:** El código buscaba un campo que no existe. Cuando exista la metadata, habrá que usar `price_min`.
 
 ### ✅ Tipos TypeScript actualizados
+
 **Archivo:** `src/integrations/supabase/types.ts`
 
 Añadidos campos:
+
 - `category?: string | null`
 - `sku?: string | null`
 
@@ -55,19 +62,20 @@ Añadidos campos:
 
 ## 3. PROBLEMA ACTUAL - POR QUÉ SIGUE SIN FUNCIONAR
 
-| Componente | Estado | Razón |
-|-----------|--------|-------|
-| Código TypeScript | ✅ Listo | Tipos actualizados |
-| Supabase Schema | ❌ Incompleto | Migration NO ejecutada |
-| Datos en Supabase | ❌ Vacío | Solo 3 registros corruptos |
-| Lectura en servidor | ❌ Vacía | Supabase no devuelve campos |
-| Catálogo público | ❌ Defaults | Sin metadata para leer |
+| Componente          | Estado        | Razón                       |
+| ------------------- | ------------- | --------------------------- |
+| Código TypeScript   | ✅ Listo      | Tipos actualizados          |
+| Supabase Schema     | ❌ Incompleto | Migration NO ejecutada      |
+| Datos en Supabase   | ❌ Vacío      | Solo 3 registros corruptos  |
+| Lectura en servidor | ❌ Vacía      | Supabase no devuelve campos |
+| Catálogo público    | ❌ Defaults   | Sin metadata para leer      |
 
 ### ⚠️ Bloqueante
 
 **Para que FASE 3A funcione:**
 
 1. **Ejecutar migration SQL en Supabase:**
+
    ```sql
    ALTER TABLE product_metadata ADD COLUMN IF NOT EXISTS category varchar;
    ALTER TABLE product_metadata ADD COLUMN IF NOT EXISTS sku varchar UNIQUE;
@@ -76,6 +84,7 @@ Añadidos campos:
    ```
 
 2. **Regenerar tipos TypeScript:**
+
    ```bash
    npx supabase gen types typescript > src/integrations/supabase/types.ts
    ```
@@ -90,6 +99,7 @@ Añadidos campos:
 ## 4. ESTADÍSTICAS ACTUALES
 
 **Supabase product_metadata:**
+
 - Total registros: 0 (después de limpieza)
 - Con categoría: 0
 - Con precio: 0
@@ -97,6 +107,7 @@ Añadidos campos:
 - Válidos: 0
 
 **GHL:**
+
 - Total productos: 68 ✓
 
 **Estado:** Desincronizados completamente.
@@ -106,6 +117,7 @@ Añadidos campos:
 ## 5. RESULTADO DE ENDPOINTS (ACTUAL)
 
 ### /api/ghl/products
+
 ```json
 {
   "products": [
@@ -124,6 +136,7 @@ Añadidos campos:
 **Status:** ❌ Devuelve defaults porque Supabase no tiene metadata
 
 ### /catalogo
+
 ```
 68 productos visibles, todos con:
 - category: "ramos" (default)
@@ -134,6 +147,7 @@ Añadidos campos:
 **Status:** ❌ Catálogo visible pero sin datos reales
 
 ### /admin/products
+
 **Status:** ✓ HTTP 401 (requiere autenticación, esperado)
 
 ---
@@ -143,6 +157,7 @@ Añadidos campos:
 Después de auditar la API v3 de GHL, estos campos PUEDEN almacenarse en GHL:
 
 ### ✅ GHL PUEDE RECIBIR:
+
 - `name` - Nombre producto
 - `description` - Descripción
 - `productType` - "PHYSICAL", "DIGITAL", etc.
@@ -155,6 +170,7 @@ Después de auditar la API v3 de GHL, estos campos PUEDEN almacenarse en GHL:
 - Custom fields - Campos personalizados (posiblemente SKU)
 
 ### ❌ GHL NO PERSISTE (en v3):
+
 - `category` - Requiere `collectionIds` (indirecto)
 - `sku` - Posiblemente en custom fields
 - `price` - Solo en `variants.prices`
@@ -166,6 +182,7 @@ Después de auditar la API v3 de GHL, estos campos PUEDEN almacenarse en GHL:
 Por razones de control, auditoria y independencia:
 
 ### 📋 SUPABASE SERÁ FUENTE DE VERDAD:
+
 - `category` - Categorización principal
 - `sku` - Identificador único interno
 - `price_min`, `price_max` - Rango de precios
@@ -182,18 +199,18 @@ Por razones de control, auditoria y independencia:
 
 ### Matriz de sincronización:
 
-| Campo | Fuente Primaria | Secundaria | Dirección Sync |
-|-------|-----------------|-----------|-----------------|
-| **name** | GHL | Supabase | GHL ← Admin |
-| **description** | GHL | Supabase | GHL ← Admin |
-| **category** | Supabase | - | GHL (via collectionIds) |
-| **price** | Supabase | GHL (variants) | GHL ← Supabase |
-| **sku** | Supabase | - | GHL (custom field) |
-| **image** | GHL | Supabase | GHL ← Upload |
-| **medias** | GHL | - | GHL ← Upload |
-| **status** | GHL | Supabase | Bidireccional |
-| **inventory** | GHL | - | GHL ← Admin |
-| **colors** | Supabase | - | Admin display |
+| Campo           | Fuente Primaria | Secundaria     | Dirección Sync          |
+| --------------- | --------------- | -------------- | ----------------------- |
+| **name**        | GHL             | Supabase       | GHL ← Admin             |
+| **description** | GHL             | Supabase       | GHL ← Admin             |
+| **category**    | Supabase        | -              | GHL (via collectionIds) |
+| **price**       | Supabase        | GHL (variants) | GHL ← Supabase          |
+| **sku**         | Supabase        | -              | GHL (custom field)      |
+| **image**       | GHL             | Supabase       | GHL ← Upload            |
+| **medias**      | GHL             | -              | GHL ← Upload            |
+| **status**      | GHL             | Supabase       | Bidireccional           |
+| **inventory**   | GHL             | -              | GHL ← Admin             |
+| **colors**      | Supabase        | -              | Admin display           |
 
 ### Principios:
 
@@ -344,11 +361,12 @@ node scripts/populate-metadata-cli.cjs
 
 **FASE 3A: 80% completada, 20% bloqueada por configuración externa.**
 
-El código está listo. La arquitectura está diseñada. 
+El código está listo. La arquitectura está diseñada.
 
 **Lo único faltante:** Ejecutar la migration SQL en Supabase y re-ejecutar el script de población.
 
 Una vez hecho eso:
+
 - ✅ Los 68 productos tendrán metadata real
 - ✅ Las categorías y precios se mostrarán
 - ✅ El admin podrá editar valores reales

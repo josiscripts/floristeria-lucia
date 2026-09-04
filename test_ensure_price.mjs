@@ -27,7 +27,7 @@ try {
   const response = await fetch(endpoint, {
     method: "POST",
     headers: {
-      "Authorization": `Bearer ${ghlToken}`,
+      Authorization: `Bearer ${ghlToken}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify(payload),

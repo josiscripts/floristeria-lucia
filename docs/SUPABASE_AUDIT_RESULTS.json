@@ -11,7 +11,5 @@
   },
   "storageBuckets": [],
   "notes": [],
-  "warnings": [
-    "Error checking profiles: Unauthorized"
-  ]
+  "warnings": ["Error checking profiles: Unauthorized"]
 }

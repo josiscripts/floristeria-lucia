@@ -53,15 +53,12 @@ if (imgErr) console.error("Error images:", imgErr.message);
 console.log("\n2. GHL - Snapshot:");
 
 try {
-  const ghlRes = await fetch(
-    "https://services.leadconnectorhq.com/v3/products",
-    {
-      headers: {
-        Authorization: `Bearer ${GHL_TOKEN}`,
-        Version: "v3",
-      },
-    }
-  );
+  const ghlRes = await fetch("https://services.leadconnectorhq.com/v3/products", {
+    headers: {
+      Authorization: `Bearer ${GHL_TOKEN}`,
+      Version: "v3",
+    },
+  });
 
   if (!ghlRes.ok) {
     console.error(`HTTP ${ghlRes.status} from GHL`);
@@ -69,7 +66,9 @@ try {
     const ghlData = await ghlRes.json();
     const ghlProducts = ghlData.products || [];
     console.log(`✓ GHL products: ${ghlProducts.length}`);
-    console.log(`  (Total with prices: ${ghlProducts.reduce((acc, p) => acc + (p.prices?.length || 0), 0)})`);
+    console.log(
+      `  (Total with prices: ${ghlProducts.reduce((acc, p) => acc + (p.prices?.length || 0), 0)})`,
+    );
   }
 } catch (err) {
   console.error("GHL fetch error:", err.message);
@@ -180,7 +179,9 @@ options?.slice(0, 5).forEach((opt) => {
   const priceFinal = opt.price_amount * (1 - (opt.discount_percent || 0) / 100);
   console.log(`- ${prodName}: ${opt.name}`);
   console.log(`  SKU: ${opt.sku}`);
-  console.log(`  Precio: €${opt.price_amount} (${opt.discount_percent || 0}% desc) = €${priceFinal.toFixed(2)}`);
+  console.log(
+    `  Precio: €${opt.price_amount} (${opt.discount_percent || 0}% desc) = €${priceFinal.toFixed(2)}`,
+  );
   console.log(`  Stock: ${opt.stock_quantity}`);
   console.log(`  ghl_price_id: ${opt.ghl_price_id || "NULL"}`);
 });
@@ -193,15 +194,12 @@ console.log("==================================================\n");
 console.log("Verificando correspondencia Supabase ↔ GHL:");
 
 try {
-  const ghlRes = await fetch(
-    "https://services.leadconnectorhq.com/v3/products",
-    {
-      headers: {
-        Authorization: `Bearer ${GHL_TOKEN}`,
-        Version: "v3",
-      },
-    }
-  );
+  const ghlRes = await fetch("https://services.leadconnectorhq.com/v3/products", {
+    headers: {
+      Authorization: `Bearer ${GHL_TOKEN}`,
+      Version: "v3",
+    },
+  });
 
   if (!ghlRes.ok) {
     console.error(`❌ GHL HTTP ${ghlRes.status}`);
@@ -222,9 +220,7 @@ try {
         continue;
       }
 
-      const ghlProd = ghlProducts.find(
-        (p) => p.id === sProduct.ghl_product_id
-      );
+      const ghlProd = ghlProducts.find((p) => p.id === sProduct.ghl_product_id);
 
       if (ghlProd) {
         matched++;
@@ -238,9 +234,7 @@ try {
       }
     }
 
-    console.log(
-      `\nRESULTADO: ${matched} coincidencias, ${missing} faltantes`
-    );
+    console.log(`\nRESULTADO: ${matched} coincidencias, ${missing} faltantes`);
   }
 } catch (err) {
   console.error("Error verificando GHL:", err.message);

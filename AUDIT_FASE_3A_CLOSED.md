@@ -1,13 +1,14 @@
 # FASE 3A: CIERRE - MIGRATION Y POBLAMIENTO
 
 **Fecha:** 2026-08-31  
-**Status:** Bloqueado esperando ejecución de migration SQL  
+**Status:** Bloqueado esperando ejecución de migration SQL
 
 ---
 
 ## 1. SUPABASE PROJECT ID UTILIZADO
 
 ✅ **CORRECTO IDENTIFICADO:**
+
 - **Project ID:** `leksmflinhohnekbgmgj`
 - **URL:** `https://leksmflinhohnekbgmgj.supabase.co`
 - **Fuente:** `.env.local` (SUPABASE_URL)
@@ -15,6 +16,7 @@
 
 ✅ **Nota de descubrimiento crítico:**
 Durante la auditoría anterior, los datos se guardaron en un proyecto INCORRECTO:
+
 - Proyecto erróneo: `https://ajlzrqfhjfdgwlzvmfxo.supabase.co`
 - Este NO es el proyecto de producción
 
@@ -27,6 +29,7 @@ La solución requiere aplicar la migration al **PROYECTO CORRECTO** (`leksmflinh
 ✅ **Archivo:** `supabase/migrations/20260831140000_add_category_sku_to_product_metadata.sql`
 
 **Contenido:**
+
 ```sql
 ALTER TABLE product_metadata ADD COLUMN IF NOT EXISTS category varchar;
 ALTER TABLE product_metadata ADD COLUMN IF NOT EXISTS sku varchar UNIQUE;
@@ -36,7 +39,8 @@ COMMENT ON COLUMN product_metadata.category IS 'Product category: ramos, plantas
 COMMENT ON COLUMN product_metadata.sku IS 'Unique product SKU: FL-{CAT}-{NUM}';
 ```
 
-**Estado:** 
+**Estado:**
+
 - ✅ Archivo existe
 - ✅ Renombrado con timestamp correcto
 - ⏱️ Pendiente ejecutar en Supabase
@@ -63,12 +67,14 @@ sku          | varchar   | true        | UNIQUE (Nueva)
 ## 4. TIPOS REGENERADOS
 
 ✅ **Estado actual:**
+
 - `src/integrations/supabase/types.ts` fue actualizado manualmente
 - Contiene `category?: string | null`
 - Contiene `sku?: string | null`
 
 ⚠️ **Pendiente:**
 Después de ejecutar la migration, regenerar types oficialmente:
+
 ```bash
 npx supabase gen types typescript > src/integrations/supabase/types.ts
 ```
@@ -80,6 +86,7 @@ npx supabase gen types typescript > src/integrations/supabase/types.ts
 **Cantidad esperada:** 68
 
 **Distribución esperada:**
+
 - 58 productos con metadata real (matched con catalog.ts)
 - 10 huérfanos (sin match, needs_review)
 
@@ -92,6 +99,7 @@ npx supabase gen types typescript > src/integrations/supabase/types.ts
 ## 6. CATEGORÍAS A RECUPERAR
 
 **58 productos matched deberían tener:**
+
 - ramos: 6
 - plantas: 13
 - rosas-eternas: 4
@@ -99,6 +107,7 @@ npx supabase gen types typescript > src/integrations/supabase/types.ts
 - condolencias: 14
 
 **10 huérfanos deberían tener:**
+
 - category: NULL
 - status: needs_review
 
@@ -107,11 +116,13 @@ npx supabase gen types typescript > src/integrations/supabase/types.ts
 ## 7. PRECIOS A RECUPERAR
 
 **58 productos matched deberían tener precios reales de catalog.ts:**
+
 - Rango: $1.50 (Jarrón) a $260 (Corona F26)
 - Ejemplo: Anthurium → $25
 - Ejemplo: Corona F26 → $260
 
 **10 huérfanos:**
+
 - price_min: NULL
 
 ---
@@ -119,6 +130,7 @@ npx supabase gen types typescript > src/integrations/supabase/types.ts
 ## 8. SKUs A RECUPERAR
 
 **58 productos matched deberían tener:**
+
 - Formato: FL-{CAT}-{NNNN}
 - Ejemplo: FL-RAM-0001 (Ramo Silvestre)
 - Ejemplo: FL-PLA-0007 (Anthurium)
@@ -126,6 +138,7 @@ npx supabase gen types typescript > src/integrations/supabase/types.ts
 - Todos únicos (sin duplicados)
 
 **10 huérfanos:**
+
 - sku: NULL
 
 ---
@@ -154,6 +167,7 @@ Los 10 productos sin match en catalog.ts:
 **Actualmente:** Devuelve 0 registros (Supabase incorrecto)
 
 **Después de migration y población:** Debería devolver 68 registros con:
+
 ```json
 {
   "ghl_product_id": "6a9568c0973de9c5b8125afe",
@@ -169,6 +183,7 @@ Los 10 productos sin match en catalog.ts:
 ## 11. RESULTADO ESPERADO: /api/ghl/products
 
 **Actualmente:**
+
 ```json
 {
   "category": "ramos",   ← DEFAULT
@@ -177,6 +192,7 @@ Los 10 productos sin match en catalog.ts:
 ```
 
 **Después:** Debe devolver datos reales
+
 ```json
 {
   "name": "Corona F26",
@@ -192,11 +208,13 @@ Los 10 productos sin match en catalog.ts:
 
 **Actualmente:** 68 productos con defaults
 
-**Después:** 
+**Después:**
+
 - 58 productos con categorías y precios reales
 - 10 productos marcados internamente como needs_review (sin mostrar)
 
 **Visualización esperada:**
+
 ```
 Ramos (6 productos)
 Plantas (13 productos)
@@ -212,6 +230,7 @@ Condolencias (14 productos)
 ## 13. RESULTADO ESPERADO: /admin/products
 
 **Después:**
+
 - 68 productos con metadata completa
 - Columnas visibles: nombre, categoría, precio, SKU, status
 - 58 activos
@@ -230,6 +249,7 @@ Condolencias (14 productos)
 ## 15. CONFIRMACIÓN: GHL NO MODIFICADO
 
 ✅ **Verificado:**
+
 - 68 productos en GHL permanecen intactos
 - Nombres, descripciones, status igual
 - Solo se leen datos desde GHL
@@ -240,6 +260,7 @@ Condolencias (14 productos)
 ## 16. CONFIRMACIÓN: IMÁGENES NO IMPLEMENTADAS
 
 ✅ **Verificado:**
+
 - ❌ product_images tabla NO creada
 - ❌ Supabase Storage NO configurado
 - ❌ Upload endpoint NO implementado
@@ -253,12 +274,14 @@ Condolencias (14 productos)
 ### PASO 1: Ejecutar migration SQL en Supabase
 
 **Opción A: SQL Editor (más rápido)**
+
 1. Ve a: https://app.supabase.com/project/leksmflinhohnekbgmgj/sql/new
 2. Lee el archivo: `SUPABASE_MIGRATION_EXECUTE_NOW.sql`
 3. Copia y pega en SQL Editor
 4. Presiona "Run"
 
 **Opción B: CLI (si prefieres)**
+
 ```bash
 npx supabase db push
 ```
@@ -282,6 +305,7 @@ node scripts/check-supabase-data.cjs
 ```
 
 **Resultado esperado:**
+
 ```
 TOTAL REGISTROS: 68
 CON CATEGORY: 58
@@ -318,19 +342,19 @@ Para considerar FASE 3A completada, estos 8 puntos DEBEN cumplirse:
 
 ## ESTADO ACTUAL
 
-| Criterio | Status |
-|----------|--------|
-| Project ID identificado | ✅ leksmflinhohnekbgmgj |
-| Migration creada | ✅ |
-| Migration aplicada | ⏱️ Pendiente |
-| Schema verificado | ⏱️ Pendiente |
-| Types regenerados | ⏱️ Pendiente |
-| Datos poblados | ⏱️ Pendiente |
-| getFullProductMetadataByIds() | ⏱️ Pendiente |
-| /api/ghl/products | ⏱️ Pendiente |
-| /catalogo | ⏱️ Pendiente |
-| /admin/products | ⏱️ Pendiente |
-| Build sin errores | ✅ |
+| Criterio                      | Status                  |
+| ----------------------------- | ----------------------- |
+| Project ID identificado       | ✅ leksmflinhohnekbgmgj |
+| Migration creada              | ✅                      |
+| Migration aplicada            | ⏱️ Pendiente            |
+| Schema verificado             | ⏱️ Pendiente            |
+| Types regenerados             | ⏱️ Pendiente            |
+| Datos poblados                | ⏱️ Pendiente            |
+| getFullProductMetadataByIds() | ⏱️ Pendiente            |
+| /api/ghl/products             | ⏱️ Pendiente            |
+| /catalogo                     | ⏱️ Pendiente            |
+| /admin/products               | ⏱️ Pendiente            |
+| Build sin errores             | ✅                      |
 
 ---
 

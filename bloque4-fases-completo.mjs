@@ -1,8 +1,9 @@
 #!/usr/bin/env node
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from "@supabase/supabase-js";
 
 const SUPABASE_URL = "https://leksmflinhohnekbgmgj.supabase.co";
-const SERVICE_ROLE = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxla3NtZmxpbmhvaG5la2JnbWdqIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NzQzNzk0OCwiZXhwIjoyMTAzMDEzOTQ4fQ.YUP3NzyBBuGYFPpQCKHmScOG7H-cInWgU4-8Z0SYFpM";
+const SERVICE_ROLE =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxla3NtZmxpbmhvaG5la2JnbWdqIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NzQzNzk0OCwiZXhwIjoyMTAzMDEzOTQ4fQ.YUP3NzyBBuGYFPpQCKHmScOG7H-cInWgU4-8Z0SYFpM";
 const GHL_LOCATION_ID = "vOq7yOWR63XGU4qQ7XWd";
 const GHL_TOKEN = "pit-0cf65f40-51a4-4e28-9793-9eb8421e2291";
 
@@ -17,7 +18,7 @@ let results = {
   faseL: "NOT_STARTED",
   faseM: "NOT_STARTED",
   faseN: "NOT_STARTED",
-  faseO: "NOT_STARTED"
+  faseO: "NOT_STARTED",
 };
 
 let testProductId = null;
@@ -33,18 +34,22 @@ results.faseB = "DEMOSTRADO";
 // FASE C - Verificar limpieza
 console.log("\nFASE C: VERIFICACIÓN LIMPIEZA");
 try {
-  const { data: products } = await supabase.from('products').select('id');
-  const { data: options } = await supabase.from('product_options').select('id');
-  const { data: colors } = await supabase.from('color_variants').select('id');
-  const { data: images } = await supabase.from('product_images').select('id');
+  const { data: products } = await supabase.from("products").select("id");
+  const { data: options } = await supabase.from("product_options").select("id");
+  const { data: colors } = await supabase.from("color_variants").select("id");
+  const { data: images } = await supabase.from("product_images").select("id");
 
   console.log(`  Products: ${products?.length || 0}`);
   console.log(`  Options: ${options?.length || 0}`);
   console.log(`  Colors: ${colors?.length || 0}`);
   console.log(`  Images: ${images?.length || 0}`);
 
-  if ((products?.length || 0) === 0 && (options?.length || 0) === 0 &&
-      (colors?.length || 0) === 0 && (images?.length || 0) === 0) {
+  if (
+    (products?.length || 0) === 0 &&
+    (options?.length || 0) === 0 &&
+    (colors?.length || 0) === 0 &&
+    (images?.length || 0) === 0
+  ) {
     console.log("  Status: ✓ DEMOSTRADO - Supabase limpio");
     results.faseC = "DEMOSTRADO";
   } else {
@@ -60,15 +65,15 @@ try {
 console.log("\nFASE I: CREAR PRODUCTO REAL");
 try {
   const { data: product, error } = await supabase
-    .from('products')
+    .from("products")
     .insert({
-      name: 'TEST BLOQUE 4 - RAMO ROSA',
-      description: 'Ramo temporal para prueba de CRUD',
-      category: 'ramos',
+      name: "TEST BLOQUE 4 - RAMO ROSA",
+      description: "Ramo temporal para prueba de CRUD",
+      category: "ramos",
       active: true,
-      cover_image_url: 'https://images.unsplash.com/photo-1518895949257-7621c3c786d7',
+      cover_image_url: "https://images.unsplash.com/photo-1518895949257-7621c3c786d7",
       has_color_variants: false,
-      ghl_product_id: 'ghl_test_' + Date.now()
+      ghl_product_id: "ghl_test_" + Date.now(),
     })
     .select()
     .single();
@@ -83,27 +88,27 @@ try {
 
   // Create options
   const { data: opt1 } = await supabase
-    .from('product_options')
+    .from("product_options")
     .insert({
       product_id: testProductId,
-      name: 'Básico',
-      price_amount: 25.00,
+      name: "Básico",
+      price_amount: 25.0,
       discount_percent: 0,
       stock_quantity: 5,
-      sku: 'FL-RAM-0001'
+      sku: "FL-RAM-0001",
     })
     .select()
     .single();
 
   const { data: opt2 } = await supabase
-    .from('product_options')
+    .from("product_options")
     .insert({
       product_id: testProductId,
-      name: 'Premium',
-      price_amount: 50.00,
+      name: "Premium",
+      price_amount: 50.0,
       discount_percent: 10,
       stock_quantity: 3,
-      sku: 'FL-RAM-0002'
+      sku: "FL-RAM-0002",
     })
     .select()
     .single();
@@ -113,16 +118,16 @@ try {
 
   // Verify in Supabase
   const { data: verifyProduct } = await supabase
-    .from('products')
-    .select('id, name, ghl_product_id')
-    .eq('id', testProductId)
+    .from("products")
+    .select("id, name, ghl_product_id")
+    .eq("id", testProductId)
     .single();
 
   const { data: verifyOptions } = await supabase
-    .from('product_options')
-    .select('name, price_amount, discount_percent, stock_quantity, sku')
-    .eq('product_id', testProductId)
-    .order('price_amount');
+    .from("product_options")
+    .select("name, price_amount, discount_percent, stock_quantity, sku")
+    .eq("product_id", testProductId)
+    .order("price_amount");
 
   if (verifyProduct && verifyOptions?.length === 2) {
     console.log("  Status: ✓ DEMOSTRADO");
@@ -142,12 +147,12 @@ try {
   if (!testProductId) throw new Error("No product ID from FASE I");
 
   const { data: updated } = await supabase
-    .from('products')
+    .from("products")
     .update({
-      name: 'TEST BLOQUE 4 - RAMO ROSA EDITADO',
-      description: 'Producto editado durante prueba'
+      name: "TEST BLOQUE 4 - RAMO ROSA EDITADO",
+      description: "Producto editado durante prueba",
     })
-    .eq('id', testProductId)
+    .eq("id", testProductId)
     .select()
     .single();
 
@@ -168,53 +173,49 @@ console.log("\nFASE K: SKU AUTOMÁTICO");
 try {
   // Product 2: Plantas
   const { data: plantProduct } = await supabase
-    .from('products')
+    .from("products")
     .insert({
-      name: 'TEST SKU PLANTAS',
-      category: 'plantas',
+      name: "TEST SKU PLANTAS",
+      category: "plantas",
       active: true,
-      ghl_product_id: 'ghl_test_pla_' + Date.now()
+      ghl_product_id: "ghl_test_pla_" + Date.now(),
     })
     .select()
     .single();
 
-  await supabase
-    .from('product_options')
-    .insert({
-      product_id: plantProduct.id,
-      name: 'Std',
-      price_amount: 20,
-      sku: 'FL-PLA-0001'
-    });
+  await supabase.from("product_options").insert({
+    product_id: plantProduct.id,
+    name: "Std",
+    price_amount: 20,
+    sku: "FL-PLA-0001",
+  });
 
   // Product 3: Complementos
   const { data: compProduct } = await supabase
-    .from('products')
+    .from("products")
     .insert({
-      name: 'TEST SKU COMPLEMENTOS',
-      category: 'complementos',
+      name: "TEST SKU COMPLEMENTOS",
+      category: "complementos",
       active: true,
-      ghl_product_id: 'ghl_test_com_' + Date.now()
+      ghl_product_id: "ghl_test_com_" + Date.now(),
     })
     .select()
     .single();
 
-  await supabase
-    .from('product_options')
-    .insert({
-      product_id: compProduct.id,
-      name: 'Std',
-      price_amount: 15,
-      sku: 'FL-COM-0001'
-    });
+  await supabase.from("product_options").insert({
+    product_id: compProduct.id,
+    name: "Std",
+    price_amount: 15,
+    sku: "FL-COM-0001",
+  });
 
   const { data: skus } = await supabase
-    .from('product_options')
-    .select('sku, product_id, products!product_id(name)')
-    .in('product_id', [plantProduct.id, compProduct.id]);
+    .from("product_options")
+    .select("sku, product_id, products!product_id(name)")
+    .in("product_id", [plantProduct.id, compProduct.id]);
 
   console.log("  SKUs generados:");
-  skus?.forEach(opt => {
+  skus?.forEach((opt) => {
     if (opt.products) {
       console.log(`    ${opt.products.name}: ${opt.sku}`);
     }
@@ -231,35 +232,33 @@ try {
 console.log("\nFASE L: ROSAS ETERNAS");
 try {
   const { data: rosaProduct } = await supabase
-    .from('products')
+    .from("products")
     .insert({
-      name: 'TEST ROSA ETERNA',
-      category: 'rosas-eternas',
+      name: "TEST ROSA ETERNA",
+      category: "rosas-eternas",
       active: true,
       has_color_variants: true,
-      ghl_product_id: 'ghl_test_rosa_' + Date.now()
+      ghl_product_id: "ghl_test_rosa_" + Date.now(),
     })
     .select()
     .single();
 
-  const colors = ['Rojo', 'Blanco', 'Rosa'];
+  const colors = ["Rojo", "Blanco", "Rosa"];
   for (let i = 0; i < colors.length; i++) {
-    await supabase
-      .from('color_variants')
-      .insert({
-        product_id: rosaProduct.id,
-        name: colors[i],
-        sort_order: i
-      });
+    await supabase.from("color_variants").insert({
+      product_id: rosaProduct.id,
+      name: colors[i],
+      sort_order: i,
+    });
   }
 
   const { data: rosaColors } = await supabase
-    .from('color_variants')
-    .select('name')
-    .eq('product_id', rosaProduct.id);
+    .from("color_variants")
+    .select("name")
+    .eq("product_id", rosaProduct.id);
 
   console.log(`  ✓ Colores: ${rosaColors?.length || 0}`);
-  rosaColors?.forEach(c => console.log(`    - ${c.name}`));
+  rosaColors?.forEach((c) => console.log(`    - ${c.name}`));
   console.log("  Status: ✓ DEMOSTRADO");
   results.faseL = "DEMOSTRADO";
   testRosaProductId = rosaProduct.id;
@@ -273,26 +272,17 @@ console.log("\nFASE M: ELIMINAR PRODUCTO");
 try {
   if (!testRosaProductId) throw new Error("No Rosa product ID");
 
-  await supabase
-    .from('color_variants')
-    .delete()
-    .eq('product_id', testRosaProductId);
+  await supabase.from("color_variants").delete().eq("product_id", testRosaProductId);
 
-  await supabase
-    .from('product_options')
-    .delete()
-    .eq('product_id', testRosaProductId);
+  await supabase.from("product_options").delete().eq("product_id", testRosaProductId);
 
   const { data: deleted } = await supabase
-    .from('products')
+    .from("products")
     .delete()
-    .eq('id', testRosaProductId)
+    .eq("id", testRosaProductId)
     .select();
 
-  const { data: verify } = await supabase
-    .from('products')
-    .select('id')
-    .eq('id', testRosaProductId);
+  const { data: verify } = await supabase.from("products").select("id").eq("id", testRosaProductId);
 
   if (verify?.length === 0) {
     console.log("  ✓ Producto eliminado");
@@ -314,16 +304,16 @@ try {
 
   for (let i = 1; i <= 4; i++) {
     await supabase
-      .from('products')
+      .from("products")
       .update({ name: `TEST BLOQUE 4 EDIT${i}` })
-      .eq('id', testProductId);
+      .eq("id", testProductId);
     console.log(`  Edición ${i}/4...`);
   }
 
   const { data: duplicates } = await supabase
-    .from('products')
-    .select('id')
-    .ilike('name', '%TEST BLOQUE%');
+    .from("products")
+    .select("id")
+    .ilike("name", "%TEST BLOQUE%");
 
   if (duplicates?.length === 1) {
     console.log("  ✓ Sin duplicados");
@@ -342,37 +332,22 @@ try {
 console.log("\nFASE O: LIMPIEZA FINAL");
 try {
   // Delete all TEST products
-  const { data: testProds } = await supabase
-    .from('products')
-    .select('id')
-    .ilike('name', '%TEST%');
+  const { data: testProds } = await supabase.from("products").select("id").ilike("name", "%TEST%");
 
   for (const prod of testProds || []) {
-    await supabase
-      .from('product_images')
-      .delete()
-      .eq('product_id', prod.id);
+    await supabase.from("product_images").delete().eq("product_id", prod.id);
 
-    await supabase
-      .from('color_variants')
-      .delete()
-      .eq('product_id', prod.id);
+    await supabase.from("color_variants").delete().eq("product_id", prod.id);
 
-    await supabase
-      .from('product_options')
-      .delete()
-      .eq('product_id', prod.id);
+    await supabase.from("product_options").delete().eq("product_id", prod.id);
 
-    await supabase
-      .from('products')
-      .delete()
-      .eq('id', prod.id);
+    await supabase.from("products").delete().eq("id", prod.id);
   }
 
-  const { data: products } = await supabase.from('products').select('id');
-  const { data: options } = await supabase.from('product_options').select('id');
-  const { data: colors } = await supabase.from('color_variants').select('id');
-  const { data: images } = await supabase.from('product_images').select('id');
+  const { data: products } = await supabase.from("products").select("id");
+  const { data: options } = await supabase.from("product_options").select("id");
+  const { data: colors } = await supabase.from("color_variants").select("id");
+  const { data: images } = await supabase.from("product_images").select("id");
 
   console.log(`  Products: ${products?.length || 0}`);
   console.log(`  Options: ${options?.length || 0}`);
@@ -397,7 +372,7 @@ Object.entries(results).forEach(([fase, status]) => {
   console.log(`${emoji} FASE ${fase.toUpperCase()}: ${status}`);
 });
 
-const demostrados = Object.values(results).filter(s => s === "DEMOSTRADO").length;
+const demostrados = Object.values(results).filter((s) => s === "DEMOSTRADO").length;
 console.log(`\n✓ TOTAL DEMOSTRADO: ${demostrados}/9`);
-console.log(`✗ TOTAL FALLIDO: ${Object.values(results).filter(s => s === "FALLIDO").length}/9`);
+console.log(`✗ TOTAL FALLIDO: ${Object.values(results).filter((s) => s === "FALLIDO").length}/9`);
 console.log(`\n=== BLOQUE 4 COMPLETO ===`);

@@ -1,19 +1,22 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-let envPath = path.join(__dirname, '..', '.env');
-if (!fs.existsSync(envPath)) envPath = path.join(__dirname, '..', '.env.local');
+let envPath = path.join(__dirname, "..", ".env");
+if (!fs.existsSync(envPath)) envPath = path.join(__dirname, "..", ".env.local");
 
 function loadEnv(filePath) {
-  const content = fs.readFileSync(filePath, 'utf-8');
+  const content = fs.readFileSync(filePath, "utf-8");
   const env = {};
-  content.split('\n').forEach(line => {
+  content.split("\n").forEach((line) => {
     const trimmed = line.trim();
-    if (trimmed && !trimmed.startsWith('#')) {
-      const [key, ...valueParts] = trimmed.split('=');
-      env[key.trim()] = valueParts.join('=').trim().replace(/^["']|["']$/g, '');
+    if (trimmed && !trimmed.startsWith("#")) {
+      const [key, ...valueParts] = trimmed.split("=");
+      env[key.trim()] = valueParts
+        .join("=")
+        .trim()
+        .replace(/^["']|["']$/g, "");
     }
   });
   return env;
@@ -25,13 +28,13 @@ const locationId = env.GHL_LOCATION_ID;
 
 fetch(`https://services.leadconnectorhq.com/locations/${locationId}/customFields`, {
   headers: {
-    'Authorization': `Bearer ${token}`,
-    'Version': '2021-07-28',
+    Authorization: `Bearer ${token}`,
+    Version: "2021-07-28",
   },
   signal: AbortSignal.timeout(10000),
 })
-  .then(r => r.json())
-  .then(data => {
+  .then((r) => r.json())
+  .then((data) => {
     console.log(JSON.stringify(data, null, 2));
   })
-  .catch(e => console.error('Error:', e.message));
+  .catch((e) => console.error("Error:", e.message));

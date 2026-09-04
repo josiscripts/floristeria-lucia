@@ -18,8 +18,7 @@ envContent.split("\n").forEach((line) => {
 });
 
 const supabaseUrl = env.SUPABASE_URL || env.VITE_SUPABASE_URL;
-const supabaseServiceKey =
-  env.SUPABASE_SERVICE_ROLE_KEY || env.VITE_SUPABASE_SERVICE_ROLE_KEY;
+const supabaseServiceKey = env.SUPABASE_SERVICE_ROLE_KEY || env.VITE_SUPABASE_SERVICE_ROLE_KEY;
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey, {
   auth: { persistSession: false },
@@ -72,7 +71,9 @@ async function simpleAudit() {
 
   console.log(`\n4. Rosas Eternas: ${rosasCount}`);
   console.log(`   Colores: ${colorData?.length || 0}`);
-  console.log(`   ${colorData?.length >= rosasCount * 3 ? "✅" : "⚠️"} ${colorData?.length || 0} total`);
+  console.log(
+    `   ${colorData?.length >= rosasCount * 3 ? "✅" : "⚠️"} ${colorData?.length || 0} total`,
+  );
 
   // 5. Options
   const { count: optionsCount } = await supabase

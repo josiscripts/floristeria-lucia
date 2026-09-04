@@ -8,9 +8,9 @@ async function check() {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
-        "Version": "v3",
+        Version: "v3",
       },
-    }
+    },
   );
 
   const data = await res.json();

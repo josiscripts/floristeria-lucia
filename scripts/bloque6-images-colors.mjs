@@ -18,8 +18,7 @@ envContent.split("\n").forEach((line) => {
 });
 
 const supabaseUrl = env.SUPABASE_URL || env.VITE_SUPABASE_URL;
-const supabaseServiceKey =
-  env.SUPABASE_SERVICE_ROLE_KEY || env.VITE_SUPABASE_SERVICE_ROLE_KEY;
+const supabaseServiceKey = env.SUPABASE_SERVICE_ROLE_KEY || env.VITE_SUPABASE_SERVICE_ROLE_KEY;
 
 if (!supabaseUrl || !supabaseServiceKey) {
   console.error("Missing Supabase credentials");
@@ -73,10 +72,7 @@ async function createImagesAndColors() {
       if (!imgError) {
         imagesCreated++;
       } else {
-        console.warn(
-          `Warning creating image for ${product.name}:`,
-          imgError.message
-        );
+        console.warn(`Warning creating image for ${product.name}:`, imgError.message);
       }
 
       // If Rosas Eternas, create colors and associate images
@@ -101,17 +97,15 @@ async function createImagesAndColors() {
             const colorImageUrl = `https://floristeria-lucia.vercel.app/images/placeholder-${product.category}-${rosasColors[i].toLowerCase()}.png`;
             const colorStoragePath = `products/${product.ghl_product_id}/${rosasColors[i].toLowerCase()}.png`;
 
-            const { error: colorImgError } = await supabase
-              .from("product_images")
-              .insert({
-                product_id: product.id,
-                ghl_product_id: product.ghl_product_id,
-                image_url: colorImageUrl,
-                storage_path: colorStoragePath,
-                color_variant_id: colorData.id,
-                is_primary: false,
-                sort_order: i + 2,
-              });
+            const { error: colorImgError } = await supabase.from("product_images").insert({
+              product_id: product.id,
+              ghl_product_id: product.ghl_product_id,
+              image_url: colorImageUrl,
+              storage_path: colorStoragePath,
+              color_variant_id: colorData.id,
+              is_primary: false,
+              sort_order: i + 2,
+            });
 
             if (!colorImgError) {
               coloredImagesCreated++;

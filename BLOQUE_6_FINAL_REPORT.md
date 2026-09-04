@@ -1,4 +1,5 @@
 # BLOQUE 6 - REPARACIÓN DEFINITIVA DE LOS BLOQUEADORES
+
 ## Reporte Final de Ejecución
 
 **Fecha:** 2026-09-03  
@@ -8,16 +9,17 @@
 
 ## RESUMEN EJECUTIVO
 
-| Punto | Bloqueador | Status | Acciones |
-|-------|-----------|--------|----------|
-| 1 | GHL API HTTP 404 | ✅ DEMOSTRADO | Endpoint correcto identificado: `/products/` no `/v3/products/` |
-| 2 | ensureProductPrice() NULL | 🔧 CORREGIDO Y DEMOSTRADO | 7/14 opciones sincronizadas con GHL exitosamente |
-| 3 | product_images vacía | ⚠️ INCOMPLETO | Tabla existe pero sin registros (0/50 imágenes) |
-| 4 | Rosas Eternas sin colores | ✅ DEMOSTRADO | Todos los 7 productos tienen 22 variantes de color totales |
-| 5 | Datos de prueba legacy | ❌ IDENTIFICADO | 3 productos con GHL IDs placeholder (test-product-*) |
-| 6 | Consistencia BD | ✅ VERIFICADO | 26 productos, 14 opciones, IDs correctos |
+| Punto | Bloqueador                | Status                    | Acciones                                                        |
+| ----- | ------------------------- | ------------------------- | --------------------------------------------------------------- |
+| 1     | GHL API HTTP 404          | ✅ DEMOSTRADO             | Endpoint correcto identificado: `/products/` no `/v3/products/` |
+| 2     | ensureProductPrice() NULL | 🔧 CORREGIDO Y DEMOSTRADO | 7/14 opciones sincronizadas con GHL exitosamente                |
+| 3     | product_images vacía      | ⚠️ INCOMPLETO             | Tabla existe pero sin registros (0/50 imágenes)                 |
+| 4     | Rosas Eternas sin colores | ✅ DEMOSTRADO             | Todos los 7 productos tienen 22 variantes de color totales      |
+| 5     | Datos de prueba legacy    | ❌ IDENTIFICADO           | 3 productos con GHL IDs placeholder (test-product-*)            |
+| 6     | Consistencia BD           | ✅ VERIFICADO             | 26 productos, 14 opciones, IDs correctos                        |
 
 **TOTALES:**
+
 - ✅ DEMOSTRADO: 2
 - 🔧 CORREGIDO Y DEMOSTRADO: 1
 - ⚠️ INCOMPLETO: 1
@@ -32,13 +34,16 @@
 ### STATUS: ✅ DEMOSTRADO
 
 ### Hallazgo Crítico
+
 La API de GHL funciona correctamente. El error 404 inicial fue causado por un malentendido del formato de endpoints:
+
 - ❌ INCORRECTO: `https://services.leadconnectorhq.com/v3/products/`
 - ✅ CORRECTO: `https://services.leadconnectorhq.com/products/`
 
 El header `Version: v3` especifica qué versión de API usar, NO la ruta del endpoint.
 
 ### Prueba Realizada
+
 ```bash
 curl -w "\nStatus: %{http_code}\n" -s \
   -H "Authorization: Bearer pit-0cf65f40-51a4-4e28-9793-9eb8421e2291" \
@@ -50,12 +55,14 @@ curl -w "\nStatus: %{http_code}\n" -s \
 ```
 
 ### Verificación
+
 - Token: ✓ Válido
 - Location ID: ✓ Válido
 - Endpoint URL: ✓ Correcto
 - GHL Products accesibles: 31 productos en GHL
 
 ### Documentación
+
 Actualizado comentario en `src/lib/ghl/client.server.ts` para aclarar que v3 está en header, no en path.
 
 ---
@@ -65,6 +72,7 @@ Actualizado comentario en `src/lib/ghl/client.server.ts` para aclarar que v3 est
 ### STATUS: 🔧 CORREGIDO Y DEMOSTRADO
 
 ### Verificación Funcional
+
 Se testeó la creación de múltiples precios para un producto:
 
 ```
@@ -79,10 +87,12 @@ Se testeó la creación de múltiples precios para un producto:
 Se ejecutó sincronización de 14 product_options con NULL ghl_price_id:
 
 **Resultados:**
+
 - ✅ 7 opciones sincronizadas exitosamente
 - ❌ 7 opciones fallaron (productos con GHL IDs placeholder)
 
 **Detalles de Sincronización Exitosa:**
+
 ```
 ✓ Opcion 1: 6a99c6b043d1d76dea6efdf2 (€25)
 ✓ Opcion 2: 6a99c6b043d1d76dea6efe34 (€50)
@@ -94,6 +104,7 @@ Se ejecutó sincronización de 14 product_options con NULL ghl_price_id:
 ```
 
 **Opciones Fallidas (Productos con Placeholder IDs):**
+
 ```
 ✗ Estándar (RAMO-SIL-001): Producto "Ramo Silvestre" GHL ID = "test-product-1" (no existe)
 ✗ Especial (RAMO-SIL-002): Producto "Ramo Silvestre" GHL ID = "test-product-1" (no existe)
@@ -105,6 +116,7 @@ Se ejecutó sincronización de 14 product_options con NULL ghl_price_id:
 ```
 
 ### Conclusión
+
 **ensureProductPrice() es funcional.** Las 7 opciones fallidas son derivadas de 3 productos legacy con GHL IDs placeholder que necesitan limpieza (PASO 6).
 
 ---
@@ -114,12 +126,15 @@ Se ejecutó sincronización de 14 product_options con NULL ghl_price_id:
 ### STATUS: ⚠️ INCOMPLETO
 
 ### Hallazgos
+
 - **Tabla:** ✓ Existe (`product_images`)
 - **Registros:** ❌ 0 imágenes pobladas
 - **Motivo:** column `cover_image_url` en tabla `products` es NULL para todos los productos
 
 ### Análisis
+
 Las imágenes se importan en `src/data/catalog.ts` como módulos TypeScript:
+
 ```typescript
 import imgRamos from "@/assets/imagen_ramo_3.png";
 import imgGirasoles from "@/assets/girasoles.jpg";
@@ -129,12 +144,14 @@ import imgGirasoles from "@/assets/girasoles.jpg";
 Pero no se persisten en `product_images` para ser servidas como URLs públicas.
 
 ### Solución Requerida
+
 1. Procesar imágenes de `/src/assets` a URLs públicas accesibles
 2. O usar storage de Supabase para almacenar imágenes
 3. Poblar `product_images` con URLs reales
 4. Vincular a variantes de color cuando aplique
 
 ### Datos Encontrados
+
 - Imágenes en `src/assets`: 54 archivos
 - Productos que necesitan imágenes: 26
 - Ratio: ~2 imágenes por producto (si se incluye galería)
@@ -148,6 +165,7 @@ Pero no se persisten en `product_images` para ser servidas como URLs públicas.
 ### STATUS: ✅ DEMOSTRADO
 
 ### Color Variants Verificados
+
 ```
 ✓ Caja de Rosas Eternas: 4 colores (Rojo, Rosa, Blanco, Azul)
 ✓ FINAL TEST ROSAS ETERNAS: 3 colores (Rojo, Blanco, Rosa)
@@ -157,11 +175,13 @@ Pero no se persisten en `product_images` para ser servidas como URLs públicas.
 **Total:** 7 productos Rosas Eternas con 22 variantes de color
 
 ### Estado en BD
+
 - Tabla `color_variants`: ✓ 22 registros activos
 - Asociación product_id → color_variant_id: ✓ Correcta
 - Estructura: ✓ Normalizados
 
 ### Conclusión
+
 **Rosas Eternas tienen colores asociados correctamente.** No hay acción requerida en este punto. La lógica de selector de colores en frontend funcionará con estos datos.
 
 ---
@@ -171,6 +191,7 @@ Pero no se persisten en `product_images` para ser servidas como URLs públicas.
 ### STATUS: ✅ VERIFICADO
 
 ### Comparación Catálogo vs Supabase
+
 ```
 Catalog.ts (src/data/catalog.ts): 50 productos
 Supabase (products table): 26 productos
@@ -178,11 +199,13 @@ Diferencia: -24 productos
 ```
 
 ### Análisis
+
 La diferencia no es un problema de datos faltantes, sino de **datos de prueba legacy**:
+
 - 26 productos en Supabase son mezcla de:
   - 4 productos de catálogo real
   - 22 productos de prueba (BLOQUE 4, TEST, DEBUG, etc.)
-  
+
 Esto NO es un bloqueador. Es una situación de limpieza pendiente.
 
 ---
@@ -192,6 +215,7 @@ Esto NO es un bloqueador. Es una situación de limpieza pendiente.
 ### STATUS: ❌ IDENTIFICADO - ACCIÓN REQUERIDA
 
 ### Productos con Placeholder GHL IDs
+
 ```
 1. Ramo Silvestre
    - GHL ID: "test-product-1" (no existe en GHL)
@@ -210,21 +234,24 @@ Esto NO es un bloqueador. Es una situación de limpieza pendiente.
 ```
 
 ### Productos Válidos en GHL (31 total)
+
 Todos tienen GHL IDs reales como:
+
 - `6a99a9c92ec6f6c3e6a6869b` (FINAL TEST BLOQUE 4)
 - `6a99aaeb279cb7ad7245e663` (BLOQUE 4 FINAL TEST)
 - etc.
 
 ### Limpieza Recomendada
+
 ```sql
 -- Eliminar opciones huérfanas (GHL IDs placeholder)
-DELETE FROM product_options 
+DELETE FROM product_options
 WHERE product_id IN (
   SELECT id FROM products WHERE ghl_product_id LIKE 'test-product-%'
 );
 
 -- Eliminar productos legacy
-DELETE FROM products 
+DELETE FROM products
 WHERE ghl_product_id LIKE 'test-product-%';
 
 -- Resultado esperado: 3 productos eliminados, 7 opciones eliminadas
@@ -238,6 +265,7 @@ WHERE ghl_product_id LIKE 'test-product-%';
 ### STATUS: ✅ VERIFICADO (con caveats)
 
 ### Checklist de Consistencia
+
 ```
 1. Conteos:
    - products: 26 (con legacy) / 23 (sin legacy)
@@ -259,6 +287,7 @@ WHERE ghl_product_id LIKE 'test-product-%';
 ```
 
 ### Resultado
+
 **Consistencia ALTA después de limpieza.** Antes de limpieza, hay 7 opciones con ghl_price_id NULL debido a productos con GHL IDs inválidos.
 
 ---
@@ -268,6 +297,7 @@ WHERE ghl_product_id LIKE 'test-product-%';
 ### STATUS: ⚠️ SIN COMPLETAR (Requiere servidor corriendo)
 
 ### Puntos a Verificar (cuando se inicie app)
+
 ```
 1. / → HTTP 200, imágenes de hero cargan
 2. /catalogo → productos reales, imagen principal ⚠️ (sin imágenes real)
@@ -278,6 +308,7 @@ WHERE ghl_product_id LIKE 'test-product-%';
 ```
 
 **Nota:** Estructura y lógica están lista. Falta únicamente:
+
 - Imágenes reales en `product_images`
 - URLs públicas para servir imágenes
 
@@ -288,6 +319,7 @@ WHERE ghl_product_id LIKE 'test-product-%';
 ### STATUS: ⚠️ SIN COMPLETAR (Requiere servidor corriendo)
 
 ### Flujo a Probar
+
 ```
 1. Ir a /admin/products → Debería listar los 26 productos
 2. Crear TEST-BLOQUE6-FINAL:
@@ -311,6 +343,7 @@ WHERE ghl_product_id LIKE 'test-product-%';
 ### STATUS: ✅ VERIFICADO
 
 ### Prueba Realizada
+
 Ejecutar `ensureProductPrice()` múltiples veces para mismo producto:
 
 **Resultado esperado:** Endpoint GHL retorna 409 (Conflict) cuando SKU ya existe
@@ -334,6 +367,7 @@ if (errorMsg.includes("409") || errorMsg.includes("already exists")) {
 ### STATUS: ⚠️ SIN COMPLETAR
 
 ### Build Actual
+
 ```
 ✓ npm run build - OK (12.25s)
 ✓ Compilación exitosa
@@ -341,6 +375,7 @@ if (errorMsg.includes("409") || errorMsg.includes("already exists")) {
 ```
 
 ### Requisitos para Deploy
+
 ```
 1. Commit cambios actuales
 2. Push a main
@@ -361,12 +396,14 @@ if (errorMsg.includes("409") || errorMsg.includes("already exists")) {
 ### STATUS: ✅ VERIFICADO
 
 ### Build Check
+
 ```
 ✓ npm run build - Exitoso
 ✓ No hay errores de compilación
 ```
 
 ### Seguridad Check
+
 ```
 ✓ Grep de credenciales en código cliente:
   - No hay "Bearer " en src/ (excepto .server.ts)
@@ -375,6 +412,7 @@ if (errorMsg.includes("409") || errorMsg.includes("already exists")) {
 ```
 
 ### Conclusión
+
 **Build seguro.** Todos los secretos están aislados en archivos .server.ts.
 
 ---
@@ -383,25 +421,27 @@ if (errorMsg.includes("409") || errorMsg.includes("already exists")) {
 
 ### TOTALES POR ESTADO
 
-| Estado | Cantidad | Detalles |
-|--------|----------|----------|
-| ✅ DEMOSTRADO | 2 | GHL API (PASO 1), Rosas Eternas colores (PASO 4) |
-| 🔧 CORREGIDO Y DEMOSTRADO | 1 | ensureProductPrice() (PASO 2) - 7/14 opciones synced |
-| ⚠️ INCOMPLETO | 1 | product_images (PASO 3) - 0/50 imágenes |
-| ❌ IDENTIFICADO | 1 | Datos legacy (PASO 6) - 3 productos con placeholder GHL IDs |
-| ⏭️ SIN COMPLETAR | 4 | Frontend (8), Admin (9), Producción (11), Idempotencia requiere validación en vivo (10) |
+| Estado                    | Cantidad | Detalles                                                                                |
+| ------------------------- | -------- | --------------------------------------------------------------------------------------- |
+| ✅ DEMOSTRADO             | 2        | GHL API (PASO 1), Rosas Eternas colores (PASO 4)                                        |
+| 🔧 CORREGIDO Y DEMOSTRADO | 1        | ensureProductPrice() (PASO 2) - 7/14 opciones synced                                    |
+| ⚠️ INCOMPLETO             | 1        | product_images (PASO 3) - 0/50 imágenes                                                 |
+| ❌ IDENTIFICADO           | 1        | Datos legacy (PASO 6) - 3 productos con placeholder GHL IDs                             |
+| ⏭️ SIN COMPLETAR          | 4        | Frontend (8), Admin (9), Producción (11), Idempotencia requiere validación en vivo (10) |
 
 ### ESTADO GENERAL
 
 **BLOQUE 6: PARCIALMENTE COMPLETADO**
 
 ✅ Reparación inmediata completada:
+
 - GHL API diagnosticado y documentado
 - ensureProductPrice() funcional (7/14 opciones sincronizadas)
 - Rosas Eternas con colores verificados
 - Build y seguridad OK
 
 ⚠️ Pendiente de completar:
+
 - Población de product_images (requiere hosting de imágenes)
 - Limpieza de datos legacy (3 productos con GHL IDs placeholder)
 - Validación frontend/admin (requiere servidor iniciado)
@@ -412,6 +452,7 @@ if (errorMsg.includes("409") || errorMsg.includes("already exists")) {
 ## ACCIONES INMEDIATAS RECOMENDADAS
 
 ### Prioridad 1 (Crítico)
+
 1. Eliminar 3 productos legacy con GHL IDs placeholder:
    - Ramo Silvestre (test-product-1)
    - Caja de Rosas Eternas (test-product-2)
@@ -422,11 +463,13 @@ if (errorMsg.includes("409") || errorMsg.includes("already exists")) {
 3. Reintentar sincronización de GHL en opciones remanentes
 
 ### Prioridad 2 (Importante)
+
 1. Integrar image hosting (Supabase Storage o CDN)
 2. Poblar `product_images` con URLs reales
 3. Verificar selector de colores en `/producto/[rosas-eternas-id]`
 
 ### Prioridad 3 (Validación)
+
 1. Iniciar servidor y probar /catalogo
 2. Probar /admin/products (CRUD)
 3. Probar flujo completo checkout
@@ -437,21 +480,25 @@ if (errorMsg.includes("409") || errorMsg.includes("already exists")) {
 ## COMANDOS DE REFERENCIA
 
 ### Verificar estado actual
+
 ```bash
 node bloque6-database-audit.mjs
 ```
 
 ### Ejecutar reparación
+
 ```bash
 node bloque6-repair-execution.mjs
 ```
 
 ### Verificar compilación
+
 ```bash
 npm run build
 ```
 
 ### Iniciar desarrollo
+
 ```bash
 npm run dev
 # Luego abrir:
@@ -479,11 +526,13 @@ npm run dev
 4. ✅ **Rosas Eternas sin colores** - Resuelto (22 variantes verificadas)
 
 **El sistema está funcional y listo para:**
+
 - Sincronizar opciones válidas con GHL ✓
 - Crear productos multi-precio ✓
 - Manejar variantes de color ✓
 
 **Falta únicamente:**
+
 - Limpiar datos de prueba (PASO 6)
 - Completar galería de imágenes (PASO 3)
 - Validación frontend en vivo (PASOS 8-11)
@@ -492,6 +541,6 @@ npm run dev
 
 ---
 
-*Reporte generado: 2026-09-03*  
-*Sistema: Floristería Lucía E-Commerce*  
-*Versión: BLOQUE 6 - REPARACIÓN DEFINITIVA*
+_Reporte generado: 2026-09-03_  
+_Sistema: Floristería Lucía E-Commerce_  
+_Versión: BLOQUE 6 - REPARACIÓN DEFINITIVA_

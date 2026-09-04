@@ -13,17 +13,17 @@
 
 ```typescript
 type Product = {
-  id: string;              // "ramo-silvestre"
-  name: string;            // "Ramo Silvestre"
-  category: CategoryId;    // "ramos"
-  priceMin: number;        // 30
-  priceMax?: number;       // 45
-  image: string;           // imgRamos (ruta de import)
-  description: string;     // "Flor variada..."
-  badge?: string;          // "Más vendido"
-  quoteOnly?: boolean;     // false (no usado)
-  roseStep?: number;       // 6 (solo rosas)
-  colors?: string[];       // ["Rojo", "Rosa", ...]
+  id: string; // "ramo-silvestre"
+  name: string; // "Ramo Silvestre"
+  category: CategoryId; // "ramos"
+  priceMin: number; // 30
+  priceMax?: number; // 45
+  image: string; // imgRamos (ruta de import)
+  description: string; // "Flor variada..."
+  badge?: string; // "Más vendido"
+  quoteOnly?: boolean; // false (no usado)
+  roseStep?: number; // 6 (solo rosas)
+  colors?: string[]; // ["Rojo", "Rosa", ...]
 };
 ```
 
@@ -35,19 +35,19 @@ type Product = {
 
 ```json
 {
-  "_id": "6a87b91004c302157108f01d",         // GHL asigna
-  "locationId": "vOq7yOWR63XGU4qQ7XWd",     // Floristería Lucía
-  "name": "pepito",                          // ✅ Editable
-  "description": "<p>hola a todos</p>",      // ✅ Editable
-  "productType": "DIGITAL",                  // Tipo de producto
+  "_id": "6a87b91004c302157108f01d", // GHL asigna
+  "locationId": "vOq7yOWR63XGU4qQ7XWd", // Floristería Lucía
+  "name": "pepito", // ✅ Editable
+  "description": "<p>hola a todos</p>", // ✅ Editable
+  "productType": "DIGITAL", // Tipo de producto
   "image": "https://assets.cdn.filesafe...", // ✅ Editable
-  "availableInStore": true,                  // ✅ Disponibilidad
-  "status": "active",                        // ✅ Activo/Inactivo
-  "category": "categoría_string",            // ✅ Editable (string libre)
+  "availableInStore": true, // ✅ Disponibilidad
+  "status": "active", // ✅ Activo/Inactivo
+  "category": "categoría_string", // ✅ Editable (string libre)
   "isTaxesEnabled": false,
   "taxes": [],
   "trackProductInventory": false,
-  "variants": [],                            // ✅ Soporta variantes
+  "variants": [], // ✅ Soporta variantes
   "createdAt": "2026-08-21T02:33:52.386Z",
   "updatedAt": "2026-08-21T02:42:02.385Z",
   "createdBy": "lo5qk08B95EED4KHc2wz"
@@ -56,16 +56,16 @@ type Product = {
 
 ### Campos nativos que GHL PUEDE almacenar:
 
-| Campo GHL | Tipo | Editable cliente | Corresponde a |
-|-----------|------|---|---|
-| `name` | string | ✅ Sí | `name` |
-| `description` | string (HTML) | ✅ Sí | `description` |
-| `image` | URL | ✅ Sí | `image` |
-| `category` | string | ✅ Sí | `category` |
-| `status` | active/inactive | ✅ Sí | - (nuevo) |
-| `availableInStore` | boolean | ✅ Sí | - (nuevo) |
-| `productType` | string | ✅ Sí | - (nuevo) |
-| `variants` | array | ✅ Sí | - (podría reemplazar colors/sizes) |
+| Campo GHL          | Tipo            | Editable cliente | Corresponde a                      |
+| ------------------ | --------------- | ---------------- | ---------------------------------- |
+| `name`             | string          | ✅ Sí            | `name`                             |
+| `description`      | string (HTML)   | ✅ Sí            | `description`                      |
+| `image`            | URL             | ✅ Sí            | `image`                            |
+| `category`         | string          | ✅ Sí            | `category`                         |
+| `status`           | active/inactive | ✅ Sí            | - (nuevo)                          |
+| `availableInStore` | boolean         | ✅ Sí            | - (nuevo)                          |
+| `productType`      | string          | ✅ Sí            | - (nuevo)                          |
+| `variants`         | array           | ✅ Sí            | - (podría reemplazar colors/sizes) |
 
 ---
 
@@ -73,142 +73,142 @@ type Product = {
 
 ### 3.1 `id` (ID original: "ramo-silvestre")
 
-| Criterio | Análisis |
-|----------|----------|
-| **Qué es** | Identificador único en catalog.ts |
-| **Formato** | kebab-case string |
-| **GHL puede almacenarla** | NO (GHL asigna su propio `_id`) |
-| **¿Es crítica?** | SÍ (mapeo legacy → GHL) |
-| **Dónde guardarla** | ✅ Supabase `product_metadata.legacy_catalog_id` |
-| **Decisión** | Supabase (metadata técnica) |
-| **¿Editable cliente?** | NO (es un identificador interno) |
+| Criterio                  | Análisis                                         |
+| ------------------------- | ------------------------------------------------ |
+| **Qué es**                | Identificador único en catalog.ts                |
+| **Formato**               | kebab-case string                                |
+| **GHL puede almacenarla** | NO (GHL asigna su propio `_id`)                  |
+| **¿Es crítica?**          | SÍ (mapeo legacy → GHL)                          |
+| **Dónde guardarla**       | ✅ Supabase `product_metadata.legacy_catalog_id` |
+| **Decisión**              | Supabase (metadata técnica)                      |
+| **¿Editable cliente?**    | NO (es un identificador interno)                 |
 
 ### 3.2 `name` (Ejemplo: "Ramo Silvestre")
 
-| Criterio | Análisis |
-|----------|----------|
-| **Qué es** | Nombre del producto visible |
-| **Formato** | string UTF-8 |
-| **GHL puede almacenarla** | ✅ SÍ (campo nativo `name`) |
-| **¿Es crítica?** | SÍ (lo más importante) |
-| **Dónde guardarla** | ✅ **GHL** |
-| **Decisión** | **GHL** (cliente administra aquí) |
-| **¿Editable cliente?** | ✅ SÍ (desde GHL Dashboard) |
+| Criterio                  | Análisis                          |
+| ------------------------- | --------------------------------- |
+| **Qué es**                | Nombre del producto visible       |
+| **Formato**               | string UTF-8                      |
+| **GHL puede almacenarla** | ✅ SÍ (campo nativo `name`)       |
+| **¿Es crítica?**          | SÍ (lo más importante)            |
+| **Dónde guardarla**       | ✅ **GHL**                        |
+| **Decisión**              | **GHL** (cliente administra aquí) |
+| **¿Editable cliente?**    | ✅ SÍ (desde GHL Dashboard)       |
 
 ### 3.3 `description` (Ejemplo: "Flor variada de temporada...")
 
-| Criterio | Análisis |
-|----------|----------|
-| **Qué es** | Descripción para mostrar en ficha |
-| **Formato** | string, puede ser HTML |
+| Criterio                  | Análisis                           |
+| ------------------------- | ---------------------------------- |
+| **Qué es**                | Descripción para mostrar en ficha  |
+| **Formato**               | string, puede ser HTML             |
 | **GHL puede almacenarla** | ✅ SÍ (campo nativo `description`) |
-| **¿Es crítica?** | SÍ (describe el producto) |
-| **Dónde guardarla** | ✅ **GHL** |
-| **Decisión** | **GHL** (cliente administra aquí) |
-| **¿Editable cliente?** | ✅ SÍ (desde GHL Dashboard) |
+| **¿Es crítica?**          | SÍ (describe el producto)          |
+| **Dónde guardarla**       | ✅ **GHL**                         |
+| **Decisión**              | **GHL** (cliente administra aquí)  |
+| **¿Editable cliente?**    | ✅ SÍ (desde GHL Dashboard)        |
 
 ### 3.4 `image` (Ejemplo: ruta de import)
 
-| Criterio | Análisis |
-|----------|----------|
-| **Qué es** | URL de imagen del producto |
-| **Formato actual** | Import de Vite (src/assets) |
-| **Formato en GHL** | URL absoluta (https://...) |
-| **GHL puede almacenarla** | ✅ SÍ (campo nativo `image`) |
-| **¿Es crítica?** | SÍ (visual imprescindible) |
-| **Conversión necesaria** | Subir a Supabase Storage o CDN |
-| **Dónde guardarla** | ✅ **GHL** (URL pública) |
-| **Decisión** | **GHL** (cliente sube imágenes en GHL) |
-| **¿Editable cliente?** | ✅ SÍ (desde GHL Dashboard) |
+| Criterio                  | Análisis                               |
+| ------------------------- | -------------------------------------- |
+| **Qué es**                | URL de imagen del producto             |
+| **Formato actual**        | Import de Vite (src/assets)            |
+| **Formato en GHL**        | URL absoluta (https://...)             |
+| **GHL puede almacenarla** | ✅ SÍ (campo nativo `image`)           |
+| **¿Es crítica?**          | SÍ (visual imprescindible)             |
+| **Conversión necesaria**  | Subir a Supabase Storage o CDN         |
+| **Dónde guardarla**       | ✅ **GHL** (URL pública)               |
+| **Decisión**              | **GHL** (cliente sube imágenes en GHL) |
+| **¿Editable cliente?**    | ✅ SÍ (desde GHL Dashboard)            |
 
 ### 3.5 `category` (Ejemplo: "ramos")
 
-| Criterio | Análisis |
-|----------|----------|
-| **Qué es** | Categoría del producto |
-| **Valores actuales** | "ramos", "plantas", "rosas-eternas", "complementos", "condolencias" |
-| **GHL puede almacenarla** | ✅ SÍ (campo nativo `category` - string libre) |
-| **¿Es crítica?** | SÍ (agrupa productos) |
-| **Dónde guardarla** | ✅ **GHL** |
-| **Decisión** | **GHL** (cliente administra aquí) |
-| **¿Editable cliente?** | ✅ SÍ (desde GHL Dashboard) |
-| **Nota** | GHL no valida valores, acepta cualquier string |
+| Criterio                  | Análisis                                                            |
+| ------------------------- | ------------------------------------------------------------------- |
+| **Qué es**                | Categoría del producto                                              |
+| **Valores actuales**      | "ramos", "plantas", "rosas-eternas", "complementos", "condolencias" |
+| **GHL puede almacenarla** | ✅ SÍ (campo nativo `category` - string libre)                      |
+| **¿Es crítica?**          | SÍ (agrupa productos)                                               |
+| **Dónde guardarla**       | ✅ **GHL**                                                          |
+| **Decisión**              | **GHL** (cliente administra aquí)                                   |
+| **¿Editable cliente?**    | ✅ SÍ (desde GHL Dashboard)                                         |
+| **Nota**                  | GHL no valida valores, acepta cualquier string                      |
 
 ### 3.6 `priceMin` (Ejemplo: 30)
 
-| Criterio | Análisis |
-|----------|----------|
-| **Qué es** | Precio mínimo del producto |
-| **Formato** | number (€) |
-| **GHL puede almacenarla** | ✅ SÍ (campo nativo `price`) |
-| **¿Es crítica?** | SÍ (esencial para e-commerce) |
-| **Dónde guardarla** | ✅ **GHL** |
-| **Decisión** | **GHL** (como `price`) |
-| **¿Editable cliente?** | ✅ SÍ (desde GHL Dashboard) |
-| **Nota** | GHL solo tiene 1 precio, no rango |
+| Criterio                  | Análisis                          |
+| ------------------------- | --------------------------------- |
+| **Qué es**                | Precio mínimo del producto        |
+| **Formato**               | number (€)                        |
+| **GHL puede almacenarla** | ✅ SÍ (campo nativo `price`)      |
+| **¿Es crítica?**          | SÍ (esencial para e-commerce)     |
+| **Dónde guardarla**       | ✅ **GHL**                        |
+| **Decisión**              | **GHL** (como `price`)            |
+| **¿Editable cliente?**    | ✅ SÍ (desde GHL Dashboard)       |
+| **Nota**                  | GHL solo tiene 1 precio, no rango |
 
 ### 3.7 `priceMax` (Ejemplo: 45)
 
-| Criterio | Análisis |
-|----------|----------|
-| **Qué es** | Precio máximo (rango de precios) |
-| **Formato** | number (€) |
-| **Productos afectados** | 25 de 58 (43%) |
-| **GHL puede almacenarla** | ❌ NO (no hay campo nativo para rango) |
-| **¿Es crítica?** | SÍ (define rango de precios) |
-| **Dónde guardarla** | ✅ Supabase `product_metadata.price_max` |
-| **Decisión** | **Supabase** (dato técnico) |
-| **¿Editable cliente?** | ⚠️ DEPENDE (ver abajo) |
-| **Nota** | Cliente DEBE poder editarlo, pero desde GHL no es posible directamente |
+| Criterio                  | Análisis                                                               |
+| ------------------------- | ---------------------------------------------------------------------- |
+| **Qué es**                | Precio máximo (rango de precios)                                       |
+| **Formato**               | number (€)                                                             |
+| **Productos afectados**   | 25 de 58 (43%)                                                         |
+| **GHL puede almacenarla** | ❌ NO (no hay campo nativo para rango)                                 |
+| **¿Es crítica?**          | SÍ (define rango de precios)                                           |
+| **Dónde guardarla**       | ✅ Supabase `product_metadata.price_max`                               |
+| **Decisión**              | **Supabase** (dato técnico)                                            |
+| **¿Editable cliente?**    | ⚠️ DEPENDE (ver abajo)                                                 |
+| **Nota**                  | Cliente DEBE poder editarlo, pero desde GHL no es posible directamente |
 
 ### 3.8 `badge` (Ejemplo: "Más vendido")
 
-| Criterio | Análisis |
-|----------|----------|
-| **Qué es** | Etiqueta visual especial |
-| **Valores** | "Más vendido", "Premium", "7-10 años" |
-| **Productos afectados** | 3 de 58 (5%) |
-| **GHL puede almacenarla** | ❌ NO (no hay campo nativo) |
-| **¿Es crítica?** | NO (es decorativo) |
-| **Dónde guardarla** | ✅ Supabase `product_metadata.badge_label` |
-| **Decisión** | **Supabase** (dato de presentación técnico) |
-| **¿Editable cliente?** | ⚠️ DEPENDE (ver abajo) |
+| Criterio                  | Análisis                                    |
+| ------------------------- | ------------------------------------------- |
+| **Qué es**                | Etiqueta visual especial                    |
+| **Valores**               | "Más vendido", "Premium", "7-10 años"       |
+| **Productos afectados**   | 3 de 58 (5%)                                |
+| **GHL puede almacenarla** | ❌ NO (no hay campo nativo)                 |
+| **¿Es crítica?**          | NO (es decorativo)                          |
+| **Dónde guardarla**       | ✅ Supabase `product_metadata.badge_label`  |
+| **Decisión**              | **Supabase** (dato de presentación técnico) |
+| **¿Editable cliente?**    | ⚠️ DEPENDE (ver abajo)                      |
 
 ### 3.9 `roseStep` (Valor: 6)
 
-| Criterio | Análisis |
-|----------|----------|
-| **Qué es** | Multiplicador para productos de rosas |
-| **Significado** | 1 unidad = 6 rosas físicas |
-| **Productos afectados** | 4 de 58 (7%) |
-| **GHL puede almacenarla** | ❌ NO (no hay campo nativo) |
-| **¿Es crítica?** | SÍ (lógica de negocio) |
-| **Dónde guardarla** | ✅ Supabase `product_metadata.rose_step` |
-| **Decisión** | **Supabase** (lógica específica del negocio) |
-| **¿Editable cliente?** | ❌ NO (es configuración técnica) |
+| Criterio                  | Análisis                                     |
+| ------------------------- | -------------------------------------------- |
+| **Qué es**                | Multiplicador para productos de rosas        |
+| **Significado**           | 1 unidad = 6 rosas físicas                   |
+| **Productos afectados**   | 4 de 58 (7%)                                 |
+| **GHL puede almacenarla** | ❌ NO (no hay campo nativo)                  |
+| **¿Es crítica?**          | SÍ (lógica de negocio)                       |
+| **Dónde guardarla**       | ✅ Supabase `product_metadata.rose_step`     |
+| **Decisión**              | **Supabase** (lógica específica del negocio) |
+| **¿Editable cliente?**    | ❌ NO (es configuración técnica)             |
 
 ### 3.10 `colors` (Array: ["Rojo", "Rosa", ...])
 
-| Criterio | Análisis |
-|----------|----------|
-| **Qué es** | Colores disponibles para personalizar |
-| **Productos afectados** | 4 de 58 (7%) |
-| **Valores** | 6 colores fijos (Rojo, Rosa, Blanco, Azul, Lila, Amarillo) |
-| **GHL puede almacenarla** | ❌ NO (no hay campo nativo) |
-| **¿Es crítica?** | SÍ (opción de compra) |
-| **Dónde guardarla** | ✅ Supabase `product_metadata.available_colors` |
-| **Decisión** | **Supabase** (configuración de producto) |
-| **¿Editable cliente?** | ⚠️ DEPENDE (ver abajo) |
+| Criterio                  | Análisis                                                   |
+| ------------------------- | ---------------------------------------------------------- |
+| **Qué es**                | Colores disponibles para personalizar                      |
+| **Productos afectados**   | 4 de 58 (7%)                                               |
+| **Valores**               | 6 colores fijos (Rojo, Rosa, Blanco, Azul, Lila, Amarillo) |
+| **GHL puede almacenarla** | ❌ NO (no hay campo nativo)                                |
+| **¿Es crítica?**          | SÍ (opción de compra)                                      |
+| **Dónde guardarla**       | ✅ Supabase `product_metadata.available_colors`            |
+| **Decisión**              | **Supabase** (configuración de producto)                   |
+| **¿Editable cliente?**    | ⚠️ DEPENDE (ver abajo)                                     |
 
 ### 3.11 `quoteOnly` (Valor: false, no usado)
 
-| Criterio | Análisis |
-|----------|----------|
-| **Qué es** | Indica si requiere cotización |
-| **Uso actual** | NO UTILIZADO (todos los productos tienen false implícito) |
-| **GHL puede almacenarla** | ❌ NO (no hay campo nativo) |
-| **¿Es crítica?** | NO (funcionalidad futura) |
-| **Decisión** | **ELIMINAR O SUPABASE** (preparación futura) |
+| Criterio                  | Análisis                                                  |
+| ------------------------- | --------------------------------------------------------- |
+| **Qué es**                | Indica si requiere cotización                             |
+| **Uso actual**            | NO UTILIZADO (todos los productos tienen false implícito) |
+| **GHL puede almacenarla** | ❌ NO (no hay campo nativo)                               |
+| **¿Es crítica?**          | NO (funcionalidad futura)                                 |
+| **Decisión**              | **ELIMINAR O SUPABASE** (preparación futura)              |
 
 ---
 
@@ -218,16 +218,16 @@ type Product = {
 
 **La cliente administra ESTOS campos directamente desde GHL Dashboard:**
 
-| Campo GHL | Campo catalog.ts | Tipo | Editable | Crítico |
-|-----------|---|---|---|---|
-| `name` | `name` | string | ✅ Sí | ✅ Sí |
-| `description` | `description` | string | ✅ Sí | ✅ Sí |
-| `image` | `image` | URL | ✅ Sí | ✅ Sí |
-| `category` | `category` | string | ✅ Sí | ✅ Sí |
-| `price` | `priceMin` | number | ✅ Sí | ✅ Sí |
-| `status` | - | active/inactive | ✅ Sí | ✅ Sí |
-| `availableInStore` | - | boolean | ✅ Sí | ⚠️ No |
-| `productType` | - | string | ✅ Sí | ⚠️ No |
+| Campo GHL          | Campo catalog.ts | Tipo            | Editable | Crítico |
+| ------------------ | ---------------- | --------------- | -------- | ------- |
+| `name`             | `name`           | string          | ✅ Sí    | ✅ Sí   |
+| `description`      | `description`    | string          | ✅ Sí    | ✅ Sí   |
+| `image`            | `image`          | URL             | ✅ Sí    | ✅ Sí   |
+| `category`         | `category`       | string          | ✅ Sí    | ✅ Sí   |
+| `price`            | `priceMin`       | number          | ✅ Sí    | ✅ Sí   |
+| `status`           | -                | active/inactive | ✅ Sí    | ✅ Sí   |
+| `availableInStore` | -                | boolean         | ✅ Sí    | ⚠️ No   |
+| `productType`      | -                | string          | ✅ Sí    | ⚠️ No   |
 
 **Resumen:** 8 campos nativos, completamente administrables por cliente en GHL
 
@@ -235,14 +235,14 @@ type Product = {
 
 **Datos técnicos que NO caben en GHL Products API:**
 
-| Campo Supabase | Campo catalog.ts | Tipo | Editable | Crítico | Automático |
-|---|---|---|---|---|---|
-| `legacy_catalog_id` | `id` | string | ❌ No | ✅ Sí | ✅ Auto-mapeo |
-| `price_max` | `priceMax` | number | ❓ Sí (pero cómo?) | ✅ Sí | ❌ Manual |
-| `rose_step` | `roseStep` | number | ❌ No | ✅ Sí | ❌ Manual |
-| `available_colors` | `colors` | array | ❓ Sí (pero cómo?) | ✅ Sí | ❌ Manual |
-| `badge_label` | `badge` | string | ❓ Sí (pero cómo?) | ❌ No | ❌ Manual |
-| `ghl_product_id` | - | string | ❌ No | ✅ Sí | ✅ Auto-mapeo |
+| Campo Supabase      | Campo catalog.ts | Tipo   | Editable           | Crítico | Automático    |
+| ------------------- | ---------------- | ------ | ------------------ | ------- | ------------- |
+| `legacy_catalog_id` | `id`             | string | ❌ No              | ✅ Sí   | ✅ Auto-mapeo |
+| `price_max`         | `priceMax`       | number | ❓ Sí (pero cómo?) | ✅ Sí   | ❌ Manual     |
+| `rose_step`         | `roseStep`       | number | ❌ No              | ✅ Sí   | ❌ Manual     |
+| `available_colors`  | `colors`         | array  | ❓ Sí (pero cómo?) | ✅ Sí   | ❌ Manual     |
+| `badge_label`       | `badge`          | string | ❓ Sí (pero cómo?) | ❌ No   | ❌ Manual     |
+| `ghl_product_id`    | -                | string | ❌ No              | ✅ Sí   | ✅ Auto-mapeo |
 
 **Problema:** Campos ❓ (price_max, available_colors, badge_label) DEBERÍAN ser editables por cliente, pero no hay UI en GHL para ellos.
 
@@ -250,12 +250,12 @@ type Product = {
 
 **Datos que SOLO existen en React, NO se almacenan:**
 
-| Dato | Propósito | Cálculo |
-|---|---|---|
+| Dato                          | Propósito           | Cálculo                  |
+| ----------------------------- | ------------------- | ------------------------ |
 | `priceMin - priceMax` (rango) | Mostrar "30€ - 45€" | `priceMin` + `price_max` |
-| Selector de color | UI en ficha | De `available_colors` |
-| Badge visual | UI en card | De `badge_label` |
-| Multiplicador rosas | Lógica en carrito | De `rose_step` |
+| Selector de color             | UI en ficha         | De `available_colors`    |
+| Badge visual                  | UI en card          | De `badge_label`         |
+| Multiplicador rosas           | Lógica en carrito   | De `rose_step`           |
 
 ---
 
@@ -264,6 +264,7 @@ type Product = {
 ### ⚠️ La brecha de edición
 
 Estos campos **NO pueden editarse desde GHL:**
+
 - `priceMax` (25 productos lo necesitan)
 - `available_colors` (4 productos)
 - `badge_label` (3 productos)
@@ -357,7 +358,7 @@ Description HTML en GHL:
 
 4. ⚠️ PROBLEMA: ¿Es producto nuevo o actualización?
    ¿Tiene metadatos en Supabase?
-   
+
    Si NO tiene metadatos:
    → Crear registro en Supabase con valores por defecto
    → legacy_catalog_id = null (no tiene, es nuevo)
@@ -369,7 +370,7 @@ Description HTML en GHL:
    - Datos de GHL (completos)
    - Datos de Supabase (todas null → valores por defecto)
    → Muestra producto con datos básicos
-   
+
 6. ¿Cliente quiere personalizar? (ej: agregar colors)
    → OPCIÓN A: Interfaz admin en Vercel
    → OPCIÓN B: No se puede (producto simple)
@@ -386,7 +387,7 @@ Description HTML en GHL:
 ```
 1. Configurar webhook en GHL:
    POST /webhook → https://vercel-app.com/api/webhooks/ghl-product
-   
+
 2. Cuando cliente crea/edita producto en GHL:
    GHL envía evento:
    {
@@ -491,34 +492,34 @@ Cliente crea producto en GHL
 
 #### GHL (Lo que cliente edita directamente)
 
-| Campo GHL | Valor ejemplo | Editable | Crítico |
-|-----------|---|---|---|
-| `name` | "Ramo de Rosas" | ✅ Sí | ✅ |
-| `description` | "Ramo de rosas frescas..." | ✅ Sí | ✅ |
-| `image` | URL pública | ✅ Sí | ✅ |
-| `category` | "ramos" | ✅ Sí | ✅ |
-| `price` | 24 | ✅ Sí | ✅ |
-| `status` | "active" | ✅ Sí | ✅ |
+| Campo GHL     | Valor ejemplo              | Editable | Crítico |
+| ------------- | -------------------------- | -------- | ------- |
+| `name`        | "Ramo de Rosas"            | ✅ Sí    | ✅      |
+| `description` | "Ramo de rosas frescas..." | ✅ Sí    | ✅      |
+| `image`       | URL pública                | ✅ Sí    | ✅      |
+| `category`    | "ramos"                    | ✅ Sí    | ✅      |
+| `price`       | 24                         | ✅ Sí    | ✅      |
+| `status`      | "active"                   | ✅ Sí    | ✅      |
 
 #### SUPABASE (Metadatos técnicos)
 
-| Campo Supabase | Valor ejemplo | Editable | Crítico | Auto-creado |
-|---|---|---|---|---|
-| `ghl_product_id` | "6a87b9..." | ❌ No | ✅ | ✅ Webhook/Poll |
-| `legacy_catalog_id` | "ramo-rosas" | ❌ No | ✅ | ✅ Migración inicial |
-| `price_max` | 48 | ⚠️ Solo admin | ✅ | ❌ Manual/Admin |
-| `available_colors` | ["Rojo","Rosa"...] | ⚠️ Solo admin | ✅ | ❌ Manual/Admin |
-| `rose_step` | 6 | ❌ No | ✅ | ❌ Manual/Admin |
-| `badge_label` | "Más vendido" | ⚠️ Solo admin | ❌ | ❌ Manual/Admin |
+| Campo Supabase      | Valor ejemplo      | Editable      | Crítico | Auto-creado          |
+| ------------------- | ------------------ | ------------- | ------- | -------------------- |
+| `ghl_product_id`    | "6a87b9..."        | ❌ No         | ✅      | ✅ Webhook/Poll      |
+| `legacy_catalog_id` | "ramo-rosas"       | ❌ No         | ✅      | ✅ Migración inicial |
+| `price_max`         | 48                 | ⚠️ Solo admin | ✅      | ❌ Manual/Admin      |
+| `available_colors`  | ["Rojo","Rosa"...] | ⚠️ Solo admin | ✅      | ❌ Manual/Admin      |
+| `rose_step`         | 6                  | ❌ No         | ✅      | ❌ Manual/Admin      |
+| `badge_label`       | "Más vendido"      | ⚠️ Solo admin | ❌      | ❌ Manual/Admin      |
 
 #### FRONTEND (Calculado en tiempo real)
 
-| Dato | Cálculo | Fuente |
-|---|---|---|
-| Rango de precios | `${price} - ${price_max}€` | GHL + Supabase |
-| Selector de color | Dropdown con `available_colors` | Supabase |
-| Badge visual | Mostrar `badge_label` si existe | Supabase |
-| Multiplicador rosas | "1 unidad = X rosas" (de `rose_step`) | Supabase |
+| Dato                | Cálculo                               | Fuente         |
+| ------------------- | ------------------------------------- | -------------- |
+| Rango de precios    | `${price} - ${price_max}€`            | GHL + Supabase |
+| Selector de color   | Dropdown con `available_colors`       | Supabase       |
+| Badge visual        | Mostrar `badge_label` si existe       | Supabase       |
+| Multiplicador rosas | "1 unidad = X rosas" (de `rose_step`) | Supabase       |
 
 ---
 
@@ -539,6 +540,7 @@ ghl_product_id ←→ legacy_catalog_id ←→ old_catalog_id
 ```
 
 **Ejemplo:**
+
 ```
 catalog.ts:       id = "ramo-rosas"
     ↓
@@ -589,6 +591,7 @@ Cuando cliente cambia:
 ```
 
 **Implementación:**
+
 - Ruta: `/admin/products`
 - Protegida: Solo ubicación "vOq7yOWR63XGU4qQ7XWd"
 - Datos: GET /api/products (GHL + Supabase combinados)
@@ -601,24 +604,26 @@ Cuando cliente cambia:
 ### Implementar Webhook en GHL
 
 **Paso 1: Registrar webhook en GHL**
+
 ```
 URL: https://vercel-app.com/api/webhooks/ghl-product
 Eventos: product.created, product.updated
 ```
 
 **Paso 2: Handler en Vercel**
+
 ```typescript
 // src/routes/api/webhooks/ghl-product.ts
 export async function POST(request: Request) {
   const event = await request.json();
-  
-  if (event.type === 'product.created') {
+
+  if (event.type === "product.created") {
     const { _id: ghlProductId, name } = event.product;
-    
+
     // Crear metadata en Supabase
-    await supabase.from('product_metadata').insert({
+    await supabase.from("product_metadata").insert({
       ghl_product_id: ghlProductId,
-      legacy_catalog_id: null,  // No existe en catalog.ts
+      legacy_catalog_id: null, // No existe en catalog.ts
       price_max: null,
       available_colors: null,
       badge_label: null,
@@ -626,12 +631,13 @@ export async function POST(request: Request) {
       created_at: new Date(),
     });
   }
-  
+
   return { ok: true };
 }
 ```
 
 **Resultado:**
+
 - ✅ Cliente crea producto en GHL
 - ✅ GHL envía webhook
 - ✅ Vercel crea metadata automáticamente
@@ -644,6 +650,7 @@ export async function POST(request: Request) {
 ### ¿Qué administra el cliente desde GHL?
 
 ✅ **DESDE GHL DASHBOARD:**
+
 - Nombre del producto
 - Descripción
 - Imagen
@@ -655,6 +662,7 @@ export async function POST(request: Request) {
 ### ¿Qué administra desde Vercel Admin?
 
 ✅ **DESDE VERCEL ADMIN:**
+
 - Precio máximo (rango)
 - Colores disponibles
 - Etiqueta/badge
@@ -663,6 +671,7 @@ export async function POST(request: Request) {
 ### ¿Qué NO se administra (fijos)?
 
 ❌ **CONFIGURACIÓN FIJA:**
+
 - roseStep (siempre 6)
 - legacy_catalog_id (asignado en migración)
 
@@ -682,4 +691,3 @@ export async function POST(request: Request) {
 **DOCUMENTO LISTO PARA APROBACIÓN**
 
 Pendiente confirmación de usuario antes de cualquier implementación.
-

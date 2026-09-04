@@ -2,7 +2,7 @@
 
 **Proyecto:** leksmflinhohnekbgmgj  
 **Migration:** 20260826000001_create_product_metadata.sql  
-**Fecha:** 2026-08-26  
+**Fecha:** 2026-08-26
 
 ---
 
@@ -118,6 +118,7 @@ COMMENT ON COLUMN public.product_metadata.status IS 'Soft delete status: active 
 ```
 
 **Resultado esperado:**
+
 ```
 Query executed successfully (took XXms)
 ```
@@ -129,7 +130,7 @@ Query executed successfully (took XXms)
 ### Verificación 1: Tabla existe
 
 ```sql
-SELECT table_name FROM information_schema.tables 
+SELECT table_name FROM information_schema.tables
 WHERE table_name = 'product_metadata' AND table_schema = 'public';
 ```
 
@@ -140,9 +141,9 @@ WHERE table_name = 'product_metadata' AND table_schema = 'public';
 ### Verificación 2: 15 columnas correctas
 
 ```sql
-SELECT column_name, data_type 
-FROM information_schema.columns 
-WHERE table_name = 'product_metadata' 
+SELECT column_name, data_type
+FROM information_schema.columns
+WHERE table_name = 'product_metadata'
 ORDER BY ordinal_position;
 ```
 
@@ -173,9 +174,9 @@ deleted_at          | timestamp with time zone
 ### Verificación 3: PRIMARY KEY
 
 ```sql
-SELECT constraint_name, constraint_type 
-FROM information_schema.table_constraints 
-WHERE table_name = 'product_metadata' 
+SELECT constraint_name, constraint_type
+FROM information_schema.table_constraints
+WHERE table_name = 'product_metadata'
 AND constraint_type = 'PRIMARY KEY';
 ```
 
@@ -186,14 +187,15 @@ AND constraint_type = 'PRIMARY KEY';
 ### Verificación 4: UNIQUE constraints
 
 ```sql
-SELECT constraint_name, constraint_type 
-FROM information_schema.table_constraints 
-WHERE table_name = 'product_metadata' 
+SELECT constraint_name, constraint_type
+FROM information_schema.table_constraints
+WHERE table_name = 'product_metadata'
 AND constraint_type = 'UNIQUE'
 ORDER BY constraint_name;
 ```
 
 **Esperado:** 2 filas
+
 ```
 constraint_name              | constraint_type
 ─────────────────────────────────────────────
@@ -206,14 +208,15 @@ unique_legacy_catalog_id     | UNIQUE
 ### Verificación 5: CHECK constraints
 
 ```sql
-SELECT constraint_name 
-FROM information_schema.table_constraints 
-WHERE table_name = 'product_metadata' 
+SELECT constraint_name
+FROM information_schema.table_constraints
+WHERE table_name = 'product_metadata'
 AND constraint_type = 'CHECK'
 ORDER BY constraint_name;
 ```
 
 **Esperado:** 4 filas
+
 ```
 constraint_name
 ─────────────────────────
@@ -228,13 +231,14 @@ product_metadata_status_check
 ### Verificación 6: Índices
 
 ```sql
-SELECT indexname 
-FROM pg_indexes 
+SELECT indexname
+FROM pg_indexes
 WHERE tablename = 'product_metadata'
 ORDER BY indexname;
 ```
 
 **Esperado:** 5 índices
+
 ```
 indexname
 ──────────────────────────
@@ -250,13 +254,14 @@ idx_status
 ### Verificación 7: Trigger
 
 ```sql
-SELECT trigger_name 
-FROM information_schema.triggers 
-WHERE trigger_schema = 'public' 
+SELECT trigger_name
+FROM information_schema.triggers
+WHERE trigger_schema = 'public'
 AND event_object_table = 'product_metadata';
 ```
 
 **Esperado:** 1 fila
+
 ```
 trigger_name
 ────────────────────────────────────
@@ -269,8 +274,8 @@ update_product_metadata_updated_at
 
 ```sql
 SELECT trigger_name, action_statement
-FROM information_schema.triggers 
-WHERE trigger_schema = 'public' 
+FROM information_schema.triggers
+WHERE trigger_schema = 'public'
 AND event_object_table = 'product_metadata';
 ```
 
@@ -281,12 +286,13 @@ AND event_object_table = 'product_metadata';
 ### Verificación 9: RLS habilitado
 
 ```sql
-SELECT rowsecurity 
-FROM pg_tables 
+SELECT rowsecurity
+FROM pg_tables
 WHERE tablename = 'product_metadata';
 ```
 
-**Esperado:** 
+**Esperado:**
+
 ```
 rowsecurity
 ───────────
@@ -299,12 +305,13 @@ true
 
 ```sql
 SELECT policyname, permissive, roles, qual
-FROM pg_policies 
+FROM pg_policies
 WHERE tablename = 'product_metadata'
 ORDER BY policyname;
 ```
 
 **Esperado:** 4 policies
+
 ```
 policyname                               | roles         | qual
 ──────────────────────────────────────────────────────────────────
@@ -319,11 +326,12 @@ update_product_metadata_service_role     | {service_role}
 ### Verificación 11: Tabla vacía
 
 ```sql
-SELECT COUNT(*) as row_count 
+SELECT COUNT(*) as row_count
 FROM public.product_metadata;
 ```
 
 **Esperado:**
+
 ```
 row_count
 ─────────
@@ -353,6 +361,7 @@ Después de ejecutar las 11 verificaciones, reporta:
 ## 🛑 IMPORTANTE
 
 NO hagas:
+
 - ❌ INSERT de datos
 - ❌ UPDATE
 - ❌ DELETE
@@ -364,6 +373,6 @@ NO hagas:
 - ❌ Cambios en Lovable Supabase
 
 Solo ejecuta:
+
 - ✅ La migración SQL exacta arriba
 - ✅ Las 11 queries de verificación
-

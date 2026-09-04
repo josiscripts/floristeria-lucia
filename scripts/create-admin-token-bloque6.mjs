@@ -18,8 +18,7 @@ envContent.split("\n").forEach((line) => {
 });
 
 const supabaseUrl = env.SUPABASE_URL || env.VITE_SUPABASE_URL;
-const supabaseServiceKey =
-  env.SUPABASE_SERVICE_ROLE_KEY || env.VITE_SUPABASE_SERVICE_ROLE_KEY;
+const supabaseServiceKey = env.SUPABASE_SERVICE_ROLE_KEY || env.VITE_SUPABASE_SERVICE_ROLE_KEY;
 
 if (!supabaseUrl || !supabaseServiceKey) {
   console.error("Missing Supabase credentials");
@@ -46,7 +45,7 @@ async function createAdminToken() {
         password,
         email_confirm: true,
       },
-      { skipConfirmation: true }
+      { skipConfirmation: true },
     );
 
     if (authError) {
@@ -59,15 +58,13 @@ async function createAdminToken() {
 
     // Set admin role in profiles
     console.log("Assigning admin role...");
-    const { error: profileError } = await supabase
-      .from("profiles")
-      .upsert(
-        {
-          id: userId,
-          role: "admin",
-        },
-        { onConflict: "id" }
-      );
+    const { error: profileError } = await supabase.from("profiles").upsert(
+      {
+        id: userId,
+        role: "admin",
+      },
+      { onConflict: "id" },
+    );
 
     if (profileError) {
       console.error("Error updating profile:", profileError);
@@ -107,8 +104,8 @@ async function createAdminToken() {
           created_at: new Date().toISOString(),
         },
         null,
-        2
-      )
+        2,
+      ),
     );
 
     console.log(`\n✓ Credentials saved:`);

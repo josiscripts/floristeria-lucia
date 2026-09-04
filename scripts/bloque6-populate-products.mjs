@@ -18,8 +18,7 @@ envContent.split("\n").forEach((line) => {
 });
 
 const supabaseUrl = env.SUPABASE_URL || env.VITE_SUPABASE_URL;
-const supabaseServiceKey =
-  env.SUPABASE_SERVICE_ROLE_KEY || env.VITE_SUPABASE_SERVICE_ROLE_KEY;
+const supabaseServiceKey = env.SUPABASE_SERVICE_ROLE_KEY || env.VITE_SUPABASE_SERVICE_ROLE_KEY;
 
 if (!supabaseUrl || !supabaseServiceKey) {
   console.error("Missing Supabase credentials");
@@ -83,10 +82,7 @@ async function populateProducts() {
         .single();
 
       if (createError) {
-        console.error(
-          `Error creating product ${meta.legacy_catalog_id}:`,
-          createError
-        );
+        console.error(`Error creating product ${meta.legacy_catalog_id}:`, createError);
         continue;
       }
 
@@ -102,15 +98,10 @@ async function populateProducts() {
           ghl_price_id: meta.ghl_price_id,
         };
 
-        const { error: optionError } = await supabase
-          .from("product_options")
-          .insert([optionData]);
+        const { error: optionError } = await supabase.from("product_options").insert([optionData]);
 
         if (optionError) {
-          console.warn(
-            `Warning creating option for ${meta.legacy_catalog_id}:`,
-            optionError
-          );
+          console.warn(`Warning creating option for ${meta.legacy_catalog_id}:`, optionError);
         }
       }
 

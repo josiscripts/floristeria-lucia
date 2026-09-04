@@ -16,22 +16,22 @@ Se realizó auditoría directa de la subcuenta de Floristería Lucía en HighLev
 
 ## 1. ESTADO DE CONEXIÓN MCP
 
-| Aspecto | Estado |
-|---------|--------|
-| **Servidor MCP** | ✅ leadconnector (HTTP) |
-| **URL** | https://services.leadconnectorhq.com/mcp/anthropic/v2 |
-| **Autenticación** | ✅ OAuth completada (tokens válidos) |
-| **Scopes disponibles** | opportunities.readonly, opportunities.write, contacts.readonly, users.readonly |
-| **Operaciones disponibles** | 200+ (read/write/delete operations) |
+| Aspecto                     | Estado                                                                         |
+| --------------------------- | ------------------------------------------------------------------------------ |
+| **Servidor MCP**            | ✅ leadconnector (HTTP)                                                        |
+| **URL**                     | https://services.leadconnectorhq.com/mcp/anthropic/v2                          |
+| **Autenticación**           | ✅ OAuth completada (tokens válidos)                                           |
+| **Scopes disponibles**      | opportunities.readonly, opportunities.write, contacts.readonly, users.readonly |
+| **Operaciones disponibles** | 200+ (read/write/delete operations)                                            |
 
 ---
 
 ## 2. SUBCUENTA CONFIRMADA
 
-| Campo | Valor |
-|-------|-------|
-| **Nombre** | C. de Motrico, 9 |
-| **Dirección** | calle universidad 1 |
+| Campo           | Valor                                |
+| --------------- | ------------------------------------ |
+| **Nombre**      | C. de Motrico, 9                     |
+| **Dirección**   | calle universidad 1                  |
 | **Location ID** | `vOq7yOWR63XGU4qQ7XWd` ✅ CONFIRMADO |
 
 **Status:** ✅ Acceso directo verificado mediante `list_locations`
@@ -41,11 +41,13 @@ Se realizó auditoría directa de la subcuenta de Floristería Lucía en HighLev
 ## 3. PIPELINES ENCONTRADOS
 
 ### Pipeline 1: Marketing Pipeline
+
 - **ID:** `PgjCFlkS4T669e8ZnVOt`
 - **Stages:** 8 stages (New Lead → Initial Contact → Booking/Order Confirmation → Preparation/Fulfillment → Delivery/Pick Up → Post Sale Follow Up → Retention & Referral → Review Request)
 - **Uso:** Pipeline de marketing genérico
 
 ### Pipeline 2: **Pedidos Floristería Lucía** ⭐ CORRECTO
+
 - **ID:** `KHKXOKLuYXPLQlkjc0aq` ✅ **EXACTO - Coincide con código**
 - **Nombre exacto:** "Pedidos Floristería Lucía"
 - **Stages:** 6 stages (orden correcto)
@@ -55,16 +57,17 @@ Se realizó auditoría directa de la subcuenta de Floristería Lucía en HighLev
 
 ## 4. STAGES DEL PIPELINE DE PEDIDOS (VERIFICADO)
 
-| Posición | Stage ID | Nombre | Probabilidad | Mapeo a Status Supabase |
-|----------|----------|--------|--------------|----------------------|
-| 0 | `1de8d7dc-deac-45a6-a87e-e7198c3ef4a5` | Recibido | 20% | **pending** ✅ |
-| 1 | `a737a3b9-98fd-4446-8f15-eb26333cc6f3` | Confirmado | 40% | **confirmed** ✅ |
-| 2 | `72c6b0eb-a0ae-4cd5-b122-482add4dd6c7` | Preparando | 60% | **preparing** ✅ |
-| 3 | `ba7e6913-7173-43cd-9d94-bf66e2add4a1` | Listo | 80% | **ready** ✅ |
-| 4 | `910fc366-8299-49a0-aaf4-99e15558fd07` | Entregado | 100% | **delivered** ✅ |
-| 5 | `bedbab33-62f0-41fd-b51e-a6b2ad0aa8ed` | Cancelado | 0% | **cancelled** ✅ |
+| Posición | Stage ID                               | Nombre     | Probabilidad | Mapeo a Status Supabase |
+| -------- | -------------------------------------- | ---------- | ------------ | ----------------------- |
+| 0        | `1de8d7dc-deac-45a6-a87e-e7198c3ef4a5` | Recibido   | 20%          | **pending** ✅          |
+| 1        | `a737a3b9-98fd-4446-8f15-eb26333cc6f3` | Confirmado | 40%          | **confirmed** ✅        |
+| 2        | `72c6b0eb-a0ae-4cd5-b122-482add4dd6c7` | Preparando | 60%          | **preparing** ✅        |
+| 3        | `ba7e6913-7173-43cd-9d94-bf66e2add4a1` | Listo      | 80%          | **ready** ✅            |
+| 4        | `910fc366-8299-49a0-aaf4-99e15558fd07` | Entregado  | 100%         | **delivered** ✅        |
+| 5        | `bedbab33-62f0-41fd-b51e-a6b2ad0aa8ed` | Cancelado  | 0%           | **cancelled** ✅        |
 
 **Verificación crítica:** Los IDs de stage en HighLevel coinciden **EXACTAMENTE** con los constantes en `src/lib/ghl/types.ts`:
+
 ```typescript
 const GHL_STAGE_TO_ORDER_STATUS = {
   "1de8d7dc-deac-45a6-a87e-e7198c3ef4a5": "pending",
@@ -72,8 +75,8 @@ const GHL_STAGE_TO_ORDER_STATUS = {
   "72c6b0eb-a0ae-4cd5-b122-482add4dd6c7": "preparing",
   "ba7e6913-7173-43cd-9d94-bf66e2add4a1": "ready",
   "910fc366-8299-49a0-aaf4-99e15558fd07": "delivered",
-  "bedbab33-62f0-41fd-b51e-a6b2ad0aa8ed": "cancelled"
-}
+  "bedbab33-62f0-41fd-b51e-a6b2ad0aa8ed": "cancelled",
+};
 ```
 
 ✅ **STATUS:** CÓDIGO ESTÁ PERFECTAMENTE SINCRONIZADO CON HL
@@ -85,6 +88,7 @@ const GHL_STAGE_TO_ORDER_STATUS = {
 **Total encontradas:** 2 oportunidades de prueba
 
 ### Oportunidad 1
+
 - **ID:** `gDfRAWhIp0dJ7TVO1G0D`
 - **Nombre:** ORD-F3-925445
 - **Pipeline:** Pedidos Floristería Lucía
@@ -94,6 +98,7 @@ const GHL_STAGE_TO_ORDER_STATUS = {
 - **Custom Fields:** [] (vacío)
 
 ### Oportunidad 2
+
 - **ID:** `eg9xwPMiMvQ3fC2fVPCg`
 - **Nombre:** ORD-F3-924978
 - **Pipeline:** Pedidos Floristería Lucía
@@ -110,23 +115,23 @@ const GHL_STAGE_TO_ORDER_STATUS = {
 
 ### Operaciones de LECTURA ✅
 
-| Operación | Scope | Descripción |
-|-----------|-------|-------------|
-| `get-pipelines` | opportunities.readonly | Listar pipelines ✅ |
-| `search-opportunity` | opportunities.readonly | Buscar oportunidades ✅ |
-| `search-contacts-advanced` | contacts.readonly | Buscar contactos ✅ |
-| `search-users` | users.readonly | Buscar usuarios (requiere companyId) |
-| `get-custom-fields-by-object-key` | locations/customFields.readonly | Obtener custom fields |
+| Operación                         | Scope                           | Descripción                          |
+| --------------------------------- | ------------------------------- | ------------------------------------ |
+| `get-pipelines`                   | opportunities.readonly          | Listar pipelines ✅                  |
+| `search-opportunity`              | opportunities.readonly          | Buscar oportunidades ✅              |
+| `search-contacts-advanced`        | contacts.readonly               | Buscar contactos ✅                  |
+| `search-users`                    | users.readonly                  | Buscar usuarios (requiere companyId) |
+| `get-custom-fields-by-object-key` | locations/customFields.readonly | Obtener custom fields                |
 
 ### Operaciones de ESCRITURA ✅
 
-| Operación | Scope | Aprobación | Descripción |
-|-----------|-------|-----------|-------------|
-| `create-opportunity` | opportunities.write | ✅ Requerida | Crear nueva oportunidad |
-| `update-opportunity` | opportunities.write | ✅ Requerida | **Actualizar oportunidad (incluye pipelineStageId)** |
-| `Upsert-opportunity` | opportunities.write | ✅ Requerida | Crear o actualizar |
-| `update-opportunity-status` | opportunities.write | ✅ Requerida | Cambiar status (open/won/lost/abandoned) |
-| `create-contact` | contacts.write | ✅ Requerida | Crear contacto |
+| Operación                   | Scope               | Aprobación   | Descripción                                          |
+| --------------------------- | ------------------- | ------------ | ---------------------------------------------------- |
+| `create-opportunity`        | opportunities.write | ✅ Requerida | Crear nueva oportunidad                              |
+| `update-opportunity`        | opportunities.write | ✅ Requerida | **Actualizar oportunidad (incluye pipelineStageId)** |
+| `Upsert-opportunity`        | opportunities.write | ✅ Requerida | Crear o actualizar                                   |
+| `update-opportunity-status` | opportunities.write | ✅ Requerida | Cambiar status (open/won/lost/abandoned)             |
+| `create-contact`            | contacts.write      | ✅ Requerida | Crear contacto                                       |
 
 **Status:** Todas las operaciones de ESCRITURA requieren `idempotencyKey` para garantizar idempotencia.
 
@@ -136,13 +141,15 @@ const GHL_STAGE_TO_ORDER_STATUS = {
 
 ### ❌ HALLAZGO CRÍTICO: NO HAY OPERACIONES DE WEBHOOK EN MCP
 
-**Búsqueda realizada:** 
+**Búsqueda realizada:**
+
 - "webhook webhooks hooks register create list get"
 - "integration private integration events event subscription"
 
 **Resultado:** 0 operaciones de webhook encontradas
 
-**Implicación:** 
+**Implicación:**
+
 - ✅ La configuración de webhooks **DEBE hacerse manualmente** en el dashboard de HighLevel
 - ✅ El MCP **NO puede** crear, listar, consultar, o eliminar webhooks
 - ✅ El MCP **NO puede** consultar logs de webhooks
@@ -157,24 +164,28 @@ const GHL_STAGE_TO_ORDER_STATUS = {
 ### Código local (`src/routes/api.webhooks.ghl-opportunity.ts`)
 
 **Espera:**
+
 - Event: `"opportunity.stage_change"`
 - Payload: `{ webhookId, locationId, data: { newStageId, oldStageId, ... } }`
 - Firma: Ed25519 (X-GHL-Signature header)
 - Deduplicación: UNIQUE(delivery_id = webhookId)
 
 **Pipeline supuesto:**
+
 - Pipeline ID: `KHKXOKLuYXPLQlkjc0aq` ✅ VERIFICADO
 - Stage IDs: 6 stages con IDs específicos ✅ VERIFICADOS
 
 ### HighLevel Real (Verificado mediante MCP)
 
 ✅ **Pipeline existe con exactitud:**
+
 - Pipeline ID: `KHKXOKLuYXPLQlkjc0aq` ✅ MATCH
 - Stages: 6 stages ✅ MATCH
 - Stage IDs: Todos coinciden ✅ MATCH
 - Nombres: Español (Recibido, Confirmado, etc.) ✅ MATCH
 
 ✅ **Configuración es compatible:**
+
 - El código puede recibir webhooks de stage_change
 - El código puede parsear newStageId
 - El código puede mapear stage a status
@@ -185,6 +196,7 @@ const GHL_STAGE_TO_ORDER_STATUS = {
 ## 9. DISCREPANCIAS ENCONTRADAS
 
 ### Discrepancia 1: Documentación vs Private Integration
+
 **Estado:** RESUELTO
 
 - Documentación revisada era para **Marketplace OAuth Apps** (OpenAI documentation style)
@@ -197,15 +209,18 @@ const GHL_STAGE_TO_ORDER_STATUS = {
 **Conclusión:** No hay incompatibilidad real. El código usa Private Integration correctamente.
 
 ### Discrepancia 2: Custom Fields en Oportunidades
+
 **Estado:** INFORMACIÓN PENDIENTE
 
 **Encontrado en auditoría:** Las oportunidades de prueba no tienen custom fields (`customFields: []`)
 
 **Expectedado según código FASE 3:**
+
 - El código intenta crear oportunidades con 9 custom fields específicos
 - Véase: `src/lib/ghl/client.server.ts` - custom fields mapping
 
 **Investigación necesaria:** ¿Los custom fields fueron creados en HighLevel?
+
 - Si existen: Verificar IDs y nombres
 - Si no existen: Crear en GHL Dashboard o mediante API
 
@@ -220,6 +235,7 @@ const GHL_STAGE_TO_ORDER_STATUS = {
 **Hallazgo:** La operación `search-users` requiere un `companyId` obligatorio que no es automático del locationId.
 
 **Recomendación:** Si se necesitan asignar oportunidades a usuarios en FASE 4.4, obtener los IDs de usuario desde:
+
 1. El dashboard de HighLevel manualmente
 2. O consultar documentación de API de HighLevel para derivar companyId
 
@@ -227,14 +243,14 @@ const GHL_STAGE_TO_ORDER_STATUS = {
 
 ## 11. CAPACIDADES NO DISPONIBLES EN MCP
 
-| Capacidad | Status | Alternativa |
-|-----------|--------|-----------|
-| Crear/Listar/Eliminar webhooks | ❌ No | Dashboard manual |
-| Consultar webhook logs | ❌ No | Dashboard manual |
-| Crear/Modificar pipelines | ❌ No | Dashboard manual |
-| Crear/Modificar stages | ❌ No | Dashboard manual |
-| Gestionar integraciones | ❌ No | Dashboard manual |
-| Buscar usuarios sin companyId | ❌ No | Dashboard o companyId |
+| Capacidad                      | Status | Alternativa           |
+| ------------------------------ | ------ | --------------------- |
+| Crear/Listar/Eliminar webhooks | ❌ No  | Dashboard manual      |
+| Consultar webhook logs         | ❌ No  | Dashboard manual      |
+| Crear/Modificar pipelines      | ❌ No  | Dashboard manual      |
+| Crear/Modificar stages         | ❌ No  | Dashboard manual      |
+| Gestionar integraciones        | ❌ No  | Dashboard manual      |
+| Buscar usuarios sin companyId  | ❌ No  | Dashboard o companyId |
 
 **Conclusión:** El MCP es suficiente para las operaciones **de datos** (oportunidades, contactos), pero NO para infraestructura (webhooks, pipelines).
 
@@ -265,6 +281,7 @@ const GHL_STAGE_TO_ORDER_STATUS = {
 ```
 
 **Validación:**
+
 - ✅ Paso 2: MCP `create-opportunity` disponible
 - ✅ Paso 4-5: Webhook recibido correctamente
 - ✅ Paso 6: Ed25519 signature verificado en código
@@ -319,12 +336,12 @@ const GHL_STAGE_TO_ORDER_STATUS = {
     "id": "KHKXOKLuYXPLQlkjc0aq",
     "name": "Pedidos Floristería Lucía",
     "stages": [
-      {"id": "1de8d7dc-deac-45a6-a87e-e7198c3ef4a5", "name": "Recibido", "status": "pending"},
-      {"id": "a737a3b9-98fd-4446-8f15-eb26333cc6f3", "name": "Confirmado", "status": "confirmed"},
-      {"id": "72c6b0eb-a0ae-4cd5-b122-482add4dd6c7", "name": "Preparando", "status": "preparing"},
-      {"id": "ba7e6913-7173-43cd-9d94-bf66e2add4a1", "name": "Listo", "status": "ready"},
-      {"id": "910fc366-8299-49a0-aaf4-99e15558fd07", "name": "Entregado", "status": "delivered"},
-      {"id": "bedbab33-62f0-41fd-b51e-a6b2ad0aa8ed", "name": "Cancelado", "status": "cancelled"}
+      { "id": "1de8d7dc-deac-45a6-a87e-e7198c3ef4a5", "name": "Recibido", "status": "pending" },
+      { "id": "a737a3b9-98fd-4446-8f15-eb26333cc6f3", "name": "Confirmado", "status": "confirmed" },
+      { "id": "72c6b0eb-a0ae-4cd5-b122-482add4dd6c7", "name": "Preparando", "status": "preparing" },
+      { "id": "ba7e6913-7173-43cd-9d94-bf66e2add4a1", "name": "Listo", "status": "ready" },
+      { "id": "910fc366-8299-49a0-aaf4-99e15558fd07", "name": "Entregado", "status": "delivered" },
+      { "id": "bedbab33-62f0-41fd-b51e-a6b2ad0aa8ed", "name": "Cancelado", "status": "cancelled" }
     ]
   },
   "integration": {
@@ -344,18 +361,18 @@ const GHL_STAGE_TO_ORDER_STATUS = {
 
 ### ✅ AUDITORÍA COMPLETADA EXITOSAMENTE
 
-| Aspecto | Estado |
-|---------|--------|
-| Conexión MCP | ✅ Autenticada y funcional |
-| Subcuenta | ✅ Confirmada |
-| Pipeline | ✅ Existe, correctamente configurado |
-| Stages | ✅ 6 stages, IDs verificados |
-| Oportunidades | ✅ Existentes, estructura correcta |
-| Custom fields | ⚠️ Requiere verificación |
-| Capacidades read | ✅ Completas |
-| Capacidades write | ✅ Disponibles para oportunidades |
-| Webhooks MCP | ❌ No disponibles (normal, usar dashboard) |
-| Código local | ✅ Sincronizado con realidad HL |
+| Aspecto           | Estado                                     |
+| ----------------- | ------------------------------------------ |
+| Conexión MCP      | ✅ Autenticada y funcional                 |
+| Subcuenta         | ✅ Confirmada                              |
+| Pipeline          | ✅ Existe, correctamente configurado       |
+| Stages            | ✅ 6 stages, IDs verificados               |
+| Oportunidades     | ✅ Existentes, estructura correcta         |
+| Custom fields     | ⚠️ Requiere verificación                   |
+| Capacidades read  | ✅ Completas                               |
+| Capacidades write | ✅ Disponibles para oportunidades          |
+| Webhooks MCP      | ❌ No disponibles (normal, usar dashboard) |
+| Código local      | ✅ Sincronizado con realidad HL            |
 
 ### SIGUIENTE PASO
 
@@ -389,4 +406,3 @@ const GHL_STAGE_TO_ORDER_STATUS = {
 **Errores encontrados:** 0  
 **Advertencias:** Custom fields requieren verificación  
 **Recomendación:** Proceder a FASE 4.4 — Webhook Registration
-

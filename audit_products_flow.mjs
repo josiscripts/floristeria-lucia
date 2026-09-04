@@ -8,9 +8,9 @@ async function auditFlow() {
   console.log("1. Admin Flow: GET /api/products");
   try {
     const adminRes = await fetch("http://localhost:3000/api/products", {
-      headers: { "Cookie": "authenticated=true" },
+      headers: { Cookie: "authenticated=true" },
     });
-    
+
     if (adminRes.ok) {
       const data = await adminRes.json();
       console.log(`   ✓ Status 200`);
@@ -30,7 +30,7 @@ async function auditFlow() {
   console.log("\n2. Public Flow: GET /api/ghl/products");
   try {
     const pubRes = await fetch("http://localhost:3000/api/ghl/products?limit=500");
-    
+
     if (pubRes.ok) {
       const data = await pubRes.json();
       console.log(`   ✓ Status 200`);
@@ -55,9 +55,9 @@ async function auditFlow() {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
-          "Version": "v3",
+          Version: "v3",
         },
-      }
+      },
     );
 
     if (res.ok) {
@@ -66,10 +66,10 @@ async function auditFlow() {
       console.log(`   ✓ Status 200`);
       console.log(`   - Items: ${items.length}`);
       console.log(`   - Total: ${Array.isArray(data.total) ? data.total[0]?.total : data.total}`);
-      
+
       // Analyze categories
       const categories = {};
-      items.forEach(p => {
+      items.forEach((p) => {
         const cat = p.category || "NO CATEGORY";
         categories[cat] = (categories[cat] || 0) + 1;
       });

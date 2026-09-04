@@ -12,7 +12,7 @@ async function tryCreate(productType) {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
-          "Version": "v3",
+          Version: "v3",
         },
         body: JSON.stringify({
           locationId,
@@ -22,7 +22,7 @@ async function tryCreate(productType) {
           productType,
           category: "ramos",
         }),
-      }
+      },
     );
 
     const data = await res.json();
@@ -43,7 +43,7 @@ async function tryCreate(productType) {
 async function test() {
   console.log("Testing productType enum values...\n");
   for (const pt of productTypes) {
-    await new Promise(r => setTimeout(r, 300));
+    await new Promise((r) => setTimeout(r, 300));
     await tryCreate(pt);
   }
 }

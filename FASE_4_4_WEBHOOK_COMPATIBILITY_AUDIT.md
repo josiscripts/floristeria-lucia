@@ -19,13 +19,13 @@ No hay incompatibilidades encontradas. El webhook puede ser publicado y activado
 
 ### 1.1 Método HTTP y Ruta
 
-| Aspecto | Valor |
-|---------|-------|
-| **Método HTTP** | POST |
-| **Ruta** | `/api/webhooks/ghl-opportunity` |
-| **Ubicación en código** | `src/routes/api.webhooks.ghl-opportunity.ts` línea 257 |
-| **Manejo de headers** | `request.headers.get("x-ghl-signature")` línea 267 |
-| **Lectura de body** | `request.text()` línea 264 (raw body ANTES de parsear JSON) |
+| Aspecto                 | Valor                                                       |
+| ----------------------- | ----------------------------------------------------------- |
+| **Método HTTP**         | POST                                                        |
+| **Ruta**                | `/api/webhooks/ghl-opportunity`                             |
+| **Ubicación en código** | `src/routes/api.webhooks.ghl-opportunity.ts` línea 257      |
+| **Manejo de headers**   | `request.headers.get("x-ghl-signature")` línea 267          |
+| **Lectura de body**     | `request.text()` línea 264 (raw body ANTES de parsear JSON) |
 
 **Status:** ✅ Correcto
 
@@ -49,6 +49,7 @@ const isValid = crypto.verify("ed25519", bodyBuffer, GHL_PUBLIC_KEY, signatureBu
 ```
 
 **Mecanismo esperado:**
+
 1. ✅ Header: `X-GHL-Signature`
 2. ✅ Formato: Base64-encoded Ed25519 signature
 3. ✅ Algoritmo: Ed25519
@@ -66,21 +67,22 @@ const isValid = crypto.verify("ed25519", bodyBuffer, GHL_PUBLIC_KEY, signatureBu
 
 ```typescript
 type GHLOpportunityStageChangeWebhook = {
-  event: "opportunity.stage_change";              // ← REQUERIDO
-  webhookId: string;                              // ← REQUERIDO (deduplicación)
-  timestamp?: string;                             // Opcional
-  locationId: string;                             // ← REQUERIDO
+  event: "opportunity.stage_change"; // ← REQUERIDO
+  webhookId: string; // ← REQUERIDO (deduplicación)
+  timestamp?: string; // Opcional
+  locationId: string; // ← REQUERIDO
   data: {
-    id: string;                                   // ← opportunity ID
-    contactId: string;                            // ← contact ID
-    pipelineId: string;                           // ← VERIFICADO contra GHL_PIPELINE_ID
-    oldStageId: string;                           // Capturado pero no usado actualmente
-    newStageId: string;                           // ← MAPEADO a order status
-    stageName?: string;                           // Opcional
-    name: string;                                 // opportunity name
-    monetaryValue?: number;                       // Opcional
-    status?: string;                              // Opcional
-    customFields?: Array<{                        // ← Usado para buscar order ID
+    id: string; // ← opportunity ID
+    contactId: string; // ← contact ID
+    pipelineId: string; // ← VERIFICADO contra GHL_PIPELINE_ID
+    oldStageId: string; // Capturado pero no usado actualmente
+    newStageId: string; // ← MAPEADO a order status
+    stageName?: string; // Opcional
+    name: string; // opportunity name
+    monetaryValue?: number; // Opcional
+    status?: string; // Opcional
+    customFields?: Array<{
+      // ← Usado para buscar order ID
       fieldId: string;
       value: string | number | boolean | null;
     }>;
@@ -89,6 +91,7 @@ type GHLOpportunityStageChangeWebhook = {
 ```
 
 **Validación en código (línea 281-287):**
+
 ```typescript
 if (!payload.event || !payload.locationId || !payload.data?.id) {
   return json({ error: "Invalid webhook payload" }, { status: 400 });
@@ -101,16 +104,16 @@ if (!payload.event || !payload.locationId || !payload.data?.id) {
 
 ### 1.4 Campos del Payload Utilizados por Código
 
-| Campo | Línea | Uso | Obligatorio |
-|-------|-------|-----|-------------|
-| `event` | 141, 281 | Validación de tipo y switch | ✅ SÍ |
-| `webhookId` | 278, 290, 234 | Deduplicación via UNIQUE | ✅ SÍ |
-| `locationId` | 281 | Validación | ✅ SÍ |
-| `data.id` | 146, 281 | Opportunity ID | ✅ SÍ |
-| `data.pipelineId` | 146, 149 | Validación vs GHL_PIPELINE_ID | ✅ SÍ |
-| `data.newStageId` | 146, 160 | Mapeo a order status | ✅ SÍ |
-| `data.customFields` | 146, 103-107 | Búsqueda alternativa de order | ❌ NO |
-| `data.contactId` | 146, 238 | Grabado en webhook_events | ❌ NO |
+| Campo               | Línea         | Uso                           | Obligatorio |
+| ------------------- | ------------- | ----------------------------- | ----------- |
+| `event`             | 141, 281      | Validación de tipo y switch   | ✅ SÍ       |
+| `webhookId`         | 278, 290, 234 | Deduplicación via UNIQUE      | ✅ SÍ       |
+| `locationId`        | 281           | Validación                    | ✅ SÍ       |
+| `data.id`           | 146, 281      | Opportunity ID                | ✅ SÍ       |
+| `data.pipelineId`   | 146, 149      | Validación vs GHL_PIPELINE_ID | ✅ SÍ       |
+| `data.newStageId`   | 146, 160      | Mapeo a order status          | ✅ SÍ       |
+| `data.customFields` | 146, 103-107  | Búsqueda alternativa de order | ❌ NO       |
+| `data.contactId`    | 146, 238      | Grabado en webhook_events     | ❌ NO       |
 
 **Campos opcionales:** customFields, contactId, timestamp, stageName, monetaryValue, status
 
@@ -123,17 +126,20 @@ if (!payload.event || !payload.locationId || !payload.data?.id) {
 ### 2.1 Mecanismo de Firma: Ed25519 ✅
 
 **Confirmado mediante auditorías previas:**
+
 - **FASE_4_4_MCP_REAL_AUDIT.md:** "Firma esperada: ✅ Ed25519 (header: X-GHL-Signature)"
 - **FASE_4_3_2_SIGNATURE_CORRECTION.md:** "Mecanismo oficial: Ed25519"
 - **Documentación oficial HighLevel:** Ed25519 para Private Integration
 
 **¿Qué envía HighLevel Workflow?**
+
 ```
 Header: X-GHL-Signature
 Valor: <base64-encoded-ed25519-signature>
 ```
 
 **¿Qué espera nuestro código?**
+
 ```
 Header: x-ghl-signature (case-insensitive en request.headers.get())
 Valor: base64 decodificado a Buffer → crypto.verify("ed25519", ...)
@@ -146,15 +152,18 @@ Valor: base64 decodificado a Buffer → crypto.verify("ed25519", ...)
 ### 2.2 Evento: `opportunity.stage_change` ✅
 
 **Confirmado mediante auditorías previas:**
+
 - **FASE_4_4_MCP_REAL_AUDIT.md:** "Evento a registrar: ✅ opportunity.stage_change (Private Integration event name)"
 - **Código esperado (línea 123):** `event: "opportunity.stage_change"`
 
 **¿Qué envía HighLevel Workflow?**
+
 ```
 event: "opportunity.stage_change"
 ```
 
 **¿Qué espera nuestro código?**
+
 ```typescript
 if (payload.event !== "opportunity.stage_change") {
   return { success: false, error: "Not a stage_change event" };
@@ -168,6 +177,7 @@ if (payload.event !== "opportunity.stage_change") {
 ### 2.3 Payload Structure ✅
 
 **Verificado mediante:**
+
 - **MCP Audit:** Obtuvimos estructura real de oportunidades
 - **Tipos TypeScript:** Definidos para stage_change events
 - **Código endpoint:** Valida y procesa cada campo
@@ -190,7 +200,7 @@ if (payload.event !== "opportunity.stage_change") {
     "monetaryValue": 99.99,
     "customFields": [
       { "fieldId": "8eLnIjuKBbd6DMwysl0M", "value": "ORD-F3-925445" },
-      { "fieldId": "WWKLWHR7EUDeGPi7zlOH", "value": "order-uuid-here" },
+      { "fieldId": "WWKLWHR7EUDeGPi7zlOH", "value": "order-uuid-here" }
       // ... más custom fields ...
     ]
   }
@@ -198,6 +208,7 @@ if (payload.event !== "opportunity.stage_change") {
 ```
 
 **¿Nuestro código lo procesa correctamente?**
+
 - ✅ Línea 276: `const parsedPayload = JSON.parse(rawBody) as GHLOpportunityWebhookPayload;`
 - ✅ Línea 141-143: Valida `event !== "opportunity.stage_change"`
 - ✅ Línea 149: Valida `pipelineId === GHL_PIPELINE_ID` ("KHKXOKLuYXPLQlkjc0aq")
@@ -214,11 +225,13 @@ if (payload.event !== "opportunity.stage_change") {
 ### 3.1 Pipeline ID Validation
 
 **Hardcodeado en endpoint:**
+
 ```typescript
 const GHL_PIPELINE_ID = "KHKXOKLuYXPLQlkjc0aq"; // Línea 19
 ```
 
 **Validado en código:**
+
 ```typescript
 if (pipelineId !== GHL_PIPELINE_ID) {
   return { success: false, error: `Pipeline ${pipelineId} not configured...` };
@@ -226,6 +239,7 @@ if (pipelineId !== GHL_PIPELINE_ID) {
 ```
 
 **Confirmado real en HighLevel (via MCP):**
+
 - Pipeline ID en HL: `KHKXOKLuYXPLQlkjc0aq` ✅
 - Nombre: "Pedidos Floristería Lucía" ✅
 
@@ -237,16 +251,17 @@ if (pipelineId !== GHL_PIPELINE_ID) {
 
 ```typescript
 const GHL_STAGE_TO_ORDER_STATUS = {
-  "1de8d7dc-deac-45a6-a87e-e7198c3ef4a5": "pending",      // Recibido
-  "a737a3b9-98fd-4446-8f15-eb26333cc6f3": "confirmed",    // Confirmado
-  "72c6b0eb-a0ae-4cd5-b122-482add4dd6c7": "preparing",    // Preparando
-  "ba7e6913-7173-43cd-9d94-bf66e2add4a1": "ready",        // Listo
-  "910fc366-8299-49a0-aaf4-99e15558fd07": "delivered",    // Entregado
-  "bedbab33-62f0-41fd-b51e-a6b2ad0aa8ed": "cancelled",    // Cancelado
+  "1de8d7dc-deac-45a6-a87e-e7198c3ef4a5": "pending", // Recibido
+  "a737a3b9-98fd-4446-8f15-eb26333cc6f3": "confirmed", // Confirmado
+  "72c6b0eb-a0ae-4cd5-b122-482add4dd6c7": "preparing", // Preparando
+  "ba7e6913-7173-43cd-9d94-bf66e2add4a1": "ready", // Listo
+  "910fc366-8299-49a0-aaf4-99e15558fd07": "delivered", // Entregado
+  "bedbab33-62f0-41fd-b51e-a6b2ad0aa8ed": "cancelled", // Cancelado
 };
 ```
 
 **Verificado real en HighLevel (via MCP FASE_4_4_MCP_REAL_AUDIT.md):**
+
 - Stage ID 1de8d7dc... → "Recibido" ✅
 - Stage ID a737a3b9... → "Confirmado" ✅
 - Stage ID 72c6b0eb... → "Preparando" ✅
@@ -255,6 +270,7 @@ const GHL_STAGE_TO_ORDER_STATUS = {
 - Stage ID bedbab33... → "Cancelado" ✅
 
 **Procesamiento en endpoint:**
+
 ```typescript
 const newStatus = getOrderStatusFromGHLStage(newStageId); // Línea 160
 if (!newStatus) {
@@ -271,6 +287,7 @@ if (!newStatus) {
 ### 4.1 Configuración en Código
 
 **Uso de webhookId:**
+
 ```typescript
 // Línea 228: webhookId es obligatorio
 if (!payload.webhookId) {
@@ -290,15 +307,18 @@ const { data: existingEvent } = await supabase
 ```
 
 **Tabla webhook_events:**
+
 ```sql
 UNIQUE(delivery_id) -- Deduplicación automática via BD
 ```
 
 **Comportamiento si webhook se recibe 2x con mismo webhookId:**
+
 1. Primera entrega: INSERT en webhook_events, procesa orden
 2. Segunda entrega (reintento): Encuentra row existente, retorna 200 OK idempotente (línea 302-310)
 
 **¿HighLevel Workflow envía webhookId?**
+
 - ✅ Sí, confirmado via MCP audit (campo "webhookId" presente en payload)
 - ✅ Siempre presente, no opcional
 - ✅ Único por evento + intento
@@ -324,33 +344,35 @@ async function findOrderByOpportunity(
     .select("id, status, updated_at")
     .eq("ghl_opportunity_id", opportunityId)
     .single();
-  
+
   if (!errOpp && orderByOpp) return orderByOpp;
-  
+
   // Estrategia 2: Buscar por custom field (WWKLWHR7EUDeGPi7zlOH = order UUID)
   const orderIdField = customFields.find(
     (field) => field.fieldId === "WWKLWHR7EUDeGPi7zlOH" && field.value
   );
-  
+
   if (orderIdField && typeof orderIdField.value === "string") {
     const { data: orderByUUID } = await supabase
       .from("orders")
       .select("id, status, updated_at")
       .eq("id", orderIdField.value)
       .single();
-    
+
     if (!errUUID && orderByUUID) return orderByUUID;
   }
-  
+
   return null;
 }
 ```
 
 **Campos necesarios:**
+
 1. ✅ `data.id` → Opportunity ID para búsqueda 1
 2. ✅ `data.customFields` → Array para búsqueda 2
 
 **Confirmado que HighLevel Workflow envía:**
+
 - ✅ opportunity.data.id
 - ✅ opportunity.data.customFields[]
 
@@ -368,17 +390,19 @@ async function findOrderByOpportunity(
 const { error: updateError } = await supabase
   .from("orders")
   .update({
-    status: newStatus,          // Mapeado desde newStageId
+    status: newStatus, // Mapeado desde newStageId
     updated_at: new Date().toISOString(),
   })
   .eq("id", order.id);
 ```
 
 **Cambios realizados:**
+
 - ✅ `status` ← Mapeado desde `newStageId` via `getOrderStatusFromGHLStage()`
 - ✅ `updated_at` ← Timestamp actual
 
 **Valores posibles:**
+
 - pending (Recibido)
 - confirmed (Confirmado)
 - preparing (Preparando)
@@ -401,7 +425,7 @@ async function recordWebhookEvent(
   payload: GHLOpportunityWebhookPayload,
   orderId: string | null,
   processed: boolean,
-  errorMessage: string | null
+  errorMessage: string | null,
 ): Promise<void> {
   const { error } = await supabase.from("webhook_events").insert({
     delivery_id: payload.webhookId,
@@ -419,6 +443,7 @@ async function recordWebhookEvent(
 ```
 
 **Datos grabados:**
+
 - ✅ delivery_id (para deduplicación)
 - ✅ event_type
 - ✅ opportunity_id
@@ -437,14 +462,14 @@ async function recordWebhookEvent(
 
 ### 8.1 Códigos de Respuesta
 
-| Caso | Status | Body |
-|------|--------|------|
-| Firma inválida | 401 | `{ error: "Invalid webhook signature" }` |
-| Payload inválido | 400 | `{ error: "Invalid webhook payload" }` |
-| Procesado exitosamente | 200 | `{ success: true, orderId, ... }` |
-| Evento válido no procesado | 200 | `{ success: true, message: "..." }` |
-| Error interno | 200 | `{ success: false, error: "..." }` |
-| Reintento (idempotente) | 200 | `{ success: true, message: "Webhook already processed..." }` |
+| Caso                       | Status | Body                                                         |
+| -------------------------- | ------ | ------------------------------------------------------------ |
+| Firma inválida             | 401    | `{ error: "Invalid webhook signature" }`                     |
+| Payload inválido           | 400    | `{ error: "Invalid webhook payload" }`                       |
+| Procesado exitosamente     | 200    | `{ success: true, orderId, ... }`                            |
+| Evento válido no procesado | 200    | `{ success: true, message: "..." }`                          |
+| Error interno              | 200    | `{ success: false, error: "..." }`                           |
+| Reintento (idempotente)    | 200    | `{ success: true, message: "Webhook already processed..." }` |
 
 **Nota:** Se retorna 200 OK incluso en errores (excepto 401, 400) para evitar reintentos de HighLevel
 
@@ -456,12 +481,12 @@ async function recordWebhookEvent(
 
 ### 9.1 Mecanismo de Firma
 
-| Aspecto | Private Integration | Marketplace OAuth App |
-|---------|-------------------|----------------------|
-| **Algoritmo** | Ed25519 | RSA-SHA256 o Ed25519 |
-| **Header** | `X-GHL-Signature` | Varía |
-| **Clave** | Pública official (hardcoded) | Diferentes por app |
-| **Formato** | Base64 | Base64 |
+| Aspecto       | Private Integration          | Marketplace OAuth App |
+| ------------- | ---------------------------- | --------------------- |
+| **Algoritmo** | Ed25519                      | RSA-SHA256 o Ed25519  |
+| **Header**    | `X-GHL-Signature`            | Varía                 |
+| **Clave**     | Pública official (hardcoded) | Diferentes por app    |
+| **Formato**   | Base64                       | Base64                |
 
 **Nuestro proyecto:** Private Integration ✅
 **Mecanismo en código:** Ed25519 ✅
@@ -469,11 +494,11 @@ async function recordWebhookEvent(
 
 ### 9.2 Configuración
 
-| Aspecto | Private Integration | Marketplace OAuth App |
-|---------|-------------------|----------------------|
+| Aspecto                | Private Integration                | Marketplace OAuth App    |
+| ---------------------- | ---------------------------------- | ------------------------ |
 | **Ubicación registro** | Settings → Integrations → Webhooks | Marketplace App settings |
-| **Evento name** | `opportunity.stage_change` | `OpportunityStageUpdate` |
-| **Payload structure** | Idéntico al que recibimos | Puede variar |
+| **Evento name**        | `opportunity.stage_change`         | `OpportunityStageUpdate` |
+| **Payload structure**  | Idéntico al que recibimos          | Puede variar             |
 
 **Nuestro proyecto:** Private Integration ✅
 **Evento esperado:** `opportunity.stage_change` ✅
@@ -485,21 +510,21 @@ async function recordWebhookEvent(
 
 ## 10. CHECKLIST DE COMPATIBILIDAD
 
-| Componente | Esperado | Real HL | Código | Status |
-|-----------|----------|---------|--------|--------|
-| **Método HTTP** | POST | ✅ POST | ✅ POST | ✅ |
-| **Header firma** | X-GHL-Signature | ✅ Sí | ✅ Lee | ✅ |
-| **Algoritmo firma** | Ed25519 | ✅ Sí | ✅ Verifica | ✅ |
-| **Evento** | opportunity.stage_change | ✅ Sí | ✅ Valida | ✅ |
-| **webhookId** | Presente | ✅ Sí | ✅ Usa | ✅ |
-| **locationId** | Presente | ✅ Sí | ✅ Valida | ✅ |
-| **data.id** | Opportunity ID | ✅ Sí | ✅ Usa | ✅ |
-| **data.pipelineId** | Específico | ✅ KHKXOKLuYXPLQlkjc0aq | ✅ Valida | ✅ |
-| **data.newStageId** | Uno de 6 | ✅ Verificado | ✅ Mapea | ✅ |
-| **data.customFields** | Array | ✅ Presente | ✅ Usa | ✅ |
-| **Deduplicación** | Via webhookId | ✅ Sí | ✅ Implementa | ✅ |
-| **Actualización BD** | Order status | ✅ Sí | ✅ Ejecuta | ✅ |
-| **Auditoría log** | webhook_events | ✅ Sí | ✅ Graba | ✅ |
+| Componente            | Esperado                 | Real HL                 | Código        | Status |
+| --------------------- | ------------------------ | ----------------------- | ------------- | ------ |
+| **Método HTTP**       | POST                     | ✅ POST                 | ✅ POST       | ✅     |
+| **Header firma**      | X-GHL-Signature          | ✅ Sí                   | ✅ Lee        | ✅     |
+| **Algoritmo firma**   | Ed25519                  | ✅ Sí                   | ✅ Verifica   | ✅     |
+| **Evento**            | opportunity.stage_change | ✅ Sí                   | ✅ Valida     | ✅     |
+| **webhookId**         | Presente                 | ✅ Sí                   | ✅ Usa        | ✅     |
+| **locationId**        | Presente                 | ✅ Sí                   | ✅ Valida     | ✅     |
+| **data.id**           | Opportunity ID           | ✅ Sí                   | ✅ Usa        | ✅     |
+| **data.pipelineId**   | Específico               | ✅ KHKXOKLuYXPLQlkjc0aq | ✅ Valida     | ✅     |
+| **data.newStageId**   | Uno de 6                 | ✅ Verificado           | ✅ Mapea      | ✅     |
+| **data.customFields** | Array                    | ✅ Presente             | ✅ Usa        | ✅     |
+| **Deduplicación**     | Via webhookId            | ✅ Sí                   | ✅ Implementa | ✅     |
+| **Actualización BD**  | Order status             | ✅ Sí                   | ✅ Ejecuta    | ✅     |
+| **Auditoría log**     | webhook_events           | ✅ Sí                   | ✅ Graba      | ✅     |
 
 ---
 
@@ -511,20 +536,20 @@ async function recordWebhookEvent(
 ✅ WEBHOOK LISTO PARA PUBLICAR EN HIGHLEVEL
 ```
 
-| Criterio | Resultado |
-|----------|-----------|
-| **Método HTTP** | ✅ Compatible |
-| **Headers** | ✅ Compatible |
-| **Mecanismo seguridad** | ✅ Compatible |
-| **Evento** | ✅ Compatible |
-| **Payload estructura** | ✅ Compatible |
-| **Campos utilizados** | ✅ Compatible |
-| **Deduplicación** | ✅ Implementada |
-| **Búsqueda orden** | ✅ Operativa |
-| **Actualización BD** | ✅ Segura |
-| **Auditoría** | ✅ Grabada |
-| **Reintentos** | ✅ Idempotentes |
-| **Errores** | ✅ Manejados |
+| Criterio                | Resultado       |
+| ----------------------- | --------------- |
+| **Método HTTP**         | ✅ Compatible   |
+| **Headers**             | ✅ Compatible   |
+| **Mecanismo seguridad** | ✅ Compatible   |
+| **Evento**              | ✅ Compatible   |
+| **Payload estructura**  | ✅ Compatible   |
+| **Campos utilizados**   | ✅ Compatible   |
+| **Deduplicación**       | ✅ Implementada |
+| **Búsqueda orden**      | ✅ Operativa    |
+| **Actualización BD**    | ✅ Segura       |
+| **Auditoría**           | ✅ Grabada      |
+| **Reintentos**          | ✅ Idempotentes |
+| **Errores**             | ✅ Manejados    |
 
 ---
 
@@ -535,6 +560,7 @@ async function recordWebhookEvent(
 No se requieren cambios de código.
 
 **Próximo paso:** Registrar webhook en HighLevel Dashboard:
+
 1. Settings → Integrations → Webhooks
 2. Register Webhook
 3. URL: `https://floristeria-lucia.vercel.app/api/webhooks/ghl-opportunity`
@@ -548,4 +574,3 @@ No se requieren cambios de código.
 **Modificaciones:** 0 (auditoría solo-lectura)  
 **Incompatibilidades encontradas:** 0  
 **Veredicto:** ✅ **COMPATIBLE - LISTO PARA PRODUCCIÓN**
-

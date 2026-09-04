@@ -30,6 +30,9 @@ import { Route as ApiOrdersRouteImport } from './routes/api.orders'
 import { Route as ApiProductImagesRouteImport } from './routes/api.product-images'
 import { Route as ApiProductsRouteImport } from './routes/api.products'
 import { Route as ApiWebhookEventsRouteImport } from './routes/api.webhook-events'
+import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
+import { Route as AuthResetPasswordRouteImport } from './routes/auth.reset-password'
+import { Route as AuthResetPasswordConfirmRouteImport } from './routes/auth.reset-password-confirm'
 import { Route as ConfirmationOrderIdRouteImport } from './routes/confirmation.$orderId'
 import { Route as DebugGhlTestRouteImport } from './routes/debug.ghl-test'
 import { Route as LegalSlugRouteImport } from './routes/legal.$slug'
@@ -171,6 +174,22 @@ const ApiWebhookEventsRoute = ApiWebhookEventsRouteImport.update({
   path: '/api/webhook-events',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/callback',
+  path: '/callback',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthResetPasswordConfirmRoute =
+  AuthResetPasswordConfirmRouteImport.update({
+    id: '/reset-password-confirm',
+    path: '/reset-password-confirm',
+    getParentRoute: () => AuthRoute,
+  } as any)
 const ConfirmationOrderIdRoute = ConfirmationOrderIdRouteImport.update({
   id: '/confirmation/$orderId',
   path: '/confirmation/$orderId',
@@ -370,7 +389,7 @@ const ApiAdminProductsIdOptionsRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/carrito': typeof CarritoRoute
   '/catalogo': typeof CatalogoRoute
   '/checkout': typeof CheckoutRoute
@@ -389,6 +408,9 @@ export interface FileRoutesByFullPath {
   '/api/product-images': typeof ApiProductImagesRoute
   '/api/products': typeof ApiProductsRouteWithChildren
   '/api/webhook-events': typeof ApiWebhookEventsRouteWithChildren
+  '/auth/callback': typeof AuthCallbackRoute
+  '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/auth/reset-password-confirm': typeof AuthResetPasswordConfirmRoute
   '/confirmation/$orderId': typeof ConfirmationOrderIdRoute
   '/debug/ghl-test': typeof DebugGhlTestRoute
   '/legal/$slug': typeof LegalSlugRoute
@@ -428,7 +450,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/carrito': typeof CarritoRoute
   '/catalogo': typeof CatalogoRoute
   '/checkout': typeof CheckoutRoute
@@ -445,6 +467,9 @@ export interface FileRoutesByTo {
   '/api/product-images': typeof ApiProductImagesRoute
   '/api/products': typeof ApiProductsRouteWithChildren
   '/api/webhook-events': typeof ApiWebhookEventsRouteWithChildren
+  '/auth/callback': typeof AuthCallbackRoute
+  '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/auth/reset-password-confirm': typeof AuthResetPasswordConfirmRoute
   '/confirmation/$orderId': typeof ConfirmationOrderIdRoute
   '/debug/ghl-test': typeof DebugGhlTestRoute
   '/legal/$slug': typeof LegalSlugRoute
@@ -484,7 +509,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/carrito': typeof CarritoRoute
   '/catalogo': typeof CatalogoRoute
   '/checkout': typeof CheckoutRoute
@@ -503,6 +528,9 @@ export interface FileRoutesById {
   '/api/product-images': typeof ApiProductImagesRoute
   '/api/products': typeof ApiProductsRouteWithChildren
   '/api/webhook-events': typeof ApiWebhookEventsRouteWithChildren
+  '/auth/callback': typeof AuthCallbackRoute
+  '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/auth/reset-password-confirm': typeof AuthResetPasswordConfirmRoute
   '/confirmation/$orderId': typeof ConfirmationOrderIdRoute
   '/debug/ghl-test': typeof DebugGhlTestRoute
   '/legal/$slug': typeof LegalSlugRoute
@@ -563,6 +591,9 @@ export interface FileRouteTypes {
     | '/api/product-images'
     | '/api/products'
     | '/api/webhook-events'
+    | '/auth/callback'
+    | '/auth/reset-password'
+    | '/auth/reset-password-confirm'
     | '/confirmation/$orderId'
     | '/debug/ghl-test'
     | '/legal/$slug'
@@ -619,6 +650,9 @@ export interface FileRouteTypes {
     | '/api/product-images'
     | '/api/products'
     | '/api/webhook-events'
+    | '/auth/callback'
+    | '/auth/reset-password'
+    | '/auth/reset-password-confirm'
     | '/confirmation/$orderId'
     | '/debug/ghl-test'
     | '/legal/$slug'
@@ -676,6 +710,9 @@ export interface FileRouteTypes {
     | '/api/product-images'
     | '/api/products'
     | '/api/webhook-events'
+    | '/auth/callback'
+    | '/auth/reset-password'
+    | '/auth/reset-password-confirm'
     | '/confirmation/$orderId'
     | '/debug/ghl-test'
     | '/legal/$slug'
@@ -717,7 +754,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
-  AuthRoute: typeof AuthRoute
+  AuthRoute: typeof AuthRouteWithChildren
   CarritoRoute: typeof CarritoRoute
   CatalogoRoute: typeof CatalogoRoute
   CheckoutRoute: typeof CheckoutRoute
@@ -899,6 +936,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/webhook-events'
       preLoaderRoute: typeof ApiWebhookEventsRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/auth/reset-password': {
+      id: '/auth/reset-password'
+      path: '/reset-password'
+      fullPath: '/auth/reset-password'
+      preLoaderRoute: typeof AuthResetPasswordRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/auth/reset-password-confirm': {
+      id: '/auth/reset-password-confirm'
+      path: '/reset-password-confirm'
+      fullPath: '/auth/reset-password-confirm'
+      preLoaderRoute: typeof AuthResetPasswordConfirmRouteImport
+      parentRoute: typeof AuthRoute
     }
     '/confirmation/$orderId': {
       id: '/confirmation/$orderId'
@@ -1229,6 +1287,20 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface AuthRouteChildren {
+  AuthCallbackRoute: typeof AuthCallbackRoute
+  AuthResetPasswordRoute: typeof AuthResetPasswordRoute
+  AuthResetPasswordConfirmRoute: typeof AuthResetPasswordConfirmRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthCallbackRoute: AuthCallbackRoute,
+  AuthResetPasswordRoute: AuthResetPasswordRoute,
+  AuthResetPasswordConfirmRoute: AuthResetPasswordConfirmRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
 interface ServiciosRouteChildren {
   ServiciosSlugRoute: typeof ServiciosSlugRoute
   ServiciosIndexRoute: typeof ServiciosIndexRoute
@@ -1317,7 +1389,7 @@ const ApiGhlProductsRouteWithChildren = ApiGhlProductsRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
-  AuthRoute: AuthRoute,
+  AuthRoute: AuthRouteWithChildren,
   CarritoRoute: CarritoRoute,
   CatalogoRoute: CatalogoRoute,
   CheckoutRoute: CheckoutRoute,

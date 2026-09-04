@@ -11,7 +11,10 @@ const envContent = fs.readFileSync(envPath, "utf-8");
 const envVars = {};
 envContent.split("\n").forEach((line) => {
   const [key, ...valueParts] = line.split("=");
-  const value = valueParts.join("=").trim().replace(/^["']|["']$/g, "");
+  const value = valueParts
+    .join("=")
+    .trim()
+    .replace(/^["']|["']$/g, "");
   if (key && value) {
     envVars[key] = value;
   }
@@ -85,7 +88,8 @@ async function seedTestProducts() {
     .insert({
       ghl_product_id: "test-product-2",
       name: "Caja de Rosas Eternas",
-      description: "Rosa natural preservada en caja de regalo. Disponible en varios tamaños y colores.",
+      description:
+        "Rosa natural preservada en caja de regalo. Disponible en varios tamaños y colores.",
       category: "rosas-eternas",
       active: true,
       cover_image_url: "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=500",

@@ -21,6 +21,7 @@ Version:             @supabase/supabase-js ^2.112.3
 ### Ubicación en Código
 
 **Configuración Central:** `/src/integrations/supabase/`
+
 - `client.ts` - Cliente frontend (auto-generado)
 - `client.server.ts` - Cliente admin server-side (auto-generado)
 - `auth-middleware.ts` - Validación JWT por request
@@ -29,6 +30,7 @@ Version:             @supabase/supabase-js ^2.112.3
 - `cron-auth.ts` - Autenticación para cron jobs
 
 **Variables de Entorno:** `.env` (NO en .env.example)
+
 ```
 SUPABASE_PROJECT_ID=fiddxvgjdosprltflqep
 SUPABASE_URL=https://fiddxvgjdosprltflqep.supabase.co
@@ -52,19 +54,21 @@ Relación:      ONE-TO-ONE con auth.users (FK con DELETE CASCADE)
 RLS:           ENABLED
 ```
 
-| Columna | Tipo | Restricción | Propósito |
-|---------|------|-------------|-----------|
-| id | UUID | PK, FK → auth.users | Identificador |
-| full_name | TEXT | nullable | Nombre completo |
-| phone | TEXT | nullable | Teléfono |
-| created_at | TIMESTAMP TZ | DEFAULT now() | Auditoría |
-| updated_at | TIMESTAMP TZ | DEFAULT now() | Auditoría |
+| Columna    | Tipo         | Restricción         | Propósito       |
+| ---------- | ------------ | ------------------- | --------------- |
+| id         | UUID         | PK, FK → auth.users | Identificador   |
+| full_name  | TEXT         | nullable            | Nombre completo |
+| phone      | TEXT         | nullable            | Teléfono        |
+| created_at | TIMESTAMP TZ | DEFAULT now()       | Auditoría       |
+| updated_at | TIMESTAMP TZ | DEFAULT now()       | Auditoría       |
 
 **Triggers:**
+
 - `update_profiles_updated_at` - Actualiza timestamp en UPDATE
 - `on_auth_user_created` - Crea perfil automáticamente al registrar usuario
 
 **RLS Policies:**
+
 - SELECT: Usuario puede ver su propio perfil
 - INSERT: Usuario puede crear su propio perfil
 - UPDATE: Usuario puede actualizar su propio perfil
@@ -78,30 +82,30 @@ Propósito:     Metadatos GHL que no caben en Product Custom Fields
 Estado:        MIGRATION CREADA pero NO APLICADA
 ```
 
-| Columna | Tipo | Restricción |
-|---------|------|-------------|
-| id | UUID | PK |
-| location_id | TEXT | NOT NULL, DEFAULT 'vOq7yOWR63XGU4qQ7XWd' |
-| ghl_product_id | TEXT | NOT NULL, UNIQUE con location_id |
-| legacy_catalog_id | TEXT | UNIQUE, nullable |
-| price_min | DECIMAL(10,2) | nullable, > 0 |
-| price_max | DECIMAL(10,2) | nullable, > 0 |
-| available_colors | TEXT[] | nullable |
-| badge_label | TEXT | nullable |
-| rose_step | INTEGER | nullable, > 0 |
-| requires_quote | BOOLEAN | DEFAULT false |
-| status | TEXT | DEFAULT 'active', CHECK IN ('active','deleted') |
-| auto_created | BOOLEAN | DEFAULT false |
-| created_at | TIMESTAMP TZ | DEFAULT now() |
-| updated_at | TIMESTAMP TZ | DEFAULT now() |
-| deleted_at | TIMESTAMP TZ | nullable |
+| Columna           | Tipo          | Restricción                                     |
+| ----------------- | ------------- | ----------------------------------------------- |
+| id                | UUID          | PK                                              |
+| location_id       | TEXT          | NOT NULL, DEFAULT 'vOq7yOWR63XGU4qQ7XWd'        |
+| ghl_product_id    | TEXT          | NOT NULL, UNIQUE con location_id                |
+| legacy_catalog_id | TEXT          | UNIQUE, nullable                                |
+| price_min         | DECIMAL(10,2) | nullable, > 0                                   |
+| price_max         | DECIMAL(10,2) | nullable, > 0                                   |
+| available_colors  | TEXT[]        | nullable                                        |
+| badge_label       | TEXT          | nullable                                        |
+| rose_step         | INTEGER       | nullable, > 0                                   |
+| requires_quote    | BOOLEAN       | DEFAULT false                                   |
+| status            | TEXT          | DEFAULT 'active', CHECK IN ('active','deleted') |
+| auto_created      | BOOLEAN       | DEFAULT false                                   |
+| created_at        | TIMESTAMP TZ  | DEFAULT now()                                   |
+| updated_at        | TIMESTAMP TZ  | DEFAULT now()                                   |
+| deleted_at        | TIMESTAMP TZ  | nullable                                        |
 
 **RLS Policies:** 4 (lectura pública activos, escritura server-side)
 
 ### Storage Buckets
 
-| Bucket | Contenido | Access | Uso |
-|--------|-----------|--------|-----|
+| Bucket         | Contenido      | Access             | Uso                      |
+| -------------- | -------------- | ------------------ | ------------------------ |
 | hero-animation | 205 PNG frames | Public (anon/auth) | Hero animation component |
 
 ---
@@ -111,16 +115,19 @@ Estado:        MIGRATION CREADA pero NO APLICADA
 ### Métodos Implementados
 
 ✅ **Email/Password**
+
 - `supabase.auth.signInWithPassword()`
 - Completamente funcional
 - Usuarios actuales lo utilizan
 
 ✅ **Google OAuth**
+
 - `supabase.auth.signInWithOAuth("google", {redirectTo: window.location.origin})`
 - **PROBLEMA:** `VITE_GOOGLE_CLIENT_ID` NO configurado en `.env`
 - OAuth UI existe pero probablemente falla en runtime
 
 ✅ **Sesiones JWT**
+
 - Tokens persistidos en localStorage via `brokeredPreviewStorage()`
 - Auto-refresh de tokens habilitado
 - Server-side validation de JWT claims
@@ -143,6 +150,7 @@ Estado:        MIGRATION CREADA pero NO APLICADA
 ### Usuarios Existentes
 
 ✅ **Perfiles con datos:**
+
 - Registrados en `auth.users` (Supabase Auth managed)
 - Datos extendidos en `profiles` (nombre, teléfono)
 - Pueden existir datos reales de clientes
@@ -150,6 +158,7 @@ Estado:        MIGRATION CREADA pero NO APLICADA
 ### RLS Protección
 
 ✅ **Activa:**
+
 - Usuarios NO pueden ver perfiles ajenos
 - Usuarios NO pueden editar perfiles ajenos
 - Server-side tiene control total via service_role
@@ -161,6 +170,7 @@ Estado:        MIGRATION CREADA pero NO APLICADA
 ### Archivos que Usan Supabase (14 total)
 
 **Integración Core:**
+
 - `/src/integrations/supabase/client.ts` (auto-gen)
 - `/src/integrations/supabase/client.server.ts` (auto-gen)
 - `/src/integrations/supabase/auth-middleware.ts`
@@ -169,6 +179,7 @@ Estado:        MIGRATION CREADA pero NO APLICADA
 - `/src/integrations/supabase/cron-auth.ts`
 
 **Autenticación:**
+
 - `/src/hooks/useAuth.ts` - Hook principal de auth
 - `/src/routes/auth.tsx` - Login/Signup UI
 - `/src/routes/__root.tsx` - Inicialización global
@@ -176,25 +187,31 @@ Estado:        MIGRATION CREADA pero NO APLICADA
 - `/src/routes/_authenticated/route.tsx` - Route guard
 
 **Datos de Usuario:**
+
 - `/src/routes/_authenticated/mi-cuenta.tsx` - Profile management
 - Queries: `.from("profiles").select()` y `.upsert()`
 
 **Componentes:**
+
 - `/src/components/AnimatedFlowerHero.tsx` - Storage access
 - Uses: `.storage.from("hero-animation").createSignedUrls()`
 
 **Server-Side:**
+
 - `/src/start.ts` - Middleware registration
 
 ### Operaciones de BD
 
 **READ:**
+
 - `mi-cuenta.tsx`: SELECT full_name, phone FROM profiles WHERE id = user_id
 
 **WRITE:**
+
 - `mi-cuenta.tsx`: UPSERT INTO profiles (id, full_name, phone)
 
 **STORAGE:**
+
 - `AnimatedFlowerHero.tsx`: CREATE SIGNED URLs for 205 animation frames
 
 ---
@@ -202,7 +219,9 @@ Estado:        MIGRATION CREADA pero NO APLICADA
 ## 5. MIGRACIONES - HISTORIAL
 
 ### Migration 1: Profiles & Auth
+
 **Archivo:** `20260822021251_6d2b278a-9cbd-46b8-b007-d38a54d0df2f.sql`
+
 - Crea tabla `profiles`
 - Triggers para timestamps
 - Trigger auto-create profiles en auth signup
@@ -211,15 +230,21 @@ Estado:        MIGRATION CREADA pero NO APLICADA
 **Crítico para:** Autenticación de usuarios, perfiles extendidos
 
 ### Migration 2: Revoke Permissions
+
 **Archivo:** `20260822021259_91a717e7-d94a-4ace-b0be-9f207bec227a.sql`
+
 - Revoke execute en handle_new_user() (seguridad)
 
 ### Migration 3: Storage Policy
+
 **Archivo:** `20260823015431_b0b63529-808b-432c-8c13-f89bbc26f5bc.sql`
+
 - Policy lectura pública en hero-animation bucket
 
 ### Migration 4: Product Metadata (NUEVA)
+
 **Archivo:** `20260826000001_create_product_metadata.sql`
+
 - **ESTADO:** Creado pero NO APLICADO AÚN
 - Tabla para GHL integration
 - RLS y policies completos
@@ -231,6 +256,7 @@ Estado:        MIGRATION CREADA pero NO APLICADA
 ### 🔴 CRÍTICOS
 
 #### Risk 1: Missing File - `previewAuthStorage.ts`
+
 - **Ubicación esperada:** `/src/integrations/supabase/previewAuthStorage.ts`
 - **Estado:** Importado en client.ts pero NO EXISTE
 - **Impacto:** Cliente Supabase puede fallar en browser
@@ -238,6 +264,7 @@ Estado:        MIGRATION CREADA pero NO APLICADA
 - **Solución:** Archivo debe ser regenerado o reparado
 
 #### Risk 2: Missing Google OAuth Configuration
+
 - **Variable:** `VITE_GOOGLE_CLIENT_ID`
 - **Estado:** No configurado en `.env`
 - **Impacto:** Google OAuth button existe pero falla en runtime
@@ -245,6 +272,7 @@ Estado:        MIGRATION CREADA pero NO APLICADA
 - **Solución:** Configurar variable en .env
 
 #### Risk 3: Service Role Key Missing Visibility
+
 - **Variable:** `SUPABASE_SERVICE_ROLE_KEY`
 - **Estado:** Necesaria pero NO visible en .env public
 - **Impacto:** Server-side admin operations pueden fallar
@@ -254,6 +282,7 @@ Estado:        MIGRATION CREADA pero NO APLICADA
 ### 🟡 ALTOS
 
 #### Risk 4: Type Definitions Out of Sync
+
 - **Archivos:** `/src/integrations/supabase/types.ts`
 - **Problema:** Tipos auto-generados, product_metadata NOT INCLUDED
 - **Impacto:** TypeScript errors cuando se use product_metadata
@@ -261,6 +290,7 @@ Estado:        MIGRATION CREADA pero NO APLICADA
 - **Solución:** Regenerar tipos desde Supabase CLI
 
 #### Risk 5: Auto-Generated Files Modified Manually
+
 - **Archivos:** `client.ts`, `client.server.ts`, `types.ts`
 - **Problema:** Marcados como "auto-generated" pero pueden haber sido editados
 - **Impacto:** Si regeneramos, perdemos cambios manuales
@@ -270,6 +300,7 @@ Estado:        MIGRATION CREADA pero NO APLICADA
 ### 🟢 BAJOS
 
 #### Risk 6: Foreign Key Constraint
+
 - **Constraint:** profiles.id FK → auth.users ON DELETE CASCADE
 - **Problema:** Si usuario se elimina en auth, perfil se borra automáticamente
 - **Impacto:** Pérdida de histórico de cliente
@@ -281,10 +312,11 @@ Estado:        MIGRATION CREADA pero NO APLICADA
 ## 7. DEPENDENCIAS DE LOVABLE
 
 ### Detectadas:
-1. **Auth Storage:** `brokeredPreviewStorage()` 
+
+1. **Auth Storage:** `brokeredPreviewStorage()`
    - Archivo: `previewAuthStorage.ts` (FALTANTE)
    - Parece ser específico de Lovable preview
-   
+
 2. **Auto-Generated Files:**
    - `client.ts`, `client.server.ts`, `types.ts` marcados como auto-gen
    - Posiblemente regenerados por herramienta de Lovable
@@ -295,6 +327,7 @@ Estado:        MIGRATION CREADA pero NO APLICADA
    - Vinculación puede ser a nivel de cuenta Lovable
 
 ### NO Detectadas:
+
 - ❌ Código de Lovable en business logic
 - ❌ Dependencias npm de Lovable en package.json (ya removidas)
 - ❌ Configuración de Lovable en vite.config.ts
@@ -307,6 +340,7 @@ Estado:        MIGRATION CREADA pero NO APLICADA
 ### Opción A: Migrar a Supabase Propio (RECOMENDADO)
 
 #### Paso 1: Crear nuevo proyecto Supabase
+
 ```
 1. Crear cuenta Supabase personal
 2. Crear nuevo proyecto
@@ -315,6 +349,7 @@ Estado:        MIGRATION CREADA pero NO APLICADA
 ```
 
 #### Paso 2: Aplicar migraciones al nuevo proyecto
+
 ```
 1. Clonar migraciones existentes:
    - 20260822021251_*.sql (profiles + triggers)
@@ -328,6 +363,7 @@ Estado:        MIGRATION CREADA pero NO APLICADA
 ```
 
 #### Paso 3: Migrar datos de usuarios
+
 ```
 1. Exportar desde Supabase Lovable:
    - SELECT * FROM profiles
@@ -344,6 +380,7 @@ Estado:        MIGRATION CREADA pero NO APLICADA
 ```
 
 #### Paso 4: Configurar Google OAuth
+
 ```
 1. En Google Cloud Console:
    - Crear OAuth 2.0 credentials (Web Application)
@@ -362,6 +399,7 @@ Estado:        MIGRATION CREADA pero NO APLICADA
 ```
 
 #### Paso 5: Recuperar archivos faltantes
+
 ```
 1. Crear previewAuthStorage.ts:
    - Implementación de localStorage custom
@@ -372,6 +410,7 @@ Estado:        MIGRATION CREADA pero NO APLICADA
 ```
 
 #### Paso 6: Actualizar en Vercel/Deployment
+
 ```
 1. Actualizar env vars en Vercel:
    - VITE_SUPABASE_URL
@@ -397,12 +436,14 @@ Estado:        MIGRATION CREADA pero NO APLICADA
 ### Opción B: Mantener Supabase de Lovable
 
 #### Pros:
+
 - ✅ Cero cambios inmediatos
 - ✅ Usuarios existentes no afectados
 - ✅ Datos históricos preservados
 - ✅ Bajo riesgo
 
 #### Contras:
+
 - ❌ Dependencia de Lovable continúa
 - ❌ No controlas tu propia BD
 - ❌ Posible deprecación futura
@@ -414,16 +455,19 @@ Estado:        MIGRATION CREADA pero NO APLICADA
 ### Opción C: Hybrid (Dual Supabase)
 
 #### Concepto:
+
 1. Crear nuevo Supabase propio
 2. Replicar datos pero mantener Lovable como backup
 3. Switchover gradual a nuevo Supabase
 
 #### Pros:
+
 - ✅ Bajo riesgo durante transition
 - ✅ Rollback fácil
 - ✅ Testing en nuevo antes de switchover
 
 #### Contras:
+
 - ❌ Complejidad mayor
 - ❌ Costo de dos Supabase
 - ❌ Sincronización de datos
@@ -464,6 +508,7 @@ Estado:        MIGRATION CREADA pero NO APLICADA
 ### ⚠️ NO RECOMENDADO: Mantener Lovable
 
 **Razones para NO:**
+
 - ❌ previewAuthStorage.ts faltante (red flag)
 - ❌ Dependencia implícita indefinida
 - ❌ GHL integration será más difícil
@@ -489,6 +534,7 @@ Estado:        MIGRATION CREADA pero NO APLICADA
 **¿Autorizar Opción A (Migrar a Supabase Propio)?**
 
 Si SÍ:
+
 1. Crear nuevo proyecto Supabase
 2. Aplicar migraciones
 3. Migrar datos
@@ -496,6 +542,7 @@ Si SÍ:
 5. Deploy a producción
 
 Si NO (Mantener Lovable):
+
 1. Reparar previewAuthStorage.ts
 2. Configurar VITE_GOOGLE_CLIENT_ID
 3. Aplicar product_metadata migration a Lovable Supabase
@@ -504,4 +551,3 @@ Si NO (Mantener Lovable):
 ---
 
 **AUDITORÍA COMPLETA - READY FOR DECISION**
-

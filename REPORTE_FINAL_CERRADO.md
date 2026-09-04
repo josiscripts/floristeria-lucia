@@ -2,7 +2,7 @@
 
 **Fecha:** 2026-08-31  
 **Status:** ✓ IMPLEMENTADO Y CERRADO  
-**Criterio:** Flujo end-to-end funcional, build sin errores  
+**Criterio:** Flujo end-to-end funcional, build sin errores
 
 ---
 
@@ -12,7 +12,8 @@
 
 **Causa:** GHL API v3 NO persiste `category`, `price`, `sku`.
 
-**Solución:** 
+**Solución:**
+
 ```
 GHL Product (_id, name, description)
   +
@@ -26,19 +27,24 @@ Producto Normalizado Completo
 ## ARCHIVOS MODIFICADOS
 
 ### 1. `src/lib/normalize-ghl-product.ts`
+
 - Actualizada normalización para usar Supabase `category`, `price` si existen
 - Default a "ramos" si no hay categoría (no descartar productos)
 
 ### 2. `src/lib/product-metadata.server.ts`
+
 - Agregados campos `category`, `price`, `sku` a `ProductMetadataInput`
 
 ### 3. `src/routes/api.products.ts`
+
 - POST handler guarda category, price, sku en Supabase al crear
 
 ### 4. `src/routes/api.ghl.products.ts`
+
 - GET handler combina GHL + Supabase metadata correctamente
 
 ### 5. `src/lib/ghl/client.server.ts`
+
 - `createGHLProduct()` ya normaliza `_id` → `id` y usa `productType: "PHYSICAL"`
 
 ---
@@ -78,7 +84,7 @@ UPDATE:
 ✓ Build: Sin errores (1.93s - 3.00s)  
 ✓ Product Collections: No accesible, estrategia alternativa implementada  
 ✓ Metadata: Supabase listo para guardar categoria, precio, SKU  
-✓ Flujos: Admin y público ahora consistentes  
+✓ Flujos: Admin y público ahora consistentes
 
 ---
 
@@ -98,6 +104,7 @@ UPDATE:
 **✓ EL FLUJO DE PRODUCTOS ESTÁ CERRADO**
 
 El sistema está listo. La arquitectura es clara:
+
 - GHL = Almacenamiento de identidad producto
 - Supabase = Almacenamiento de categorización y metadata
 - Normalización = Combinación transparente

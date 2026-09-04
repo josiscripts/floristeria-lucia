@@ -1,4 +1,5 @@
 # DATABASE
+
 ## Documentación Completa del Modelo de Datos
 
 > Este documento debe generarse siguiendo `PROJECT_AUDIT_SPEC.md`.
@@ -59,34 +60,34 @@ Si algo no existe o no puede determinarse, escribe:
 
 ## Base de datos detectada
 
-| Campo | Valor |
-|--------|------|
-| Motor | PostgreSQL 14.15 (Supabase) |
-| ORM | Supabase SDK (no hay ORM, queries directas) |
-| Migraciones | Sí - 3 migraciones en supabase/migrations/ |
-| Seeds | No detectados |
-| RLS | Habilitado en todas las tablas |
-| Storage | Sí - Bucket 'hero-animation' |
+| Campo       | Valor                                       |
+| ----------- | ------------------------------------------- |
+| Motor       | PostgreSQL 14.15 (Supabase)                 |
+| ORM         | Supabase SDK (no hay ORM, queries directas) |
+| Migraciones | Sí - 3 migraciones en supabase/migrations/  |
+| Seeds       | No detectados                               |
+| RLS         | Habilitado en todas las tablas              |
+| Storage     | Sí - Bucket 'hero-animation'                |
 
 ## Número de entidades
 
-| Elemento | Cantidad |
-|----------|----------|
-| Tablas | 1 (public.profiles) |
-| Views | 0 |
-| Functions | 2 (update_updated_at_column, handle_new_user) |
-| Triggers | 2 (update_profiles_updated_at, on_auth_user_created) |
-| Policies | 3 (SELECT, INSERT, UPDATE en profiles) |
+| Elemento  | Cantidad                                             |
+| --------- | ---------------------------------------------------- |
+| Tablas    | 1 (public.profiles)                                  |
+| Views     | 0                                                    |
+| Functions | 2 (update_updated_at_column, handle_new_user)        |
+| Triggers  | 2 (update_profiles_updated_at, on_auth_user_created) |
+| Policies  | 3 (SELECT, INSERT, UPDATE en profiles)               |
 
 ---
 
 # 2. INVENTARIO DE TABLAS
 
-| Tabla | Descripción | Registros estimados |
-|--------|-------------|--------------------|
-| auth.users | Usuarios del sistema (Supabase managed) | Variable, según usuarios registrados |
-| public.profiles | Perfil extendido de usuario | Igual a auth.users |
-| storage.objects | Objetos en buckets de almacenamiento | Imágenes de la aplicación |
+| Tabla           | Descripción                             | Registros estimados                  |
+| --------------- | --------------------------------------- | ------------------------------------ |
+| auth.users      | Usuarios del sistema (Supabase managed) | Variable, según usuarios registrados |
+| public.profiles | Perfil extendido de usuario             | Igual a auth.users                   |
+| storage.objects | Objetos en buckets de almacenamiento    | Imágenes de la aplicación            |
 
 **Total de tablas de negocio:** 1 (profiles)
 **Total de tablas de sistema:** 2 (auth.users, storage.objects)
@@ -103,37 +104,37 @@ Extensión del usuario autenticado. Almacena información adicional del perfil q
 
 #### Columnas
 
-| Campo | Tipo | PK | FK | Nullable | Default | Descripción |
-|--------|------|----|----|----------|----------|-------------|
-| id | UUID | ✓ | ✓ auth.users | ✗ | - | ID del usuario (referencia a auth.users) |
-| full_name | TEXT | ✗ | ✗ | ✓ | NULL | Nombre completo del usuario |
-| phone | TEXT | ✗ | ✗ | ✓ | NULL | Teléfono de contacto |
-| created_at | TIMESTAMP WITH TIME ZONE | ✗ | ✗ | ✗ | now() | Fecha de creación |
-| updated_at | TIMESTAMP WITH TIME ZONE | ✗ | ✗ | ✗ | now() | Fecha de última actualización |
+| Campo      | Tipo                     | PK  | FK           | Nullable | Default | Descripción                              |
+| ---------- | ------------------------ | --- | ------------ | -------- | ------- | ---------------------------------------- |
+| id         | UUID                     | ✓   | ✓ auth.users | ✗        | -       | ID del usuario (referencia a auth.users) |
+| full_name  | TEXT                     | ✗   | ✗            | ✓        | NULL    | Nombre completo del usuario              |
+| phone      | TEXT                     | ✗   | ✗            | ✓        | NULL    | Teléfono de contacto                     |
+| created_at | TIMESTAMP WITH TIME ZONE | ✗   | ✗            | ✗        | now()   | Fecha de creación                        |
+| updated_at | TIMESTAMP WITH TIME ZONE | ✗   | ✗            | ✗        | now()   | Fecha de última actualización            |
 
 #### Índices
 
-| Nombre | Tipo | Columnas |
-|---------|------|----------|
-| profiles_pkey | PRIMARY KEY | id |
+| Nombre        | Tipo        | Columnas |
+| ------------- | ----------- | -------- |
+| profiles_pkey | PRIMARY KEY | id       |
 
 #### Constraints
 
-| Constraint | Tipo |
-|------------|------|
-| PRIMARY KEY (id) | Llave primaria |
+| Constraint                                                   | Tipo                  |
+| ------------------------------------------------------------ | --------------------- |
+| PRIMARY KEY (id)                                             | Llave primaria        |
 | FOREIGN KEY (id) REFERENCES auth.users(id) ON DELETE CASCADE | Referencia a usuarios |
 
 #### Relaciones salientes
 
-| Destino | Tipo |
-|----------|------|
+| Destino    | Tipo            |
+| ---------- | --------------- |
 | auth.users | 1:1 (Uno a uno) |
 
 #### Relaciones entrantes
 
-| Origen | Tipo |
-|---------|------|
+| Origen     | Tipo                             |
+| ---------- | -------------------------------- |
 | auth.users | 1:N (Un usuario tiene un perfil) |
 
 #### Row Level Security (RLS)
@@ -141,23 +142,25 @@ Extensión del usuario autenticado. Almacena información adicional del perfil q
 **Habilitado:** SÍ
 
 **Políticas:**
+
 1. SELECT: Usuarios autenticados pueden leer solo su propio perfil
 2. INSERT: Usuarios autenticados pueden insertar solo su propio perfil
 3. UPDATE: Usuarios autenticados pueden actualizar solo su propio perfil
 
 **Código:**
+
 ```sql
-CREATE POLICY "Users can view their own profile" ON public.profiles 
-  FOR SELECT TO authenticated 
+CREATE POLICY "Users can view their own profile" ON public.profiles
+  FOR SELECT TO authenticated
   USING (auth.uid() = id);
 
-CREATE POLICY "Users can insert their own profile" ON public.profiles 
-  FOR INSERT TO authenticated 
+CREATE POLICY "Users can insert their own profile" ON public.profiles
+  FOR INSERT TO authenticated
   WITH CHECK (auth.uid() = id);
 
-CREATE POLICY "Users can update their own profile" ON public.profiles 
-  FOR UPDATE TO authenticated 
-  USING (auth.uid() = id) 
+CREATE POLICY "Users can update their own profile" ON public.profiles
+  FOR UPDATE TO authenticated
+  USING (auth.uid() = id)
   WITH CHECK (auth.uid() = id);
 ```
 
@@ -180,8 +183,8 @@ CREATE POLICY "Users can update their own profile" ON public.profiles
 Documentar todas las PK.
 
 | Tabla | Campo |
-|--------|-------|
-| | |
+| ----- | ----- |
+|       |       |
 
 ---
 
@@ -190,8 +193,8 @@ Documentar todas las PK.
 Documentar todas las FK.
 
 | Tabla origen | Campo | Tabla destino | Campo |
-|-------------|------|---------------|------|
-| | | | |
+| ------------ | ----- | ------------- | ----- |
+|              |       |               |       |
 
 ---
 
@@ -200,24 +203,24 @@ Documentar todas las FK.
 ## Relaciones 1:1
 
 | Origen | Destino |
-|---------|----------|
-| | |
+| ------ | ------- |
+|        |         |
 
 ---
 
 ## Relaciones 1:N
 
 | Padre | Hijo |
-|--------|------|
-| | |
+| ----- | ---- |
+|       |      |
 
 ---
 
 ## Relaciones N:N
 
 | Tabla puente | Entidad A | Entidad B |
-|-------------|-----------|-----------|
-| | | |
+| ------------ | --------- | --------- |
+|              |           |           |
 
 ---
 
@@ -226,7 +229,7 @@ Documentar todas las FK.
 ```mermaid
 erDiagram
     AUTH_USERS ||--|| PROFILES : "1:1"
-    
+
     AUTH_USERS {
         uuid id PK
         string email
@@ -234,7 +237,7 @@ erDiagram
         timestamp created_at
         timestamp updated_at
     }
-    
+
     PROFILES {
         uuid id PK
         string full_name "nullable"
@@ -263,7 +266,7 @@ classDiagram
         +signOut()
         +resetPassword()
     }
-    
+
     class Profile {
         +UUID id (PK, FK)
         +String full_name
@@ -273,7 +276,7 @@ classDiagram
         +updateProfile()
         +getProfile()
     }
-    
+
     User "1" --> "1" Profile : has
 ```
 
@@ -292,7 +295,7 @@ SUPABASE PROJECT
     └── public.profiles
         ├── 1:1 relationship with auth.users
         └── Contiene: full_name, phone, timestamps
-        
+
 STORAGE
 └── Buckets
     └── hero-animation (imágenes públicas)
@@ -404,6 +407,7 @@ Frontend recibe confirmación
 **Modelo de datos actual es minimal pero funcional.**
 
 Al finalizar este documento:
+
 - ✓ Estructura de BD completamente documentada
 - ✓ Relaciones explicadas
 - ✓ RLS políticas claras
@@ -416,6 +420,7 @@ Al finalizar este documento:
 ---
 
 Parte de la suite de auditoría:
+
 - PROJECT_AUDIT_SPEC.md
 - PROJECT_AUDIT_REPORT.md
 - ARCHITECTURE.md
@@ -431,8 +436,8 @@ Analizar completamente.
 ## Campos
 
 | Campo | Tipo | Descripción |
-|--------|------|-------------|
-| | | |
+| ----- | ---- | ----------- |
+|       |      |             |
 
 ## Relaciones
 
@@ -463,8 +468,8 @@ Documentar:
 ## Modelo
 
 | Campo | Tipo |
-|--------|------|
-| | |
+| ----- | ---- |
+|       |      |
 
 ---
 
@@ -488,8 +493,8 @@ Documentar:
 ## Modelo
 
 | Campo | Tipo |
-|--------|------|
-| | |
+| ----- | ---- |
+|       |      |
 
 ---
 
@@ -500,8 +505,8 @@ Si existen.
 ## Modelo
 
 | Campo | Tipo |
-|--------|------|
-| | |
+| ----- | ---- |
+|       |      |
 
 Relaciones con productos.
 
@@ -532,8 +537,8 @@ Reconstruir completamente.
 ## Tablas implicadas
 
 | Tabla | Función |
-|--------|----------|
-| | |
+| ----- | ------- |
+|       |         |
 
 ## Flujo
 
@@ -576,8 +581,8 @@ Documentar:
 ## Modelo
 
 | Campo | Tipo |
-|--------|------|
-| | |
+| ----- | ---- |
+|       |      |
 
 ---
 
@@ -629,8 +634,8 @@ Documentar:
 Detectar todos los enums.
 
 | Enum | Valores |
-|------|---------|
-| | |
+| ---- | ------- |
+|      |         |
 
 ---
 
@@ -639,8 +644,8 @@ Detectar todos los enums.
 Documentar todas.
 
 | View | Propósito |
-|------|-----------|
-| | |
+| ---- | --------- |
+|      |           |
 
 ---
 
@@ -649,16 +654,16 @@ Documentar todas.
 Documentar funciones SQL.
 
 | Función | Uso |
-|----------|-----|
-| | |
+| ------- | --- |
+|         |     |
 
 ---
 
 # 22. TRIGGERS
 
 | Trigger | Evento | Tabla |
-|----------|--------|------|
-| | | |
+| ------- | ------ | ----- |
+|         |        |       |
 
 ---
 
@@ -667,8 +672,8 @@ Documentar funciones SQL.
 Si existen.
 
 | Tabla | Policy | Acción |
-|--------|--------|--------|
-| | | |
+| ----- | ------ | ------ |
+|       |        |        |
 
 Explicar:
 
@@ -684,8 +689,8 @@ Explicar:
 Documentar el orden cronológico.
 
 | Migración | Descripción |
-|-----------|-------------|
-| | |
+| --------- | ----------- |
+|           |             |
 
 No modificar ninguna.
 
@@ -696,8 +701,8 @@ No modificar ninguna.
 Documentar datos iniciales.
 
 | Archivo | Contenido |
-|----------|----------|
-| | |
+| ------- | --------- |
+|         |           |
 
 ---
 

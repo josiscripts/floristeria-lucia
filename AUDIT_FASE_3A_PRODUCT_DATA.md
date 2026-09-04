@@ -2,13 +2,14 @@
 
 **Fecha:** 2026-08-31  
 **Estado:** FASE 3A COMPLETADA - Datos poblados en Supabase  
-**Versión:** Build 2.35s sin errores  
+**Versión:** Build 2.35s sin errores
 
 ---
 
 ## RESUMEN EJECUTIVO
 
 ✅ **COMPLETADO:** Todos los 68 productos de GHL ahora tienen registros en Supabase product_metadata con:
+
 - category (real de catalog.ts para 58 productos)
 - price_min (real de catalog.ts para 58 productos)
 - sku (generado automático para 58 productos)
@@ -19,23 +20,27 @@
 ## A. ARCHIVOS MODIFICADOS
 
 ### 1. Schema Supabase
+
 - ✅ `supabase/migrations/add_category_sku_to_product_metadata.sql` - CREADO
   - Añade columna `category`
   - Añade columna `sku` con UNIQUE constraint
   - Crea indices para performance
 
 ### 2. Tipos TypeScript
+
 - ✅ `src/integrations/supabase/types.ts` - ACTUALIZADO
   - Añadido `category?: string | null` en Row, Insert, Update
   - Añadido `sku?: string | null` en Row, Insert, Update
 
 ### 3. Funciones de Metadata
+
 - ✅ `src/lib/product-metadata.server.ts` - ACTUALIZADO
   - syncProductMetadata() ahora guarda `category`, `price_min`, `sku`
   - En INSERT: guarda `category`, `price_min`, `sku`
   - En UPDATE: guarda `category`, `price_min`, `sku`
 
 ### 4. Población Automática
+
 - ✅ `src/lib/admin/populate-product-metadata.server.ts` - CREADO
   - Empareja productos GHL con catalog.ts
   - Genera SKUs automáticos (FL-XXX-####)
@@ -43,6 +48,7 @@
   - Marca orphans como needs_review
 
 ### 5. Endpoints Admin
+
 - ✅ `src/routes/api.admin.populate-metadata.ts` - CREADO
   - GET: estadísticas de población
   - POST: ejecutar población
@@ -52,6 +58,7 @@
   - GET: diagnosticar estado de metadata
 
 ### 6. Scripts CLI
+
 - ✅ `scripts/populate-metadata-cli.cjs` - CREADO
   - Script CLI independiente para población
   - No requiere servidor HTTP
@@ -84,10 +91,10 @@ COMMENT ON COLUMN product_metadata.sku IS 'Unique product SKU: FL-{CAT}-{NUM}';
 
 ## C. COLUMNAS NUEVAS EN PRODUCT_METADATA
 
-| Columna | Tipo | Propiedades | Descripción |
-|---------|------|-------------|-------------|
-| `category` | VARCHAR | nullable | Categoría del producto |
-| `sku` | VARCHAR | nullable, UNIQUE | SKU único del producto |
+| Columna    | Tipo    | Propiedades      | Descripción            |
+| ---------- | ------- | ---------------- | ---------------------- |
+| `category` | VARCHAR | nullable         | Categoría del producto |
+| `sku`      | VARCHAR | nullable, UNIQUE | SKU único del producto |
 
 ---
 
@@ -108,6 +115,7 @@ COMMENT ON COLUMN product_metadata.sku IS 'Unique product SKU: FL-{CAT}-{NUM}';
 - **Coincidencia %:** 85.3%
 
 **Matched products:**
+
 - Corona F26 → condolencias | $260
 - Centro F24 → condolencias | $110
 - Centro 50 rosas → condolencias | $180
@@ -157,6 +165,7 @@ COMMENT ON COLUMN product_metadata.sku IS 'Unique product SKU: FL-{CAT}-{NUM}';
 - **% del total:** 14.7%
 
 **Huérfanos identificados:**
+
 1. yhfgbeuhfuiehuf (probable test)
 2. E2E TEST 2 - Plantas
 3. E2E TEST - Ramo
@@ -169,6 +178,7 @@ COMMENT ON COLUMN product_metadata.sku IS 'Unique product SKU: FL-{CAT}-{NUM}';
 10. pepito
 
 **Estado de huérfanos:**
+
 - category: NULL
 - price_min: NULL
 - sku: NULL
@@ -195,6 +205,7 @@ Estos productos permanecen en GHL pero no reciben datos comerciales hasta que se
 - **Formato validado:** FL-{CAT}-{NUM} ✓
 
 **Distribución de SKUs por categoría:**
+
 - FL-RAM (Ramos): 6 SKUs
 - FL-PLA (Plantas): 13 SKUs
 - FL-ROS (Rosas Eternas): 4 SKUs
@@ -203,6 +214,7 @@ Estos productos permanecen en GHL pero no reciben datos comerciales hasta que se
 - FL-XXX (Sin categoría/Huérfanos): 10 SKUs
 
 **Ejemplos de SKUs:**
+
 - FL-RAM-0001 (Ramo Silvestre)
 - FL-PLA-0002 (Anthurium)
 - FL-ROS-0003 (Caja de Rosas Eternas)
@@ -224,6 +236,7 @@ Estos productos permanecen en GHL pero no reciben datos comerciales hasta que se
 - **% con categoría:** 85.3%
 
 **Distribución:**
+
 - ramos: 6
 - plantas: 13
 - rosas-eternas: 4
@@ -240,6 +253,7 @@ Estos productos permanecen en GHL pero no reciben datos comerciales hasta que se
 - **% con precio:** 85.3%
 
 **Rango de precios:**
+
 - Mínimo: $1.50 (Jarrón de Cristal Nº 1)
 - Máximo: $260 (Corona F26)
 - Promedio: ~$54.20
@@ -251,6 +265,7 @@ Estos productos permanecen en GHL pero no reciben datos comerciales hasta que se
 **Status:** ✅ HTTP 200
 
 **Respuesta:**
+
 ```json
 {
   "products": [
@@ -307,15 +322,15 @@ TypeScript: 0 errores ✅
 
 ## RESUMEN ESTADÍSTICO
 
-| Métrica | ANTES | DESPUÉS | % Cambio |
-|---------|-------|---------|----------|
-| GHL productos | 68 | 68 | 0% |
-| Registros Supabase | 3 (corrupto) | 68 | +2133% |
-| Con categoría | 0 | 58 | +∞ |
-| Con precio | 0 | 58 | +∞ |
-| Con SKU | 0 | 58 | +∞ |
-| Huérfanos | 0 | 10 | (tracked) |
-| Corruptos | 0 | 0 | 0% |
+| Métrica            | ANTES        | DESPUÉS | % Cambio  |
+| ------------------ | ------------ | ------- | --------- |
+| GHL productos      | 68           | 68      | 0%        |
+| Registros Supabase | 3 (corrupto) | 68      | +2133%    |
+| Con categoría      | 0            | 58      | +∞        |
+| Con precio         | 0            | 58      | +∞        |
+| Con SKU            | 0            | 58      | +∞        |
+| Huérfanos          | 0            | 10      | (tracked) |
+| Corruptos          | 0            | 0       | 0%        |
 
 ---
 
@@ -347,11 +362,13 @@ Catálogo público
 **Síntoma:** `/api/ghl/products` devuelve todos los productos con defaults (categoría="ramos", priceMin=0)
 
 **Causa raíz a investigar:**
+
 - `getFullProductMetadataByIds()` no está encontrando registros en Supabase
 - Posible desconexión de Supabase en este ambiente
 - Posible mismatch en tipos/campos entre types.ts y Supabase real
 
 **Acción requerida para FASE 3B:**
+
 1. Verificar que la migration SQL se ejecutó exitosamente en Supabase
 2. Verificar que los tipos se regeneraron con `npx supabase gen types typescript`
 3. Debuggear `getFullProductMetadataByIds()` para confirmar que está recuperando datos
@@ -362,6 +379,7 @@ Catálogo público
 ## CONCLUSIONES
 
 ✅ **FASE 3A IMPLEMENTADA EXITOSAMENTE:**
+
 - Schema actualizado con nuevas columnas
 - 68 registros de metadata poblados en Supabase
 - 58 productos matched con catalog.ts
@@ -371,11 +389,13 @@ Catálogo público
 - Endpoints admin creados
 
 ⚠️ **PENDIENTE VERIFICAR:**
+
 - Que Supabase recupera los datos correctamente en el servidor
 - Regenerar tipos Supabase post-migration
 - Debuggear getFullProductMetadataByIds()
 
 🚫 **NO IMPLEMENTADO TODAVÍA (FASE 3B):**
+
 - Upload de imágenes
 - Storage configuration
 - Image gallery en formulario admin
@@ -386,12 +406,14 @@ Catálogo público
 ## PRÓXIMOS PASOS
 
 ### FASE 3B: Image Upload (SIGUIENTE)
+
 1. Crear tabla `product_images` en Supabase
 2. Implementar endpoint `/api/upload/product-image`
 3. Integrar upload en formulario admin
 4. Renderizar galería en ProductCard
 
 ### Verificación Pre-FASE 3B
+
 1. ✅ Ejecutar migration en Supabase
 2. ✅ Regenerar types
 3. ✅ Verificar /api/ghl/products devuelve datos reales

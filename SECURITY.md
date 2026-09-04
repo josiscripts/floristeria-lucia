@@ -1,4 +1,5 @@
 # SECURITY
+
 ## Auditoría Completa de Seguridad del Proyecto
 
 > Este documento debe generarse siguiendo `PROJECT_AUDIT_SPEC.md`.
@@ -44,12 +45,12 @@ Nunca modificar el código.
 
 # NIVELES DE PRIORIDAD
 
-| Nivel | Significado |
-|--------|-------------|
-| 🔴 Crítico | Compromete datos o dinero |
-| 🟠 Alto | Riesgo importante de explotación |
-| 🟡 Medio | Debe corregirse antes de escalar |
-| 🟢 Bajo | Mejora recomendada |
+| Nivel      | Significado                      |
+| ---------- | -------------------------------- |
+| 🔴 Crítico | Compromete datos o dinero        |
+| 🟠 Alto    | Riesgo importante de explotación |
+| 🟡 Medio   | Debe corregirse antes de escalar |
+| 🟢 Bajo    | Mejora recomendada               |
 
 ---
 
@@ -133,13 +134,13 @@ Si existe.
 
 Documentar cómo se mantienen.
 
-| Elemento | Implementación |
-|----------|----------------|
-| JWT | |
-| Cookie | |
-| Session | |
-| Refresh | |
-| Expiración | |
+| Elemento   | Implementación |
+| ---------- | -------------- |
+| JWT        |                |
+| Cookie     |                |
+| Session    |                |
+| Refresh    |                |
+| Expiración |                |
 
 Indicar dónde se almacenan.
 
@@ -150,8 +151,8 @@ Indicar dónde se almacenan.
 Detectar todos los roles.
 
 | Rol | Permisos |
-|------|-----------|
-| | |
+| --- | -------- |
+|     |          |
 
 Explicar:
 
@@ -170,8 +171,8 @@ Solo si existen.
 Detectar todas las cookies.
 
 | Cookie | Tipo | Duración | Uso |
-|---------|------|----------|-----|
-| | | | |
+| ------ | ---- | -------- | --- |
+|        |      |          |     |
 
 Clasificar:
 
@@ -202,8 +203,8 @@ Documentar qué información almacena el navegador.
 Detectar todas las variables.
 
 | Variable | Pública | Uso |
-|----------|----------|-----|
-| | | |
+| -------- | ------- | --- |
+|          |         |     |
 
 Nunca mostrar valores.
 
@@ -229,8 +230,8 @@ Buscar:
 Formato:
 
 | Secreto | Ubicación | Estado |
-|----------|-----------|--------|
-| | | |
+| ------- | --------- | ------ |
+|         |           |        |
 
 Nunca mostrar el valor.
 
@@ -241,8 +242,8 @@ Nunca mostrar el valor.
 Auditar todos los endpoints.
 
 | Método | Endpoint | Auth | Validación |
-|---------|----------|------|-----------|
-| | | | |
+| ------ | -------- | ---- | ---------- |
+|        |          |      |            |
 
 Detectar:
 
@@ -275,8 +276,8 @@ Analizar protección.
 ## RLS
 
 | Tabla | Estado |
-|--------|--------|
-| | |
+| ----- | ------ |
+|       |        |
 
 ## Policies
 
@@ -347,8 +348,8 @@ Detectar manipulación de precios.
 Documentar todos.
 
 | Servicio | Verificación de firma |
-|----------|-----------------------|
-| | |
+| -------- | --------------------- |
+|          |                       |
 
 Explicar cómo se autentican.
 
@@ -359,8 +360,8 @@ Explicar cómo se autentican.
 Analizar configuración.
 
 | Origen | Estado |
-|---------|--------|
-| | |
+| ------ | ------ |
+|        |        |
 
 Detectar configuraciones peligrosas.
 
@@ -453,13 +454,13 @@ Estado:
 
 Comprobar:
 
-| Header | Estado |
-|----------|--------|
-| CSP | |
-| HSTS | |
-| X-Frame | |
-| XSS Protection | |
-| Referrer Policy | |
+| Header          | Estado |
+| --------------- | ------ |
+| CSP             |        |
+| HSTS            |        |
+| X-Frame         |        |
+| XSS Protection  |        |
+| Referrer Policy |        |
 
 ---
 
@@ -468,8 +469,8 @@ Comprobar:
 Analizar librerías.
 
 | Dependencia | Riesgo |
-|-------------|---------|
-| | |
+| ----------- | ------ |
+|             |        |
 
 No actualizar automáticamente.
 
@@ -505,45 +506,45 @@ Verificar:
 
 ## 🔴 Críticos
 
-| Riesgo | Impacto | Ubicación |
-|---------|----------|-----------|
+| Riesgo                                | Impacto                                        | Ubicación                   |
+| ------------------------------------- | ---------------------------------------------- | --------------------------- |
 | Sin validación de precios en servidor | Atacante modifica carrito.total antes de pedir | src/context/ShopContext.tsx |
-| Carrito sin persistencia en BD | Datos pueden perderse o manipularse | localStorage |
-| Sin integración de pagos | Imposible completar venta en línea | No existe |
+| Carrito sin persistencia en BD        | Datos pueden perderse o manipularse            | localStorage                |
+| Sin integración de pagos              | Imposible completar venta en línea             | No existe                   |
 
 ---
 
 ## 🟠 Altos
 
-| Riesgo | Impacto | Ubicación |
-|---------|----------|-----------|
-| Supabase anon key expuesta | Si RLS falla, acceso no autorizado | .env (VITE_SUPABASE_ANON_KEY) |
-| Sin rate limiting | Posible fuerza bruta en login/registro | Supabase Auth |
-| Email no verificado obligatoriamente | Cuenta con email falso posible | supabase/migrations/ |
-| Sin validación de cantidad | Cantidad negativa o extrema posible | src/context/ShopContext.tsx |
-| No hay protección CSRF claramente visible | Posible ataque CSRF | No detectado |
+| Riesgo                                    | Impacto                                | Ubicación                     |
+| ----------------------------------------- | -------------------------------------- | ----------------------------- |
+| Supabase anon key expuesta                | Si RLS falla, acceso no autorizado     | .env (VITE_SUPABASE_ANON_KEY) |
+| Sin rate limiting                         | Posible fuerza bruta en login/registro | Supabase Auth                 |
+| Email no verificado obligatoriamente      | Cuenta con email falso posible         | supabase/migrations/          |
+| Sin validación de cantidad                | Cantidad negativa o extrema posible    | src/context/ShopContext.tsx   |
+| No hay protección CSRF claramente visible | Posible ataque CSRF                    | No detectado                  |
 
 ---
 
 ## 🟡 Medios
 
-| Riesgo | Impacto | Ubicación |
-|---------|----------|-----------|
-| Storage bucket público | hero-animation accesible sin auth | supabase/migrations/20260823015431 |
-| Errores pueden exponer info | Stack traces visibles en console | src/lib/error-capture.ts |
-| No hay Content Security Policy detectada | XSS más fácil | vite.config.ts |
-| LocalStorage en client visible | Datos de carrito visibles en DevTools | src/context/ShopContext.tsx |
-| JWT tokens en localStorage | Vulnerable a XSS (si browser comprometido) | supabase/client.ts |
+| Riesgo                                   | Impacto                                    | Ubicación                          |
+| ---------------------------------------- | ------------------------------------------ | ---------------------------------- |
+| Storage bucket público                   | hero-animation accesible sin auth          | supabase/migrations/20260823015431 |
+| Errores pueden exponer info              | Stack traces visibles en console           | src/lib/error-capture.ts           |
+| No hay Content Security Policy detectada | XSS más fácil                              | vite.config.ts                     |
+| LocalStorage en client visible           | Datos de carrito visibles en DevTools      | src/context/ShopContext.tsx        |
+| JWT tokens en localStorage               | Vulnerable a XSS (si browser comprometido) | supabase/client.ts                 |
 
 ---
 
 ## 🟢 Bajos
 
-| Riesgo | Impacto | Ubicación |
-|---------|----------|-----------|
-| Source maps exponen código | Depuración más fácil para atacante | vite build |
-| Componentes sin sanitización explícita | Posible XSS en user input | Radix UI debería sanitizar |
-| No hay logging de eventos de seguridad | Auditoría limitada | No implementado |
+| Riesgo                                 | Impacto                            | Ubicación                  |
+| -------------------------------------- | ---------------------------------- | -------------------------- |
+| Source maps exponen código             | Depuración más fácil para atacante | vite build                 |
+| Componentes sin sanitización explícita | Posible XSS en user input          | Radix UI debería sanitizar |
+| No hay logging de eventos de seguridad | Auditoría limitada                 | No implementado            |
 
 ---
 
@@ -610,7 +611,7 @@ Verificar:
    - Validación de transaction
 
 4. **Forzar verificación de email**
-   - Habilitaren  en Supabase Auth
+   - Habilitaren en Supabase Auth
    - Enviar email de confirmación
 
 ## 🟠 Alto (Antes de escalar)
@@ -666,6 +667,7 @@ Verificar:
 **La aplicación tiene una base de seguridad sólida (Supabase Auth, RLS) pero críticos gaps para producción (sin pagos, sin validación servidor).**
 
 **Recomendación:** No lanzar a producción sin implementar:
+
 1. Sistema de pagos
 2. Validación de servidor
 3. Protección CSRF/XSS
@@ -675,6 +677,7 @@ Verificar:
 ---
 
 Parte de la suite de auditoría:
+
 - PROJECT_AUDIT_SPEC.md
 - PROJECT_AUDIT_REPORT.md
 - ARCHITECTURE.md

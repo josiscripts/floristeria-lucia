@@ -2,7 +2,7 @@
 
 **Fecha:** 2026-08-27  
 **Objetivo:** Determinar estado de productos en GoHighLevel vs catalog.ts  
-**Status:** READ-ONLY Analysis (Sin modificaciones)  
+**Status:** READ-ONLY Analysis (Sin modificaciones)
 
 ---
 
@@ -13,6 +13,7 @@
 **Los 41 productos de catalog.ts NO existen en GoHighLevel**
 
 La consulta a la API de GHL retornó **404 Not Found** al intentar acceder a:
+
 ```
 GET /locations/vOq7yOWR63XGU4qQ7XWd/products/?limit=100
 ```
@@ -25,39 +26,39 @@ GET /locations/vOq7yOWR63XGU4qQ7XWd/products/?limit=100
 
 ### catalog.ts
 
-| Métrica | Valor |
-|---------|-------|
-| **Total de productos** | 49 |
-| **Ramos** | 6 |
-| **Plantas** | 13 |
-| **Rosas Eternas** | 4 |
-| **Complementos** | 13 |
-| **Condolencias** | 5 |
-| **Con imagen** | 49 |
-| **Con priceMin** | 49 |
-| **Con priceMax** | 17 |
-| **Con colores** | 5 |
-| **Con badge** | 3 |
-| **Con roseStep** | 4 |
+| Métrica                | Valor |
+| ---------------------- | ----- |
+| **Total de productos** | 49    |
+| **Ramos**              | 6     |
+| **Plantas**            | 13    |
+| **Rosas Eternas**      | 4     |
+| **Complementos**       | 13    |
+| **Condolencias**       | 5     |
+| **Con imagen**         | 49    |
+| **Con priceMin**       | 49    |
+| **Con priceMax**       | 17    |
+| **Con colores**        | 5     |
+| **Con badge**          | 3     |
+| **Con roseStep**       | 4     |
 
 ### GoHighLevel
 
-| Métrica | Valor |
-|---------|-------|
-| **Total de productos** | **0** |
-| **Acceso API** | **404 Not Found** |
-| **Estado** | **Vacío** |
+| Métrica                | Valor             |
+| ---------------------- | ----------------- |
+| **Total de productos** | **0**             |
+| **Acceso API**         | **404 Not Found** |
+| **Estado**             | **Vacío**         |
 
 ---
 
 ## 2. MATCHES IDENTIFICADOS
 
-| Tipo | Cantidad |
-|------|----------|
-| Matches claros | 0 |
-| Posibles matches | 0 |
-| Solo en catalog.ts | 49 |
-| Solo en GHL | 0 |
+| Tipo               | Cantidad |
+| ------------------ | -------- |
+| Matches claros     | 0        |
+| Posibles matches   | 0        |
+| Solo en catalog.ts | 49       |
+| Solo en GHL        | 0        |
 
 **Conclusión:** NO hay superposición. Todos los productos necesitan crearse en GHL.
 
@@ -65,15 +66,16 @@ GET /locations/vOq7yOWR63XGU4qQ7XWd/products/?limit=100
 
 ## 3. IMÁGENES
 
-| Estado | Cantidad |
-|--------|----------|
-| catalog.ts con imagen | 49/49 (100%) |
-| GHL con imagen | 0/0 (N/A) |
-| **Acción necesaria** | **Migrar 49 imágenes a GHL** |
+| Estado                | Cantidad                     |
+| --------------------- | ---------------------------- |
+| catalog.ts con imagen | 49/49 (100%)                 |
+| GHL con imagen        | 0/0 (N/A)                    |
+| **Acción necesaria**  | **Migrar 49 imágenes a GHL** |
 
 ### Detalle
 
 catalog.ts usa imágenes locales importadas desde `@/assets/`:
+
 ```
 import imgRamos from "@/assets/cat-ramos.jpg";
 import imgGirasoles from "@/assets/girasoles.jpg";
@@ -107,6 +109,7 @@ condolencias (5 productos)
 - La API de GHL tiene un campo `category` pero es una STRING, no normalizada
 
 **Solución propuesta:**
+
 1. Usar `ghl_category_mapping.json` para mapear IDs a categorías
 2. No almacenar categoría en GHL
 3. Recuperarla desde mapping en el frontend
@@ -117,11 +120,11 @@ condolencias (5 productos)
 
 ### catalog.ts
 
-| Campo | Uso | Productos |
-|-------|-----|-----------|
-| **priceMin** | Precio mínimo | 49/49 |
-| **priceMax** | Precio máximo (rango) | 17/49 |
-| **Rango** | $1.50 - $85.00 | - |
+| Campo        | Uso                   | Productos |
+| ------------ | --------------------- | --------- |
+| **priceMin** | Precio mínimo         | 49/49     |
+| **priceMax** | Precio máximo (rango) | 17/49     |
+| **Rango**    | $1.50 - $85.00        | -         |
 
 ### GHL
 
@@ -132,6 +135,7 @@ condolencias (5 productos)
 GHL tiene un campo `price` (valor único), no soporta rangos.
 
 **Solución:**
+
 - `priceMin` → Almacenar en GHL.price
 - `priceMax` → Almacenar en product_metadata.price_max
 - Frontend muestra ambos
@@ -142,12 +146,12 @@ GHL tiene un campo `price` (valor único), no soporta rangos.
 
 ### Campos que necesitan Supabase
 
-| Campo | catalog.ts | GHL | product_metadata |
-|-------|-----------|-----|------------------|
-| **badge** | 3 productos | ❌ NO | ✅ SÍ |
-| **colors** | 5 productos | ❌ NO | ✅ SÍ |
-| **roseStep** | 4 productos | ❌ NO | ✅ SÍ |
-| **category** | 5 tipos | ⚠️ Incompleto | Mapping externo |
+| Campo        | catalog.ts  | GHL           | product_metadata |
+| ------------ | ----------- | ------------- | ---------------- |
+| **badge**    | 3 productos | ❌ NO         | ✅ SÍ            |
+| **colors**   | 5 productos | ❌ NO         | ✅ SÍ            |
+| **roseStep** | 4 productos | ❌ NO         | ✅ SÍ            |
+| **category** | 5 tipos     | ⚠️ Incompleto | Mapping externo  |
 
 **Todos estos campos deben almacenarse en product_metadata.**
 
@@ -202,6 +206,7 @@ Ejemplo de 2 productos:
 **Hallazgo:** La API de GHL retorna 404 al intentar acceder a productos.
 
 **Implicación:**
+
 - Los 49 productos de catalog.ts NUNCA fueron creados en GHL
 - NO hay sincronización posible hasta que existan en GHL
 - Debemos crear 49 productos en GHL primero
@@ -213,15 +218,19 @@ Ejemplo de 2 productos:
 ## 9. BLOQUEADORES DE DECISIÓN RESUELTOS
 
 ### ✅ Pregunta 1: ¿Existen los 41 productos en GHL?
+
 **Respuesta:** NO - API retorna 404
 
 ### ⏳ Pregunta 2: ¿Cómo representar categorías?
+
 **Respuesta parcial:** Usar mapping file (ghl_category_mapping.json)
 
 ### ⏳ Pregunta 3: ¿Dónde están las imágenes?
+
 **Respuesta:** catalog.ts las tiene locales. Decisión: ¿migrar a GHL o mantener locales?
 
 ### ⏳ Pregunta 4: ¿Timeline de migración?
+
 **Nueva restricción:** Primero crear productos en GHL (paso nuevo)
 
 ---
@@ -261,6 +270,7 @@ Timeline: 1-2 semanas (crear + validar + sincronizar)
 ### RECOMENDACIÓN
 
 **Proceder con Opción A:**
+
 1. Crear script para migrar catalog.ts → GHL
 2. Validar que los 49 productos se crean correctamente
 3. Guardar mapping legacy_id → ghl_id
@@ -271,24 +281,25 @@ Timeline: 1-2 semanas (crear + validar + sincronizar)
 
 ## 11. DECISIONES A TOMAR ANTES DE IMPLEMENTAR
 
-| Decisión | Opciones | Impacto |
-|----------|----------|---------|
-| **Imágenes** | A. Migrar a GHL | Alto |
-| | B. Mantener locales | Bajo |
-| | C. Ambas (GHL + local fallback) | Medio |
-| **Categorías** | A. Usar mapping file | Bajo |
-| | B. Custom field en GHL | No posible |
-| | C. Tabla separada en Supabase | Medio |
-| **Timeline** | A. Crear productos ahora | Bloquea integración |
-| | B. Crear después | Puedo continuar con webhook |
-| **Datos históricos** | A. Migrar todo | 1-2 semanas |
-| | B. Crear going-forward solo | Más rápido |
+| Decisión             | Opciones                        | Impacto                     |
+| -------------------- | ------------------------------- | --------------------------- |
+| **Imágenes**         | A. Migrar a GHL                 | Alto                        |
+|                      | B. Mantener locales             | Bajo                        |
+|                      | C. Ambas (GHL + local fallback) | Medio                       |
+| **Categorías**       | A. Usar mapping file            | Bajo                        |
+|                      | B. Custom field en GHL          | No posible                  |
+|                      | C. Tabla separada en Supabase   | Medio                       |
+| **Timeline**         | A. Crear productos ahora        | Bloquea integración         |
+|                      | B. Crear después                | Puedo continuar con webhook |
+| **Datos históricos** | A. Migrar todo                  | 1-2 semanas                 |
+|                      | B. Crear going-forward solo     | Más rápido                  |
 
 ---
 
 ## 12. ARCHIVOS DE SOPORTE
 
 Generated:
+
 - ✅ `ghl-reconciliation-data.json` - Datos crudos de reconciliación
 
 ---
@@ -325,6 +336,7 @@ Generated:
 **Status:** Reconciliación completada sin modificaciones en GHL ni Supabase ✅
 
 **Hallazgo:** Los productos NO existen en GHL. Esto cambia el plan:
+
 - Antes: Esperábamos sincronizar productos existentes
 - Ahora: Debemos crear 49 productos primero
 
@@ -335,4 +347,3 @@ Generated:
 **Informe generado:** 2026-08-27  
 **READ-ONLY:** Sin modificaciones en sistemas externos  
 **Aprobado:** Bloqueadores de decisión resueltos, listo para FASE 4
-

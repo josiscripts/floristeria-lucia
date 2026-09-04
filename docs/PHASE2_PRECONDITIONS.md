@@ -1,7 +1,7 @@
 # FASE 2: Verificaciones Previas
 
 **Proyecto objetivo:** leksmflinhohnekbgmgj  
-**Fecha:** 2026-08-26  
+**Fecha:** 2026-08-26
 
 ---
 
@@ -12,12 +12,14 @@ Antes de ejecutar la migración product_metadata, necesitamos confirmar:
 ### PRECONDICIÓN 1: product_metadata NO existe
 
 **Query:**
+
 ```sql
-SELECT table_name FROM information_schema.tables 
+SELECT table_name FROM information_schema.tables
 WHERE table_name = 'product_metadata' AND table_schema = 'public';
 ```
 
 **Resultado esperado:**
+
 ```
 (Sin resultados - tabla no existe)
 ```
@@ -29,12 +31,14 @@ WHERE table_name = 'product_metadata' AND table_schema = 'public';
 ### PRECONDICIÓN 2: Función update_updated_at_column() SÍ existe
 
 **Query:**
+
 ```sql
-SELECT routine_name FROM information_schema.routines 
+SELECT routine_name FROM information_schema.routines
 WHERE routine_name = 'update_updated_at_column' AND routine_schema = 'public';
 ```
 
 **Resultado esperado:**
+
 ```
 routine_name
 ──────────────────────────
@@ -48,12 +52,14 @@ update_updated_at_column
 ### PRECONDICIÓN 3: Tabla profiles SÍ existe
 
 **Query:**
+
 ```sql
-SELECT table_name FROM information_schema.tables 
+SELECT table_name FROM information_schema.tables
 WHERE table_name = 'profiles' AND table_schema = 'public';
 ```
 
 **Resultado esperado:**
+
 ```
 table_name
 ──────────
@@ -67,12 +73,14 @@ profiles
 ### PRECONDICIÓN 4: RLS de profiles está habilitado
 
 **Query:**
+
 ```sql
-SELECT rowsecurity FROM pg_tables 
+SELECT rowsecurity FROM pg_tables
 WHERE tablename = 'profiles';
 ```
 
 **Resultado esperado:**
+
 ```
 rowsecurity
 ───────────
@@ -99,4 +107,3 @@ true
 Si todo es correcto, procederemos a ejecutar FASE 2.
 
 Si algo falla, reporta el error y DETENEMOS.
-

@@ -10,6 +10,7 @@
 ⚠️ **HALLAZGO CRÍTICO:** La implementación actual del mecanismo de firma de webhooks GHL en `src/routes/api.webhooks.ghl-opportunity.ts` **NO HA SIDO VERIFICADA** contra documentación oficial de GHL API v3.
 
 **Evidencia:**
+
 ```typescript
 /**
  * @see https://docs.gohighlevel.com/webhooks (assumed - verify with GHL docs)
@@ -19,6 +20,7 @@
 **Status:** La palabra "assumed" (asumido) confirma que el mecanismo NO fue verificado oficialmente.
 
 **Impacto:** Si el mecanismo real de GHL difiere del implementado:
+
 - Todos los webhooks serán rechazados (401 Unauthorized)
 - Los webhooks NO se procesarán
 - Las órdenes NO se actualizarán
@@ -34,22 +36,19 @@
 function verifyWebhookSignature(
   rawBody: string | Buffer,
   signatureHeader: string | null | undefined,
-  secret: string
+  secret: string,
 ): boolean {
   // Expects header: X-GHL-Signature: sha256=<hash>
-  
+
   const signatureParts = signatureHeader.split("=");
   // Expected format: ["sha256", "<hash>"]
-  
+
   if (signatureParts[0] !== "sha256") {
     return false; // Rejects if not sha256
   }
-  
-  const expectedSignature = crypto
-    .createHmac("sha256", secret)
-    .update(bodyString)
-    .digest("hex");
-    
+
+  const expectedSignature = crypto.createHmac("sha256", secret).update(bodyString).digest("hex");
+
   // Timing-safe comparison
   return crypto.timingSafeEqual(headerBuffer, expectedBuffer);
 }
@@ -57,14 +56,14 @@ function verifyWebhookSignature(
 
 ### Supuestos Implementados
 
-| Aspecto | Implementación Actual | Fuente |
-|---------|----------------------|--------|
-| Header Name | `X-GHL-Signature` | Código (no verificado) |
-| Header Format | `sha256=<hex_hash>` | Código (no verificado) |
-| Algoritmo | HMAC-SHA256 | Auditoría FASE 4 (no verificado) |
-| Body | Raw (no JSON-parseado) | Código (no verificado) |
-| Secret | `GHL_WEBHOOK_SECRET` env var | Diseño FASE 4 (no verificado) |
-| Comparación | `crypto.timingSafeEqual()` | Security best practice |
+| Aspecto       | Implementación Actual        | Fuente                           |
+| ------------- | ---------------------------- | -------------------------------- |
+| Header Name   | `X-GHL-Signature`            | Código (no verificado)           |
+| Header Format | `sha256=<hex_hash>`          | Código (no verificado)           |
+| Algoritmo     | HMAC-SHA256                  | Auditoría FASE 4 (no verificado) |
+| Body          | Raw (no JSON-parseado)       | Código (no verificado)           |
+| Secret        | `GHL_WEBHOOK_SECRET` env var | Diseño FASE 4 (no verificado)    |
+| Comparación   | `crypto.timingSafeEqual()`   | Security best practice           |
 
 ---
 
@@ -73,10 +72,11 @@ function verifyWebhookSignature(
 ### Definiciones en el Código
 
 #### FASE 4.1 — Types (`src/lib/ghl/types.ts`)
+
 ```typescript
 export type GHLOpportunityStageChangeWebhook = {
   event: "opportunity.stage_change";
-  deliveryId?: string;  // ← OPCIONAL (?)
+  deliveryId?: string; // ← OPCIONAL (?)
   timestamp?: string;
   locationId: string;
   // ...
@@ -86,6 +86,7 @@ export type GHLOpportunityStageChangeWebhook = {
 **Estado:** `deliveryId` es OPCIONAL en los tipos.
 
 #### FASE 4.2 — Migración (`webhook_events` table)
+
 ```sql
 delivery_id VARCHAR(255) UNIQUE NOT NULL
 ```
@@ -93,6 +94,7 @@ delivery_id VARCHAR(255) UNIQUE NOT NULL
 **Estado:** `delivery_id` es **REQUIRED** en BD (NOT NULL).
 
 #### FASE 4.3 — Implementación
+
 ```typescript
 // En recordWebhookEvent():
 delivery_id: payload.deliveryId || crypto.randomUUID(),
@@ -105,18 +107,21 @@ delivery_id: payload.deliveryId || crypto.randomUUID(),
 ### Problema: Dos Comportamientos Contradictorios
 
 **Escenario 1:** GHL SIEMPRE envía `deliveryId` (es garantizado)
+
 - ✅ Tipos deberían ser `deliveryId: string` (NO optional)
 - ✅ Migración correcta: `delivery_id NOT NULL`
 - ✅ Fallback UUID es innecesario (nunca se ejecutará)
 - ⚠️ Pero si alguna vez falta, el UUID enmascarará el problema
 
 **Escenario 2:** GHL AVECES NO envía `deliveryId` (es optional)
+
 - ⚠️ Tipos correctos: `deliveryId?: string`
 - ⚠️ Pero migración es incorrecta: `delivery_id NOT NULL` forzaría inserción de UUIDs generados
 - ⚠️ Eso rompe la garantía de deduplicación (no es delivery_id real de GHL)
 - 🔴 **SEGURIDAD COMPROMETIDA:** Dos webhooks diferentes podrían generar dos UUIDs diferentes pero ser considerados "duplicados" si llegan en cierto orden
 
 **Escenario 3:** GHL PODRÍA NO enviar `deliveryId` en futuros tipos de eventos
+
 - ⚠️ Estaría oculto por el UUID auto-generado
 - 🔴 Riesgo de procesamiento duplicado silencioso
 
@@ -183,19 +188,17 @@ delivery_id: payload.deliveryId || crypto.randomUUID(),
 En `src/routes/api.webhooks.ghl-product.ts`:
 
 ```typescript
-function validateWebhook(
-  _body: unknown,
-  _headers: Headers
-): boolean {
+function validateWebhook(_body: unknown, _headers: Headers): boolean {
   // TODO: Implement GHL webhook signature verification
   // For now, basic validation that event has required structure
-  return true;  // ← SIEMPRE retorna true (NO verifica firma)
+  return true; // ← SIEMPRE retorna true (NO verifica firma)
 }
 ```
 
 **Hallazgo:** El endpoint de webhooks de productos de GHL **NO implementa verificación de firma**, solo tiene un TODO.
 
-**Implicación:** 
+**Implicación:**
+
 - La implementación de firma en FASE 4.3 es la PRIMERA vez que se implementa esto
 - No hay "patrón establecido" en el código
 - Está basado ÚNICAMENTE en auditoría + asunción (assumed)
@@ -204,15 +207,15 @@ function validateWebhook(
 
 ## ESTADO ACTUAL vs DOCUMENTACIÓN OFICIAL
 
-| Componente | Implementado | Verificado Oficialmente | Risk |
-|-----------|------------|----------------------|------|
-| Header Name | X-GHL-Signature | ❌ NO | 🔴 CRÍTICO |
-| Format | sha256=<hash> | ❌ NO | 🔴 CRÍTICO |
-| Algoritmo | HMAC-SHA256 | ❌ NO | 🔴 CRÍTICO |
-| Raw Body | Sí | ❌ NO | 🔴 CRÍTICO |
-| Secret | GHL_WEBHOOK_SECRET | ❌ NO | 🔴 CRÍTICO |
-| deliveryId Obligatorio | No (has fallback) | ❌ NO | 🟡 ALTO |
-| deliveryId Único | Asumido | ❌ NO | 🟡 ALTO |
+| Componente             | Implementado       | Verificado Oficialmente | Risk       |
+| ---------------------- | ------------------ | ----------------------- | ---------- |
+| Header Name            | X-GHL-Signature    | ❌ NO                   | 🔴 CRÍTICO |
+| Format                 | sha256=<hash>      | ❌ NO                   | 🔴 CRÍTICO |
+| Algoritmo              | HMAC-SHA256        | ❌ NO                   | 🔴 CRÍTICO |
+| Raw Body               | Sí                 | ❌ NO                   | 🔴 CRÍTICO |
+| Secret                 | GHL_WEBHOOK_SECRET | ❌ NO                   | 🔴 CRÍTICO |
+| deliveryId Obligatorio | No (has fallback)  | ❌ NO                   | 🟡 ALTO    |
+| deliveryId Único       | Asumido            | ❌ NO                   | 🟡 ALTO    |
 
 ---
 
@@ -265,6 +268,7 @@ Si documentación oficial no está disponible:
 La implementación PARECE correcta para el patrón estándar de webhooks (HMAC-SHA256 + X-Signature header), pero **NO ES VERIFICADO**.
 
 **Recomendación:**
+
 - ✅ Mantener la implementación actual COMO ESTÁ (es sound security design)
 - ⚠️ Pero MARCAR CLARAMENTE en el código que necesita verificación oficial
 - 🔴 NO proceder a FASE 4.4 sin verificación
@@ -272,6 +276,7 @@ La implementación PARECE correcta para el patrón estándar de webhooks (HMAC-S
 ### Sobre deliveryId
 
 **Problema identificado:**
+
 - Tipos dicen "optional" (?)
 - Migración dice "NOT NULL"
 - Código genera UUID de fallback
@@ -281,10 +286,11 @@ La implementación PARECE correcta para el patrón estándar de webhooks (HMAC-S
 **Recomendación:**
 
 Opción 1 (Recomendada si GHL garantiza deliveryId):
+
 ```typescript
 // CAMBIO en FASE 4.1 types:
 export type GHLOpportunityStageChangeWebhook = {
-  deliveryId: string;  // ← REQUERIDO (no optional)
+  deliveryId: string; // ← REQUERIDO (no optional)
   // ...
 };
 
@@ -296,6 +302,7 @@ if (!payload.deliveryId) {
 ```
 
 Opción 2 (Si GHL NO garantiza deliveryId):
+
 ```typescript
 // CAMBIO en FASE 4.2 migración:
 -- Drop NOT NULL constraint, aceptar NULL
@@ -338,6 +345,7 @@ delivery_id_and_timestamp_unique UNIQUE (delivery_id, received_at)
 ## CHECKLIST ACTUAL vs OFICIAL
 
 ### Mecanismo Implementado
+
 ```
 Header: X-GHL-Signature
 Format: sha256=<hex_hash>
@@ -346,6 +354,7 @@ Comparison: crypto.timingSafeEqual()
 ```
 
 ### Mecanismo Necesario
+
 ```
 [PENDIENTE VERIFICACIÓN OFICIAL]
 ```
@@ -363,6 +372,7 @@ Comparison: crypto.timingSafeEqual()
 5. ✅ Cambios necesarios sean AUTORIZADOS
 
 **NO ejecutar:**
+
 - ❌ npm run build (hasta que cambios sean aprobados)
 - ❌ Registrar webhook en GHL (FASE 4.4)
 - ❌ Testing
@@ -382,5 +392,4 @@ La implementación está basada en asunciones NO VERIFICADAS. Aunque el patrón 
 
 **Status:** BLOQUEANTE  
 **Responsable:** Usuario debe verificar documentación GHL  
-**Impacto si no se verifica:** FASE 4.4 fallará con 401 errors, webhooks no procesarán  
-
+**Impacto si no se verifica:** FASE 4.4 fallará con 401 errors, webhooks no procesarán

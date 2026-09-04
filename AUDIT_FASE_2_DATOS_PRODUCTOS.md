@@ -2,49 +2,51 @@
 
 **Fecha:** 2026-08-31  
 **Objetivo:** Mapear exactamente qué información existe en GHL y Supabase antes de FASE 3  
-**Status:** AUDITORÍA COMPLETADA - SIN MODIFICACIONES  
+**Status:** AUDITORÍA COMPLETADA - SIN MODIFICACIONES
 
 ---
 
 ## RESUMEN EJECUTIVO
 
-| Métrica | Cantidad | Estado |
-|---------|----------|--------|
-| **Productos en GHL** | 68 | Visibles, sin metadata |
-| **Productos en Supabase** | 3 | Incompletos (0 con categoría, 0 con precio) |
-| **Productos en catalog.ts** | 50 | Referencia legacy |
-| **Coincidencia GHL ↔ catalog** | ~51/68 | Parcial (~75%) |
-| **Collections en GHL** | 0 | Token sin acceso / no existen |
+| Métrica                        | Cantidad | Estado                                      |
+| ------------------------------ | -------- | ------------------------------------------- |
+| **Productos en GHL**           | 68       | Visibles, sin metadata                      |
+| **Productos en Supabase**      | 3        | Incompletos (0 con categoría, 0 con precio) |
+| **Productos en catalog.ts**    | 50       | Referencia legacy                           |
+| **Coincidencia GHL ↔ catalog** | ~51/68   | Parcial (~75%)                              |
+| **Collections en GHL**         | 0        | Token sin acceso / no existen               |
 
 ---
 
 ## FASE 1: AUDITORÍA GHL - ESTRUCTURA DE LOS 68 PRODUCTOS
 
 ### Campos presentes en cada producto:
+
 ```
-_id, locationId, name, description, productType, variants, 
-isTaxesEnabled, taxes, excludedStoreIds, status, displayPriority, 
-trackProductInventory, createdAt, updatedAt, variantsLength, 
+_id, locationId, name, description, productType, variants,
+isTaxesEnabled, taxes, excludedStoreIds, status, displayPriority,
+trackProductInventory, createdAt, updatedAt, variantsLength,
 hasVariants, hasPrices, <algunos tienen: image>
 ```
 
 ### Hallazgos críticos:
 
-| Campo | Con datos | Sin datos | % Completitud |
-|-------|-----------|-----------|---------------|
-| **image** | 1 | 67 | 1.5% |
-| **medias** | 0 | 68 | 0% |
-| **variants** | 0 | 68 | 0% |
-| **hasPrices** | 0 | 68 | 0% |
-| **priceIds** | 0 | 68 | 0% |
-| **collectionIds** | 0 | 68 | 0% |
-| **category** | 0 | 68 | 0% |
-| **sku** | 0 | 68 | 0% |
-| **price** | 0 | 68 | 0% |
+| Campo             | Con datos | Sin datos | % Completitud |
+| ----------------- | --------- | --------- | ------------- |
+| **image**         | 1         | 67        | 1.5%          |
+| **medias**        | 0         | 68        | 0%            |
+| **variants**      | 0         | 68        | 0%            |
+| **hasPrices**     | 0         | 68        | 0%            |
+| **priceIds**      | 0         | 68        | 0%            |
+| **collectionIds** | 0         | 68        | 0%            |
+| **category**      | 0         | 68        | 0%            |
+| **sku**           | 0         | 68        | 0%            |
+| **price**         | 0         | 68        | 0%            |
 
 ### Análisis de productos específicos:
 
 **Productos de prueba detectados:**
+
 - "TEST - Ramo Silvestre" (ID: 6a9560bcc330eca0575c4b20)
 - "TEST productType PHYSICAL" (ID: 6a9560adbfd47b2be50b50ec)
 - "pepito" (ID: 6a87b91004c302157108f01d)
@@ -52,12 +54,13 @@ hasVariants, hasPrices, <algunos tienen: image>
 **Productos reales:** ~65/68
 
 ### Conclusión GHL:
+
 ✗ **CRÍTICO:** No hay precios en GHL  
 ✗ **CRÍTICO:** No hay categorías en GHL  
 ✗ **CRÍTICO:** No hay imágenes (excepto 1)  
 ✗ **CRÍTICO:** No hay medias/files  
 ✗ **CRÍTICO:** No hay variants con precios  
-✗ **CRÍTICO:** No hay collections asignadas  
+✗ **CRÍTICO:** No hay collections asignadas
 
 **Razón:** GHL v3 API solo persiste: `_id, name, description, productType`.  
 Todos los campos adicionales deben estar en **Supabase** o en **otro servicio**.
@@ -67,6 +70,7 @@ Todos los campos adicionales deben estar en **Supabase** o en **otro servicio**.
 ## FASE 2: AUDITORÍA SUPABASE - PRODUCT_METADATA
 
 ### Estado de metadata:
+
 ```
 Total registros: 3
 ├── Con categoría: 0
@@ -84,6 +88,7 @@ Total registros: 3
 ### Muestras de registros existentes:
 
 **Registro 1:**
+
 - GHL ID: `6a956539324935c27b152bb5`
 - Category: MISSING
 - Price: MISSING
@@ -92,12 +97,14 @@ Total registros: 3
 - Status: active
 
 **Registro 2:**
+
 - GHL ID: `undefined` ❌ **CORRUPTO**
 - Category: MISSING
 - Price: MISSING
 - SKU: MISSING
 
 **Registro 3:**
+
 - GHL ID: `6a9568c0973de9c5b8125afe`
 - Category: MISSING
 - Price: MISSING
@@ -109,12 +116,13 @@ Total registros: 3
 **CRÍTICO:** Ningún registro tiene categoría  
 **CRÍTICO:** Ningún registro tiene precio  
 **CRÍTICO:** Un registro tiene ghl_product_id undefined (corrupto)  
-**CRÍTICO:** Los 65 productos GHL NO tienen metadata en Supabase  
+**CRÍTICO:** Los 65 productos GHL NO tienen metadata en Supabase
 
 ### Conclusión Supabase:
+
 ✗ **CRÍTICO:** 65/68 productos sin metadata en Supabase  
 ✗ **CRÍTICO:** Metadata existente está incompleta (sin categoría, sin precio, sin SKU)  
-✗ **CRÍTICO:** Un registro está corrupto (ghl_product_id undefined)  
+✗ **CRÍTICO:** Un registro está corrupto (ghl_product_id undefined)
 
 ---
 
@@ -122,22 +130,25 @@ Total registros: 3
 
 **Endpoint:** `GET /products/collections/?locationId=vOq7yOWR63XGU4qQ7XWd`  
 **Status:** HTTP 401 - Token no autorizado  
-**Resultado:** No se pudo verificar si existen collections  
+**Resultado:** No se pudo verificar si existen collections
 
 ### Conclusión Collections:
+
 ✗ **ALTO:** Token no tiene permisos para collections  
-✗ **ALTO:** Si existen collections, 0 productos están asignados (verificado vía collectionIds vacío)  
+✗ **ALTO:** Si existen collections, 0 productos están asignados (verificado vía collectionIds vacío)
 
 ---
 
 ## FASE 4: COMPARACIÓN CATALOG.TS vs GHL
 
 ### Totales:
+
 - **catalog.ts:** 50 productos con metadata completa
 - **GHL:** 68 productos (incluye 50 de catalog + 18 adicionales/test)
 - **Coincidencia:** ~51/68 (75%)
 
 ### Distribución catalog.ts por categoría:
+
 ```
 ramos: 6
 plantas: 13
@@ -148,18 +159,21 @@ TOTAL: 50
 ```
 
 ### Productos GHL sin equivalente en catalog.ts:
+
 - ~18 productos (incluye 3 de prueba, otros huérfanos)
 
 ### Conclusión Comparativa:
+
 ✗ **MEDIO:** catalog.ts NO está sincronizado con GHL  
 ✗ **MEDIO:** Los 68 productos GHL no son migración de catalog.ts  
-✓ **Información:** catalog.ts conserva estructura correcta (categorías, precios)  
+✓ **Información:** catalog.ts conserva estructura correcta (categorías, precios)
 
 ---
 
 ## FASE 5: AUDITORÍA DE IMÁGENES
 
 ### Estado de imágenes en GHL:
+
 ```
 Productos con image: 1/68 (1.5%)
 Productos con medias: 0/68 (0%)
@@ -171,9 +185,10 @@ Desglose de medias:
 ```
 
 ### Conclusión Imágenes:
+
 ✗ **CRÍTICO:** 67/68 productos sin imagen  
 ✗ **CRÍTICO:** 0 productos con medias/files  
-⚠ **IMPACTO:** Catálogo actual muestra placeholder.jpg para todos  
+⚠ **IMPACTO:** Catálogo actual muestra placeholder.jpg para todos
 
 ---
 
@@ -273,31 +288,38 @@ Desglose de medias:
 ## ESTADÍSTICAS FINALES
 
 ### Grupo A: Totales
+
 - **A) Total GHL:** 68 productos
 - **B) Total Supabase metadata:** 3 registros (incompletos)
 - **C) Total collections GHL:** 0 accesibles
 
 ### Grupo D-E: Precios
+
 - **D) Con precio:** 0
 - **E) Sin precio:** 68
 
 ### Grupo F-G: Categorías
+
 - **F) Con categoría:** 0
 - **G) Sin categoría:** 68
 
 ### Grupo H-I: SKU
+
 - **H) Con SKU:** 0
 - **I) Sin SKU:** 68
 
 ### Grupo J-K: Imágenes
+
 - **J) Con imagen:** 1
 - **K) Sin imagen:** 67
 
 ### Grupo L-M: Medias
+
 - **L) Con medias:** 0
 - **M) Sin medias:** 68
 
 ### Grupo N-O: Coincidencia con catalog.ts
+
 - **N) Coincidentes:** ~51
 - **O) Huérfanos en GHL:** ~18
 
@@ -306,31 +328,37 @@ Desglose de medias:
 ## PROPUESTA TÉCNICA PARA FASE 3
 
 ### OBJETIVO FASE 3:
+
 Sincronizar categorías, precios, SKUs e imágenes de los 68 productos
 
 ### ESTRATEGIA:
 
 **Paso 1: Llenar Supabase product_metadata para los 68 productos**
+
 - Crear entrada para cada ghl_product_id faltante (65/68)
 - Arreglar registro corrupto (undefined ghl_product_id)
 - Llenar campos: category, price, sku
 
 **Paso 2: Estrategia de datos para metadata**
 Opción A: Usar catalog.ts como fuente
-  - Los 50 productos en catalog.ts tienen datos completos
-  - Mapear por nombre/id a los 68 de GHL
-  - Para los 18 huérfanos: solicitar datos manualmente
+
+- Los 50 productos en catalog.ts tienen datos completos
+- Mapear por nombre/id a los 68 de GHL
+- Para los 18 huérfanos: solicitar datos manualmente
 
 Opción B: Esperar entrada del admin
-  - Admin crea categoría, precio, SKU vía /admin/products
-  - Se guardará automáticamente en Supabase
+
+- Admin crea categoría, precio, SKU vía /admin/products
+- Se guardará automáticamente en Supabase
 
 Opción C: Híbrida (RECOMENDADA)
-  - Auto-sync de catalog.ts para los 50 coincidentes
-  - Admin puede editar después
-  - Los 18 huérfanos quedan en "ramos" / 0 precio hasta corrección
+
+- Auto-sync de catalog.ts para los 50 coincidentes
+- Admin puede editar después
+- Los 18 huérfanos quedan en "ramos" / 0 precio hasta corrección
 
 **Paso 3: Implementar upload de imágenes**
+
 - Crear endpoint /api/upload/product-image
 - Soportar JPG, PNG, WEBP
 - Hasta 10 imágenes por producto
@@ -338,11 +366,13 @@ Opción C: Híbrida (RECOMENDADA)
 - Renderizar en ProductCard
 
 **Paso 4: Flujo de sincronización GHL ↔ Supabase**
+
 - POST /admin/products → Crear en GHL + Supabase
 - PUT /admin/products/:id → Actualizar en GHL + Supabase
 - GET /api/ghl/products → Combinar datos (ya funciona)
 
 **Paso 5: Validaciones**
+
 - No permitir producto sin categoría
 - No permitir precio negativo
 - SKU único y formato: FL-{CAT}-{NUM}
@@ -354,15 +384,16 @@ Opción C: Híbrida (RECOMENDADA)
 ✅ Catálogo mostrará precios reales, categorías, imágenes  
 ✅ Admin puede editar/crear productos  
 ✅ GHL y Supabase sincronizados  
-✅ Sistema escalable para 100+ productos  
+✅ Sistema escalable para 100+ productos
 
 ### RIESGOS:
 
 ⚠️ Los 18 productos huérfanos necesitan clasificación manual  
 ⚠️ Mapeo automático de catalog.ts podría fallar si nombres cambian  
-⚠️ Upload de imágenes requiere almacenamiento (local o cloud)  
+⚠️ Upload de imágenes requiere almacenamiento (local o cloud)
 
 ### TIMELINE ESTIMADA:
+
 - Llenar metadata Supabase: 30 min
 - Implementar upload imágenes: 1.5 hrs
 - Integrar UI admin: 1 hr
@@ -374,6 +405,7 @@ Opción C: Híbrida (RECOMENDADA)
 ## PRÓXIMOS PASOS
 
 **NO HACER TODAVÍA:**
+
 - ✗ No crear/eliminar productos
 - ✗ No modificar code
 - ✗ No cambiar GHL
@@ -381,6 +413,7 @@ Opción C: Híbrida (RECOMENDADA)
 - ✗ No implementar upload
 
 **CUANDO PROCEDER A FASE 3:**
+
 - ✓ Decisión sobre fuente de categorías (catalog.ts o manual)
 - ✓ Confirmación de la estrategia de imágenes
 - ✓ Clasificación de los 18 productos huérfanos

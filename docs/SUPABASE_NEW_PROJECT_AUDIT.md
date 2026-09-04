@@ -3,7 +3,7 @@
 **Fecha:** 2026-08-26  
 **Estado:** PREPARACIÓN FASE 1 - AUDITORÍA ÚNICAMENTE  
 **Nuevo Proyecto ID:** leksmflinhohnekbgmgj  
-**Nuevo Supabase URL:** https://leksmflinhohnekbgmgj.supabase.co  
+**Nuevo Supabase URL:** https://leksmflinhohnekbgmgj.supabase.co
 
 ---
 
@@ -23,12 +23,12 @@ Basado en las migraciones existentes en el repositorio, el nuevo Supabase **debe
 
 ### 1.1 Migraciones Aplicadas
 
-| # | Archivo | Descripción | Estado |
-|---|---------|-------------|--------|
-| 1 | `20260822021251_*.sql` | Tabla `profiles` + triggers + functions | ✅ Debe existir |
-| 2 | `20260822021259_*.sql` | Revoke permisos execute en functions | ✅ Debe existir |
-| 3 | `20260823015431_*.sql` | Storage policy para hero-animation | ✅ Debe existir |
-| 4 | `20260826000001_*.sql` | Tabla `product_metadata` (NO aplicada en Lovable) | ❌ NO debería existir |
+| #   | Archivo                | Descripción                                       | Estado                |
+| --- | ---------------------- | ------------------------------------------------- | --------------------- |
+| 1   | `20260822021251_*.sql` | Tabla `profiles` + triggers + functions           | ✅ Debe existir       |
+| 2   | `20260822021259_*.sql` | Revoke permisos execute en functions              | ✅ Debe existir       |
+| 3   | `20260823015431_*.sql` | Storage policy para hero-animation                | ✅ Debe existir       |
+| 4   | `20260826000001_*.sql` | Tabla `product_metadata` (NO aplicada en Lovable) | ❌ NO debería existir |
 
 ### 1.2 Tablas Esperadas
 
@@ -90,11 +90,13 @@ RLS:           Manejado internamente por Supabase
 **Estado:** Migración creada (`20260826000001_*.sql`) pero **NO aplicada** en Lovable
 
 **Si existe en nuevo Supabase:**
+
 - Verificar si fue creada manualmente
 - Verificar estructura vs. archivo de migración
 - **Acción:** REVISAR MANUALMENTE
 
 **Si NO existe en nuevo Supabase:**
+
 - Esperado (aún no ha sido aplicada)
 - Será aplicada después en FASE 2
 - **Acción:** NO HACER NADA AHORA
@@ -103,8 +105,8 @@ RLS:           Manejado internamente por Supabase
 
 ### 1.3 Storage Buckets Esperados
 
-| Bucket | Contenido | RLS | Acción |
-|--------|-----------|-----|--------|
+| Bucket           | Contenido      | RLS                | Acción    |
+| ---------------- | -------------- | ------------------ | --------- |
 | `hero-animation` | 205 PNG frames | Public (anon/auth) | CONSERVAR |
 
 **Policy esperada:** `"Anyone can read hero animation frames"` en storage.objects
@@ -126,16 +128,17 @@ RLS:           Manejado internamente por Supabase
 
 **Para cada tabla que EXISTA en el nuevo Supabase, llena esta tabla:**
 
-| Tabla | ¿Existe? | Propósito | ¿Pertenece a Floristería? | Evidencia | Acción | Notas |
-|-------|----------|-----------|---------------------------|-----------|--------|-------|
-| `public.profiles` | ❓ | Datos usuario | ❓ | Verificar estructura | ? | Crítico si existe |
-| `public.product_metadata` | ❓ | Metadatos GHL | ❓ | Migración: 20260826000001 | ? | Podría ser del proyecto anterior |
-| `storage.hero-animation` | ❓ | Animación Hero | ❓ | 205 PNG frames | ? | Si existe, revisar |
-| [TABLA DESCONOCIDA 1] | ? | ? | ❓ | ? | ? | **REVISAR MANUALMENTE** |
-| [TABLA DESCONOCIDA 2] | ? | ? | ❓ | ? | ? | **REVISAR MANUALMENTE** |
-| [TABLA DESCONOCIDA N] | ? | ? | ❓ | ? | ? | **REVISAR MANUALMENTE** |
+| Tabla                     | ¿Existe? | Propósito      | ¿Pertenece a Floristería? | Evidencia                 | Acción | Notas                            |
+| ------------------------- | -------- | -------------- | ------------------------- | ------------------------- | ------ | -------------------------------- |
+| `public.profiles`         | ❓       | Datos usuario  | ❓                        | Verificar estructura      | ?      | Crítico si existe                |
+| `public.product_metadata` | ❓       | Metadatos GHL  | ❓                        | Migración: 20260826000001 | ?      | Podría ser del proyecto anterior |
+| `storage.hero-animation`  | ❓       | Animación Hero | ❓                        | 205 PNG frames            | ?      | Si existe, revisar               |
+| [TABLA DESCONOCIDA 1]     | ?        | ?              | ❓                        | ?                         | ?      | **REVISAR MANUALMENTE**          |
+| [TABLA DESCONOCIDA 2]     | ?        | ?              | ❓                        | ?                         | ?      | **REVISAR MANUALMENTE**          |
+| [TABLA DESCONOCIDA N]     | ?        | ?              | ❓                        | ?                         | ?      | **REVISAR MANUALMENTE**          |
 
 **Instrucciones para el usuario:**
+
 1. Ve a https://leksmflinhohnekbgmgj.supabase.co
 2. Abre SQL Editor
 3. Ejecuta: `SELECT tablename FROM pg_tables WHERE schemaname = 'public';`
@@ -202,7 +205,7 @@ src/routes/_authenticated/mi-cuenta.tsx
 
 src/hooks/useAuth.ts
   └─ Gestiona sesión del usuario
-  
+
 src/integrations/supabase/client.ts
   └─ Cliente Supabase con acceso a tablas
 ```
@@ -219,10 +222,10 @@ src/components/AnimatedFlowerHero.tsx
 ```
 src/routes/api.ghl.products.ts
   └─ Lectura de metadatos
-  
+
 src/hooks/useGHLProducts.ts
   └─ Query React Query
-  
+
 (No implementado completamente aún)
 ```
 
@@ -247,6 +250,7 @@ src/hooks/useGHLProducts.ts
 ### 🟡 ALTO: Foreign Keys Cruzadas
 
 **Si existen tablas antiguas, verificar:**
+
 - ¿Hay foreign keys de tablas nuevas → viejas?
 - ¿Hay foreign keys de viejas → nuevas?
 - ¿Eliminar vieja rompería relaciones?
@@ -254,6 +258,7 @@ src/hooks/useGHLProducts.ts
 ### 🟡 ALTO: Storage Buckets
 
 **Si `hero-animation` NO existe:**
+
 - Las imágenes de hero animation no cargarán
 - Necesita ser recreado + subidos los 205 frames
 
@@ -264,11 +269,11 @@ src/hooks/useGHLProducts.ts
 ### PASO 1: Listar todas las tablas
 
 ```sql
-SELECT 
+SELECT
   schemaname,
   tablename,
   tableowner
-FROM pg_tables 
+FROM pg_tables
 WHERE schemaname NOT IN ('pg_catalog', 'information_schema')
 ORDER BY schemaname, tablename;
 ```
@@ -276,11 +281,13 @@ ORDER BY schemaname, tablename;
 ### PASO 2: Para cada tabla, determinar:
 
 **Pregunta 1: ¿Está referenciada en el código de Floristería?**
+
 ```
 grep -r "\.from(['\"]TABLA_NAME['\"]" src/
 ```
 
 **Pregunta 2: ¿Tiene estructura que sugiera Floristería Lucía?**
+
 ```
 - profiles            → SÍ, nombre específico
 - product_metadata    → SÍ, propósito claro
@@ -289,6 +296,7 @@ grep -r "\.from(['\"]TABLA_NAME['\"]" src/
 ```
 
 **Pregunta 3: ¿Tiene datos adentro?**
+
 ```sql
 SELECT COUNT(*) FROM [TABLA_NAME];
 ```
@@ -296,14 +304,17 @@ SELECT COUNT(*) FROM [TABLA_NAME];
 ### PASO 3: Clasificación
 
 #### CONSERVAR (✅)
+
 - `public.profiles` - Crítica para Floristería Lucía
 - `auth.users` - Sistema de autenticación
 - `storage.hero-animation` - Animación hero
 
 #### MIGRAR/RECREAR (🔄)
+
 - `public.product_metadata` - Si existe, verificar vs. migración
 
 #### ELIMINAR DESPUÉS (❌)
+
 - Cualquier tabla que:
   - No esté referenciada en código
   - No tenga nombre que sugiera Floristería
@@ -311,6 +322,7 @@ SELECT COUNT(*) FROM [TABLA_NAME];
   - NO tenga datos críticos adentro
 
 #### REVISAR MANUALMENTE (❓)
+
 - Cualquier tabla que:
   - Tenga nombre ambiguo
   - Tenga datos pero estructura incierta
@@ -345,7 +357,7 @@ NEW SUPABASE: leksmflinhohnekbgmgj
 ├── SCHEMA: auth
 │   └── TABLE: users (Supabase-managed)
 │
-└── STORAGE: 
+└── STORAGE:
     └── BUCKET: hero-animation
         ├── 205 PNG frames
         └── Policy: Public read
@@ -356,23 +368,27 @@ NEW SUPABASE: leksmflinhohnekbgmgj
 ## 8. ORDEN DE ACCIONES (NO EJECUTAR AÚN)
 
 ### ✅ FASE 1 (AUDITORÍA - HOY)
+
 1. Listar todas las tablas en nuevo Supabase
 2. Clasificar cada tabla (CONSERVAR/ELIMINAR/REVISAR)
 3. Completar tabla de clasificación en este documento
 4. DETENER y esperar aprobación del usuario
 
 ### ⏸️ FASE 2 (CUANDO USUARIO APRUEBE)
+
 1. Eliminar tablas antiguas (si se determina que sí)
 2. Aplicar migraciones de Floristería Lucía
 3. Crear buckets de storage
 4. Subir archivos de animación
 
 ### 🔄 FASE 3 (MIGRACIÓN DE USUARIOS)
+
 1. Migrar auth.users (con cuidado)
 2. Migrar profiles
 3. Validar datos
 
 ### ✅ FASE 4 (CUTOVER)
+
 1. Cambiar .env
 2. Deploy a Vercel
 3. Testing en producción
@@ -393,16 +409,16 @@ NEW SUPABASE: leksmflinhohnekbgmgj
 
 ```sql
 -- Query 1: Listar todas las tablas
-SELECT 
+SELECT
   schemaname,
   tablename,
   tableowner
-FROM pg_tables 
+FROM pg_tables
 WHERE schemaname NOT IN ('pg_catalog', 'information_schema')
 ORDER BY schemaname, tablename;
 
 -- Query 2: Para cada tabla, contar filas
-SELECT 
+SELECT
   schemaname,
   tablename,
   n_live_tup as row_count
@@ -455,29 +471,29 @@ ORDER BY ordinal_position;
 
 #### Tabla 1: `public.profiles`
 
-| Propiedad | Valor |
-|-----------|-------|
-| **Existe** | ❌ NO |
-| **Registros** | 0 |
-| **Pertenece a** | ✅ Floristería Lucía (CRÍTICA) |
-| **Clasificación** | DEBE CREARSE |
-| **Prioridad** | 🔴 CRÍTICA |
-| **Acción** | Aplicar migración: `20260822021251_*.sql` |
-| **Motivo** | Tabla esencial para autenticación y datos de usuario. Sin ella, los usuarios no pueden registrarse/loguearse. |
+| Propiedad         | Valor                                                                                                         |
+| ----------------- | ------------------------------------------------------------------------------------------------------------- |
+| **Existe**        | ❌ NO                                                                                                         |
+| **Registros**     | 0                                                                                                             |
+| **Pertenece a**   | ✅ Floristería Lucía (CRÍTICA)                                                                                |
+| **Clasificación** | DEBE CREARSE                                                                                                  |
+| **Prioridad**     | 🔴 CRÍTICA                                                                                                    |
+| **Acción**        | Aplicar migración: `20260822021251_*.sql`                                                                     |
+| **Motivo**        | Tabla esencial para autenticación y datos de usuario. Sin ella, los usuarios no pueden registrarse/loguearse. |
 
 ---
 
 #### Tabla 2: `public.product_metadata`
 
-| Propiedad | Valor |
-|-----------|-------|
-| **Existe** | ❌ NO |
-| **Registros** | 0 |
-| **Pertenece a** | ✅ Floristería Lucía (GHL Integration) |
-| **Clasificación** | CREAR EN FASE 2 |
-| **Prioridad** | 🟡 ALTA (después de Fase 1) |
-| **Acción** | Aplicar migración: `20260826000001_*.sql` (cuando aprobado) |
-| **Motivo** | Tabla para metadatos GHL. Se aplicará después de FASE 1. |
+| Propiedad         | Valor                                                       |
+| ----------------- | ----------------------------------------------------------- |
+| **Existe**        | ❌ NO                                                       |
+| **Registros**     | 0                                                           |
+| **Pertenece a**   | ✅ Floristería Lucía (GHL Integration)                      |
+| **Clasificación** | CREAR EN FASE 2                                             |
+| **Prioridad**     | 🟡 ALTA (después de Fase 1)                                 |
+| **Acción**        | Aplicar migración: `20260826000001_*.sql` (cuando aprobado) |
+| **Motivo**        | Tabla para metadatos GHL. Se aplicará después de FASE 1.    |
 
 ---
 
@@ -485,15 +501,15 @@ ORDER BY ordinal_position;
 
 #### Bucket 1: `hero-animation`
 
-| Propiedad | Valor |
-|-----------|-------|
-| **Existe** | ❌ NO |
-| **Archivos** | 0 |
-| **Pertenece a** | ✅ Floristería Lucía |
-| **Clasificación** | DEBE CREARSE |
-| **Prioridad** | 🟡 ALTA (FASE 2) |
-| **Acción** | 1. Crear bucket, 2. Subir 205 PNG frames |
-| **Motivo** | Necesario para animación hero. Sin él, hero component fallará. |
+| Propiedad         | Valor                                                          |
+| ----------------- | -------------------------------------------------------------- |
+| **Existe**        | ❌ NO                                                          |
+| **Archivos**      | 0                                                              |
+| **Pertenece a**   | ✅ Floristería Lucía                                           |
+| **Clasificación** | DEBE CREARSE                                                   |
+| **Prioridad**     | 🟡 ALTA (FASE 2)                                               |
+| **Acción**        | 1. Crear bucket, 2. Subir 205 PNG frames                       |
+| **Motivo**        | Necesario para animación hero. Sin él, hero component fallará. |
 
 ---
 
@@ -501,26 +517,26 @@ ORDER BY ordinal_position;
 
 #### auth.users
 
-| Propiedad | Valor |
-|-----------|-------|
-| **Existe** | ✅ SÍ (Supabase-managed) |
-| **Registros** | 0 (proyecto nuevo, sin usuarios) |
-| **Pertenece a** | ✅ Floristería Lucía |
-| **Clasificación** | EXISTE Y LISTO |
-| **Prioridad** | 🔴 CRÍTICA |
-| **Acción** | Configurar: Email/Password + Google OAuth |
-| **Motivo** | Sistema de autenticación. Manejado por Supabase, listo para usar. |
+| Propiedad         | Valor                                                             |
+| ----------------- | ----------------------------------------------------------------- |
+| **Existe**        | ✅ SÍ (Supabase-managed)                                          |
+| **Registros**     | 0 (proyecto nuevo, sin usuarios)                                  |
+| **Pertenece a**   | ✅ Floristería Lucía                                              |
+| **Clasificación** | EXISTE Y LISTO                                                    |
+| **Prioridad**     | 🔴 CRÍTICA                                                        |
+| **Acción**        | Configurar: Email/Password + Google OAuth                         |
+| **Motivo**        | Sistema de autenticación. Manejado por Supabase, listo para usar. |
 
 ---
 
 ### RESUMEN GENERAL
 
-| Recurso | Existe | Registros | Acción | Prioridad |
-|---------|--------|-----------|--------|-----------|
-| public.profiles | ❌ NO | 0 | CREAR | 🔴 |
-| public.product_metadata | ❌ NO | 0 | CREAR (FASE 2) | 🟡 |
-| storage.hero-animation | ❌ NO | 0 | CREAR | 🟡 |
-| auth.users | ✅ SÍ | 0 | CONFIGURAR | 🔴 |
+| Recurso                 | Existe | Registros | Acción         | Prioridad |
+| ----------------------- | ------ | --------- | -------------- | --------- |
+| public.profiles         | ❌ NO  | 0         | CREAR          | 🔴        |
+| public.product_metadata | ❌ NO  | 0         | CREAR (FASE 2) | 🟡        |
+| storage.hero-animation  | ❌ NO  | 0         | CREAR          | 🟡        |
+| auth.users              | ✅ SÍ  | 0         | CONFIGURAR     | 🔴        |
 
 ---
 
@@ -557,6 +573,7 @@ NUEVO SUPABASE (leksmflinhohnekbgmgj)
 ### ⚠️ ADVERTENCIAS Y NOTAS
 
 #### ✅ BUENAS NOTICIAS:
+
 1. El nuevo Supabase está LIMPIO
 2. NO hay conflictos con proyectos anteriores
 3. NO hay datos que eliminar
@@ -564,6 +581,7 @@ NUEVO SUPABASE (leksmflinhohnekbgmgj)
 5. Proyecto LISTO para aplicar migraciones fresh
 
 #### ⚠️ OBSERVACIONES:
+
 1. **profiles es CRÍTICA** - Sin ella, autenticación falla
 2. **hero-animation debe tener 205 archivos** - Si faltan, hero component no carga
 3. **product_metadata se aplicará después** - En FASE 2, cuando usuario apruebe
@@ -669,19 +687,18 @@ NUEVO SUPABASE (leksmflinhohnekbgmgj)
 
 ## 15. RESUMEN EJECUTIVO
 
-| Aspecto | Resultado |
-|--------|-----------|
-| **Estado General** | ✅ LIMPIO, LISTO |
-| **Tablas Antiguas** | ✅ 0 encontradas |
-| **Datos que Limpiar** | ✅ Ninguno |
-| **Tablas a Crear** | 2 (profiles, product_metadata) |
-| **Storage a Crear** | 1 (hero-animation) |
-| **Riesgos** | 🟢 BAJO (no hay conflictos) |
-| **Aprobación Usuario** | ✅ LISTA PARA FASE 1 |
+| Aspecto                | Resultado                      |
+| ---------------------- | ------------------------------ |
+| **Estado General**     | ✅ LIMPIO, LISTO               |
+| **Tablas Antiguas**    | ✅ 0 encontradas               |
+| **Datos que Limpiar**  | ✅ Ninguno                     |
+| **Tablas a Crear**     | 2 (profiles, product_metadata) |
+| **Storage a Crear**    | 1 (hero-animation)             |
+| **Riesgos**            | 🟢 BAJO (no hay conflictos)    |
+| **Aprobación Usuario** | ✅ LISTA PARA FASE 1           |
 
 ---
 
 **AUDITORÍA COMPLETADA - PROYECTO LIMPIO Y SEGURO**  
 **Timestamp:** 2026-08-26T18:50:36Z  
 **Resultado:** ✅ APTO PARA MIGRACIÓN DE FLORISTERÍA LUCÍA
-

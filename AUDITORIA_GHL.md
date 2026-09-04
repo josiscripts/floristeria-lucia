@@ -9,6 +9,7 @@
 ## 1. INTEGRACIÓN GHL ACTUAL
 
 ### 1.1 Ubicación del Código
+
 ```
 src/lib/ghl/
 ├── client.server.ts       (Cliente API principal)
@@ -28,6 +29,7 @@ src/hooks/
 ```
 
 ### 1.2 Variables de Entorno Configuradas
+
 ```
 GHL_PRIVATE_INTEGRATION_TOKEN = "pit-0cf65f40-51a4-4e28-9793-9eb8421e2291"
 GHL_LOCATION_ID            = "vOq7yOWR63XGU4qQ7XWd"
@@ -39,6 +41,7 @@ GHL_TIMEOUT                = 10000ms
 ### 1.3 Funciones GHL Implementadas (client.server.ts)
 
 #### READ Operations (4 funciones)
+
 ```
 ✅ getGHLProducts(locationId?, options?)
    - Endpoint: GET /products/?locationId=X&limit=Y&skip=Z
@@ -62,6 +65,7 @@ GHL_TIMEOUT                = 10000ms
 ```
 
 #### WRITE Operations (3 funciones)
+
 ```
 ✅ createGHLProduct(productData, locationId?)
    - Método: POST /products
@@ -83,6 +87,7 @@ GHL_TIMEOUT                = 10000ms
 ```
 
 #### Utilidad (1 función)
+
 ```
 🔧 ghlFetch<T>(endpoint, options?)
    - Wrapper para todas las llamadas API
@@ -94,6 +99,7 @@ GHL_TIMEOUT                = 10000ms
 ### 1.4 Tipos Definidos (types.ts)
 
 **Implementados:**
+
 ```typescript
 ✅ GHLProduct
    - id, name, description, price, cost, image, images[], sku, category, status, inventory
@@ -107,6 +113,7 @@ GHL_TIMEOUT                = 10000ms
 ```
 
 **NO Implementados:**
+
 ```typescript
 ❌ GHLContact          (Necesario para sincronización de órdenes)
 ❌ GHLOpportunity      (Necesario para pipeline de pedidos)
@@ -118,6 +125,7 @@ GHL_TIMEOUT                = 10000ms
 ### 1.5 Endpoints API Existentes
 
 #### Lectura (Productos)
+
 ```
 GET /api/ghl/products?action=test
    - Verifica conectividad con GHL
@@ -133,6 +141,7 @@ GET /api/ghl/products/[id]
 ```
 
 #### Escritura (Productos)
+
 ```
 POST /api/products
    - Crear producto en GHL + Supabase metadata
@@ -141,6 +150,7 @@ POST /api/products
 ```
 
 #### Webhooks
+
 ```
 POST /api/webhooks/ghl-product
    - Recibe: {event: "product.created|updated|deleted", data: GHLProduct, timestamp?}
@@ -154,6 +164,7 @@ POST /api/webhooks/ghl-product
 ### 1.6 Sincronización de Metadata (product_metadata table)
 
 **Schema Supabase:**
+
 ```sql
 product_metadata
 ├── id (UUID, primary)
@@ -172,6 +183,7 @@ product_metadata
 ```
 
 **Flujo Actual:**
+
 ```
 GHL Product
     ↓
@@ -185,6 +197,7 @@ Frontend Product
 ```
 
 **Funciones Disponibles:**
+
 ```
 ✅ syncProductMetadata(input)       - Create or update
 ✅ deleteProductMetadata(ghlId)     - Soft delete
@@ -199,6 +212,7 @@ Frontend Product
 ### 2.1 Base de Datos (Supabase)
 
 **Tabla: orders (19 campos)**
+
 ```
 ✅ id (UUID)                    - Primary key
 ✅ order_number (VARCHAR)       - Unique, formato: ORD-YYYYMMDD-XXXXX
@@ -215,6 +229,7 @@ Frontend Product
 ```
 
 **Tabla: order_items (12 campos)**
+
 ```
 ✅ id, order_id (FK)            - Primary key + Foreign key
 ✅ ghl_product_id              - Referencia a producto en GHL
@@ -227,6 +242,7 @@ Frontend Product
 ### 2.2 Backend de Órdenes
 
 **Funciones Implementadas:**
+
 ```
 ✅ createOrder(request: CreateOrderRequest)
    Ubicación: src/lib/orders.server.ts
@@ -240,6 +256,7 @@ Frontend Product
 ```
 
 **Endpoints:**
+
 ```
 ✅ POST /api/orders
    - Valida estructura de request
@@ -317,7 +334,7 @@ API GHL v3 Reference:
   - POST /opportunities              (Create)
   - PUT /opportunities/:id           (Update)
   - GET /opportunities/:id           (Get by ID)
-  
+
 Requerimiento previo:
   - ghl_contact_id debe estar poblado (ver punto A)
 ```
@@ -603,7 +620,7 @@ Supabase → Frontend → /confirmation actualizado
       "fieldId": "cf_order_total",
       "label": "Total Pedido",
       "type": "numeric",
-      "value": 80.50
+      "value": 80.5
     },
     {
       "fieldId": "cf_delivery_date",
@@ -628,8 +645,8 @@ Supabase → Frontend → /confirmation actualizado
       "label": "Productos",
       "type": "json",
       "value": [
-        {"product": "Ramo Rosas", "qty": 1, "price": 45.00},
-        {"product": "Cesta Plantas", "qty": 2, "price": 35.50}
+        { "product": "Ramo Rosas", "qty": 1, "price": 45.0 },
+        { "product": "Cesta Plantas", "qty": 2, "price": 35.5 }
       ]
     }
   ]
@@ -641,6 +658,7 @@ Supabase → Frontend → /confirmation actualizado
 ## 5. FASES DE IMPLEMENTACIÓN RECOMENDADAS
 
 ### Phase 1: Infraestructura GHL (Preparación)
+
 **Tiempo estimado: 1-2 horas (manual + config)**
 
 ```
@@ -668,6 +686,7 @@ Supabase → Frontend → /confirmation actualizado
 ```
 
 ### Phase 2: Backend - Contactos (Implementación)
+
 **Tiempo estimado: 3-4 horas**
 
 ```
@@ -695,6 +714,7 @@ Supabase → Frontend → /confirmation actualizado
 ```
 
 ### Phase 3: Backend - Opportunities (Implementación)
+
 **Tiempo estimado: 4-5 horas**
 
 ```
@@ -727,6 +747,7 @@ Supabase → Frontend → /confirmation actualizado
 ```
 
 ### Phase 4: Webhooks - Order Updates (Implementación)
+
 **Tiempo estimado: 3-4 horas**
 
 ```
@@ -755,6 +776,7 @@ Supabase → Frontend → /confirmation actualizado
 ```
 
 ### Phase 5: Dashboard GHL + Frontend Updates (Configuración)
+
 **Tiempo estimado: 2-3 horas**
 
 ```
@@ -779,6 +801,7 @@ Supabase → Frontend → /confirmation actualizado
 ```
 
 ### Phase 6: Verification & Sync Testing (Validación)
+
 **Tiempo estimado: 2-3 horas**
 
 ```
@@ -810,40 +833,47 @@ Supabase → Frontend → /confirmation actualizado
 ## 6. RESUMEN: RESPUESTAS A PREGUNTAS
 
 ### A. Crear/actualizar contactos GHL ✅ SÍ (Implementar Phase 2)
-   - Usar: GET /contacts?email= + POST/PUT /contacts
-   - Desde: createOrder() → syncGHLContact()
-   - Almacenar: ghl_contact_id en orders.ghl_contact_id
+
+- Usar: GET /contacts?email= + POST/PUT /contacts
+- Desde: createOrder() → syncGHLContact()
+- Almacenar: ghl_contact_id en orders.ghl_contact_id
 
 ### B. Crear Opportunity asociado a contacto ✅ SÍ (Implementar Phase 3)
-   - Usar: POST /opportunities con contactId + pipelineId
-   - Custom fields: order_number, total, address, items
-   - Almacenar: ghl_opportunity_id en orders
+
+- Usar: POST /opportunities con contactId + pipelineId
+- Custom fields: order_number, total, address, items
+- Almacenar: ghl_opportunity_id en orders
 
 ### C. Pipeline para estado pedido ✅ SÍ (Setup Phase 1 + Impl Phase 3/4)
-   - Crear manualmente: Pipeline con 6 stages
-   - Mapeo: pending→RECIBIDO, preparing→PREPARANDO, etc.
-   - Sync bidireccional: updateStage() + Webhook
+
+- Crear manualmente: Pipeline con 6 stages
+- Mapeo: pending→RECIBIDO, preparing→PREPARANDO, etc.
+- Sync bidireccional: updateStage() + Webhook
 
 ### D. Custom Fields para datos pedido ✅ SÍ (Phase 1 + Phase 3)
-   - Definir en GHL: order_number, total, address, dedicatory, items
-   - Poblar en: createGHLOpportunity() con valores
-   - Actualizar en: updateGHLOpportunity()
+
+- Definir en GHL: order_number, total, address, dedicatory, items
+- Poblar en: createGHLOpportunity() con valores
+- Actualizar en: updateGHLOpportunity()
 
 ### E. Consultar pedidos desde GHL ✅ SÍ (Dashboard GHL + API)
-   - GHL UI: Ver opportunities con filtros
-   - API: GET /opportunities?pipelineId=X
-   - Búsqueda: Por email, teléfono, fecha entrega
+
+- GHL UI: Ver opportunities con filtros
+- API: GET /opportunities?pipelineId=X
+- Búsqueda: Por email, teléfono, fecha entrega
 
 ### F. Datos en Supabase ✅ SIEMPRE (Sync bidireccional)
-   - Source of Truth: orders + order_items
-   - Sincronizado: ghl_contact_id, ghl_opportunity_id
-   - Webhooks: Actualizar status cuando GHL cambia
+
+- Source of Truth: orders + order_items
+- Sincronizado: ghl_contact_id, ghl_opportunity_id
+- Webhooks: Actualizar status cuando GHL cambia
 
 ---
 
 ## 7. RECOMENDACIONES FINALES
 
 ### ✅ Recomendado Hacer
+
 ```
 1. Implementar por fases (no todo de golpe)
 2. Empezar por Phase 2 (Contactos) - es la base
@@ -855,6 +885,7 @@ Supabase → Frontend → /confirmation actualizado
 ```
 
 ### ⚠️ Cuidados Importantes
+
 ```
 1. NO perder datos de Supabase (es source of truth)
 2. Manejar errores sin bloquear orden creation
@@ -866,6 +897,7 @@ Supabase → Frontend → /confirmation actualizado
 ```
 
 ### 🚀 Stack Recomendado
+
 ```
 - Framework: TanStack Start ✅ (ya en uso)
 - DB: Supabase + PostgreSQL ✅ (ya en uso)
@@ -880,4 +912,3 @@ Supabase → Frontend → /confirmation actualizado
 **Auditoría completada:** 2026-08-28
 **Estado:** LISTO PARA IMPLEMENTACIÓN (Phase 1-2)
 **Siguiente paso:** Crear Plan de Implementación detallado
-

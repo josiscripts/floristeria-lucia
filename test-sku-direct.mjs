@@ -36,7 +36,8 @@ async function generateSKU(category) {
     test: ["FL-TEST-001"],
   };
 
-  const categoryKey = category === "ramos" ? "ramos" : category === "rosas-eternas" ? "rosas-eternas" : "test";
+  const categoryKey =
+    category === "ramos" ? "ramos" : category === "rosas-eternas" ? "rosas-eternas" : "test";
   const skus = existingSKUs[categoryKey] || [];
 
   const sequenceNumbers = [];
@@ -52,7 +53,9 @@ async function generateSKU(category) {
   const newSKU = `FL-${prefix}-${String(nextSequence).padStart(4, "0")}`;
 
   console.log(`[SKUGenerator] Category: ${category}, Prefix: ${prefix}`);
-  console.log(`[SKUGenerator] Existing sequences: [${sequenceNumbers.sort((a,b) => a-b).join(", ")}]`);
+  console.log(
+    `[SKUGenerator] Existing sequences: [${sequenceNumbers.sort((a, b) => a - b).join(", ")}]`,
+  );
   console.log(`[SKUGenerator] Max sequence: ${maxSequence}`);
   console.log(`[SKUGenerator] Next sequence: ${nextSequence}`);
   console.log(`[SKUGenerator] Generated SKU: ${newSKU}`);

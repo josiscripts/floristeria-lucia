@@ -23,27 +23,32 @@
 ## FASES A-C (AUDITORÍA Y LIMPIEZA PREVIA)
 
 ### FASE A: Auditoría Inicial ✓
+
 - Supabase: Validado
 - GHL Integración: 0 productos
 - Esquema de BD: Validado
 - Status: **DEMOSTRADO**
 
 ### FASE B: Borrado Supabase ✓
+
 ```sql
 DELETE FROM product_images;      -- OK
 DELETE FROM color_variants;      -- OK
 DELETE FROM product_options;     -- OK
 DELETE FROM products;            -- OK
 ```
+
 - Status: **DEMOSTRADO**
 
 ### FASE C: Verificación Limpieza ✓
+
 ```
 Products:  0 ✓
 Options:   0 ✓
 Colors:    0 ✓
 Images:    0 ✓
 ```
+
 - Status: **DEMOSTRADO**
 
 ---
@@ -51,6 +56,7 @@ Images:    0 ✓
 ## FASES D-G (NUEVO MODELO DE DATOS)
 
 ✓ Implementadas en sprints anteriores:
+
 - Soporte para múltiples opciones por producto
 - Precios con descuentos por opción
 - Stock management granular
@@ -64,6 +70,7 @@ Images:    0 ✓
 **Producto creado:** TEST BLOQUE 4 - RAMO ROSA
 
 ### Datos insertados:
+
 ```json
 {
   "id": "41f559e6-531e-4c6e-ba0d-14eda8f0452e",
@@ -90,6 +97,7 @@ Images:    0 ✓
 ```
 
 ### Verificación:
+
 - Supabase: 1 producto, 2 opciones ✓
 - GHL sincronización: ID generado ✓
 - SKU generados automáticamente ✓
@@ -101,6 +109,7 @@ Images:    0 ✓
 ## FASE J: EDITAR PRODUCTO ✓
 
 **Cambios realizados:**
+
 ```
 name:        "TEST BLOQUE 4 - RAMO ROSA"
              ↓
@@ -110,6 +119,7 @@ description: (actualizado)
 ```
 
 **Verificación:**
+
 - Supabase: Actualización exitosa ✓
 - GHL: Sincronización ✓
 - Sin duplicados: 1 ID únicamente ✓
@@ -121,6 +131,7 @@ description: (actualizado)
 ## FASE K: SKU AUTOMÁTICO ✓
 
 Productos creados:
+
 ```
 TEST BLOQUE 4 (ramos):      FL-RAM-0001 ✓
 TEST SKU PLANTAS:           FL-PLA-0001 ✓
@@ -128,8 +139,9 @@ TEST SKU COMPLEMENTOS:      FL-COM-0001 ✓
 ```
 
 **Validación de prefijos:**
-- Ramos:       FL-RAM-* ✓
-- Plantas:     FL-PLA-* ✓
+
+- Ramos: FL-RAM-* ✓
+- Plantas: FL-PLA-* ✓
 - Complementos: FL-COM-* ✓
 
 **Status: DEMOSTRADO**
@@ -141,6 +153,7 @@ TEST SKU COMPLEMENTOS:      FL-COM-0001 ✓
 **Producto creado:** TEST ROSA ETERNA
 
 **Color variants:**
+
 ```
 1. Rojo   (sort_order: 0) ✓
 2. Blanco (sort_order: 1) ✓
@@ -148,6 +161,7 @@ TEST SKU COMPLEMENTOS:      FL-COM-0001 ✓
 ```
 
 **Verificación:**
+
 - 3 color_variants creadas ✓
 - Relación product ↔ colors válida ✓
 - Sort order correcto ✓
@@ -161,6 +175,7 @@ TEST SKU COMPLEMENTOS:      FL-COM-0001 ✓
 **Producto eliminado:** TEST ROSA ETERNA
 
 **Cascada de eliminación:**
+
 ```
 DELETE color_variants   (3 registros)  ✓
 DELETE product_options  (si existen)   ✓
@@ -168,6 +183,7 @@ DELETE products         (1 registro)   ✓
 ```
 
 **Verificación post-eliminación:**
+
 ```
 SELECT * FROM products WHERE id = 'rosa_product_id'
 → 0 resultados (eliminado correctamente) ✓
@@ -193,6 +209,7 @@ for (let i = 1; i <= 4; i++) {
 ```
 
 **Resultados:**
+
 ```
 Edición 1: Nombre actualizado a "TEST BLOQUE 4 EDIT1" ✓
 Edición 2: Nombre actualizado a "TEST BLOQUE 4 EDIT2" ✓
@@ -225,6 +242,7 @@ DELETE FROM products WHERE name LIKE '%TEST%';
 ```
 
 **Estado final de Supabase:**
+
 ```
 Products:  0 ✓
 Options:   0 ✓
@@ -239,25 +257,31 @@ Images:    0 ✓
 ## FASE P: BUILD & VERCEL
 
 ### Build
+
 ```bash
 npm run build
 ```
+
 **Resultado:** ✓ built in 3.29s
 
 **Output:**
+
 - Nitro build complete
 - .vercel/output generated
 - All chunks optimized
 - Status: PASS
 
 ### Linting
+
 ```bash
 npm run lint
 ```
+
 **Resultado:** PASS  
 Status: PASS
 
 ### Commit
+
 ```
 feat: BLOQUE 4 RECONSTRUCCIÓN COMPLETA
 
@@ -266,17 +290,21 @@ Build: PASS
 Supabase: limpio (0 registros)
 GHL sync: verificado
 ```
+
 **Hash:** 3aa773a  
 **Status:** COMPLETO
 
 ### Push
+
 ```bash
 git push origin main
 ```
+
 **Resultado:** ✓ 15 files changed  
 **Status:** COMPLETO
 
 ### Vercel Deployment
+
 - Trigger: Automatic on push to main
 - Estimated time: 2-3 minutos
 - URL: https://floristeria-lucia.vercel.app
@@ -321,12 +349,15 @@ TOTAL NO DEMOSTRADO: 0/14
 ## ARCHIVOS GENERADOS/MODIFICADOS
 
 ### Scripts de prueba:
+
 - `bloque4-fases-completo.mjs` — Ejecutable que prueba FASES B-O
 
 ### Documentación:
+
 - `BLOQUE_4_FINAL_REPORT.md` (este archivo)
 
 ### Código modificado:
+
 - `src/components/admin/ProductFormNew.tsx` — Nuevo form para opciones
 - `src/lib/admin/api.ts` — Endpoints CRUD seguros
 - `src/routes/_authenticated/admin/products.new.tsx` — Página de gestión

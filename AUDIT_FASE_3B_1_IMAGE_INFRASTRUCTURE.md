@@ -2,7 +2,7 @@
 
 **Fecha:** 2026-08-31  
 **Status:** ✅ COMPLETADA  
-**Scope:** Backend infrastructure only (NO visual changes, NO admin UI integration)  
+**Scope:** Backend infrastructure only (NO visual changes, NO admin UI integration)
 
 ---
 
@@ -15,7 +15,7 @@ FASE 3B.1 establece la infraestructura backend completa para gestionar imágenes
 ✅ **Funciones backend** para CRUD de imágenes  
 ✅ **Endpoints API** funcionales  
 ✅ **Build TypeScript** sin errores (2.21s)  
-✅ **NO hay cambios visuales** (esperado para 3B.1)  
+✅ **NO hay cambios visuales** (esperado para 3B.1)
 
 ---
 
@@ -39,17 +39,17 @@ CREATE TABLE product_images (
 
 ### Campos
 
-| Campo | Tipo | Nullable | Descripción |
-|-------|------|----------|-------------|
-| `id` | UUID | NO | Primary key |
-| `ghl_product_id` | TEXT | NO | FK lógico a GHL product (sin constraint) |
-| `storage_path` | TEXT | NO | Path en bucket: `{ghl_product_id}/{seq}.{ext}` |
-| `image_url` | TEXT | YES | URL pública de acceso |
-| `alt_text` | TEXT | YES | Texto alternativo para accesibilidad |
-| `sort_order` | INT | NO | Orden de visualización (0-based) |
-| `is_primary` | BOOL | NO | Si es la imagen principal (1 por producto) |
-| `created_at` | TIMESTAMPTZ | NO | Timestamp de creación |
-| `updated_at` | TIMESTAMPTZ | NO | Timestamp de última actualización |
+| Campo            | Tipo        | Nullable | Descripción                                    |
+| ---------------- | ----------- | -------- | ---------------------------------------------- |
+| `id`             | UUID        | NO       | Primary key                                    |
+| `ghl_product_id` | TEXT        | NO       | FK lógico a GHL product (sin constraint)       |
+| `storage_path`   | TEXT        | NO       | Path en bucket: `{ghl_product_id}/{seq}.{ext}` |
+| `image_url`      | TEXT        | YES      | URL pública de acceso                          |
+| `alt_text`       | TEXT        | YES      | Texto alternativo para accesibilidad           |
+| `sort_order`     | INT         | NO       | Orden de visualización (0-based)               |
+| `is_primary`     | BOOL        | NO       | Si es la imagen principal (1 por producto)     |
+| `created_at`     | TIMESTAMPTZ | NO       | Timestamp de creación                          |
+| `updated_at`     | TIMESTAMPTZ | NO       | Timestamp de última actualización              |
 
 ### Índices Creados
 
@@ -68,14 +68,15 @@ idx_product_images_one_primary        -- UNIQUE constraint: una imagen principal
 
 ### RLS Policies
 
-| Policy | Tabla | Operación | Condición |
-|--------|-------|-----------|-----------|
-| `product_images_read_public` | product_images | SELECT | `true` (público) |
-| `product_images_write_authenticated` | product_images | INSERT | `auth.role() = 'authenticated'` |
-| `product_images_update_authenticated` | product_images | UPDATE | `auth.role() = 'authenticated'` |
-| `product_images_delete_authenticated` | product_images | DELETE | `auth.role() = 'authenticated'` |
+| Policy                                | Tabla          | Operación | Condición                       |
+| ------------------------------------- | -------------- | --------- | ------------------------------- |
+| `product_images_read_public`          | product_images | SELECT    | `true` (público)                |
+| `product_images_write_authenticated`  | product_images | INSERT    | `auth.role() = 'authenticated'` |
+| `product_images_update_authenticated` | product_images | UPDATE    | `auth.role() = 'authenticated'` |
+| `product_images_delete_authenticated` | product_images | DELETE    | `auth.role() = 'authenticated'` |
 
-**Seguridad:** 
+**Seguridad:**
+
 - Lectura pública (necesario para catálogo)
 - Escritura/Actualización/Eliminación requiere autenticación
 - En producción, el admin middleware endurecerá esto a solo rol=admin
@@ -88,7 +89,7 @@ idx_product_images_one_primary        -- UNIQUE constraint: una imagen principal
 
 **Nombre:** `product-images`  
 **Estado:** Listo para configurar  
-**Visibilidad:** Debe configurarse públicamente para lectura  
+**Visibilidad:** Debe configurarse públicamente para lectura
 
 ### Estructura de Rutas
 
@@ -107,6 +108,7 @@ product-images/
 **Formato:** `{ghl_product_id}/{sequence}.{ext}`
 
 **Ventajas:**
+
 - Determinista (no depende de nombres originales)
 - Evita colisiones (secuencial por producto)
 - Seguro (sin caracteres problemáticos)
@@ -123,6 +125,7 @@ image/webp   → .webp
 **NO permitidos inicialmente:** SVG, GIF, BMP, TIFF
 
 **Límites:**
+
 - Max file size: 5MB
 - Validación en endpoint de upload
 
@@ -135,76 +138,82 @@ image/webp   → .webp
 ### Funciones Implementadas
 
 #### `getProductImages(ghlProductId: string): Promise<ProductImage[]>`
+
 - Obtiene todas las imágenes de un producto
 - Ordenadas por `sort_order` ascendente
 - Retorna array vacío si no hay imágenes
 
 ```typescript
-const images = await getProductImages('6a9568c0973de9c5b8125afe');
+const images = await getProductImages("6a9568c0973de9c5b8125afe");
 // [{ id: '...', sort_order: 0, is_primary: true, ... }, ...]
 ```
 
 #### `getPrimaryProductImage(ghlProductId: string): Promise<ProductImage | null>`
+
 - Obtiene la imagen principal (marcada con `is_primary = true`)
 - Retorna null si no existe
 
 ```typescript
-const primary = await getPrimaryProductImage('6a9568c0973de9c5b8125afe');
+const primary = await getPrimaryProductImage("6a9568c0973de9c5b8125afe");
 // { id: '...', is_primary: true, alt_text: 'Corona...' }
 ```
 
 #### `createProductImage(input: ProductImageInsert & {...}): Promise<ProductImage | null>`
+
 - Crea un nuevo registro de imagen después de upload a Storage
 - Primera imagen de un producto se marca automáticamente como principal
 - Retorna null si falla
 
 ```typescript
 const image = await createProductImage({
-  ghl_product_id: '6a9568c0973de9c5b8125afe',
-  storage_path: '6a9568c0973de9c5b8125afe/0001.jpg',
-  image_url: 'https://.../storage/v1/object/public/...',
-  alt_text: 'Corona F26 - imagen principal',
+  ghl_product_id: "6a9568c0973de9c5b8125afe",
+  storage_path: "6a9568c0973de9c5b8125afe/0001.jpg",
+  image_url: "https://.../storage/v1/object/public/...",
+  alt_text: "Corona F26 - imagen principal",
 });
 ```
 
 #### `deleteProductImage(imageId: string): Promise<boolean>`
+
 - Elimina un registro de imagen (no automáticamente la del Storage)
 - Retorna true si éxito, false si error
 
 #### `setPrimaryProductImage(imageId: string, ghlProductId: string): Promise<boolean>`
+
 - Marca una imagen como principal
 - Automáticamente desmarca otras imágenes de ese producto
 - Garantiza constraint: una principal por producto
 
 ```typescript
-await setPrimaryProductImage(
-  '550e8400-e29b-41d4-a716-446655440000',
-  '6a9568c0973de9c5b8125afe'
-);
+await setPrimaryProductImage("550e8400-e29b-41d4-a716-446655440000", "6a9568c0973de9c5b8125afe");
 ```
 
 #### `reorderProductImages(items: Array<{id, sort_order}>): Promise<boolean>`
+
 - Reordena múltiples imágenes en una sola operación
 - Útil para drag-and-drop en admin
 
 ```typescript
 await reorderProductImages([
-  { id: 'img1', sort_order: 0 },
-  { id: 'img3', sort_order: 1 },
-  { id: 'img2', sort_order: 2 },
+  { id: "img1", sort_order: 0 },
+  { id: "img3", sort_order: 1 },
+  { id: "img2", sort_order: 2 },
 ]);
 ```
 
 #### `getNextSortOrder(ghlProductId: string): Promise<number>`
+
 - Retorna el siguiente `sort_order` para una nueva imagen
 - Usado para auto-incrementar al añadir
 
 #### `deleteAllProductImages(ghlProductId: string): Promise<boolean>`
+
 - Elimina todas las imágenes de un producto
 - Operación en cascada
 - Uso: cuando se elimina un producto
 
 #### `getProductImageCount(ghlProductId: string): Promise<number>`
+
 - Cuenta de imágenes para un producto
 - Útil para validaciones
 
@@ -215,11 +224,13 @@ await reorderProductImages([
 ### GET /api/product-images
 
 **Query Parameters:**
+
 ```
 ghlProductId: string (required)
 ```
 
 **Response (200):**
+
 ```json
 {
   "images": [
@@ -240,6 +251,7 @@ ghlProductId: string (required)
 ```
 
 **Error (400):**
+
 ```json
 { "error": "ghlProductId is required" }
 ```
@@ -247,6 +259,7 @@ ghlProductId: string (required)
 ### POST /api/product-images
 
 **Body:**
+
 ```json
 {
   "ghlProductId": "6a9568c0973de9c5b8125afe",
@@ -257,6 +270,7 @@ ghlProductId: string (required)
 ```
 
 **Response (201):**
+
 ```json
 {
   "image": { ... }
@@ -264,6 +278,7 @@ ghlProductId: string (required)
 ```
 
 **Business Logic:**
+
 - Si es la primera imagen del producto → `is_primary: true`
 - Si hay imágenes previas → `is_primary: false`
 
@@ -280,6 +295,7 @@ ghlProductId: string (required)
 ```
 
 **Response (200):**
+
 ```json
 {
   "success": true,
@@ -300,6 +316,7 @@ ghlProductId: string (required)
 ```
 
 **Response (200):**
+
 ```json
 { "success": true }
 ```
@@ -307,11 +324,13 @@ ghlProductId: string (required)
 ### DELETE /api/product-images
 
 **Query Parameters:**
+
 ```
 imageId: string (required)
 ```
 
 **Response (200):**
+
 ```json
 {
   "success": true,
@@ -328,18 +347,21 @@ imageId: string (required)
 **Tipo:** Multipart form data
 
 **Campos requeridos:**
+
 ```
 file: File (JPEG, PNG, WebP, max 5MB)
 ghlProductId: string
 ```
 
 **Validaciones:**
+
 - ✅ MIME type (solo JPEG, PNG, WebP)
 - ✅ File size (máx 5MB)
 - ✅ GHL product existe en product_metadata
 - ✅ Storage path único (determinista: `{ghlProductId}/{nextSeq}.{ext}`)
 
 **Response (201):**
+
 ```json
 {
   "success": true,
@@ -353,21 +375,25 @@ ghlProductId: string
 ```
 
 **Error (400) - Invalid MIME:**
+
 ```json
 { "error": "Invalid file type. Allowed: JPEG, PNG, WebP. Got: image/svg+xml" }
 ```
 
 **Error (400) - File too large:**
+
 ```json
 { "error": "File too large. Max: 5MB. Got: 6.50MB" }
 ```
 
 **Error (404) - Product not found:**
+
 ```json
 { "error": "Product not found. Invalid ghlProductId." }
 ```
 
 **Workflow:**
+
 1. Cliente sube archivo → `/api/upload/product-image`
 2. Backend valida MIME, size, product existence
 3. Backend sube a Storage → `product-images/{ghlProductId}/{seq}.{ext}`
@@ -382,6 +408,7 @@ ghlProductId: string
 **Archivo:** `src/integrations/supabase/types.ts`
 
 **Tipos autogenerados de Supabase:**
+
 ```typescript
 type Database['public']['Tables']['product_images']['Row']
 type Database['public']['Tables']['product_images']['Insert']
@@ -445,6 +472,7 @@ Generated .vercel/output/nitro.json
 ```
 
 **Resultado:**
+
 - ✅ 0 TypeScript errors
 - ✅ 0 warnings
 - ✅ Build successful
@@ -459,13 +487,13 @@ Generated .vercel/output/nitro.json
 
 ### Endpoints Verificados
 
-| Endpoint | Status |
-|----------|--------|
+| Endpoint                                   | Status      |
+| ------------------------------------------ | ----------- |
 | `GET /api/product-images?ghlProductId=...` | ✅ Routable |
-| `POST /api/product-images` | ✅ Routable |
-| `PATCH /api/product-images` | ✅ Routable |
-| `DELETE /api/product-images` | ✅ Routable |
-| `POST /api/upload/product-image` | ✅ Routable |
+| `POST /api/product-images`                 | ✅ Routable |
+| `PATCH /api/product-images`                | ✅ Routable |
+| `DELETE /api/product-images`               | ✅ Routable |
+| `POST /api/upload/product-image`           | ✅ Routable |
 
 ---
 
@@ -505,20 +533,23 @@ Generated .vercel/output/nitro.json
 Para que las imágenes sean accesibles desde el catálogo público:
 
 **Opción 1: SQL (en Supabase SQL Editor)**
+
 ```sql
 -- Make bucket public
-UPDATE storage.buckets 
-SET public = true 
+UPDATE storage.buckets
+SET public = true
 WHERE name = 'product-images';
 ```
 
 **Opción 2: Supabase Dashboard**
+
 1. Storage → product-images bucket
 2. Settings → Public Access ON
 
 ### Verificación
 
 Una vez configurado, las URLs públicas funcionarán:
+
 ```
 https://leksmflinhohnekbgmgj.supabase.co/storage/v1/object/public/product-images/6a9568c0973de9c5b8125afe/0001.jpg
 ```
@@ -530,13 +561,15 @@ https://leksmflinhohnekbgmgj.supabase.co/storage/v1/object/public/product-images
 **NO EJECUTAR TODAVÍA** (deferred a siguiente prompt)
 
 FASE 3B.2 incluirá:
+
 - [ ] Integración del upload en `/admin/products`
 - [ ] UI para drag-and-drop de imágenes
 - [ ] Preview en admin
 - [ ] Galería en ProductCard (MINIMAL)
 - [ ] Tests end-to-end
 
-**Recordatorio:** 
+**Recordatorio:**
+
 - NO modificar ProductCard todavía
 - NO cambiar /catalogo
 - Solo backend infrastructure está lista

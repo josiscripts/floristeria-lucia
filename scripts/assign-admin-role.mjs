@@ -57,16 +57,14 @@ async function main() {
   console.log(`User ID: ${testUser.id}\n`);
 
   // Insert into profiles with all required fields
-  const { error: profileError, data: profileData } = await supabaseAdmin
-    .from("profiles")
-    .insert({
-      id: testUser.id,
-      email: testUser.email,
-      role: "admin",
-      full_name: testUser.email?.split("@")[0] || "Test Admin",
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    });
+  const { error: profileError, data: profileData } = await supabaseAdmin.from("profiles").insert({
+    id: testUser.id,
+    email: testUser.email,
+    role: "admin",
+    full_name: testUser.email?.split("@")[0] || "Test Admin",
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  });
 
   if (profileError) {
     console.error(`Error inserting profile: ${profileError.message}`);

@@ -9,19 +9,19 @@
 
 ### TABLA 1: ¿Dónde va cada dato?
 
-| Campo catalog.ts | GHL | Supabase | Frontend | ¿Editable cliente? |
-|---|---|---|---|---|
-| `id` → "ramo-rosas" | ❌ | ✅ metadata.legacy_catalog_id | ❌ | ❌ No |
-| `name` → "Ramo Rosas" | ✅ | ❌ | ❌ | ✅ Sí (GHL) |
-| `description` | ✅ | ❌ | ❌ | ✅ Sí (GHL) |
-| `image` | ✅ | ❌ | ❌ | ✅ Sí (GHL) |
-| `category` | ✅ | ❌ | ❌ | ✅ Sí (GHL) |
-| `priceMin` | ✅ (price) | ❌ | ❌ | ✅ Sí (GHL) |
-| `priceMax` → 45 | ❌ | ✅ metadata.price_max | ✅ (cálculo) | ⚠️ Vercel admin |
-| `badge` → "Más vendido" | ❌ | ✅ metadata.badge_label | ✅ (mostrar) | ⚠️ Vercel admin |
-| `roseStep` → 6 | ❌ | ✅ metadata.rose_step | ✅ (lógica) | ❌ No (fijo) |
-| `colors` → array | ❌ | ✅ metadata.available_colors | ✅ (selector) | ⚠️ Vercel admin |
-| `quoteOnly` | ❌ | ✅ (futuro) | ❌ | ❌ No (futuro) |
+| Campo catalog.ts        | GHL        | Supabase                      | Frontend      | ¿Editable cliente? |
+| ----------------------- | ---------- | ----------------------------- | ------------- | ------------------ |
+| `id` → "ramo-rosas"     | ❌         | ✅ metadata.legacy_catalog_id | ❌            | ❌ No              |
+| `name` → "Ramo Rosas"   | ✅         | ❌                            | ❌            | ✅ Sí (GHL)        |
+| `description`           | ✅         | ❌                            | ❌            | ✅ Sí (GHL)        |
+| `image`                 | ✅         | ❌                            | ❌            | ✅ Sí (GHL)        |
+| `category`              | ✅         | ❌                            | ❌            | ✅ Sí (GHL)        |
+| `priceMin`              | ✅ (price) | ❌                            | ❌            | ✅ Sí (GHL)        |
+| `priceMax` → 45         | ❌         | ✅ metadata.price_max         | ✅ (cálculo)  | ⚠️ Vercel admin    |
+| `badge` → "Más vendido" | ❌         | ✅ metadata.badge_label       | ✅ (mostrar)  | ⚠️ Vercel admin    |
+| `roseStep` → 6          | ❌         | ✅ metadata.rose_step         | ✅ (lógica)   | ❌ No (fijo)       |
+| `colors` → array        | ❌         | ✅ metadata.available_colors  | ✅ (selector) | ⚠️ Vercel admin    |
+| `quoteOnly`             | ❌         | ✅ (futuro)                   | ❌            | ❌ No (futuro)     |
 
 ---
 
@@ -161,26 +161,26 @@ Total: N/A (dinámico)
 ```sql
 CREATE TABLE product_metadata (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  
+
   -- Claves foráneas
   ghl_product_id TEXT NOT NULL UNIQUE,      -- FK a GHL
   legacy_catalog_id TEXT UNIQUE,             -- Mapeo a catalog.ts (si existe)
-  
+
   -- Metadatos de precio
   price_max DECIMAL(10,2),                   -- Precio máximo (NULL = sin rango)
-  
+
   -- Personalización
   available_colors TEXT[],                   -- Array JSON: ["Rojo", "Rosa", ...]
   badge_label TEXT,                          -- "Más vendido", "Premium", etc.
-  
+
   -- Lógica específica
   rose_step INTEGER,                         -- 6 para productos de rosas
   requires_quote BOOLEAN DEFAULT false,      -- Para cotizaciones futuras
-  
+
   -- Auditoría
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now(),
-  
+
   -- Restricciones
   CHECK (price_max IS NULL OR price_max > 0)
 );
@@ -259,7 +259,7 @@ const product = {
   category: "ramos",
   image: "https://...",
   status: "active",
-  
+
   // De Supabase
   legacy_catalog_id: "ramo-rosas",
   price_max: 48,
@@ -329,7 +329,7 @@ Campos editables:
   - Price Max
   - Available Colors
   - Badge Label
-  
+
 Campos read-only (de GHL):
   - Name
   - Description
@@ -428,6 +428,7 @@ Webhook = Sincronización automática
 ```
 
 **Beneficios:**
+
 - ✅ Cliente administra desde GHL (donde debe ser)
 - ✅ Datos técnicos protegidos en Supabase
 - ✅ Sincronización automática de cambios
@@ -435,4 +436,3 @@ Webhook = Sincronización automática
 - ✅ Sin intervención manual
 
 **Listo para aprobación y ejecución.**
-

@@ -2,7 +2,7 @@
 
 **Proyecto:** leksmflinhohnekbgmgj  
 **Objetivo:** Eliminar y recrear product_metadata exactamente según la migración oficial  
-**Fecha:** 2026-08-27  
+**Fecha:** 2026-08-27
 
 ---
 
@@ -11,6 +11,7 @@
 Este procedimiento ELIMINA la tabla product_metadata completamente.
 
 **Solo continúa si:**
+
 - ✅ El proyecto es leksmflinhohnekbgmgj (nuevo)
 - ✅ Contiene 0 registros (verificado primero)
 - ❌ NO es el Supabase Lovable (fiddxvgjdosprltflqep)
@@ -26,7 +27,8 @@ SELECT COUNT(*) AS total_records
 FROM public.product_metadata;
 ```
 
-**Resultado esperado:** 
+**Resultado esperado:**
+
 ```
 total_records
 ─────────────
@@ -34,6 +36,7 @@ total_records
 ```
 
 **¿Qué hacer si contiene registros?**
+
 - ❌ DETENTE
 - ❌ NO ejecutes DROP
 - ✅ Reporta el número de registros
@@ -52,6 +55,7 @@ DROP TABLE public.product_metadata;
 ```
 
 **Resultado esperado:**
+
 ```
 DROP TABLE
 
@@ -59,6 +63,7 @@ Query executed successfully (took XXms)
 ```
 
 **Cosas que NO debes eliminar:**
+
 - ❌ public.profiles
 - ❌ auth.users
 - ❌ storage buckets
@@ -179,6 +184,7 @@ COMMENT ON COLUMN public.product_metadata.status IS 'Soft delete status: active 
 ```
 
 **Resultado esperado:**
+
 ```
 Query executed successfully (took XXms)
 ```
@@ -190,7 +196,7 @@ Query executed successfully (took XXms)
 ### Verificación 1: Tabla existe
 
 ```sql
-SELECT table_name FROM information_schema.tables 
+SELECT table_name FROM information_schema.tables
 WHERE table_name = 'product_metadata' AND table_schema = 'public';
 ```
 
@@ -220,6 +226,7 @@ ORDER BY ordinal_position;
 ```
 
 **Esperado:**
+
 ```
 id → uuid
 location_id → text
@@ -266,6 +273,7 @@ ORDER BY constraint_name;
 ```
 
 **Esperado:**
+
 ```
 unique_ghl_product_id
 unique_legacy_catalog_id
@@ -286,6 +294,7 @@ ORDER BY constraint_name;
 ```
 
 **Esperado:**
+
 ```
 check_price_max
 check_price_min
@@ -307,6 +316,7 @@ ORDER BY indexname;
 ```
 
 **Esperado:**
+
 ```
 idx_created_at
 idx_ghl_product_id
@@ -354,6 +364,7 @@ ORDER BY policyname;
 ```
 
 **Esperado:**
+
 ```
 delete_product_metadata_service_role
 insert_product_metadata_service_role
@@ -398,6 +409,7 @@ FROM public.product_metadata;
 ## 🛑 IMPORTANTE
 
 **NO hagas:**
+
 - ❌ INSERT de datos
 - ❌ UPDATE
 - ❌ DELETE
@@ -408,7 +420,7 @@ FROM public.product_metadata;
 - ❌ Modificar GHL
 
 **Solo:**
+
 - ✅ DROP TABLE product_metadata
 - ✅ Ejecutar migración exactamente
 - ✅ SELECT queries de verificación
-

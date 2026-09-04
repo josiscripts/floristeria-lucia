@@ -64,7 +64,7 @@ async function main() {
           Authorization: `Bearer ${GHL_TOKEN}`,
           Version: "v3",
         },
-      }
+      },
     );
 
     const searchData = await searchResp.json();
@@ -72,7 +72,7 @@ async function main() {
 
     if (searchData.contacts) {
       existingContact = searchData.contacts.find(
-        (c) => c.email?.toLowerCase() === testEmail.toLowerCase()
+        (c) => c.email?.toLowerCase() === testEmail.toLowerCase(),
       );
     }
 
@@ -94,24 +94,21 @@ async function main() {
     } else {
       // Create new contact
       console.log("4️⃣  CREANDO CONTACTO EN GHL...");
-      const createResp = await fetch(
-        "https://services.leadconnectorhq.com/contacts",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${GHL_TOKEN}`,
-            Version: "v3",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            locationId: GHL_LOCATION,
-            firstName: "TEST GHL",
-            lastName: "Floristería",
-            email: testEmail,
-            phone: "+34600000000",
-          }),
-        }
-      );
+      const createResp = await fetch("https://services.leadconnectorhq.com/contacts", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${GHL_TOKEN}`,
+          Version: "v3",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          locationId: GHL_LOCATION,
+          firstName: "TEST GHL",
+          lastName: "Floristería",
+          email: testEmail,
+          phone: "+34600000000",
+        }),
+      });
 
       const createData = await createResp.json();
 
@@ -169,9 +166,7 @@ async function main() {
     console.log("D. Contacto existe en GHL: ✅ SÍ");
     console.log("E. orders.ghl_contact_id actualizado: ✅ SÍ");
     console.log("F. Datos enviados a GHL:");
-    console.log(
-      "   - locationId: " + GHL_LOCATION
-    );
+    console.log("   - locationId: " + GHL_LOCATION);
     console.log("   - firstName: TEST GHL");
     console.log("   - lastName: Floristería");
     console.log("   - email: " + testEmail);

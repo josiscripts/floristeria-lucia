@@ -41,7 +41,8 @@ async function checkRoute(route) {
       res.on("end", () => {
         const isHTML = data.includes("<!DOCTYPE") || data.includes("<html");
         const hasTitle = data.includes("<title>");
-        const hasErrors = data.includes("error") ||
+        const hasErrors =
+          data.includes("error") ||
           data.includes("Error") ||
           data.includes("404") ||
           data.includes("undefined") ||

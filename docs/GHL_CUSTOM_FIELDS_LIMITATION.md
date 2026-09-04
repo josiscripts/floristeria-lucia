@@ -44,6 +44,7 @@ Después del hallazgo, tenemos 4 opciones principales:
 ### Opción 1: Almacenar Metadatos en Supabase (RECOMENDADA)
 
 **Concepto:**
+
 - Productos viven en GHL (name, description, price, image, category)
 - Metadatos especiales viven en Supabase (legacy_catalog_id, price_max, colors, roseStep, badge, etc.)
 
@@ -66,6 +67,7 @@ CREATE TABLE product_metadata (
 ```
 
 **Flujo:**
+
 ```
 1. Usuario abre producto desde catálogo
 2. Frontend obtiene datos de GHL (price, name, etc.)
@@ -75,6 +77,7 @@ CREATE TABLE product_metadata (
 ```
 
 **Ventajas:**
+
 - ✅ Soportado 100% por GHL
 - ✅ Flexibilidad total en campos
 - ✅ Migración segura (Supabase está en la pila)
@@ -83,6 +86,7 @@ CREATE TABLE product_metadata (
 - ✅ Fácil revertir si es necesario
 
 **Desventajas:**
+
 - ⚠️ Requiere sincronización entre dos sistemas
 - ⚠️ Latencia de 2 llamadas (GHL + Supabase)
 
@@ -91,11 +95,13 @@ CREATE TABLE product_metadata (
 ### Opción 2: Variantes Nativas de GHL
 
 **Concepto:**
+
 - Usar `variants` de GHL para representar precio/color/tamaño
 
 **Implementación:**
 
 Un "Ramo de Rosas" tendría variantes:
+
 ```json
 {
   "name": "Ramo de Rosas",
@@ -105,17 +111,19 @@ Un "Ramo de Rosas" tendría variantes:
     { "name": "Rojo - Premium", "price": 48 },
     { "name": "Rosa - Estándar", "price": 24 },
     { "name": "Rosa - Especial", "price": 36 },
-    { "name": "Rosa - Premium", "price": 48 },
+    { "name": "Rosa - Premium", "price": 48 }
     // ... 6 colores × 3 tamaños = 18 variantes
   ]
 }
 ```
 
 **Ventajas:**
+
 - ✅ Nativo de GHL
 - ✅ No requiere tabla extra en Supabase
 
 **Desventajas:**
+
 - ❌ Explosión combinatoria (6 colores × 3 precios = 18 variantes por producto)
 - ❌ Ramo de Rosas = 18 variantes, Caja Rosas Eternas = 18 variantes, Cupido = 18 variantes
 - ❌ Total: ~200+ variantes adicionales en catálogo
@@ -128,9 +136,11 @@ Un "Ramo de Rosas" tendría variantes:
 ### Opción 3: Incrustar Metadatos en Descripción (NO RECOMENDADA)
 
 **Concepto:**
+
 - Guardar metadatos como JSON en el campo `description`
 
 **Ejemplo:**
+
 ```json
 {
   "description": "<h2>Ramo de Rosas Frescas</h2><p>Ramo de rosas frescas...</p><script>/*META:{\"priceMax\":48,\"roseStep\":6,\"colors\":[...]}*/</script>"
@@ -138,10 +148,12 @@ Un "Ramo de Rosas" tendría variantes:
 ```
 
 **Ventajas:**
+
 - ✅ No requiere tabla extra
 - ✅ Datos junto al producto
 
 **Desventajas:**
+
 - ❌ Frágil (cambios en descripción rompen datos)
 - ❌ Contaminación de contenido
 - ❌ Difícil de parsear y mantener
@@ -153,13 +165,16 @@ Un "Ramo de Rosas" tendría variantes:
 ### Opción 4: Usar Opportunity Custom Fields (EXPERIMENTAL)
 
 **Concepto:**
+
 - Crear una "Opportunity" por cada producto con custom fields
 - Ligar mediante ID
 
 **Ventajas:**
+
 - ✅ Sí soporta custom fields
 
 **Desventajas:**
+
 - ❌ Abusa de modelo de datos de GHL
 - ❌ Opportunities son para ventas, no para catálogo
 - ❌ Performance pobre (queries cruzadas)
@@ -172,6 +187,7 @@ Un "Ramo de Rosas" tendría variantes:
 ### **OPCIÓN 1: Supabase para Metadatos**
 
 **Porque:**
+
 1. ✅ Completamente compatible con GHL
 2. ✅ Supabase ya está en la pila
 3. ✅ RLS puede proteger datos
@@ -195,7 +211,7 @@ CREATE TABLE product_metadata (
   requires_quote BOOLEAN DEFAULT false,
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now(),
-  
+
   CONSTRAINT unique_ghl_id UNIQUE(location_id, ghl_product_id),
   CONSTRAINT unique_legacy_id UNIQUE(legacy_catalog_id)
 );
@@ -217,8 +233,8 @@ CREATE POLICY "server_update" ON product_metadata
 
 ```typescript
 // antes (estático)
-import { products } from '@/data/catalog';
-const product = products.find(p => p.id === 'ramo-rosas');
+import { products } from "@/data/catalog";
+const product = products.find((p) => p.id === "ramo-rosas");
 
 // después (híbrido)
 const { data: ghlProduct } = useGHLProduct(productId); // De GHL
@@ -231,18 +247,18 @@ const complete = { ...ghlProduct, ...metadata };
 
 ## 📊 COMPARATIVA DE OPCIONES
 
-| Criterio | Opción 1: Supabase | Opción 2: Variantes | Opción 3: Description | Opción 4: Opportunity |
-|----------|---|---|---|---|
-| **Compatible con GHL** | ✅ 100% | ✅ 100% | ✅ 100% | ❌ 50% |
-| **Requiere API extra** | ✅ (Supabase) | ❌ No | ❌ No | ✅ (GHL) |
-| **Complejidad implementación** | 🟡 Media | 🟢 Baja | 🔴 Alta | 🔴 Alta |
-| **Escalabilidad** | ✅ Alta | ❌ Baja | ❌ Media | ❌ Media |
-| **Mantenibilidad** | ✅ Alta | ⚠️ Media | ❌ Baja | ❌ Baja |
-| **Performance** | ✅ Buena | ✅ Excelente | ✅ Excelente | ❌ Mala |
-| **Número de registros** | 58 (metadata) | 200+ (variantes) | N/A | 58 (opportunities) |
-| **Facilidad de revertir** | ✅ Fácil | ❌ Difícil | ⚠️ Media | ❌ Muy difícil |
-| **Costo adicional** | ❌ No | ❌ No | ❌ No | ✅ Sí (GHL) |
-| **Recomendación** | 🟢 **USAR ESTA** | ❌ | ❌ | ❌ |
+| Criterio                       | Opción 1: Supabase | Opción 2: Variantes | Opción 3: Description | Opción 4: Opportunity |
+| ------------------------------ | ------------------ | ------------------- | --------------------- | --------------------- |
+| **Compatible con GHL**         | ✅ 100%            | ✅ 100%             | ✅ 100%               | ❌ 50%                |
+| **Requiere API extra**         | ✅ (Supabase)      | ❌ No               | ❌ No                 | ✅ (GHL)              |
+| **Complejidad implementación** | 🟡 Media           | 🟢 Baja             | 🔴 Alta               | 🔴 Alta               |
+| **Escalabilidad**              | ✅ Alta            | ❌ Baja             | ❌ Media              | ❌ Media              |
+| **Mantenibilidad**             | ✅ Alta            | ⚠️ Media            | ❌ Baja               | ❌ Baja               |
+| **Performance**                | ✅ Buena           | ✅ Excelente        | ✅ Excelente          | ❌ Mala               |
+| **Número de registros**        | 58 (metadata)      | 200+ (variantes)    | N/A                   | 58 (opportunities)    |
+| **Facilidad de revertir**      | ✅ Fácil           | ❌ Difícil          | ⚠️ Media              | ❌ Muy difícil        |
+| **Costo adicional**            | ❌ No              | ❌ No               | ❌ No                 | ✅ Sí (GHL)           |
+| **Recomendación**              | 🟢 **USAR ESTA**   | ❌                  | ❌                    | ❌                    |
 
 ---
 
@@ -284,14 +300,14 @@ const complete = { ...ghlProduct, ...metadata };
 
 ## 📝 CAMBIOS AL DISEÑO ORIGINAL
 
-| Elemento | Diseño Original | Nuevo Diseño |
-|----------|---|---|
-| Almacén de metadatos | GHL custom fields | Supabase table |
-| Tabla en GHL | products + 6 custom fields | products (nativos) |
-| Tabla en Supabase | profiles + auth | profiles + auth + product_metadata |
-| Llamadas API | GET /products + custom fields | GET /products + GET product_metadata |
-| Complejidad GHL | 🔴 Imposible | ✅ Solo 5 campos nativos |
-| Complejidad Supabase | ✅ Nada | 🟡 +1 tabla pequeña |
+| Elemento             | Diseño Original               | Nuevo Diseño                         |
+| -------------------- | ----------------------------- | ------------------------------------ |
+| Almacén de metadatos | GHL custom fields             | Supabase table                       |
+| Tabla en GHL         | products + 6 custom fields    | products (nativos)                   |
+| Tabla en Supabase    | profiles + auth               | profiles + auth + product_metadata   |
+| Llamadas API         | GET /products + custom fields | GET /products + GET product_metadata |
+| Complejidad GHL      | 🔴 Imposible                  | ✅ Solo 5 campos nativos             |
+| Complejidad Supabase | ✅ Nada                       | 🟡 +1 tabla pequeña                  |
 
 ---
 
@@ -300,12 +316,14 @@ const complete = { ...ghlProduct, ...metadata };
 **La limitación es CRÍTICA pero SOLUCIONABLE.**
 
 Cambio de enfoque:
+
 - ❌ No almacenar metadatos en GHL
 - ✅ Almacenar metadatos en Supabase
 - ✅ GHL = catálogo público (productos básicos)
 - ✅ Supabase = metadatos internos (custom fields)
 
 **Esta arquitectura es:**
+
 - Más limpia
 - Más segura
 - Más flexible
@@ -314,4 +332,3 @@ Cambio de enfoque:
 ---
 
 **ESPERA APROBACIÓN DEL USUARIO antes de proceder.**
-

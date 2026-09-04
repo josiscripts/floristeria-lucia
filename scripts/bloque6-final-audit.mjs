@@ -18,8 +18,7 @@ envContent.split("\n").forEach((line) => {
 });
 
 const supabaseUrl = env.SUPABASE_URL || env.VITE_SUPABASE_URL;
-const supabaseServiceKey =
-  env.SUPABASE_SERVICE_ROLE_KEY || env.VITE_SUPABASE_SERVICE_ROLE_KEY;
+const supabaseServiceKey = env.SUPABASE_SERVICE_ROLE_KEY || env.VITE_SUPABASE_SERVICE_ROLE_KEY;
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey, {
   auth: { persistSession: false },
@@ -46,9 +45,7 @@ async function finalAudit() {
   const { data: testProducts, count: testCount } = await supabase
     .from("products")
     .select("id", { count: "exact" })
-    .or(
-      `name.ilike.%TEST%,name.ilike.%TEMP%`
-    )
+    .or(`name.ilike.%TEST%,name.ilike.%TEMP%`)
     .is("deleted_at", null);
 
   results.testProducts = testCount;
@@ -81,7 +78,9 @@ async function finalAudit() {
   results.colors = colorCount;
   console.log(`\n4. Rosas Eternas: ${rosasCount} productos`);
   console.log(`   Variantes de color: ${colorCount}`);
-  console.log(`   Status: ${colorCount >= rosasCount * 3 ? "✅ OK (3+ por producto)" : "⚠️ PARCIAL"}`);
+  console.log(
+    `   Status: ${colorCount >= rosasCount * 3 ? "✅ OK (3+ por producto)" : "⚠️ PARCIAL"}`,
+  );
 
   // 5. Product_options
   const { count: optionsCount } = await supabase
@@ -102,31 +101,34 @@ async function finalAudit() {
   console.log(`   Status: ${nullPriceCount === 0 ? "✅ TODOS POBLADOS" : "⚠️ FALTAN PRECIOS"}`);
 
   // 6. Duplicados
-  const { data: dupNames } = await supabase.rpc("count_duplicates", {
-    table_name: "products",
-    column_name: "name",
-  }).catch(() => ({ data: [] }));
+  const { data: dupNames } = await supabase
+    .rpc("count_duplicates", {
+      table_name: "products",
+      column_name: "name",
+    })
+    .catch(() => ({ data: [] }));
 
-  const { data: dupGHL } = await supabase.rpc("count_duplicates", {
-    table_name: "products",
-    column_name: "ghl_product_id",
-  }).catch(() => ({ data: [] }));
+  const { data: dupGHL } = await supabase
+    .rpc("count_duplicates", {
+      table_name: "products",
+      column_name: "ghl_product_id",
+    })
+    .catch(() => ({ data: [] }));
 
   console.log(`\n6. Duplicados:  `);
-  console.log(`   Nombres duplicados: ${dupNames?.filter(d => d.count > 1).length || 0}`);
-  console.log(`   GHL IDs duplicados: ${dupGHL?.filter(d => d.count > 1).length || 0}`);
+  console.log(`   Nombres duplicados: ${dupNames?.filter((d) => d.count > 1).length || 0}`);
+  console.log(`   GHL IDs duplicados: ${dupGHL?.filter((d) => d.count > 1).length || 0}`);
   console.log(`   Status: ✅ SIN DUPLICADOS`);
 
   // 7. Orfandad
-  const { count: orphanOptions } = await supabase.rpc(
-    "check_orphaned_records",
-    {
+  const { count: orphanOptions } = await supabase
+    .rpc("check_orphaned_records", {
       parent_table: "products",
       child_table: "product_options",
       parent_col: "id",
       child_col: "product_id",
-    }
-  ).catch(() => ({ count: 0 }));
+    })
+    .catch(() => ({ count: 0 }));
 
   console.log(`\n7. Registros huérfanos:  `);
   console.log(`   product_options huérfanas: 0`);
@@ -156,7 +158,9 @@ async function finalAudit() {
   console.log(`\n${passing}/${checks.length} puntos CONFIRMADOS`);
 
   const allPass = passing === checks.length;
-  console.log(`\nESTADO GENERAL: ${allPass ? "✅ LISTO PARA PRODUCCIÓN" : "⚠️ PROBLEMAS DETECTADOS"}`);
+  console.log(
+    `\nESTADO GENERAL: ${allPass ? "✅ LISTO PARA PRODUCCIÓN" : "⚠️ PROBLEMAS DETECTADOS"}`,
+  );
   console.log("=".repeat(60) + "\n");
 
   return allPass;

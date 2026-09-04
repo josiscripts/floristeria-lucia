@@ -27,12 +27,12 @@ try {
     {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${GHL_TOKEN}`,
-        "Version": "v3",
+        Authorization: `Bearer ${GHL_TOKEN}`,
+        Version: "v3",
         "Content-Type": "application/json",
       },
       body: JSON.stringify(createProductPayload),
-    }
+    },
   );
 
   if (!productResponse.ok) {
@@ -83,15 +83,15 @@ try {
       {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${GHL_TOKEN}`,
-          "Version": "v3",
+          Authorization: `Bearer ${GHL_TOKEN}`,
+          Version: "v3",
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           ...pricePayload,
           locationId: GHL_LOCATION_ID,
         }),
-      }
+      },
     );
 
     const priceData = await priceResponse.json();
@@ -163,4 +163,3 @@ try {
   console.log("=".repeat(60));
   process.exit(1);
 }
-

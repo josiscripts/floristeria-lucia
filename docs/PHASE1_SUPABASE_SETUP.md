@@ -18,33 +18,33 @@ Crear la tabla `product_metadata` con estructura, constraints, índices y RLS po
 ```sql
 CREATE TABLE public.product_metadata (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  
+
   -- Location & Foreign Keys
   location_id TEXT NOT NULL DEFAULT 'vOq7yOWR63XGU4qQ7XWd',
   ghl_product_id TEXT NOT NULL,
   legacy_catalog_id TEXT,
-  
+
   -- Pricing metadata
   price_min DECIMAL(10,2),
   price_max DECIMAL(10,2),
-  
+
   -- Customization
   available_colors TEXT[],
   badge_label TEXT,
-  
+
   -- Business logic
   rose_step INTEGER,
   requires_quote BOOLEAN DEFAULT false,
-  
+
   -- Status & tracking
   status TEXT DEFAULT 'active' CHECK (status IN ('active', 'deleted')),
   auto_created BOOLEAN DEFAULT false,
-  
+
   -- Timestamps
   created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
   deleted_at TIMESTAMP WITH TIME ZONE,
-  
+
   -- Constraints...
 );
 ```
@@ -84,6 +84,7 @@ CREATE INDEX idx_created_at ON public.product_metadata(created_at);
 ## 🔑 RLS POLICIES
 
 ### Policy 1: Lectura pública (SELECT)
+
 ```sql
 CREATE POLICY "read_active_product_metadata"
   ON public.product_metadata
@@ -91,10 +92,12 @@ CREATE POLICY "read_active_product_metadata"
   TO anon, authenticated
   USING (status = 'active');
 ```
+
 **Quién:** Anon + usuarios autenticados  
 **Qué ven:** Solo metadatos de productos activos
 
 ### Policy 2: Escritura desde server (INSERT)
+
 ```sql
 CREATE POLICY "insert_product_metadata_service_role"
   ON public.product_metadata
@@ -102,10 +105,12 @@ CREATE POLICY "insert_product_metadata_service_role"
   TO service_role
   WITH CHECK (true);
 ```
+
 **Quién:** Solo Service Role Key (server-side)  
 **Qué puede:** Insertar nuevas entradas
 
 ### Policy 3: Actualización desde server (UPDATE)
+
 ```sql
 CREATE POLICY "update_product_metadata_service_role"
   ON public.product_metadata
@@ -114,10 +119,12 @@ CREATE POLICY "update_product_metadata_service_role"
   USING (true)
   WITH CHECK (true);
 ```
+
 **Quién:** Solo Service Role Key (server-side)  
 **Qué puede:** Actualizar campos
 
 ### Policy 4: Eliminación desde server (DELETE)
+
 ```sql
 CREATE POLICY "delete_product_metadata_service_role"
   ON public.product_metadata
@@ -125,6 +132,7 @@ CREATE POLICY "delete_product_metadata_service_role"
   TO service_role
   USING (true);
 ```
+
 **Quién:** Solo Service Role Key (server-side)  
 **Qué puede:** Marcar como eliminado (soft delete)
 
@@ -193,7 +201,7 @@ curl -X POST https://[PROJECT_ID].supabase.co/rest/v1/sql \
 ### 1. Verificar tabla existe
 
 ```sql
-SELECT table_name FROM information_schema.tables 
+SELECT table_name FROM information_schema.tables
 WHERE table_schema = 'public' AND table_name = 'product_metadata';
 ```
 
@@ -210,8 +218,8 @@ WHERE table_schema = 'public' AND table_name = 'product_metadata';
 ### 3. Verificar RLS está habilitado
 
 ```sql
-SELECT schemaname, tablename, rowsecurity 
-FROM pg_tables 
+SELECT schemaname, tablename, rowsecurity
+FROM pg_tables
 WHERE tablename = 'product_metadata';
 ```
 
@@ -220,8 +228,8 @@ WHERE tablename = 'product_metadata';
 ### 4. Verificar policies
 
 ```sql
-SELECT schemaname, tablename, policyname 
-FROM pg_policies 
+SELECT schemaname, tablename, policyname
+FROM pg_policies
 WHERE tablename = 'product_metadata';
 ```
 
@@ -230,7 +238,7 @@ WHERE tablename = 'product_metadata';
 ### 5. Verificar índices
 
 ```sql
-SELECT indexname FROM pg_indexes 
+SELECT indexname FROM pg_indexes
 WHERE tablename = 'product_metadata';
 ```
 
@@ -259,7 +267,7 @@ INSERT INTO public.product_metadata (
 );
 
 -- Verificar inserción
-SELECT * FROM public.product_metadata 
+SELECT * FROM public.product_metadata
 WHERE ghl_product_id = 'test_product_123';
 ```
 
@@ -270,12 +278,14 @@ WHERE ghl_product_id = 'test_product_123';
 ### Durante esta Fase 1:
 
 ✅ **COMPLETADO:**
+
 - Migración SQL creada
 - Estructura definida
 - Constraints y índices especificados
 - RLS policies definidas
 
 ❌ **NO HACER:**
+
 - No migrar productos todavía
 - No crear webhook/polling
 - No crear /admin/products
@@ -319,11 +329,10 @@ Todos los timestamps usan TIMESTAMP WITH TIME ZONE
 Cada columna tiene comentario para documentación:
 
 ```sql
-COMMENT ON COLUMN public.product_metadata.ghl_product_id 
+COMMENT ON COLUMN public.product_metadata.ghl_product_id
   IS 'Foreign key to GoHighLevel product ID (_id)';
 ```
 
 ---
 
 **FASE 1 COMPLETA - LISTA PARA APLICACIÓN**
-

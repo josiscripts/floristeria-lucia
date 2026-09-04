@@ -16,19 +16,19 @@ Una tienda en línea moderna para floristería especializada en venta de flores,
 
 ## Tecnologías
 
-| Tecnología | Versión | Uso |
-|-----------|---------|-----|
-| **React** | 19.2.0 | Framework UI |
-| **TypeScript** | 5.8.3 | Tipado estático |
-| **TanStack Start** | 1.168.32 | Full-stack framework con SSR |
-| **TanStack Router** | 1.170.18 | Enrutamiento |
-| **TanStack React Query** | 5.101.1 | State management de datos |
-| **Supabase** | 2.112.3 | BD PostgreSQL + Auth + Storage |
-| **Tailwind CSS** | 4.2.1 | Framework CSS |
-| **Radix UI** | Varios | Componentes accesibles |
-| **React Hook Form** | 7.71.2 | Gestión de formularios |
-| **Zod** | 3.24.2 | Validación de esquemas |
-| **Vite** | 8.2.0 | Build tool |
+| Tecnología               | Versión  | Uso                            |
+| ------------------------ | -------- | ------------------------------ |
+| **React**                | 19.2.0   | Framework UI                   |
+| **TypeScript**           | 5.8.3    | Tipado estático                |
+| **TanStack Start**       | 1.168.32 | Full-stack framework con SSR   |
+| **TanStack Router**      | 1.170.18 | Enrutamiento                   |
+| **TanStack React Query** | 5.101.1  | State management de datos      |
+| **Supabase**             | 2.112.3  | BD PostgreSQL + Auth + Storage |
+| **Tailwind CSS**         | 4.2.1    | Framework CSS                  |
+| **Radix UI**             | Varios   | Componentes accesibles         |
+| **React Hook Form**      | 7.71.2   | Gestión de formularios         |
+| **Zod**                  | 3.24.2   | Validación de esquemas         |
+| **Vite**                 | 8.2.0    | Build tool                     |
 
 ## Arquitectura
 
@@ -40,7 +40,7 @@ flowchart LR
     DB["🗄️ PostgreSQL<br/>RLS Enabled"]
     Storage["📸 Supabase Storage<br/>Imágenes"]
     Google["🌐 Google OAuth"]
-    
+
     User -->|HTTP/HTTPS| Frontend
     Frontend -->|API| Auth
     Frontend -->|Realtime| DB
@@ -109,6 +109,7 @@ npm install
 ```
 
 O con alternativas:
+
 ```bash
 yarn install
 pnpm install
@@ -156,6 +157,7 @@ npm run dev
 El proyecto estará disponible en `http://localhost:5173`
 
 **Características en desarrollo:**
+
 - Hot Module Reloading (HMR)
 - TypeScript type checking
 - Vite development server optimizado
@@ -163,14 +165,14 @@ El proyecto estará disponible en `http://localhost:5173`
 
 ### Comandos disponibles
 
-| Comando | Descripción |
-|---------|-------------|
-| `npm run dev` | Inicia servidor de desarrollo |
-| `npm run build` | Build de producción |
-| `npm run build:dev` | Build en modo desarrollo |
-| `npm run preview` | Previsualizar build |
-| `npm run lint` | ESLint check |
-| `npm run format` | Prettier format |
+| Comando             | Descripción                   |
+| ------------------- | ----------------------------- |
+| `npm run dev`       | Inicia servidor de desarrollo |
+| `npm run build`     | Build de producción           |
+| `npm run build:dev` | Build en modo desarrollo      |
+| `npm run preview`   | Previsualizar build           |
+| `npm run lint`      | ESLint check                  |
+| `npm run format`    | Prettier format               |
 
 ## Build para Producción
 
@@ -179,6 +181,7 @@ npm run build
 ```
 
 Genera:
+
 - `dist/` - Build de cliente (SPA)
 - `.output/` - Build de servidor (SSR)
 
@@ -219,6 +222,7 @@ railway up
 ```
 
 **Archivo railway.toml:**
+
 ```toml
 [build]
 builder = "nixpacks"
@@ -235,6 +239,7 @@ netlify deploy --prod
 ```
 
 **Configuración en netlify.toml:**
+
 ```toml
 [build]
 command = "npm run build"
@@ -278,11 +283,11 @@ docker run -p 3000:3000 \
 
 ### Tablas principales
 
-| Tabla | Descripción |
-|-------|-------------|
-| `auth.users` | Usuarios (Supabase managed) |
+| Tabla             | Descripción                         |
+| ----------------- | ----------------------------------- |
+| `auth.users`      | Usuarios (Supabase managed)         |
 | `public.profiles` | Perfil extendido (nombre, teléfono) |
-| `storage.objects` | Almacenamiento de imágenes |
+| `storage.objects` | Almacenamiento de imágenes          |
 
 ### Migraciones
 
@@ -355,7 +360,7 @@ const { user, session, loading } = useAuth();
 
 ```typescript
 type CartLine = {
-  key: string;          // productId::size
+  key: string; // productId::size
   productId: string;
   name: string;
   size: string;
@@ -388,6 +393,7 @@ removeLine(key);
 **Estado**: No implementado actualmente.
 
 El flujo esperado es:
+
 1. Usuario revisa carrito
 2. Contacta a floristería (WhatsApp, email, teléfono)
 3. Floristería confirma pedido y método de pago
@@ -404,28 +410,28 @@ No hay API REST propia actualmente. Todo se comunica directamente con Supabase:
 
 ```typescript
 // Ejemplo: Actualizar perfil
-const { error } = await supabase
-  .from('profiles')
-  .upsert({ id, full_name, phone });
+const { error } = await supabase.from("profiles").upsert({ id, full_name, phone });
 ```
 
 ### APIs Externas
 
-| API | Uso | Autenticación |
-|-----|-----|---------------|
-| Supabase REST | BD, Auth, Storage | API Key anónima + JWT |
-| Google OAuth 2.0 | Login social | Client ID |
+| API              | Uso               | Autenticación         |
+| ---------------- | ----------------- | --------------------- |
+| Supabase REST    | BD, Auth, Storage | API Key anónima + JWT |
+| Google OAuth 2.0 | Login social      | Client ID             |
 
 ## Seguridad
 
 ### Variables de Entorno
 
 **Públicas** (prefijo `VITE_`):
+
 - Supabase URL (necesaria en cliente)
 - Supabase ANON_KEY (acceso público limitado por RLS)
 - Google Client ID
 
 **Privadas** (nunca en frontend):
+
 - Supabase SERVICE_ROLE_KEY (nunca exponer)
 - API Keys secretas
 
@@ -440,10 +446,12 @@ const { error } = await supabase
 ### Riesgos identificados
 
 **Críticos:**
+
 - Sin validación de precios en servidor (futura: implementar)
 - Carrito sin persistencia en BD (futura: migrar a servidor)
 
 **Altos:**
+
 - Supabase ANON_KEY expuesta (mitigado por RLS)
 
 Ver `SECURITY.md` para auditoría completa.
@@ -471,6 +479,7 @@ VITE_SUPABASE_ANON_KEY=...
 ### "RLS violation when fetching profile"
 
 **Solución**: Verificar que:
+
 1. Usuario está autenticado (`useAuth().user` no es null)
 2. ID del usuario coincide con el ID en BD
 3. RLS policies están correctas (revisar en Supabase)
@@ -482,6 +491,7 @@ VITE_SUPABASE_ANON_KEY=...
 ### "Google OAuth no funciona"
 
 **Verificar:**
+
 1. Google Client ID correcto en `.env.local`
 2. Redirect URI registrado en Google Console: `http://localhost:5173` (dev), `https://dominio.com` (prod)
 3. Supabase Auth con Google configurado
@@ -503,25 +513,26 @@ npm run format
 
 ## Servicios Externos
 
-| Servicio | Necesario | Configuración |
-|----------|-----------|---------------|
-| Supabase | ✅ Sí | URL + API Key |
-| Google OAuth | ⚠️ Opcional | Client ID |
-| Cloudflare | ❌ No | (potencial: CDN) |
+| Servicio     | Necesario   | Configuración    |
+| ------------ | ----------- | ---------------- |
+| Supabase     | ✅ Sí       | URL + API Key    |
+| Google OAuth | ⚠️ Opcional | Client ID        |
+| Cloudflare   | ❌ No       | (potencial: CDN) |
 
 **Si un servicio externo no está disponible:**
+
 - Supabase: App no funciona
 - Google OAuth: Login email/contraseña sigue disponible
 - Email: No hay confirmaciones de email
 
 ## Variables de Entorno Completas
 
-| Variable | Público/Privado | Uso | Ejemplo |
-|----------|-----------------|-----|---------|
-| `VITE_SUPABASE_URL` | Público | URL de Supabase | `https://xyz.supabase.co` |
-| `VITE_SUPABASE_ANON_KEY` | Público | API anónima | `eyJ...` |
-| `VITE_GOOGLE_CLIENT_ID` | Público | OAuth de Google | `xyz.apps.googleusercontent.com` |
-| `NODE_ENV` | Local | Entorno | `development` / `production` |
+| Variable                 | Público/Privado | Uso             | Ejemplo                          |
+| ------------------------ | --------------- | --------------- | -------------------------------- |
+| `VITE_SUPABASE_URL`      | Público         | URL de Supabase | `https://xyz.supabase.co`        |
+| `VITE_SUPABASE_ANON_KEY` | Público         | API anónima     | `eyJ...`                         |
+| `VITE_GOOGLE_CLIENT_ID`  | Público         | OAuth de Google | `xyz.apps.googleusercontent.com` |
+| `NODE_ENV`               | Local           | Entorno         | `development` / `production`     |
 
 ## Licencia
 
@@ -530,6 +541,7 @@ No determinado. Consultar con propietario del proyecto.
 ## Contacto
 
 **Floristería Lucía**
+
 - 📍 Calle de Motrico 9, 28830 San Fernando de Henares, Madrid
 - 📞 919 95 38 80
 - 📧 info@floristerialuciamotrico.com

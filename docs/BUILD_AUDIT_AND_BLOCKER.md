@@ -2,7 +2,7 @@
 
 **Fecha:** 2026-08-27  
 **Estado:** BLOQUEADOR CRÍTICO IDENTIFICADO  
-**Auditoría:** READ-ONLY completada  
+**Auditoría:** READ-ONLY completada
 
 ---
 
@@ -42,7 +42,7 @@ Error: Missing "./config" specifier in "@tanstack/react-start" package
 import { defineConfig } from "@tanstack/react-start/config";
 ```
 
-**Problema:** 
+**Problema:**
 
 El paquete `@tanstack/react-start` v1.168.49 (instalado actualmente) **NO tiene el export `./config`**.
 
@@ -66,6 +66,7 @@ Package.json de @tanstack/react-start:
 ## IMPACTO
 
 **Bloqueador para:**
+
 - ❌ `npm run build` (no se puede compilar)
 - ❌ `npm run dev` (no se puede desarrollar)
 - ❌ `npm run preview` (depende del build)
@@ -77,14 +78,14 @@ Package.json de @tanstack/react-start:
 
 ## VERSIONES ACTUALES
 
-| Paquete | Versión | Estado |
-|---------|---------|--------|
-| Node.js | v22.21.1 | ✅ Soportado |
-| npm | 10.9.4 | ✅ Soportado |
-| @tanstack/react-start | 1.168.49 | ⚠️ Config import roto |
-| @tanstack/router-plugin | 1.168.35 | ✅ OK |
-| vite | 8.2.2 | ✅ OK |
-| nitro | 3.0.260603-beta | ✅ OK |
+| Paquete                 | Versión         | Estado                |
+| ----------------------- | --------------- | --------------------- |
+| Node.js                 | v22.21.1        | ✅ Soportado          |
+| npm                     | 10.9.4          | ✅ Soportado          |
+| @tanstack/react-start   | 1.168.49        | ⚠️ Config import roto |
+| @tanstack/router-plugin | 1.168.35        | ✅ OK                 |
+| vite                    | 8.2.2           | ✅ OK                 |
+| nitro                   | 3.0.260603-beta | ✅ OK                 |
 
 ---
 
@@ -93,6 +94,7 @@ Package.json de @tanstack/react-start:
 Este proyecto fue migrado desde **Lovable** (que probablemente tenía una versión diferente de @tanstack/react-start con soporte para "./config").
 
 Durante la migración:
+
 - El código de `vite.config.ts` no se actualizó
 - Las dependencias se actualizaron automáticamente
 - Ahora hay un mismatch entre el código y las dependencias
@@ -104,6 +106,7 @@ Durante la migración:
 ### Opción A: Actualizar vite.config.ts (RECOMENDADO)
 
 Cambiar línea 4 de:
+
 ```typescript
 import { defineConfig } from "@tanstack/react-start/config";
 ```
@@ -111,16 +114,19 @@ import { defineConfig } from "@tanstack/react-start/config";
 A (una de estas opciones):
 
 **Opción A1:** (si TanStack Start tiene un export directo para defineConfig)
+
 ```typescript
 import { defineConfig } from "vite";
 ```
 
 **Opción A2:** (si existe en ./plugin)
+
 ```typescript
 // Revisar docs oficiales de TanStack Start para importación correcta
 ```
 
 **Opción A3:** (deprecated - usar el patrón nuevo)
+
 ```typescript
 import { defineConfig } from "@tanstack/react-start";
 ```
@@ -128,6 +134,7 @@ import { defineConfig } from "@tanstack/react-start";
 ### Opción B: Downgrade de @tanstack/react-start
 
 Cambiar `package.json` línea 46 de:
+
 ```json
 "@tanstack/react-start": "^1.168.32",
 ```
@@ -160,6 +167,7 @@ Antes de que yo hagas cualquier cambio:
 ### PASO 1: Obtener vite.config.ts correcto
 
 Opción A (recomendado):
+
 ```bash
 # Ir a https://github.com/TanStack/router
 # Carpeta: packages/react-start/examples/basic
@@ -168,6 +176,7 @@ Opción A (recomendado):
 ```
 
 Opción B:
+
 ```bash
 # Consultar docs oficiales
 # Determinar importación correcta
@@ -199,6 +208,7 @@ npm run dev
 ### PASO 5: Reportar resultado
 
 Dime:
+
 ```
 ✅ npm run build exitoso
 ✅ npm run dev funciona
@@ -225,6 +235,7 @@ Una vez que el build funcione:
 **Este bloqueo DEBE resolverse antes de continuar con cualquier fase de migración.**
 
 Sin un build exitoso, no es posible:
+
 - Verificar que el código funciona
 - Hacer deploy a Vercel
 - Obtener URL pública para imágenes
@@ -233,4 +244,3 @@ Sin un build exitoso, no es posible:
 ---
 
 **Status:** ⛔ BLOQUEADOR - REQUIERE RESOLUCIÓN MANUAL
-

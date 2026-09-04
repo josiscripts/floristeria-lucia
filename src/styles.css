@@ -159,7 +159,6 @@
   --sidebar-ring: oklch(0.74 0.075 322);
 }
 
-
 @layer base {
   * {
     border-color: var(--color-border);
@@ -185,11 +184,9 @@
   background: linear-gradient(90deg, var(--gold), transparent);
 }
 
-
 @utility text-balance-tight {
   text-wrap: balance;
 }
-
 
 /* ============================================================
    Sistema global de microinteracciones (elegante, floral, sutil)
@@ -455,5 +452,3 @@
     transform: none !important;
   }
 }
-
-

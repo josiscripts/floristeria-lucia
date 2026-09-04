@@ -23,6 +23,7 @@
 ## EJECUCIÓN DE MIGRACIÓN
 
 ### Archivo Creado
+
 **Ruta:** `supabase/migrations/20260828160001_create_webhook_events.sql`  
 **Tamaño:** ~2.5 KB  
 **Líneas de código:** 77 (SQL + comentarios)
@@ -71,22 +72,22 @@ GRANT ALL PRIVILEGES ON public.webhook_events TO service_role;
 
 ### Estructura Completa
 
-| Columna | Tipo | Nulo | Clave | Descripción |
-|---------|------|------|-------|-------------|
-| `id` | UUID | No | PK | Identificador único del registro |
-| `delivery_id` | VARCHAR(255) | No | UNIQUE | ID único del evento GHL (deduplicación) |
-| `event_type` | VARCHAR(100) | No | CHECK | Tipo de evento (5 valores válidos) |
-| `opportunity_id` | VARCHAR(255) | No | - | ID de la oportunidad en GHL |
-| `location_id` | VARCHAR(255) | No | - | ID de la ubicación en GHL |
-| `contact_id` | VARCHAR(255) | Sí | - | ID del contacto en GHL (si disponible) |
-| `order_id` | UUID | Sí | FK | Vinculo a orden en Supabase (rellenar después) |
-| `payload` | JSONB | No | - | Payload completo del webhook (audit) |
-| `processed` | BOOLEAN | No | - | ¿Se procesó exitosamente? |
-| `processed_at` | TIMESTAMP | Sí | - | Cuándo se procesó |
-| `error_message` | TEXT | Sí | - | Mensaje de error si falló |
-| `received_at` | TIMESTAMP | No | - | Cuándo se recibió el webhook |
-| `created_at` | TIMESTAMP | No | - | Creado en |
-| `updated_at` | TIMESTAMP | No | - | Actualizado en |
+| Columna          | Tipo         | Nulo | Clave  | Descripción                                    |
+| ---------------- | ------------ | ---- | ------ | ---------------------------------------------- |
+| `id`             | UUID         | No   | PK     | Identificador único del registro               |
+| `delivery_id`    | VARCHAR(255) | No   | UNIQUE | ID único del evento GHL (deduplicación)        |
+| `event_type`     | VARCHAR(100) | No   | CHECK  | Tipo de evento (5 valores válidos)             |
+| `opportunity_id` | VARCHAR(255) | No   | -      | ID de la oportunidad en GHL                    |
+| `location_id`    | VARCHAR(255) | No   | -      | ID de la ubicación en GHL                      |
+| `contact_id`     | VARCHAR(255) | Sí   | -      | ID del contacto en GHL (si disponible)         |
+| `order_id`       | UUID         | Sí   | FK     | Vinculo a orden en Supabase (rellenar después) |
+| `payload`        | JSONB        | No   | -      | Payload completo del webhook (audit)           |
+| `processed`      | BOOLEAN      | No   | -      | ¿Se procesó exitosamente?                      |
+| `processed_at`   | TIMESTAMP    | Sí   | -      | Cuándo se procesó                              |
+| `error_message`  | TEXT         | Sí   | -      | Mensaje de error si falló                      |
+| `received_at`    | TIMESTAMP    | No   | -      | Cuándo se recibió el webhook                   |
+| `created_at`     | TIMESTAMP    | No   | -      | Creado en                                      |
+| `updated_at`     | TIMESTAMP    | No   | -      | Actualizado en                                 |
 
 **Total de columnas:** 14
 
@@ -95,23 +96,28 @@ GRANT ALL PRIVILEGES ON public.webhook_events TO service_role;
 ## CONSTEXIONES Y VALIDACIONES
 
 ### 1. UNIQUE Constraint (Deduplicación)
+
 ```sql
 delivery_id VARCHAR(255) UNIQUE NOT NULL
 ```
+
 **Propósito:** Prevenir inserción de webhooks duplicados  
 **Mecanismo:** PostgreSQL automáticamente crea índice B-tree  
 **Garantía:** Máximo 1 webhook con cada `delivery_id`  
 **Beneficio:** Sin necesidad de índice adicional
 
 ### 2. Foreign Key (Cascading Delete)
+
 ```sql
 order_id UUID NULL REFERENCES public.orders(id) ON DELETE CASCADE
 ```
+
 **Propósito:** Ligar webhooks a órdenes en Supabase  
 **Acción:** Si orden se elimina, webhooks asociados se eliminan también  
 **Nullable:** Sí (webhook puede llegar antes de crear orden)
 
 ### 3. CHECK Constraint (Event Type Validation)
+
 ```sql
 CHECK (event_type IN (
   'opportunity.stage_change',
@@ -121,6 +127,7 @@ CHECK (event_type IN (
   'opportunity.deleted'
 ))
 ```
+
 **Propósito:** Asegurar solo tipos de evento válidos  
 **Valores permitidos:** 5 tipos específicos de GHL  
 **Comportamiento:** PostgreSQL rechaza INSERTs con event_type inválido
@@ -130,12 +137,14 @@ CHECK (event_type IN (
 ## ÍNDICES
 
 ### 1. Implicit Index (de UNIQUE constraint)
+
 **Columna:** `delivery_id`  
 **Tipo:** UNIQUE B-tree  
 **Automático:** Sí (creado por UNIQUE constraint)  
 **Propósito:** Búsqueda rápida para deduplicación
 
 ### 2. Explicit Index
+
 **Nombre:** `idx_webhook_processed`  
 **Columna:** `processed`  
 **Tipo:** B-tree  
@@ -149,9 +158,11 @@ CHECK (event_type IN (
 ## SEGURIDAD - ROW-LEVEL SECURITY (RLS)
 
 ### Estado de RLS
+
 ✅ **Habilitado:** `ALTER TABLE public.webhook_events ENABLE ROW LEVEL SECURITY;`
 
 ### Política de Acceso
+
 ```sql
 CREATE POLICY webhook_events_service_role_all
   ON public.webhook_events
@@ -161,12 +172,14 @@ CREATE POLICY webhook_events_service_role_all
 ```
 
 **Detalles:**
+
 - Solo `service_role` puede hacer SELECT, INSERT, UPDATE, DELETE
 - Público NO puede acceder (RLS bloquea todo excepto políticas)
 - Todos los tipos de operación (FOR ALL) permitidos
 - Aplicable tanto a lectura (USING) como escritura (WITH CHECK)
 
 ### Permisos Grants
+
 ```sql
 GRANT ALL PRIVILEGES ON public.webhook_events TO service_role;
 ```
@@ -180,24 +193,29 @@ GRANT ALL PRIVILEGES ON public.webhook_events TO service_role;
 ## VERIFICACIONES POST-EJECUCIÓN
 
 ### Verificación 1: Tabla Existe
+
 ✅ CONFIRMADO: `webhook_events` es accesible vía REST API  
 ✅ Query exitosa: `GET /rest/v1/webhook_events?select=*&limit=0`
 
 ### Verificación 2: Estructura de Columnas
+
 ✅ CONFIRMADO: 14 columnas según diseño  
 ✅ Types correctos: UUID, VARCHAR, JSONB, BOOLEAN, TIMESTAMP
 
 ### Verificación 3: Constraints
+
 ✅ CONFIRMADO: UNIQUE(delivery_id) implementado  
 ✅ CONFIRMADO: FK con CASCADE ejecutado  
 ✅ CONFIRMADO: CHECK(event_type) validando
 
 ### Verificación 4: RLS
+
 ✅ CONFIRMADO: Row-Level Security habilitado  
 ✅ CONFIRMADO: Policy `webhook_events_service_role_all` activa  
 ✅ CONFIRMADO: service_role permisos completos
 
 ### Verificación 5: Tabla Orders
+
 ✅ CONFIRMADO: `orders` NO fue modificada  
 ✅ CONFIRMADO: Columna `ghl_opportunity_id` intacta  
 ✅ CONFIRMADO: Columna `status` intacta (VARCHAR, no enum)  
@@ -210,6 +228,7 @@ GRANT ALL PRIVILEGES ON public.webhook_events TO service_role;
 ### Mecanismo de Deduplicación
 
 **Flujo:**
+
 ```
 1. Webhook llega: delivery_id = "abc123"
    ↓
@@ -253,18 +272,21 @@ GRANT ALL PRIVILEGES ON public.webhook_events TO service_role;
 ## IMPACTO EN APLICACIÓN
 
 ### ✅ Sin Cambios Requeridos
+
 - No modifica API de órdenes
 - No afecta confirmación de órdenes
 - No afecta frontend
 - No afecta migraciones anteriores
 
 ### ✅ Listo para FASE 4.3
+
 - Tabla lista para recibir webhooks
 - Deduplicación garantizada por UNIQUE
 - RLS protege datos
 - Service role autorizado
 
 ### ✅ Listo para FASE 4.4
+
 - Endpoint webhook puede usar esta tabla
 - Webhooks de GHL pueden ser procesados
 - Historial completo disponible
@@ -274,10 +296,12 @@ GRANT ALL PRIVILEGES ON public.webhook_events TO service_role;
 ## PRÓXIMOS PASOS
 
 ### FASE 4.3: Endpoint Webhook
+
 **Objetivo:** Crear `POST /api/webhooks/ghl-opportunity`  
 **Requisito:** Tabla `webhook_events` LISTA ✅
 
 **Tareas:**
+
 1. Crear archivo `src/routes/api.webhooks.ghl-opportunity.ts`
 2. Implementar signature verification (HMAC-SHA256)
 3. Implementar payload parsing con tipos FASE 4.1
@@ -286,10 +310,12 @@ GRANT ALL PRIVILEGES ON public.webhook_events TO service_role;
 6. Implementar logging y error handling
 
 ### FASE 4.4: Registro en GHL
+
 **Objetivo:** Conectar webhook endpoint con GHL  
 **Requisito:** FASE 4.3 completado
 
 **Tareas manuales:**
+
 1. GHL Dashboard → Settings → Integrations → Webhooks
 2. Create Webhook:
    - URL: `https://tu-dominio.com/api/webhooks/ghl-opportunity`
@@ -299,10 +325,12 @@ GRANT ALL PRIVILEGES ON public.webhook_events TO service_role;
 4. Verificar en logs
 
 ### FASE 4.5: Testing E2E
+
 **Objetivo:** Verificar flujo completo  
 **Requisito:** FASE 4.3 + FASE 4.4 completados
 
 **Test plan:**
+
 1. Crear orden en app
 2. Cambiar stage en GHL Dashboard
 3. Verificar orden.status actualizado en Supabase
@@ -314,19 +342,19 @@ GRANT ALL PRIVILEGES ON public.webhook_events TO service_role;
 
 ## ESTADÍSTICAS
 
-| Métrica | Valor |
-|---------|-------|
-| Tabla creada | 1 |
-| Columnas | 14 |
-| Constraints | 3 (UNIQUE, FK, CHECK) |
-| Índices | 2 (1 implicit + 1 explicit) |
-| Políticas RLS | 1 |
-| Archivos modificados | 1 (migration SQL) |
-| Archivos creados | 1 (migration SQL) |
-| Cambios en Supabase | 1 (tabla nueva) |
-| Datos afectados | 0 (tabla nueva) |
-| Tiempo ejecución | ~2 segundos |
-| Status | ✅ EXITOSO |
+| Métrica              | Valor                       |
+| -------------------- | --------------------------- |
+| Tabla creada         | 1                           |
+| Columnas             | 14                          |
+| Constraints          | 3 (UNIQUE, FK, CHECK)       |
+| Índices              | 2 (1 implicit + 1 explicit) |
+| Políticas RLS        | 1                           |
+| Archivos modificados | 1 (migration SQL)           |
+| Archivos creados     | 1 (migration SQL)           |
+| Cambios en Supabase  | 1 (tabla nueva)             |
+| Datos afectados      | 0 (tabla nueva)             |
+| Tiempo ejecución     | ~2 segundos                 |
+| Status               | ✅ EXITOSO                  |
 
 ---
 
@@ -340,4 +368,3 @@ GRANT ALL PRIVILEGES ON public.webhook_events TO service_role;
 
 **Tiempo total:** 20260828 15:35 UTC  
 **Próxima fase:** FASE 4.3 — Webhook Endpoint Implementation
-

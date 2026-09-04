@@ -19,145 +19,145 @@ Se verificó directamente en HighLevel que todos los 9 custom fields requeridos 
 
 ### ✅ CAMPO 1: Número de pedido
 
-| Atributo | Valor |
-|----------|-------|
-| **ID esperado en código** | `8eLnIjuKBbd6DMwysl0M` |
-| **ID encontrado en HL** | `8eLnIjuKBbd6DMwysl0M` ✅ |
-| **Nombre en HL** | "Número de pedido" |
-| **Modelo** | opportunity |
-| **Tipo de dato** | TEXT |
-| **Position** | 500 |
-| **Creado** | 2026-08-28T07:02:55.788Z |
-| **Estado** | ✅ CORRECTO |
-| **Mapeado en código** | `orderNumber` |
+| Atributo                  | Valor                     |
+| ------------------------- | ------------------------- |
+| **ID esperado en código** | `8eLnIjuKBbd6DMwysl0M`    |
+| **ID encontrado en HL**   | `8eLnIjuKBbd6DMwysl0M` ✅ |
+| **Nombre en HL**          | "Número de pedido"        |
+| **Modelo**                | opportunity               |
+| **Tipo de dato**          | TEXT                      |
+| **Position**              | 500                       |
+| **Creado**                | 2026-08-28T07:02:55.788Z  |
+| **Estado**                | ✅ CORRECTO               |
+| **Mapeado en código**     | `orderNumber`             |
 
 ### ✅ CAMPO 2: ID pedido Supabase
 
-| Atributo | Valor |
-|----------|-------|
-| **ID esperado en código** | `WWKLWHR7EUDeGPi7zlOH` |
-| **ID encontrado en HL** | `WWKLWHR7EUDeGPi7zlOH` ✅ |
-| **Nombre en HL** | "ID pedido Supabase" |
-| **Modelo** | opportunity |
-| **Tipo de dato** | TEXT |
-| **Position** | 550 |
-| **Creado** | 2026-08-28T07:03:11.015Z |
-| **Estado** | ✅ CORRECTO |
-| **Mapeado en código** | `orderData.id` |
+| Atributo                  | Valor                     |
+| ------------------------- | ------------------------- |
+| **ID esperado en código** | `WWKLWHR7EUDeGPi7zlOH`    |
+| **ID encontrado en HL**   | `WWKLWHR7EUDeGPi7zlOH` ✅ |
+| **Nombre en HL**          | "ID pedido Supabase"      |
+| **Modelo**                | opportunity               |
+| **Tipo de dato**          | TEXT                      |
+| **Position**              | 550                       |
+| **Creado**                | 2026-08-28T07:03:11.015Z  |
+| **Estado**                | ✅ CORRECTO               |
+| **Mapeado en código**     | `orderData.id`            |
 
 ### ✅ CAMPO 3: Fecha de entrega
 
-| Atributo | Valor |
-|----------|-------|
-| **ID esperado en código** | `rXM9yMbgg5JaevJyVCXY` |
-| **ID encontrado en HL** | `rXM9yMbgg5JaevJyVCXY` ✅ |
-| **Nombre en HL** | "Fecha de entrega" |
-| **Modelo** | opportunity |
-| **Tipo de dato** | DATE ✅ |
-| **Position** | 600 |
-| **Creado** | 2026-08-28T07:03:52.587Z |
-| **Estado** | ✅ CORRECTO |
-| **Mapeado en código** | `orderData.delivery_date` |
+| Atributo                  | Valor                     |
+| ------------------------- | ------------------------- |
+| **ID esperado en código** | `rXM9yMbgg5JaevJyVCXY`    |
+| **ID encontrado en HL**   | `rXM9yMbgg5JaevJyVCXY` ✅ |
+| **Nombre en HL**          | "Fecha de entrega"        |
+| **Modelo**                | opportunity               |
+| **Tipo de dato**          | DATE ✅                   |
+| **Position**              | 600                       |
+| **Creado**                | 2026-08-28T07:03:52.587Z  |
+| **Estado**                | ✅ CORRECTO               |
+| **Mapeado en código**     | `orderData.delivery_date` |
 
 ### ✅ CAMPO 4: Total del pedido
 
-| Atributo | Valor |
-|----------|-------|
-| **ID esperado en código** | `UwE0cVM9RTH1ZnSINMoq` |
-| **ID encontrado en HL** | `UwE0cVM9RTH1ZnSINMoq` ✅ |
-| **Nombre en HL** | "Total del pedido" |
-| **Modelo** | opportunity |
-| **Tipo de dato** | MONETORY ✅ (moneda) |
-| **Position** | 950 |
-| **Creado** | 2026-08-28T07:09:17.863Z |
-| **Estado** | ✅ CORRECTO |
-| **Mapeado en código** | `orderData.total` |
+| Atributo                  | Valor                     |
+| ------------------------- | ------------------------- |
+| **ID esperado en código** | `UwE0cVM9RTH1ZnSINMoq`    |
+| **ID encontrado en HL**   | `UwE0cVM9RTH1ZnSINMoq` ✅ |
+| **Nombre en HL**          | "Total del pedido"        |
+| **Modelo**                | opportunity               |
+| **Tipo de dato**          | MONETORY ✅ (moneda)      |
+| **Position**              | 950                       |
+| **Creado**                | 2026-08-28T07:09:17.863Z  |
+| **Estado**                | ✅ CORRECTO               |
+| **Mapeado en código**     | `orderData.total`         |
 
 ### ✅ CAMPO 5: Dirección de entrega
 
-| Atributo | Valor |
-|----------|-------|
-| **ID esperado en código** | `jeQFSOGG7H0kZEpHnfsz` |
-| **ID encontrado en HL** | `jeQFSOGG7H0kZEpHnfsz` ✅ |
-| **Nombre en HL** | "Dirección de entrega" |
-| **Modelo** | opportunity |
-| **Tipo de dato** | LARGE_TEXT ✅ |
-| **Position** | 700 |
-| **Creado** | 2026-08-28T07:05:17.907Z |
-| **Estado** | ✅ CORRECTO |
-| **Mapeado en código** | `orderData.address` |
+| Atributo                  | Valor                     |
+| ------------------------- | ------------------------- |
+| **ID esperado en código** | `jeQFSOGG7H0kZEpHnfsz`    |
+| **ID encontrado en HL**   | `jeQFSOGG7H0kZEpHnfsz` ✅ |
+| **Nombre en HL**          | "Dirección de entrega"    |
+| **Modelo**                | opportunity               |
+| **Tipo de dato**          | LARGE_TEXT ✅             |
+| **Position**              | 700                       |
+| **Creado**                | 2026-08-28T07:05:17.907Z  |
+| **Estado**                | ✅ CORRECTO               |
+| **Mapeado en código**     | `orderData.address`       |
 
 ### ✅ CAMPO 6: Ciudad
 
-| Atributo | Valor |
-|----------|-------|
-| **ID esperado en código** | `kBnxxaULHnZXT723jzSB` |
-| **ID encontrado en HL** | `kBnxxaULHnZXT723jzSB` ✅ |
-| **Nombre en HL** | "Ciudad" |
-| **Modelo** | opportunity |
-| **Tipo de dato** | TEXT |
-| **Position** | 750 |
-| **Creado** | 2026-08-28T07:05:38.033Z |
-| **Estado** | ✅ CORRECTO |
-| **Mapeado en código** | `orderData.city` |
+| Atributo                  | Valor                     |
+| ------------------------- | ------------------------- |
+| **ID esperado en código** | `kBnxxaULHnZXT723jzSB`    |
+| **ID encontrado en HL**   | `kBnxxaULHnZXT723jzSB` ✅ |
+| **Nombre en HL**          | "Ciudad"                  |
+| **Modelo**                | opportunity               |
+| **Tipo de dato**          | TEXT                      |
+| **Position**              | 750                       |
+| **Creado**                | 2026-08-28T07:05:38.033Z  |
+| **Estado**                | ✅ CORRECTO               |
+| **Mapeado en código**     | `orderData.city`          |
 
 ### ✅ CAMPO 7: Código postal
 
-| Atributo | Valor |
-|----------|-------|
-| **ID esperado en código** | `BY5x3DugugfPH3JYTIuu` |
-| **ID encontrado en HL** | `BY5x3DugugfPH3JYTIuu` ✅ |
-| **Nombre en HL** | "Código postal" |
-| **Modelo** | opportunity |
-| **Tipo de dato** | TEXT |
-| **Position** | 800 |
-| **Creado** | 2026-08-28T07:06:04.040Z |
-| **Estado** | ✅ CORRECTO |
-| **Mapeado en código** | `orderData.postal_code` |
+| Atributo                  | Valor                     |
+| ------------------------- | ------------------------- |
+| **ID esperado en código** | `BY5x3DugugfPH3JYTIuu`    |
+| **ID encontrado en HL**   | `BY5x3DugugfPH3JYTIuu` ✅ |
+| **Nombre en HL**          | "Código postal"           |
+| **Modelo**                | opportunity               |
+| **Tipo de dato**          | TEXT                      |
+| **Position**              | 800                       |
+| **Creado**                | 2026-08-28T07:06:04.040Z  |
+| **Estado**                | ✅ CORRECTO               |
+| **Mapeado en código**     | `orderData.postal_code`   |
 
 ### ✅ CAMPO 8: Dedicatoria
 
-| Atributo | Valor |
-|----------|-------|
-| **ID esperado en código** | `ll9L1SW3tGONid8GnXzT` |
-| **ID encontrado en HL** | `ll9L1SW3tGONid8GnXzT` ✅ |
-| **Nombre en HL** | "Dedicatoria" |
-| **Modelo** | opportunity |
-| **Tipo de dato** | LARGE_TEXT ✅ |
-| **Position** | 850 |
-| **Creado** | 2026-08-28T07:07:05.199Z |
-| **Estado** | ✅ CORRECTO |
-| **Mapeado en código** | `orderData.dedicatory` |
+| Atributo                  | Valor                     |
+| ------------------------- | ------------------------- |
+| **ID esperado en código** | `ll9L1SW3tGONid8GnXzT`    |
+| **ID encontrado en HL**   | `ll9L1SW3tGONid8GnXzT` ✅ |
+| **Nombre en HL**          | "Dedicatoria"             |
+| **Modelo**                | opportunity               |
+| **Tipo de dato**          | LARGE_TEXT ✅             |
+| **Position**              | 850                       |
+| **Creado**                | 2026-08-28T07:07:05.199Z  |
+| **Estado**                | ✅ CORRECTO               |
+| **Mapeado en código**     | `orderData.dedicatory`    |
 
 ### ✅ CAMPO 9: Notas del pedido
 
-| Atributo | Valor |
-|----------|-------|
-| **ID esperado en código** | `O3uXs2omCM74sXUtn4uP` |
-| **ID encontrado en HL** | `O3uXs2omCM74sXUtn4uP` ✅ |
-| **Nombre en HL** | "Notas del pedido" |
-| **Modelo** | opportunity |
-| **Tipo de dato** | LARGE_TEXT ✅ |
-| **Position** | 1000 |
-| **Creado** | 2026-08-28T07:10:22.570Z |
-| **Estado** | ✅ CORRECTO |
-| **Mapeado en código** | `orderData.notes` |
+| Atributo                  | Valor                     |
+| ------------------------- | ------------------------- |
+| **ID esperado en código** | `O3uXs2omCM74sXUtn4uP`    |
+| **ID encontrado en HL**   | `O3uXs2omCM74sXUtn4uP` ✅ |
+| **Nombre en HL**          | "Notas del pedido"        |
+| **Modelo**                | opportunity               |
+| **Tipo de dato**          | LARGE_TEXT ✅             |
+| **Position**              | 1000                      |
+| **Creado**                | 2026-08-28T07:10:22.570Z  |
+| **Estado**                | ✅ CORRECTO               |
+| **Mapeado en código**     | `orderData.notes`         |
 
 ---
 
 ## 2. TABLA RESUMEN
 
-| # | Campo | ID HighLevel | ID Código | Tipo | Estado |
-|---|-------|--------------|-----------|------|--------|
-| 1 | Número de pedido | `8eLnIjuKBbd6DMwysl0M` | ✅ Match | TEXT | ✅ OK |
-| 2 | ID pedido Supabase | `WWKLWHR7EUDeGPi7zlOH` | ✅ Match | TEXT | ✅ OK |
-| 3 | Fecha de entrega | `rXM9yMbgg5JaevJyVCXY` | ✅ Match | DATE | ✅ OK |
-| 4 | Total del pedido | `UwE0cVM9RTH1ZnSINMoq` | ✅ Match | MONETORY | ✅ OK |
-| 5 | Dirección de entrega | `jeQFSOGG7H0kZEpHnfsz` | ✅ Match | LARGE_TEXT | ✅ OK |
-| 6 | Ciudad | `kBnxxaULHnZXT723jzSB` | ✅ Match | TEXT | ✅ OK |
-| 7 | Código postal | `BY5x3DugugfPH3JYTIuu` | ✅ Match | TEXT | ✅ OK |
-| 8 | Dedicatoria | `ll9L1SW3tGONid8GnXzT` | ✅ Match | LARGE_TEXT | ✅ OK |
-| 9 | Notas del pedido | `O3uXs2omCM74sXUtn4uP` | ✅ Match | LARGE_TEXT | ✅ OK |
+| #   | Campo                | ID HighLevel           | ID Código | Tipo       | Estado |
+| --- | -------------------- | ---------------------- | --------- | ---------- | ------ |
+| 1   | Número de pedido     | `8eLnIjuKBbd6DMwysl0M` | ✅ Match  | TEXT       | ✅ OK  |
+| 2   | ID pedido Supabase   | `WWKLWHR7EUDeGPi7zlOH` | ✅ Match  | TEXT       | ✅ OK  |
+| 3   | Fecha de entrega     | `rXM9yMbgg5JaevJyVCXY` | ✅ Match  | DATE       | ✅ OK  |
+| 4   | Total del pedido     | `UwE0cVM9RTH1ZnSINMoq` | ✅ Match  | MONETORY   | ✅ OK  |
+| 5   | Dirección de entrega | `jeQFSOGG7H0kZEpHnfsz` | ✅ Match  | LARGE_TEXT | ✅ OK  |
+| 6   | Ciudad               | `kBnxxaULHnZXT723jzSB` | ✅ Match  | TEXT       | ✅ OK  |
+| 7   | Código postal        | `BY5x3DugugfPH3JYTIuu` | ✅ Match  | TEXT       | ✅ OK  |
+| 8   | Dedicatoria          | `ll9L1SW3tGONid8GnXzT` | ✅ Match  | LARGE_TEXT | ✅ OK  |
+| 9   | Notas del pedido     | `O3uXs2omCM74sXUtn4uP` | ✅ Match  | LARGE_TEXT | ✅ OK  |
 
 ---
 
@@ -199,17 +199,17 @@ const customFields = [
 
 ## 4. ANÁLISIS DE TIPOS DE DATOS
 
-| Campo | Tipo en HL | Tipo en código | Compatibilidad |
-|-------|-----------|----------------|----------------|
-| Número de pedido | TEXT | string (orderNumber) | ✅ OK |
-| ID Supabase | TEXT | string (orderData.id) | ✅ OK |
-| Fecha de entrega | DATE | string (orderData.delivery_date) | ✅ OK (formato se envía como string) |
-| Total del pedido | MONETORY | number (orderData.total) | ✅ OK (se envía como número) |
-| Dirección de entrega | LARGE_TEXT | string (orderData.address) | ✅ OK |
-| Ciudad | TEXT | string (orderData.city) | ✅ OK |
-| Código postal | TEXT | string (orderData.postal_code) | ✅ OK |
-| Dedicatoria | LARGE_TEXT | string (orderData.dedicatory) | ✅ OK |
-| Notas del pedido | LARGE_TEXT | string (orderData.notes) | ✅ OK |
+| Campo                | Tipo en HL | Tipo en código                   | Compatibilidad                       |
+| -------------------- | ---------- | -------------------------------- | ------------------------------------ |
+| Número de pedido     | TEXT       | string (orderNumber)             | ✅ OK                                |
+| ID Supabase          | TEXT       | string (orderData.id)            | ✅ OK                                |
+| Fecha de entrega     | DATE       | string (orderData.delivery_date) | ✅ OK (formato se envía como string) |
+| Total del pedido     | MONETORY   | number (orderData.total)         | ✅ OK (se envía como número)         |
+| Dirección de entrega | LARGE_TEXT | string (orderData.address)       | ✅ OK                                |
+| Ciudad               | TEXT       | string (orderData.city)          | ✅ OK                                |
+| Código postal        | TEXT       | string (orderData.postal_code)   | ✅ OK                                |
+| Dedicatoria          | LARGE_TEXT | string (orderData.dedicatory)    | ✅ OK                                |
+| Notas del pedido     | LARGE_TEXT | string (orderData.notes)         | ✅ OK                                |
 
 **Conclusión:** Todos los tipos de datos son compatibles. El código enviará los valores en formatos que HighLevel aceptará.
 
@@ -244,7 +244,7 @@ const customFields = [
 ✅ Todos los tipos de datos son compatibles  
 ✅ Todos los campos están activos  
 ✅ Todos están en el modelo correcto (opportunity)  
-✅ Ningún campo está duplicado o malformado  
+✅ Ningún campo está duplicado o malformado
 
 ---
 
@@ -263,10 +263,10 @@ await createGHLOpportunity({
   name: orderNumber,
   monetaryValue: orderData.total,
   customFields: [
-    { fieldId: "8eLnIjuKBbd6DMwysl0M", value: "ORD-..." },  // ✅ Campo existe
+    { fieldId: "8eLnIjuKBbd6DMwysl0M", value: "ORD-..." }, // ✅ Campo existe
     { fieldId: "WWKLWHR7EUDeGPi7zlOH", value: "uuid-..." }, // ✅ Campo existe
     // ... más campos ...
-  ]
+  ],
 });
 ```
 
@@ -279,6 +279,7 @@ await createGHLOpportunity({
 ### Búsqueda de campos por ID
 
 Todos los IDs fueron verificados directamente mediante MCP:
+
 - Los 9 campos aparecen en la respuesta de `get-custom-fields`
 - Los IDs no tienen inconsistencias o typos
 - Los nombres coinciden con los comentarios del código
@@ -312,14 +313,14 @@ Todos los IDs fueron verificados directamente mediante MCP:
 ✅ CUSTOM FIELDS OK - PROCEDER CON FASE 4.4 INMEDIATAMENTE
 ```
 
-| Criterio | Estado |
-|----------|--------|
-| **Todos los 9 campos existen** | ✅ |
-| **IDs coinciden exactamente** | ✅ |
-| **Tipos de datos compatibles** | ✅ |
-| **Configuración correcta** | ✅ |
-| **Modificaciones necesarias** | ❌ Ninguna |
-| **Bloqueantes para FASE 4.4** | ❌ Ninguno |
+| Criterio                       | Estado     |
+| ------------------------------ | ---------- |
+| **Todos los 9 campos existen** | ✅         |
+| **IDs coinciden exactamente**  | ✅         |
+| **Tipos de datos compatibles** | ✅         |
+| **Configuración correcta**     | ✅         |
+| **Modificaciones necesarias**  | ❌ Ninguna |
+| **Bloqueantes para FASE 4.4**  | ❌ Ninguno |
 
 ---
 
@@ -329,4 +330,3 @@ Todos los IDs fueron verificados directamente mediante MCP:
 **Errores encontrados:** 0  
 **Advertencias:** Ninguna  
 **Recomendación:** ✅ **LISTO PARA FASE 4.4**
-

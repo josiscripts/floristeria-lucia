@@ -34,6 +34,7 @@ La cliente administra **ESTOS 7 campos DIRECTAMENTE en GHL Dashboard:**
 ### Problema identificado
 
 La cliente QUIERE poder editar desde GHL:
+
 - `price_max`
 - `available_colors`
 - `badge_label`
@@ -53,6 +54,7 @@ Pero **GHL Products API NO permite custom fields**.
 ```
 
 **Evaluación:**
+
 - ✅ No requiere tabla Supabase
 - ✅ Cliente edita en GHL
 - ❌ Frágil (cambio de description rompe datos)
@@ -77,6 +79,7 @@ Ramo de Rosas
 ```
 
 **Evaluación:**
+
 - ✅ Nativo de GHL
 - ❌ Explosión combinatoria: 6 colores × 3 precios = 18 variantes POR PRODUCTO
 - ❌ UX compleja (dropdown con 18 opciones)
@@ -96,6 +99,7 @@ Cliente edita en /admin/products: price_max, colors, badge_label
 ```
 
 **Evaluación:**
+
 - ✅ Datos en lugar correcto (Supabase)
 - ✅ UX limpia (interfaz dedicada)
 - ✅ No contamina GHL
@@ -107,12 +111,14 @@ Cliente edita en /admin/products: price_max, colors, badge_label
 ### Decisión: Alternativa 3 + Mejora
 
 **Implementación:**
+
 1. Metadatos en Supabase (product_metadata)
 2. Cliente edita metadatos en `/admin/products` (Vercel)
 3. Dashboard admin es privado, integrado, autenticado
 4. Mismo login que el frontend (Supabase Auth)
 
 **Beneficio:** Cliente tiene una interfaz unificada en Vercel para:
+
 - Ver productos de GHL (read-only)
 - Editar metadatos técnicos (price_max, colors, badge)
 
@@ -141,6 +147,7 @@ Mensaje: "Model value need to be either `contact` or `opportunity`"
 **Basado en patrón API de GHL:**
 
 GHL soporta webhooks para:
+
 - ✅ contact.created, contact.updated, contact.deleted
 - ✅ opportunity.created, opportunity.updated, opportunity.deleted
 - ❓ product.created, product.updated, product.deleted (DESCONOCIDO)
@@ -212,16 +219,16 @@ Frontend:
 
 **Principio:** GHL es la fuente de verdad para sus 7 campos
 
-| Campo | Dónde se edita | Dónde es verdad | Consistencia |
-|---|---|---|---|
-| name | GHL | GHL | ✅ Una fuente |
-| price | GHL | GHL | ✅ Una fuente |
-| description | GHL | GHL | ✅ Una fuente |
-| image | GHL | GHL | ✅ Una fuente |
-| category | GHL | GHL | ✅ Una fuente |
-| price_max | /admin/products | Supabase | ✅ Una fuente |
-| colors | /admin/products | Supabase | ✅ Una fuente |
-| badge | /admin/products | Supabase | ✅ Una fuente |
+| Campo       | Dónde se edita  | Dónde es verdad | Consistencia  |
+| ----------- | --------------- | --------------- | ------------- |
+| name        | GHL             | GHL             | ✅ Una fuente |
+| price       | GHL             | GHL             | ✅ Una fuente |
+| description | GHL             | GHL             | ✅ Una fuente |
+| image       | GHL             | GHL             | ✅ Una fuente |
+| category    | GHL             | GHL             | ✅ Una fuente |
+| price_max   | /admin/products | Supabase        | ✅ Una fuente |
+| colors      | /admin/products | Supabase        | ✅ Una fuente |
+| badge       | /admin/products | Supabase        | ✅ Una fuente |
 
 **Garantía:** Nunca hay dos fuentes de verdad para el mismo dato
 
@@ -274,6 +281,7 @@ WHERE status = 'active' AND ghl_product_id IN (
 ```
 
 **Cuando cliente elimina en GHL:**
+
 - GHL: producto desaparece
 - Supabase: marca como deleted (audit trail)
 - Frontend: no muestra (filtra por status = active)
@@ -384,13 +392,13 @@ Solución alternativa:
 
 ### Resumen: Idempotencia garantizada
 
-| Falla | Manejo | Resultado |
-|---|---|---|
-| Webhook llega duplicado | UNIQUE constraint | ✅ No duplicados |
-| Vercel falla | Retry automático | ✅ Eventualmente consistente |
-| Supabase falla | Queue + retry | ✅ Retry 3 veces |
-| Metadata faltante | On-demand creation | ✅ Auto-recovery |
-| Metadata huérfana | Cron cleanup | ✅ Sincronizado |
+| Falla                   | Manejo             | Resultado                    |
+| ----------------------- | ------------------ | ---------------------------- |
+| Webhook llega duplicado | UNIQUE constraint  | ✅ No duplicados             |
+| Vercel falla            | Retry automático   | ✅ Eventualmente consistente |
+| Supabase falla          | Queue + retry      | ✅ Retry 3 veces             |
+| Metadata faltante       | On-demand creation | ✅ Auto-recovery             |
+| Metadata huérfana       | Cron cleanup       | ✅ Sincronizado              |
 
 ---
 
@@ -398,15 +406,15 @@ Solución alternativa:
 
 ### Análisis comparativo
 
-| Criterio | Webhook | Polling | Hybrid |
-|----------|---------|---------|--------|
-| **Latencia** | <5 seg (real-time) | 5 min | <5 seg (webhook) + fallback |
-| **Fiabilidad** | ⚠️ GHL debe enviar | ✅ Vercel controla | ✅✅ Máxima |
-| **Configuración** | Manual en GHL | Automática | Manual + automática |
-| **Complejidad** | Media | Baja | Media |
-| **Costo API** | Mínimo | Alto (cada 5 min) | Bajo (webhook primario) |
-| **Recuperación** | ⚠️ Manual si falla | ✅ Automática | ✅✅ Ambas |
-| **Desacoplamiento** | Débil (GHL controla) | ✅ Fuerte (Vercel controla) | ✅✅ Máximo |
+| Criterio            | Webhook              | Polling                     | Hybrid                      |
+| ------------------- | -------------------- | --------------------------- | --------------------------- |
+| **Latencia**        | <5 seg (real-time)   | 5 min                       | <5 seg (webhook) + fallback |
+| **Fiabilidad**      | ⚠️ GHL debe enviar   | ✅ Vercel controla          | ✅✅ Máxima                 |
+| **Configuración**   | Manual en GHL        | Automática                  | Manual + automática         |
+| **Complejidad**     | Media                | Baja                        | Media                       |
+| **Costo API**       | Mínimo               | Alto (cada 5 min)           | Bajo (webhook primario)     |
+| **Recuperación**    | ⚠️ Manual si falla   | ✅ Automática               | ✅✅ Ambas                  |
+| **Desacoplamiento** | Débil (GHL controla) | ✅ Fuerte (Vercel controla) | ✅✅ Máximo                 |
 
 ### Decisión: HYBRID (Webhook + Polling)
 
@@ -429,10 +437,10 @@ Solución alternativa:
 // Opción 1: GHL soporta product webhooks
 if (GHL_SUPPORTS_PRODUCT_WEBHOOKS) {
   // Primary: Webhook handler
-  app.post('/api/webhooks/ghl-product', handler);
-  
+  app.post("/api/webhooks/ghl-product", handler);
+
   // Fallback: Polling cada 5 minutos
-  cron.schedule('*/5 * * * *', async () => {
+  cron.schedule("*/5 * * * *", async () => {
     const products = await getGHLProducts();
     for (const product of products) {
       await syncProductMetadata(product);
@@ -443,7 +451,7 @@ if (GHL_SUPPORTS_PRODUCT_WEBHOOKS) {
 // Opción 2: GHL NO soporta product webhooks
 if (!GHL_SUPPORTS_PRODUCT_WEBHOOKS) {
   // Solo polling
-  cron.schedule('*/5 * * * *', async () => {
+  cron.schedule("*/5 * * * *", async () => {
     const products = await getGHLProducts();
     for (const product of products) {
       await syncProductMetadata(product);
@@ -516,6 +524,7 @@ Por qué:
 ```
 
 **Verificación:**
+
 - `src/lib/ghl/client.server.ts` ✅ Usa process.env
 - `/api/ghl/*` ✅ Routes server-side
 - Frontend hooks ✅ Never expose token
@@ -530,6 +539,7 @@ Por qué:
 ```
 
 **Verificación:**
+
 - server-only imports ✅ .server.ts files
 - API routes ✅ Server-side
 - Frontend ✅ Never access directly
@@ -745,14 +755,14 @@ GARANTÍA:
 
 ### 10.6 Manejo de errores y recuperación
 
-| Escenario | Manejo | Recuperación |
-|-----------|--------|--------------|
-| Webhook no llega | Polling detecta en 5 min | ✅ Automática |
-| Webhook duplicado | UNIQUE constraint | ✅ Detectado e ignorado |
-| Vercel falla | Queue + retry (3x) | ✅ Reintentos automáticos |
-| Supabase falla | Retry exponencial | ✅ Eventualmente consistente |
-| Metadata faltante | On-demand creation | ✅ Auto-recovery |
-| Metadata huérfana | Cron cleanup | ✅ Sincronizado |
+| Escenario         | Manejo                   | Recuperación                 |
+| ----------------- | ------------------------ | ---------------------------- |
+| Webhook no llega  | Polling detecta en 5 min | ✅ Automática                |
+| Webhook duplicado | UNIQUE constraint        | ✅ Detectado e ignorado      |
+| Vercel falla      | Queue + retry (3x)       | ✅ Reintentos automáticos    |
+| Supabase falla    | Retry exponencial        | ✅ Eventualmente consistente |
+| Metadata faltante | On-demand creation       | ✅ Auto-recovery             |
+| Metadata huérfana | Cron cleanup             | ✅ Sincronizado              |
 
 ---
 
@@ -787,34 +797,34 @@ Frontend:
 CREATE TABLE product_metadata (
   -- Primary key
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  
+
   -- Foreign keys (links)
   location_id TEXT NOT NULL DEFAULT 'vOq7yOWR63XGU4qQ7XWd',
   ghl_product_id TEXT NOT NULL UNIQUE,      -- Link a GHL
   legacy_catalog_id TEXT UNIQUE,             -- Link a catalog.ts (si existe)
-  
+
   -- Precios
   price_min DECIMAL(10,2),                   -- Opcional: cache de GHL
   price_max DECIMAL(10,2),                   -- Rango (metadato)
-  
+
   -- Personalización
   available_colors TEXT[],                   -- ["Rojo", "Rosa", ...] (JSON)
   badge_label TEXT,                          -- "Más vendido", etc.
-  
+
   -- Lógica específica del negocio
   rose_step INTEGER DEFAULT NULL,            -- Multiplicador rosas (6)
   requires_quote BOOLEAN DEFAULT false,      -- Para cotizaciones futuras
-  
+
   -- Estado
   status TEXT DEFAULT 'active',              -- active | deleted
   auto_created BOOLEAN DEFAULT false,        -- Creado automáticamente?
-  
+
   -- Auditoría
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now(),
   deleted_at TIMESTAMP DEFAULT NULL,
   deleted_by UUID DEFAULT NULL,              -- Quién lo borró
-  
+
   -- Constraints
   CONSTRAINT unique_ghl_product UNIQUE(location_id, ghl_product_id),
   CONSTRAINT check_price_max CHECK (price_max IS NULL OR price_max > 0),
@@ -857,37 +867,40 @@ CREATE POLICY "server_delete_metadata" ON product_metadata
 export async function POST(request: Request) {
   const event = await request.json();
   const { type, product } = event;
-  
+
   // Validar firma de webhook (seguridad)
   validateWebhookSignature(request);
-  
-  if (type === 'product.created') {
+
+  if (type === "product.created") {
     await createProductMetadata(product._id, product);
-  } else if (type === 'product.updated') {
+  } else if (type === "product.updated") {
     // NO actualizar metadata, solo registrar
     await updateProductTimestamp(product._id);
-  } else if (type === 'product.deleted') {
+  } else if (type === "product.deleted") {
     await softDeleteProductMetadata(product._id);
   }
-  
+
   return { ok: true };
 }
 
 async function createProductMetadata(ghlProductId, product) {
   // UPSERT para idempotencia
-  await supabase.from('product_metadata').upsert({
-    ghl_product_id: ghlProductId,
-    legacy_catalog_id: null,
-    price_max: null,
-    available_colors: null,
-    badge_label: null,
-    rose_step: null,
-    status: 'active',
-    auto_created: true,
-    created_at: new Date(),
-  }, {
-    onConflict: 'ghl_product_id',
-  });
+  await supabase.from("product_metadata").upsert(
+    {
+      ghl_product_id: ghlProductId,
+      legacy_catalog_id: null,
+      price_max: null,
+      available_colors: null,
+      badge_label: null,
+      rose_step: null,
+      status: "active",
+      auto_created: true,
+      created_at: new Date(),
+    },
+    {
+      onConflict: "ghl_product_id",
+    },
+  );
 }
 ```
 
@@ -901,45 +914,45 @@ async function createProductMetadata(ghlProductId, product) {
 export async function syncGHLProducts() {
   // Ejecutar cada 5 minutos
   const products = await getGHLProducts();
-  
+
   for (const product of products) {
     const metadata = await supabase
-      .from('product_metadata')
-      .select('id')
-      .eq('ghl_product_id', product._id)
+      .from("product_metadata")
+      .select("id")
+      .eq("ghl_product_id", product._id)
       .single();
-    
+
     if (!metadata.data) {
       // Nuevo producto en GHL, crear metadata
-      await supabase.from('product_metadata').insert({
+      await supabase.from("product_metadata").insert({
         ghl_product_id: product._id,
         legacy_catalog_id: null,
-        status: 'active',
+        status: "active",
         auto_created: true,
       });
     }
   }
-  
+
   // Detectar eliminados
   const supabaseProducts = await supabase
-    .from('product_metadata')
-    .select('ghl_product_id')
-    .eq('status', 'active');
-  
+    .from("product_metadata")
+    .select("ghl_product_id")
+    .eq("status", "active");
+
   for (const metadata of supabaseProducts.data) {
-    const exists = products.find(p => p._id === metadata.ghl_product_id);
+    const exists = products.find((p) => p._id === metadata.ghl_product_id);
     if (!exists) {
       // Producto eliminado en GHL
       await supabase
-        .from('product_metadata')
-        .update({ status: 'deleted' })
-        .eq('ghl_product_id', metadata.ghl_product_id);
+        .from("product_metadata")
+        .update({ status: "deleted" })
+        .eq("ghl_product_id", metadata.ghl_product_id);
     }
   }
 }
 
 // Registrar cron job
-cron.schedule('*/5 * * * *', syncGHLProducts);
+cron.schedule("*/5 * * * *", syncGHLProducts);
 ```
 
 **Latencia:** Máximo 5 minutos
@@ -962,52 +975,62 @@ cron.schedule('*/5 * * * *', syncGHLProducts);
 ### Validación de cierre:
 
 ✅ **1. GHL como fuente principal:** VALIDADO
+
 - Cliente administra 7 campos en GHL
 - No necesita Supabase
 
 ✅ **2. Supabase como capa técnica:** VALIDADO
+
 - Metadatos técnicos que GHL no puede almacenar
 - Cliente edita vía /admin/products en Vercel
 - No toca Supabase directamente
 
 ✅ **3. Creación automática:** VALIDADO
+
 - Webhook (SI existe) O Polling (SIEMPRE)
 - 100% automática
 - No requiere intervención
 
 ✅ **4. Edición:** VALIDADO
+
 - GHL envía cambios via webhook/polling
 - Vercel obtiene datos nuevos
 - Frontend refresca automáticamente
 - Sin inconsistencias
 
 ✅ **5. Eliminación:** VALIDADO
+
 - Soft delete (marcar como inactivo)
 - Auditoría permanente
 - Reversible
 
 ✅ **6. Fallas de sincronización:** VALIDADO
+
 - Sistema idempotente
 - UNIQUE constraints
 - Retry automáticos
 - On-demand recovery
 
 ✅ **7. Polling vs Webhook:** VALIDADO
+
 - Hybrid: Webhook principal + Polling fallback
 - Real-time si existe webhook
 - Fallback a 5 min si no existe
 
 ✅ **8. Frontend:** VALIDADO
+
 - Obtiene datos combinados (GHL + Supabase)
 - Cliente puede editar GHL sin cambiar frontend
 - Arquitectura moderna y desacoplada
 
 ✅ **9. Seguridad:** VALIDADO
+
 - Credenciales solo server-side
 - Frontend nunca accede a secrets
 - Arquitectura segura
 
 ✅ **10. Resultado final:** VALIDADO
+
 - Todo cerrado sin ambigüedades
 - Listo para implementación
 
@@ -1026,4 +1049,3 @@ cron.schedule('*/5 * * * *', syncGHLProducts);
 5. ✅ Crear dashboard admin `/admin/products` (opcional Fase 1)
 
 **NO HACER NADA HASTA CONFIRMACIÓN DEL USUARIO**
-

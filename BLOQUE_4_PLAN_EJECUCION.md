@@ -11,26 +11,26 @@
 
 ### Hallazgos
 
-| Aspecto | Hallazgo |
-|---------|----------|
-| **Productos en catálogo** | 54 (no 50 como se mencionó) |
-| **Infraestructura GHL** | ✓ createGHLProduct, updateGHLProduct, getGHLProducts |
-| **Infraestructura Precios** | ✓ ensureProductPrice con idempotencia |
-| **Infraestructura Metadata** | ✓ syncProductMetadata con support para legacy_catalog_id |
-| **Endpoint Sincronización Masiva** | ✗ NO EXISTÍA - CREADO EN ESTA FASE |
-| **Generador SKU** | ✓ generateSKU con prefijos por categoría |
-| **Mapeo Categorías** | ✓ category_to_ghl_collection (probablemente sin IDs aún) |
+| Aspecto                            | Hallazgo                                                 |
+| ---------------------------------- | -------------------------------------------------------- |
+| **Productos en catálogo**          | 54 (no 50 como se mencionó)                              |
+| **Infraestructura GHL**            | ✓ createGHLProduct, updateGHLProduct, getGHLProducts     |
+| **Infraestructura Precios**        | ✓ ensureProductPrice con idempotencia                    |
+| **Infraestructura Metadata**       | ✓ syncProductMetadata con support para legacy_catalog_id |
+| **Endpoint Sincronización Masiva** | ✗ NO EXISTÍA - CREADO EN ESTA FASE                       |
+| **Generador SKU**                  | ✓ generateSKU con prefijos por categoría                 |
+| **Mapeo Categorías**               | ✓ category_to_ghl_collection (probablemente sin IDs aún) |
 
 ### Categorías en Catálogo
 
-| Categoría | Productos | SKU Prefix |
-|-----------|-----------|-----------|
-| ramos | ~10 | FL-RAM-NNNN |
-| plantas | ~13 | FL-PLN-NNNN |
-| rosas-eternas | ~4 | FL-ROS-NNNN |
-| complementos | ~13 | FL-COM-NNNN |
-| condolencias | ~14 | FL-CON-NNNN |
-| **TOTAL** | **54** | - |
+| Categoría     | Productos | SKU Prefix  |
+| ------------- | --------- | ----------- |
+| ramos         | ~10       | FL-RAM-NNNN |
+| plantas       | ~13       | FL-PLN-NNNN |
+| rosas-eternas | ~4        | FL-ROS-NNNN |
+| complementos  | ~13       | FL-COM-NNNN |
+| condolencias  | ~14       | FL-CON-NNNN |
+| **TOTAL**     | **54**    | -           |
 
 ### Verificaciones Previas Requeridas
 
@@ -56,6 +56,7 @@ curl -H "Authorization: Bearer $GHL_TOKEN" \
 ## PARTE 2: ENDPOINT DE SINCRONIZACIÓN CREADO
 
 ### Ubicación
+
 **Archivo**: `src/routes/api.admin.sync-catalog.ts`
 
 ### Funcionalidad
@@ -63,6 +64,7 @@ curl -H "Authorization: Bearer $GHL_TOKEN" \
 #### POST /api/admin/sync-catalog
 
 **Request**:
+
 ```typescript
 {
   dryRun?: boolean,        // Si true: simula sin crear
@@ -72,6 +74,7 @@ curl -H "Authorization: Bearer $GHL_TOKEN" \
 ```
 
 **Response**:
+
 ```typescript
 {
   success: boolean,
@@ -103,6 +106,7 @@ curl -H "Authorization: Bearer $GHL_TOKEN" \
 #### GET /api/admin/sync-catalog
 
 Health check - retorna estado de readiness:
+
 ```typescript
 {
   endpoint: string,
@@ -181,7 +185,7 @@ Para cada producto en catalog.ts:
 curl -X GET http://localhost:3000/api/admin/sync-catalog \
   -H "Authorization: Bearer $ADMIN_TOKEN"
 
-# Expected: 
+# Expected:
 {
   "endpoint": "/api/admin/sync-catalog",
   "catalogSize": 54,
@@ -196,7 +200,7 @@ curl -X POST http://localhost:3000/api/admin/sync-catalog \
   -H "Content-Type: application/json" \
   -d '{"dryRun": true}'
 
-# Expected: 
+# Expected:
 # - status: "created" para los 54 (simulated)
 # - errors: [] (ninguno)
 # - summary: {created: 54, updated: 0, failed: 0}
@@ -215,12 +219,14 @@ curl -X POST http://localhost:3000/api/admin/sync-catalog \
 ```
 
 **Esperado**:
+
 - ✓ 54 productos con status "created" (simulado)
 - ✓ Todos con SKU asignado
 - ✓ Sin errores
 - ✓ Logs muestran cada paso
 
 **Si hay errores**:
+
 - Analizar mensajes de error
 - Verificar permisos GHL
 - Verificar estado de Supabase
@@ -239,6 +245,7 @@ curl -X POST http://localhost:3000/api/admin/sync-catalog \
 ```
 
 **Esperado**:
+
 - ✓ 54 productos con status "created"
 - ✓ Cada uno tiene ghlProductId y ghlPriceId
 - ✓ Cada uno tiene SKU FL-CAT-NNNN
@@ -247,12 +254,14 @@ curl -X POST http://localhost:3000/api/admin/sync-catalog \
 - ✓ Logs completamente auditables
 
 **Si hay errores parciales**:
+
 - Los productos fallidos se reportan con error message
 - El sync CONTINÚA (no fail-fast)
 - Los productos OK se crean/actualizan
 - Registrar errores para revisión
 
 **Si sync falla completamente**:
+
 - ROLLBACK: No continuar
 - Investigar root cause
 - Reparar y reintentar
@@ -269,7 +278,7 @@ SELECT COUNT(*) FROM product_metadata;
 -- Expected: >= 54
 
 -- 2. Verificar campos críticos
-SELECT 
+SELECT
   COUNT(*) as total,
   COUNT(CASE WHEN ghl_product_id IS NOT NULL THEN 1 END) as with_ghl_id,
   COUNT(CASE WHEN ghl_price_id IS NOT NULL THEN 1 END) as with_price_id,
@@ -279,22 +288,22 @@ FROM product_metadata;
 -- Expected: 54 | 54 | 54 | 54 | 54
 
 -- 3. Buscar NULL críticos
-SELECT * FROM product_metadata 
+SELECT * FROM product_metadata
 WHERE ghl_product_id IS NULL OR sku IS NULL;
 -- Expected: (empty)
 
 -- 4. Detectar duplicados por ghl_product_id
-SELECT ghl_product_id, COUNT(*) as cnt 
-FROM product_metadata 
-GROUP BY ghl_product_id 
+SELECT ghl_product_id, COUNT(*) as cnt
+FROM product_metadata
+GROUP BY ghl_product_id
 HAVING COUNT(*) > 1;
 -- Expected: (empty)
 
 -- 5. Detectar duplicados por SKU
-SELECT sku, COUNT(*) as cnt 
-FROM product_metadata 
+SELECT sku, COUNT(*) as cnt
+FROM product_metadata
 WHERE sku IS NOT NULL
-GROUP BY sku 
+GROUP BY sku
 HAVING COUNT(*) > 1;
 -- Expected: (empty)
 
@@ -304,7 +313,7 @@ FROM product_metadata
 WHERE category IS NOT NULL
 GROUP BY category
 ORDER BY category;
--- Expected: 
+-- Expected:
 -- complementos | 13
 -- condolencias | 14
 -- plantas | 13
@@ -371,6 +380,7 @@ curl -X POST http://localhost:3000/api/admin/sync-catalog \
 ```
 
 **Esperado (Idempotencia Correcta)**:
+
 ```
 summary: {
   total: 54,
@@ -393,14 +403,15 @@ SELECT COUNT(DISTINCT ghl_product_id) FROM product_metadata;
 -- Expected: 54 (NO AUMENTÓ)
 
 -- Verificar no hay nuevos duplicados
-SELECT ghl_product_id, COUNT(*) as cnt 
-FROM product_metadata 
-GROUP BY ghl_product_id 
+SELECT ghl_product_id, COUNT(*) as cnt
+FROM product_metadata
+GROUP BY ghl_product_id
 HAVING COUNT(*) > 1;
 -- Expected: (empty)
 ```
 
 **Si Idempotencia Falla**:
+
 - STOP: No continuar
 - Aparecer status "created" en 2da ejecución → BUG
 - Investigar root cause:
@@ -516,6 +527,7 @@ ESTADO FINAL:
 ---
 
 **Próximos Pasos**:
+
 1. Ejecutar verificación previa (GET endpoint)
 2. Ejecutar DRY RUN (POST dryRun: true)
 3. Ejecutar sincronización real (POST dryRun: false)

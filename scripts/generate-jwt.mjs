@@ -9,11 +9,7 @@ import { createHmac, randomBytes } from "crypto";
  */
 
 function base64url(buffer) {
-  return buffer
-    .toString("base64")
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=/g, "");
+  return buffer.toString("base64").replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
 }
 
 export function generateJWT(userId, secret, expiresIn = 3600) {
@@ -37,9 +33,7 @@ export function generateJWT(userId, secret, expiresIn = 3600) {
   const signatureInput = `${headerEncoded}.${payloadEncoded}`;
 
   // Create HMAC signature
-  const signature = base64url(
-    createHmac("sha256", secret).update(signatureInput).digest()
-  );
+  const signature = base64url(createHmac("sha256", secret).update(signatureInput).digest());
 
   return `${signatureInput}.${signature}`;
 }

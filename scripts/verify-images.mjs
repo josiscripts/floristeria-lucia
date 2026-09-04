@@ -18,8 +18,7 @@ envContent.split("\n").forEach((line) => {
 });
 
 const supabaseUrl = env.SUPABASE_URL || env.VITE_SUPABASE_URL;
-const supabaseServiceKey =
-  env.SUPABASE_SERVICE_ROLE_KEY || env.VITE_SUPABASE_SERVICE_ROLE_KEY;
+const supabaseServiceKey = env.SUPABASE_SERVICE_ROLE_KEY || env.VITE_SUPABASE_SERVICE_ROLE_KEY;
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey, {
   auth: { persistSession: false },
@@ -37,7 +36,7 @@ if (data && data.length > 0) {
   console.log("\nSample records:");
   data.forEach((img) => {
     console.log(
-      `  Product: ${img.product_id.slice(0, 8)}... Deleted: ${img.deleted_at} URL: ${img.image_url?.slice(0, 50) || "NULL"}...`
+      `  Product: ${img.product_id.slice(0, 8)}... Deleted: ${img.deleted_at} URL: ${img.image_url?.slice(0, 50) || "NULL"}...`,
     );
   });
 } else {
@@ -45,9 +44,7 @@ if (data && data.length > 0) {
 
   // Try raw query
   console.log("\nAttempting raw count...");
-  const { data: rawData, error: rawError } = await supabase
-    .from("product_images")
-    .select("*");
+  const { data: rawData, error: rawError } = await supabase.from("product_images").select("*");
 
   console.log("Raw error:", rawError);
   console.log("Raw count:", rawData?.length);

@@ -18,8 +18,7 @@ envContent.split("\n").forEach((line) => {
 });
 
 const supabaseUrl = env.SUPABASE_URL || env.VITE_SUPABASE_URL;
-const supabaseServiceKey =
-  env.SUPABASE_SERVICE_ROLE_KEY || env.VITE_SUPABASE_SERVICE_ROLE_KEY;
+const supabaseServiceKey = env.SUPABASE_SERVICE_ROLE_KEY || env.VITE_SUPABASE_SERVICE_ROLE_KEY;
 
 if (!supabaseUrl || !supabaseServiceKey) {
   console.error("Missing Supabase credentials");
@@ -82,9 +81,7 @@ async function getRealProducts() {
   Object.entries(byCategory).forEach(([cat, prods]) => {
     console.log(`\n${cat} (${prods.length}):`);
     prods.forEach((p) => {
-      console.log(
-        `  - ${p.name} [ghl_id: ${p.ghl_product_id || "NULL"}]`
-      );
+      console.log(`  - ${p.name} [ghl_id: ${p.ghl_product_id || "NULL"}]`);
     });
   });
 
@@ -93,9 +90,7 @@ async function getRealProducts() {
 
 // ACCIÓN 4: Verificar y poblar ghl_price_id
 async function populateGHLPriceIds(realProducts) {
-  console.log(
-    "\n=== ACCIÓN 3: VERIFICAR ghl_price_id ===\n"
-  );
+  console.log("\n=== ACCIÓN 3: VERIFICAR ghl_price_id ===\n");
 
   const { data: nullPrices } = await supabase
     .from("product_options")
@@ -103,9 +98,7 @@ async function populateGHLPriceIds(realProducts) {
     .is("deleted_at", null)
     .is("ghl_price_id", null);
 
-  console.log(
-    `Opciones sin ghl_price_id: ${nullPrices?.length || 0}`
-  );
+  console.log(`Opciones sin ghl_price_id: ${nullPrices?.length || 0}`);
 
   if (nullPrices && nullPrices.length > 0) {
     console.log("\nDetalles de opciones sin ghl_price_id:");
@@ -115,12 +108,8 @@ async function populateGHLPriceIds(realProducts) {
       console.log(`    ID: ${opt.id}, Precio: ${opt.price_amount}`);
     });
 
-    console.log(
-      "\nNOTA: Para población de ghl_price_id necesitamos acceso a GHL API"
-    );
-    console.log(
-      "      Se requiere ensureProductPrice() en el endpoint backend"
-    );
+    console.log("\nNOTA: Para población de ghl_price_id necesitamos acceso a GHL API");
+    console.log("      Se requiere ensureProductPrice() en el endpoint backend");
   }
 
   return nullPrices;
@@ -128,14 +117,10 @@ async function populateGHLPriceIds(realProducts) {
 
 // ACCIÓN 5: Verificar product_images
 async function checkAndCreateProductImages(realProducts) {
-  console.log(
-    "\n=== ACCIÓN 4: VERIFICAR PRODUCT_IMAGES ===\n"
-  );
+  console.log("\n=== ACCIÓN 4: VERIFICAR PRODUCT_IMAGES ===\n");
 
   // Get existing images
-  const { data: existingImages } = await supabase
-    .from("product_images")
-    .select("id, product_id");
+  const { data: existingImages } = await supabase.from("product_images").select("id, product_id");
 
   console.log(`Imágenes existentes: ${existingImages?.length || 0}`);
   console.log(`Productos que necesitan imágenes: ${realProducts.length}`);
@@ -149,9 +134,7 @@ async function checkAndCreateProductImages(realProducts) {
     imagesByProduct[img.product_id]++;
   });
 
-  const missingImages = realProducts.filter(
-    (p) => !imagesByProduct[p.id]
-  );
+  const missingImages = realProducts.filter((p) => !imagesByProduct[p.id]);
 
   console.log(`Productos sin imágenes: ${missingImages.length}`);
   if (missingImages.length > 0) {
@@ -162,9 +145,9 @@ async function checkAndCreateProductImages(realProducts) {
 
     console.log(
       "\nNOTA: Se requiere:\n" +
-      "  1. Crear URLs de imágenes (Supabase Storage o public/images)\n" +
-      "  2. Insertar en product_images tabla\n" +
-      "  3. Asociar a color_variants si es Rosas Eternas"
+        "  1. Crear URLs de imágenes (Supabase Storage o public/images)\n" +
+        "  2. Insertar en product_images tabla\n" +
+        "  3. Asociar a color_variants si es Rosas Eternas",
     );
   }
 
@@ -175,9 +158,7 @@ async function checkAndCreateProductImages(realProducts) {
 async function checkRosasEternas(realProducts) {
   console.log("\n=== ACCIÓN 5: ROSAS ETERNAS - COLORES ===\n");
 
-  const rosasProducts = realProducts.filter(
-    (p) => p.category === "rosas-eternas"
-  );
+  const rosasProducts = realProducts.filter((p) => p.category === "rosas-eternas");
 
   console.log(`Productos Rosas Eternas: ${rosasProducts.length}`);
 

@@ -5,7 +5,8 @@ import { createClient } from "@supabase/supabase-js";
 const GHL_TOKEN = "pit-0cf65f40-51a4-4e28-9793-9eb8421e2291";
 const GHL_LOCATION_ID = "vOq7yOWR63XGU4qQ7XWd";
 const SUPABASE_URL = "https://leksmflinhohnekbgmgj.supabase.co";
-const SUPABASE_SERVICE_ROLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxla3NtZmxpbmhvaG5la2JnbWdqIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NzQzNzk0OCwiZXhwIjoyMTAzMDEzOTQ4fQ.YUP3NzyBBuGYFPpQCKHmScOG7H-cInWgU4-8Z0SYFpM";
+const SUPABASE_SERVICE_ROLE_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxla3NtZmxpbmhvaG5la2JnbWdqIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NzQzNzk0OCwiZXhwIjoyMTAzMDEzOTQ4fQ.YUP3NzyBBuGYFPpQCKHmScOG7H-cInWgU4-8Z0SYFpM";
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
@@ -51,8 +52,8 @@ try {
         {
           method: "POST",
           headers: {
-            "Authorization": `Bearer ${GHL_TOKEN}`,
-            "Version": "v3",
+            Authorization: `Bearer ${GHL_TOKEN}`,
+            Version: "v3",
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
@@ -63,7 +64,7 @@ try {
             sku: option.sku,
             locationId: GHL_LOCATION_ID,
           }),
-        }
+        },
       );
 
       const priceData = await priceResponse.json();
@@ -119,7 +120,7 @@ try {
       .eq("product_id", product.id);
 
     const colorCount = colors?.length || 0;
-    const colorNames = colors?.map(c => c.name).join(", ") || "NONE";
+    const colorNames = colors?.map((c) => c.name).join(", ") || "NONE";
 
     if (colorCount === 0) {
       console.log(`✗ ${product.name}: NO COLORS - Creating defaults...`);
@@ -153,9 +154,7 @@ console.log("-".repeat(70));
 try {
   // For now, create image entries using the catalog image URLs
   // In production, you'd use real image URLs or file storage
-  const { data: products } = await supabase
-    .from("products")
-    .select("id, name, cover_image_url");
+  const { data: products } = await supabase.from("products").select("id, name, cover_image_url");
 
   let createdCount = 0;
 
@@ -170,14 +169,12 @@ try {
 
       if (!existing || existing.length === 0) {
         // Insert product image
-        const { error: insertError } = await supabase
-          .from("product_images")
-          .insert({
-            product_id: product.id,
-            image_url: product.cover_image_url,
-            is_primary: true,
-            sort_order: 1,
-          });
+        const { error: insertError } = await supabase.from("product_images").insert({
+          product_id: product.id,
+          image_url: product.cover_image_url,
+          is_primary: true,
+          sort_order: 1,
+        });
 
         if (!insertError) {
           createdCount++;
@@ -207,19 +204,22 @@ try {
     .from("product_options")
     .select("id", { count: "exact" });
 
-  const { data: images } = await supabase
-    .from("product_images")
-    .select("id", { count: "exact" });
+  const { data: images } = await supabase.from("product_images").select("id", { count: "exact" });
 
   const { data: colorVariants } = await supabase
     .from("color_variants")
     .select("id", { count: "exact" });
 
-  console.log(`Options with ghl_price_id: ${optionsWithPrice?.length || 0}/${optionsTotal?.length || 0}`);
+  console.log(
+    `Options with ghl_price_id: ${optionsWithPrice?.length || 0}/${optionsTotal?.length || 0}`,
+  );
   console.log(`Product images: ${images?.length || 0}`);
   console.log(`Color variants: ${colorVariants?.length || 0}`);
 
-  if ((optionsWithPrice?.length || 0) === (optionsTotal?.length || 0) && (optionsTotal?.length || 0) > 0) {
+  if (
+    (optionsWithPrice?.length || 0) === (optionsTotal?.length || 0) &&
+    (optionsTotal?.length || 0) > 0
+  ) {
     console.log(`✓ STATUS: ✅ PASO 2 COMPLETED - All options synced to GHL`);
   } else {
     console.log(`⚠ STATUS: ⚠️ Some options still need sync`);

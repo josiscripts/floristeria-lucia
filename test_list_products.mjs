@@ -11,20 +11,20 @@ const endpoints = [
 
 for (const endpoint of endpoints) {
   console.log(`GET ${endpoint}`);
-  
+
   try {
     const response = await fetch(`https://services.leadconnectorhq.com${endpoint}`, {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ${ghlToken}`,
+        Authorization: `Bearer ${ghlToken}`,
         "Content-Type": "application/json",
-        "Version": "v3",
+        Version: "v3",
       },
     });
 
     const text = await response.text();
     console.log(`  Status: ${response.status}`);
-    
+
     if (response.status === 200 && text) {
       try {
         const data = JSON.parse(text);

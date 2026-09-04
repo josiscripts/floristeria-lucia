@@ -24,12 +24,12 @@
 
 ### Cambios Recibibles
 
-| Cambio | Recibible | Evento |
-|--------|-----------|--------|
-| Pipeline | ✅ Sí | opportunity.updated |
-| Status | ✅ Sí | opportunity.status_change |
-| Stage | ✅ Sí | opportunity.stage_change |
-| Otros campos | ✅ Sí | opportunity.updated |
+| Cambio       | Recibible | Evento                    |
+| ------------ | --------- | ------------------------- |
+| Pipeline     | ✅ Sí     | opportunity.updated       |
+| Status       | ✅ Sí     | opportunity.status_change |
+| Stage        | ✅ Sí     | opportunity.stage_change  |
+| Otros campos | ✅ Sí     | opportunity.updated       |
 
 ---
 
@@ -97,6 +97,7 @@ X-GHL-Signature: sha256=<hash>
 ```
 
 Algoritmo:
+
 1. Tomar raw request body (no JSON parseado)
 2. Calcular: HMAC-SHA256(body, GHL_WEBHOOK_SECRET)
 3. Comparar con header X-GHL-Signature
@@ -104,32 +105,22 @@ Algoritmo:
 ### Protección contra Requests Falsos
 
 ```typescript
-function validateWebhookSignature(
-  rawBody: string,
-  signature: string,
-  secret: string
-): boolean {
-  const expected = crypto
-    .createHmac('sha256', secret)
-    .update(rawBody)
-    .digest('hex');
-  
-  return crypto.timingSafeEqual(
-    Buffer.from(signature),
-    Buffer.from(expected)
-  );
+function validateWebhookSignature(rawBody: string, signature: string, secret: string): boolean {
+  const expected = crypto.createHmac("sha256", secret).update(rawBody).digest("hex");
+
+  return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected));
 }
 ```
 
 ### Manejo de Errores
 
-| Caso | Respuesta |
-|------|-----------|
-| Validación fallida | 401 Unauthorized |
-| Payload inválido | 400 Bad Request |
+| Caso                      | Respuesta        |
+| ------------------------- | ---------------- |
+| Validación fallida        | 401 Unauthorized |
+| Payload inválido          | 400 Bad Request  |
 | Opportunity no encontrada | 200 OK (con log) |
-| Error de BD | 200 OK (con log) |
-| Éxito | 200 OK |
+| Error de BD               | 200 OK (con log) |
+| Éxito                     | 200 OK           |
 
 **REGLA CRÍTICA:** Siempre devolver 200 OK a GHL (excepto 401/403 por validación)
 
@@ -154,17 +145,20 @@ function validateWebhookSignature(
 ### Estrategia 3-Layer
 
 **Capa 1 (Rápida):**
+
 ```sql
 SELECT * FROM orders WHERE ghl_opportunity_id = 'gDfRAWhIp0dJ7TVO1G0D'
 ```
 
 **Capa 2 (Fallback):**
+
 ```
 Extraer WWKLWHR7EUDeGPi7zlOH del customFields del webhook
 SELECT * FROM orders WHERE id = customField.value
 ```
 
 **Capa 3:**
+
 ```
 NO usar order_number (peligro de actualizar orden equivocada)
 ```
@@ -175,14 +169,14 @@ NO usar order_number (peligro de actualizar orden equivocada)
 
 ### Estados GHL (Stages actuales)
 
-| Stage ID | Nombre | Descripción |
-|----------|--------|-------------|
-| 1de8d7dc-deac-45a6-a87e-e7198c3ef4a5 | Recibido | Pedido recibido |
+| Stage ID                             | Nombre     | Descripción       |
+| ------------------------------------ | ---------- | ----------------- |
+| 1de8d7dc-deac-45a6-a87e-e7198c3ef4a5 | Recibido   | Pedido recibido   |
 | a737a3b9-98fd-4446-8f15-eb26333cc6f3 | Confirmado | Pedido confirmado |
-| 72c6b0eb-a0ae-4cd5-b122-482add4dd6c7 | Preparando | En preparación |
-| ba7e6913-7173-43cd-9d94-bf66e2add4a1 | Listo | Listo para envío |
-| 910fc366-8299-49a0-aaf4-99e15558fd07 | Entregado | Entregado |
-| bedbab33-62f0-41fd-b51e-a6b2ad0aa8ed | Cancelado | Cancelado |
+| 72c6b0eb-a0ae-4cd5-b122-482add4dd6c7 | Preparando | En preparación    |
+| ba7e6913-7173-43cd-9d94-bf66e2add4a1 | Listo      | Listo para envío  |
+| 910fc366-8299-49a0-aaf4-99e15558fd07 | Entregado  | Entregado         |
+| bedbab33-62f0-41fd-b51e-a6b2ad0aa8ed | Cancelado  | Cancelado         |
 
 ### Estados Supabase (PROPUESTA)
 
@@ -219,6 +213,7 @@ GHL puede enviar el mismo webhook múltiples veces por retry, redeployment, etc.
 ### Solución: webhook_delivery_id
 
 GHL envía en cada payload:
+
 ```json
 {
   "deliveryId": "webhook_delivery_1234567890",
@@ -276,7 +271,7 @@ GHL envía en cada payload:
 ✅ Webhook recibido (event, deliveryId, opportunityId)  
 ✅ Orden encontrada (orderId)  
 ✅ Cambio de estado (previousStatus → newStatus)  
-✅ Resultado de actualización (success/error)  
+✅ Resultado de actualización (success/error)
 
 ### Qué NO Loguear
 
@@ -331,7 +326,7 @@ CREATE INDEX idx_webhook_delivery_id ON webhook_events(delivery_id);
 ```sql
 ALTER TABLE webhook_events ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY webhook_events_service_role_all 
+CREATE POLICY webhook_events_service_role_all
   ON webhook_events FOR ALL
   USING (auth.role() = 'service_role');
 
@@ -347,7 +342,7 @@ GRANT ALL PRIVILEGES ON webhook_events TO service_role;
 ⚠️ **Latencia de delivery:** 1-5 segundos, no garantizado  
 ⚠️ **Orden de eventos:** Si A→B→C rápidamente, puede llegar C antes que B  
 ⚠️ **Sin GET /webhooks/{id}:** No hay histórico automático de entrega  
-⚠️ **Custom fields limitados:** >50 campos no se incluyen en payload  
+⚠️ **Custom fields limitados:** >50 campos no se incluyen en payload
 
 ---
 
@@ -356,6 +351,7 @@ GRANT ALL PRIVILEGES ON webhook_events TO service_role;
 ### FASE 4.1 — EXTENSIÓN DE TIPOS Y MAPEO
 
 **Qué se modifica:**
+
 - `src/lib/ghl/types.ts` (agregar tipos de webhook)
 - `src/lib/ghl/client.server.ts` (agregar utilidades de mapeo)
 
@@ -368,6 +364,7 @@ GRANT ALL PRIVILEGES ON webhook_events TO service_role;
 ### FASE 4.2 — MIGRACIÓN DE BASE DE DATOS
 
 **Qué se modifica:**
+
 - `supabase/migrations/20260829_expand_order_status_enum.sql` (NEW)
 - `supabase/migrations/20260829_create_webhook_events_table.sql` (NEW)
 
@@ -379,6 +376,7 @@ GRANT ALL PRIVILEGES ON webhook_events TO service_role;
 ### FASE 4.3 — ENDPOINT WEBHOOK
 
 **Qué se modifica:**
+
 - `src/routes/api.webhooks.ghl-opportunity.ts` (NEW)
 - `.env.local` (agregar `GHL_WEBHOOK_SECRET` - manual del usuario)
 
@@ -392,6 +390,7 @@ GRANT ALL PRIVILEGES ON webhook_events TO service_role;
 **Qué se modifica:** Configuración en GHL Dashboard (manual del usuario)
 
 **Pasos manuales:**
+
 1. GHL Dashboard → Settings → Integrations → Webhooks
 2. Create Webhook
    - URL: `https://tu-dominio.com/api/webhooks/ghl-opportunity`
@@ -405,12 +404,14 @@ GRANT ALL PRIVILEGES ON webhook_events TO service_role;
 ### FASE 4.5 — INTEGRACIÓN CON ORDEN Y TESTING
 
 **Qué se modifica:**
+
 - `test_fase4_e2e.py` (NEW - test script)
 - Potencial: `src/lib/orders.server.ts` (si hay efectos secundarios)
 
 **Endpoint:** `POST /api/webhooks/ghl-opportunity`
 
 **Test E2E:**
+
 1. Crear orden de prueba
 2. Cambiar stage en GHL Dashboard
 3. Verificar orden actualizada en Supabase
@@ -425,6 +426,7 @@ GRANT ALL PRIVILEGES ON webhook_events TO service_role;
 ### ✅ AUDITORÍA COMPLETADA
 
 **Hallazgos principales:**
+
 1. GHL tiene soporte completo para webhooks de opportunities
 2. Arquitectura actual puede soportar webhooks sin cambios mayores
 3. Necesarias 3 migraciones Supabase (enum status, webhook_events, RLS)

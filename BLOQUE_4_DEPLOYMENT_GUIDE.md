@@ -49,8 +49,8 @@ After migration, run this query to verify:
 
 ```sql
 -- Check new tables exist
-SELECT table_name FROM information_schema.tables 
-WHERE table_schema = 'public' 
+SELECT table_name FROM information_schema.tables
+WHERE table_schema = 'public'
 AND table_name IN ('products', 'product_options', 'color_variants', 'product_images');
 
 -- Check indexes
@@ -58,7 +58,7 @@ SELECT indexname FROM pg_indexes WHERE tablename = 'products';
 SELECT indexname FROM pg_indexes WHERE tablename = 'product_options';
 
 -- Check RLS is enabled
-SELECT tablename, rowsecurity FROM pg_tables 
+SELECT tablename, rowsecurity FROM pg_tables
 WHERE tablename IN ('products', 'product_options', 'color_variants');
 ```
 
@@ -133,7 +133,7 @@ async function createTestProducts() {
         },
         body: JSON.stringify(product)
       });
-      
+
       const data = await response.json();
       if (response.ok) {
         console.log(`✓ Created: ${product.name}`);
@@ -164,9 +164,9 @@ After creating test products, run these queries:
 
 ```sql
 -- Verify products created
-SELECT id, ghl_product_id, name, category, active 
-FROM products 
-ORDER BY created_at DESC 
+SELECT id, ghl_product_id, name, category, active
+FROM products
+ORDER BY created_at DESC
 LIMIT 5;
 
 -- Verify options created
@@ -257,6 +257,7 @@ curl -X GET https://your-domain.vercel.app/api/admin/products \
 After deployment, verify:
 
 ### Database ✓
+
 - [ ] All 3 new tables created
 - [ ] All indexes created
 - [ ] RLS policies in place
@@ -264,6 +265,7 @@ After deployment, verify:
 - [ ] Triggers for updated_at working
 
 ### API Endpoints ✓
+
 - [ ] POST /api/admin/products → creates product + options + colors
 - [ ] GET /api/admin/products → lists all products
 - [ ] GET /api/admin/products/{id} → gets product with options
@@ -276,6 +278,7 @@ After deployment, verify:
 - [ ] DELETE /api/admin/products/{id}/colors/{colorId} → deletes color
 
 ### GHL Sync ✓
+
 - [ ] Products appear in GHL catalog
 - [ ] Prices created in GHL (one per option)
 - [ ] SKUs generated and populated
@@ -283,12 +286,14 @@ After deployment, verify:
 - [ ] No duplicate products/prices
 
 ### Security ✓
+
 - [ ] All endpoints require auth (withAdminGuard)
 - [ ] RLS policies enforced
 - [ ] Audit logs recorded
 - [ ] No test endpoints exposed
 
 ### Build ✓
+
 - [ ] TypeScript: 0 errors
 - [ ] Linting: passes
 - [ ] No console warnings (from our code)
@@ -339,18 +344,21 @@ ALTER TABLE products ENABLE ROW LEVEL SECURITY;
 After deployment, monitor:
 
 ### Supabase Dashboard
+
 - Database Health
 - Query Performance
 - Storage Usage
 - API Usage
 
 ### Vercel Deployment
+
 - Function Runtime
 - Error Logs
 - Performance Metrics
 - Build Failures
 
 ### Application Logs
+
 - Check for API errors
 - GHL sync failures
 - Validation errors
@@ -367,9 +375,10 @@ supabase logs pull
 ## TROUBLESHOOTING
 
 ### Migration Fails
+
 - **Error:** Foreign key constraint
   - **Solution:** Ensure product_images table exists first
-  
+
 - **Error:** Column already exists
   - **Solution:** Migration already applied, safe to ignore
 
@@ -377,6 +386,7 @@ supabase logs pull
   - **Solution:** Check schema name is 'public'
 
 ### API Endpoint 404
+
 - **Solution:** Ensure route files are in correct path:
   - `src/routes/api.admin.products.ts`
   - `src/routes/api.admin.products.$id.ts`
@@ -384,16 +394,19 @@ supabase logs pull
   - `src/routes/api.admin.products.$id.colors.ts`
 
 ### GHL Sync Failed
+
 - Check GHL_API_KEY and GHL_LOCATION_ID in env
 - Check location has sufficient permissions
 - Verify network connectivity
 - Check GHL API rate limits
 
 ### Duplicate Products
+
 - **Cause:** Missing ghl_product_id UNIQUE constraint
 - **Fix:** Manually delete duplicates, check constraint exists
 
 ### Build Errors
+
 ```bash
 # Clean and rebuild
 rm -rf node_modules .nuxt .dist
