@@ -23,7 +23,6 @@ import { Route as RosasEternasRouteImport } from './routes/rosas-eternas'
 import { Route as ServiciosRouteImport } from './routes/servicios'
 import { Route as SobreNosotrosRouteImport } from './routes/sobre-nosotros'
 import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
-import { Route as AuthenticatedConfiguracionRouteImport } from './routes/_authenticated/configuracion'
 import { Route as AuthenticatedMiCuentaRouteImport } from './routes/_authenticated/mi-cuenta'
 import { Route as ApiAddressesRouteImport } from './routes/api.addresses'
 import { Route as ApiAuditLogsRouteImport } from './routes/api.audit-logs'
@@ -49,6 +48,7 @@ import { Route as AuthenticatedAdminProductsRouteImport } from './routes/_authen
 import { Route as AuthenticatedAdminReportsRouteImport } from './routes/_authenticated/admin/reports'
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin/settings'
 import { Route as AuthenticatedAdminWebhooksRouteImport } from './routes/_authenticated/admin/webhooks'
+import { Route as AuthenticatedMiCuentaConfiguracionRouteImport } from './routes/_authenticated/mi-cuenta.configuracion'
 import { Route as AuthenticatedMiCuentaPedidosRouteImport } from './routes/_authenticated/mi-cuenta.pedidos'
 import { Route as ApiAccountOrdersRouteImport } from './routes/api.account.orders'
 import { Route as ApiAdminDebugEnvRouteImport } from './routes/api.admin.debug-env'
@@ -145,12 +145,6 @@ const AuthenticatedAdminRouteRoute = AuthenticatedAdminRouteRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedConfiguracionRoute =
-  AuthenticatedConfiguracionRouteImport.update({
-    id: '/configuracion',
-    path: '/configuracion',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
 const AuthenticatedMiCuentaRoute = AuthenticatedMiCuentaRouteImport.update({
   id: '/mi-cuenta',
   path: '/mi-cuenta',
@@ -282,6 +276,12 @@ const AuthenticatedAdminWebhooksRoute =
     id: '/webhooks',
     path: '/webhooks',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedMiCuentaConfiguracionRoute =
+  AuthenticatedMiCuentaConfiguracionRouteImport.update({
+    id: '/configuracion',
+    path: '/configuracion',
+    getParentRoute: () => AuthenticatedMiCuentaRoute,
   } as any)
 const AuthenticatedMiCuentaPedidosRoute =
   AuthenticatedMiCuentaPedidosRouteImport.update({
@@ -439,7 +439,6 @@ export interface FileRoutesByFullPath {
   '/servicios': typeof ServiciosRouteWithChildren
   '/sobre-nosotros': typeof SobreNosotrosRoute
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
-  '/configuracion': typeof AuthenticatedConfiguracionRoute
   '/mi-cuenta': typeof AuthenticatedMiCuentaRouteWithChildren
   '/api/addresses': typeof ApiAddressesRoute
   '/api/audit-logs': typeof ApiAuditLogsRoute
@@ -464,6 +463,7 @@ export interface FileRoutesByFullPath {
   '/admin/reports': typeof AuthenticatedAdminReportsRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/webhooks': typeof AuthenticatedAdminWebhooksRoute
+  '/mi-cuenta/configuracion': typeof AuthenticatedMiCuentaConfiguracionRoute
   '/mi-cuenta/pedidos': typeof AuthenticatedMiCuentaPedidosRoute
   '/api/account/orders': typeof ApiAccountOrdersRoute
   '/api/admin/debug-env': typeof ApiAdminDebugEnvRoute
@@ -504,7 +504,6 @@ export interface FileRoutesByTo {
   '/personalizar-ramo': typeof PersonalizarRamoRoute
   '/rosas-eternas': typeof RosasEternasRoute
   '/sobre-nosotros': typeof SobreNosotrosRoute
-  '/configuracion': typeof AuthenticatedConfiguracionRoute
   '/mi-cuenta': typeof AuthenticatedMiCuentaRouteWithChildren
   '/api/addresses': typeof ApiAddressesRoute
   '/api/audit-logs': typeof ApiAuditLogsRoute
@@ -527,6 +526,7 @@ export interface FileRoutesByTo {
   '/admin/reports': typeof AuthenticatedAdminReportsRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/webhooks': typeof AuthenticatedAdminWebhooksRoute
+  '/mi-cuenta/configuracion': typeof AuthenticatedMiCuentaConfiguracionRoute
   '/mi-cuenta/pedidos': typeof AuthenticatedMiCuentaPedidosRoute
   '/api/account/orders': typeof ApiAccountOrdersRoute
   '/api/admin/debug-env': typeof ApiAdminDebugEnvRoute
@@ -571,7 +571,6 @@ export interface FileRoutesById {
   '/servicios': typeof ServiciosRouteWithChildren
   '/sobre-nosotros': typeof SobreNosotrosRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
-  '/_authenticated/configuracion': typeof AuthenticatedConfiguracionRoute
   '/_authenticated/mi-cuenta': typeof AuthenticatedMiCuentaRouteWithChildren
   '/api/addresses': typeof ApiAddressesRoute
   '/api/audit-logs': typeof ApiAuditLogsRoute
@@ -596,6 +595,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/reports': typeof AuthenticatedAdminReportsRoute
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/_authenticated/admin/webhooks': typeof AuthenticatedAdminWebhooksRoute
+  '/_authenticated/mi-cuenta/configuracion': typeof AuthenticatedMiCuentaConfiguracionRoute
   '/_authenticated/mi-cuenta/pedidos': typeof AuthenticatedMiCuentaPedidosRoute
   '/api/account/orders': typeof ApiAccountOrdersRoute
   '/api/admin/debug-env': typeof ApiAdminDebugEnvRoute
@@ -640,7 +640,6 @@ export interface FileRouteTypes {
     | '/servicios'
     | '/sobre-nosotros'
     | '/admin'
-    | '/configuracion'
     | '/mi-cuenta'
     | '/api/addresses'
     | '/api/audit-logs'
@@ -665,6 +664,7 @@ export interface FileRouteTypes {
     | '/admin/reports'
     | '/admin/settings'
     | '/admin/webhooks'
+    | '/mi-cuenta/configuracion'
     | '/mi-cuenta/pedidos'
     | '/api/account/orders'
     | '/api/admin/debug-env'
@@ -705,7 +705,6 @@ export interface FileRouteTypes {
     | '/personalizar-ramo'
     | '/rosas-eternas'
     | '/sobre-nosotros'
-    | '/configuracion'
     | '/mi-cuenta'
     | '/api/addresses'
     | '/api/audit-logs'
@@ -728,6 +727,7 @@ export interface FileRouteTypes {
     | '/admin/reports'
     | '/admin/settings'
     | '/admin/webhooks'
+    | '/mi-cuenta/configuracion'
     | '/mi-cuenta/pedidos'
     | '/api/account/orders'
     | '/api/admin/debug-env'
@@ -771,7 +771,6 @@ export interface FileRouteTypes {
     | '/servicios'
     | '/sobre-nosotros'
     | '/_authenticated/admin'
-    | '/_authenticated/configuracion'
     | '/_authenticated/mi-cuenta'
     | '/api/addresses'
     | '/api/audit-logs'
@@ -796,6 +795,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/reports'
     | '/_authenticated/admin/settings'
     | '/_authenticated/admin/webhooks'
+    | '/_authenticated/mi-cuenta/configuracion'
     | '/_authenticated/mi-cuenta/pedidos'
     | '/api/account/orders'
     | '/api/admin/debug-env'
@@ -964,13 +964,6 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AuthenticatedAdminRouteRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/configuracion': {
-      id: '/_authenticated/configuracion'
-      path: '/configuracion'
-      fullPath: '/configuracion'
-      preLoaderRoute: typeof AuthenticatedConfiguracionRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/mi-cuenta': {
@@ -1147,6 +1140,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/webhooks'
       preLoaderRoute: typeof AuthenticatedAdminWebhooksRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/mi-cuenta/configuracion': {
+      id: '/_authenticated/mi-cuenta/configuracion'
+      path: '/configuracion'
+      fullPath: '/mi-cuenta/configuracion'
+      preLoaderRoute: typeof AuthenticatedMiCuentaConfiguracionRouteImport
+      parentRoute: typeof AuthenticatedMiCuentaRoute
     }
     '/_authenticated/mi-cuenta/pedidos': {
       id: '/_authenticated/mi-cuenta/pedidos'
@@ -1395,10 +1395,13 @@ const AuthenticatedAdminRouteRouteWithChildren =
   )
 
 interface AuthenticatedMiCuentaRouteChildren {
+  AuthenticatedMiCuentaConfiguracionRoute: typeof AuthenticatedMiCuentaConfiguracionRoute
   AuthenticatedMiCuentaPedidosRoute: typeof AuthenticatedMiCuentaPedidosRoute
 }
 
 const AuthenticatedMiCuentaRouteChildren: AuthenticatedMiCuentaRouteChildren = {
+  AuthenticatedMiCuentaConfiguracionRoute:
+    AuthenticatedMiCuentaConfiguracionRoute,
   AuthenticatedMiCuentaPedidosRoute: AuthenticatedMiCuentaPedidosRoute,
 }
 
@@ -1409,13 +1412,11 @@ const AuthenticatedMiCuentaRouteWithChildren =
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRouteWithChildren
-  AuthenticatedConfiguracionRoute: typeof AuthenticatedConfiguracionRoute
   AuthenticatedMiCuentaRoute: typeof AuthenticatedMiCuentaRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRouteRoute: AuthenticatedAdminRouteRouteWithChildren,
-  AuthenticatedConfiguracionRoute: AuthenticatedConfiguracionRoute,
   AuthenticatedMiCuentaRoute: AuthenticatedMiCuentaRouteWithChildren,
 }
 

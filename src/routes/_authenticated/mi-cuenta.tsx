@@ -80,7 +80,7 @@ function AccountPage() {
 
           {/* Tab: Settings */}
           <TabsContent value="settings">
-            <SettingsPreview onNavigate={() => window.location.href = "/mi-cuenta/configuracion"} />
+            <SettingsPreview onNavigate={() => navigate({ to: "/mi-cuenta/configuracion" })} />
           </TabsContent>
         </Tabs>
 

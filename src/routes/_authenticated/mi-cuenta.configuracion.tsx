@@ -15,7 +15,7 @@ import { PreferenciasNotificacionesSection } from "@/components/account/settings
 import { CuentasVinculadasSection } from "@/components/account/settings/CuentasVinculadasSection";
 import { PrivacidadSection } from "@/components/account/settings/PrivacidadSection";
 
-export const Route = createFileRoute("/_authenticated/configuracion")({
+export const Route = createFileRoute("/_authenticated/mi-cuenta/configuracion")({
   head: () => ({
     meta: [
       { title: "Configuración · floristeria lucia" },
