@@ -1,7 +1,7 @@
 -- Create addresses table for user shipping addresses
 -- FASE 3 - Configuration section
 
-CREATE TABLE public.addresses (
+CREATE TABLE IF NOT EXISTS public.addresses (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   label text DEFAULT 'Home' NOT NULL, -- "Home", "Office", "Other"

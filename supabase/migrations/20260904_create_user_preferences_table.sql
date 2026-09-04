@@ -1,7 +1,7 @@
 -- Create user preferences table for communication preferences and purchase preferences
 -- FASE 3 - Configuration section
 
-CREATE TABLE public.user_preferences (
+CREATE TABLE IF NOT EXISTS public.user_preferences (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id uuid UNIQUE NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   -- Communication preferences
