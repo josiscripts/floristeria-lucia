@@ -16,11 +16,11 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { GHLStatusBadge } from "@/components/admin/GHLStatusBadge";
 import { ProductForm, type ProductFormValues } from "@/components/admin/ProductForm";
 import { LoadingState } from "@/components/admin/LoadingState";
 import { ErrorState } from "@/components/admin/ErrorState";
-import { fetchProductById, updateProduct, deactivateProduct } from "@/lib/admin/api";
+import { fetchProductByIdNew, updateProductNew, deactivateProductNew } from "@/lib/admin/api";
+import { syncProductImages } from "@/lib/product-images-sync";
 
 export const Route = createFileRoute("/_authenticated/admin/products/$id")({
   component: EditProductPage,
@@ -35,13 +35,27 @@ function EditProductPage() {
 
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["admin", "product", id],
-    queryFn: () => fetchProductById(id),
+    queryFn: () => fetchProductByIdNew(id),
   });
 
   const handleSubmit = async (values: ProductFormValues) => {
     setSubmitting(true);
     try {
-      await updateProduct(id, values);
+      const originalImages = data?.product.product_images || [];
+
+      await updateProductNew(id, {
+        name: values.name,
+        description: values.description,
+        category_id: values.category,
+        active: values.active,
+        cover_image_url: values.cover_image_url,
+        has_color_variants: values.has_color_variants,
+      });
+
+      if (values.images.length > 0 || originalImages.length > 0) {
+        await syncProductImages(id, originalImages, values.images);
+      }
+
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ["admin", "product", id] }),
         queryClient.invalidateQueries({ queryKey: ["admin", "products"] }),
@@ -57,7 +71,7 @@ function EditProductPage() {
   const handleDeactivate = async () => {
     setDeactivating(true);
     try {
-      await deactivateProduct(id);
+      await deactivateProductNew(id);
       toast.success("Producto desactivado correctamente");
       navigate({ to: "/admin/products" });
     } catch (err) {
@@ -77,7 +91,7 @@ function EditProductPage() {
           </Link>
         </Button>
 
-        {data?.product.status === "active" && (
+        {data?.product.active && (
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button variant="destructive" size="sm">
@@ -90,7 +104,7 @@ function EditProductPage() {
                 <AlertDialogTitle>¿Desactivar este producto?</AlertDialogTitle>
                 <AlertDialogDescription>
                   El producto dejará de estar disponible en la tienda pública. Esta acción se puede
-                  revertir editándolo de nuevo en GoHighLevel.
+                  revertir editándolo nuevamente.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -117,26 +131,26 @@ function EditProductPage() {
         <>
           <div className="flex items-center gap-3">
             <h1 className="font-display text-2xl text-foreground">{data.product.name}</h1>
-            <GHLStatusBadge status={data.product.status} />
           </div>
 
           <ProductForm
-            initialValues={{
+            initialProduct={{
+              id: id,
               name: data.product.name,
               description: data.product.description,
-              price: data.product.price,
-              category: data.product.category,
-              image: data.product.image,
-              sku: data.product.sku,
-              price_max: data.metadata?.price_max ?? undefined,
-              badge_label: data.metadata?.badge_label ?? undefined,
-              rose_step: data.metadata?.rose_step ?? undefined,
-              available_colors: data.metadata?.available_colors ?? undefined,
-              requires_quote: data.metadata?.requires_quote ?? undefined,
-            }}
+              category: data.product.category_id || undefined,
+              active: data.product.active,
+              cover_image_url: data.product.cover_image_url,
+              has_color_variants: data.product.has_color_variants,
+              options: data.product.product_options,
+              images: data.product.product_images,
+              color_variants: data.product.color_variants,
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+              deleted_at: null,
+            } as any}
             onSubmit={handleSubmit}
-            submitting={submitting}
-            submitLabel="Guardar cambios"
+            isLoading={submitting}
           />
         </>
       )}

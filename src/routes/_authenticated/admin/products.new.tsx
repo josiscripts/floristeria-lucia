@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { ProductForm, type ProductFormValues } from "@/components/admin/ProductForm";
 import { createProductNew } from "@/lib/admin/api";
+import { syncProductImages } from "@/lib/product-images-sync";
 
 export const Route = createFileRoute("/_authenticated/admin/products/new")({
   component: NewProductPage,
@@ -22,7 +23,7 @@ function NewProductPage() {
     setSubmitting(true);
     setError(null);
     try {
-      await createProductNew({
+      const response = await createProductNew({
         name: values.name,
         description: values.description,
         category: values.category,
@@ -32,6 +33,12 @@ function NewProductPage() {
         options: values.options,
         color_variants: values.color_variants,
       });
+
+      const productId = (response as any).product?.id;
+      if (productId && values.images.length > 0) {
+        await syncProductImages(productId, [], values.images);
+      }
+
       const productName = values.name || "Producto";
       toast.success(`${productName} creado correctamente`);
       await queryClient.invalidateQueries({ queryKey: ["admin", "products"] });

@@ -17,7 +17,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { categoryLabels } from "@/data/catalog";
+import { useSupabaseCategories } from "@/hooks/useSupabaseCategories";
+import { syncProductImages } from "@/lib/product-images-sync";
 import { ProductOptionsEditor } from "./ProductOptionsEditor";
 import { ProductImagesEditor } from "./ProductImagesEditor";
 
@@ -42,6 +43,12 @@ export interface ProductFormValues {
     stock_quantity?: number | null;
   }>;
   color_variants?: string[];
+  images: Array<{
+    id: string;
+    image_url: string | null;
+    is_primary: boolean;
+    sort_order?: number;
+  }>;
 }
 
 interface ProductFormProps {
@@ -57,8 +64,6 @@ interface ProductFormProps {
   syncStatus?: "synchronized" | "pending" | "error" | null;
 }
 
-const CATEGORY_OPTIONS = Object.values(categoryLabels);
-
 export function ProductForm({
   initialProduct,
   isNew = false,
@@ -67,6 +72,8 @@ export function ProductForm({
   error,
   syncStatus,
 }: ProductFormProps) {
+  const { data: categories = [] } = useSupabaseCategories();
+
   const [name, setName] = useState(initialProduct?.name ?? "");
   const [description, setDescription] = useState(initialProduct?.description ?? "");
   const [category, setCategory] = useState(initialProduct?.category ?? "");
@@ -134,6 +141,12 @@ export function ProductForm({
           stock_quantity: opt.stock_quantity,
         })),
         color_variants: colorVariants.map((cv) => cv.name),
+        images: images.map((img) => ({
+          id: img.id,
+          image_url: img.image_url,
+          is_primary: img.is_primary,
+          sort_order: img.sort_order,
+        })),
       };
 
       await onSubmit(values);
@@ -242,9 +255,9 @@ export function ProductForm({
                       <SelectValue placeholder="Selecciona una categoría" />
                     </SelectTrigger>
                     <SelectContent>
-                      {CATEGORY_OPTIONS.map((label) => (
-                        <SelectItem key={label} value={label}>
-                          {label}
+                      {categories.map((cat) => (
+                        <SelectItem key={cat.id} value={cat.id}>
+                          {cat.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
