@@ -161,7 +161,9 @@ export function DireccionesSection({ user }: DireccionesSectionProps) {
       {showForm && (
         <Card className="border border-border/40 p-6">
           <h3 className="mb-6 font-display text-xl text-foreground">
-            {editingId ? t("auth.account.settings.editAddress") : t("auth.account.settings.newAddress")}
+            {editingId
+              ? t("auth.account.settings.editAddress")
+              : t("auth.account.settings.newAddress")}
           </h3>
 
           <div className="space-y-4">

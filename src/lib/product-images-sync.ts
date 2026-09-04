@@ -10,7 +10,7 @@ interface ImageRecord {
 export async function syncProductImages(
   productId: string,
   originalImages: ImageRecord[],
-  updatedImages: ImageRecord[]
+  updatedImages: ImageRecord[],
 ) {
   const newImages = updatedImages.filter((img) => img.id.startsWith("temp-"));
   const existingUpdated = updatedImages.filter((img) => !img.id.startsWith("temp-"));
@@ -40,7 +40,10 @@ export async function syncProductImages(
   // Update existing images (primary status, sort order)
   for (const img of existingUpdated) {
     const original = originalImages.find((o) => o.id === img.id);
-    if (original && (original.is_primary !== img.is_primary || original.sort_order !== img.sort_order)) {
+    if (
+      original &&
+      (original.is_primary !== img.is_primary || original.sort_order !== img.sort_order)
+    ) {
       try {
         const res = await updateProductImage(productId, img.id, {
           is_primary: img.is_primary,

@@ -74,7 +74,9 @@ export async function queueSyncRetry(
 
     if (error) throw error;
 
-    console.log(`[SyncRetry] Queued ${operation} for product ${productId}, next retry at ${nextRetry.toISOString()}`);
+    console.log(
+      `[SyncRetry] Queued ${operation} for product ${productId}, next retry at ${nextRetry.toISOString()}`,
+    );
     return { success: true };
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";
@@ -117,7 +119,9 @@ export async function updateSyncStatus(
  * Mark a product as successfully synced
  * Clears any error message
  */
-export async function markSyncedSuccess(productId: string): Promise<{ success: boolean; error?: string }> {
+export async function markSyncedSuccess(
+  productId: string,
+): Promise<{ success: boolean; error?: string }> {
   return updateSyncStatus(productId, "synced", null);
 }
 
@@ -132,7 +136,11 @@ export async function markSyncFailed(
 ): Promise<{ success: boolean; error?: string }> {
   try {
     // Update product status
-    const statusRes = await updateSyncStatus(productId, "error", sanitizeErrorMessage(errorMessage));
+    const statusRes = await updateSyncStatus(
+      productId,
+      "error",
+      sanitizeErrorMessage(errorMessage),
+    );
     if (!statusRes.success) return statusRes;
 
     // Queue retry if requested

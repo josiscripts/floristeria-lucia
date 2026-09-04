@@ -13,9 +13,7 @@ interface PreferenciasNotificacionesProps {
   user: User;
 }
 
-export function PreferenciasNotificacionesSection({
-  user,
-}: PreferenciasNotificacionesProps) {
+export function PreferenciasNotificacionesSection({ user }: PreferenciasNotificacionesProps) {
   const t = useT();
   const [preferences, setPreferences] = useState({
     email_newsletter_promotions: true,
@@ -31,9 +29,7 @@ export function PreferenciasNotificacionesSection({
       try {
         const { data } = await supabase
           .from("user_preferences")
-          .select(
-            "email_newsletter_promotions, email_newsletter_news, email_order_updates"
-          )
+          .select("email_newsletter_promotions, email_newsletter_news, email_order_updates")
           .eq("user_id", user.id)
           .single();
 
@@ -123,9 +119,7 @@ export function PreferenciasNotificacionesSection({
             <Checkbox
               id="orderUpdates"
               checked={preferences.email_order_updates}
-              onCheckedChange={(checked) =>
-                handleChange("email_order_updates", checked as boolean)
-              }
+              onCheckedChange={(checked) => handleChange("email_order_updates", checked as boolean)}
             />
             <Label htmlFor="orderUpdates" className="cursor-pointer text-sm font-normal">
               {t("auth.account.settings.orderUpdates")}

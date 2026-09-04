@@ -25,7 +25,7 @@ export function AccountTabContent({ user, favorites }: AccountTabContentProps) {
     const timestamp = new Date().toLocaleTimeString();
 
     console.log(
-      `[AccountTab Fetch #${fetchNumber}] Start - ${timestamp} | authLoading=${authLoading} | session=${!!session} | token=${!!session?.access_token}`
+      `[AccountTab Fetch #${fetchNumber}] Start - ${timestamp} | authLoading=${authLoading} | session=${!!session} | token=${!!session?.access_token}`,
     );
 
     const fetchOrderCount = async () => {
@@ -66,7 +66,10 @@ export function AccountTabContent({ user, favorites }: AccountTabContentProps) {
           console.log(`[AccountTab Fetch #${fetchNumber}] Error status - not ok`);
         }
       } catch (error) {
-        console.error(`[AccountTab Fetch #${fetchNumber}] Exception:`, error instanceof Error ? error.message : error);
+        console.error(
+          `[AccountTab Fetch #${fetchNumber}] Exception:`,
+          error instanceof Error ? error.message : error,
+        );
       } finally {
         setLoading(false);
         console.log(`[AccountTab Fetch #${fetchNumber}] Complete`);

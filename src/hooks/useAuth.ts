@@ -16,7 +16,7 @@ export function useAuth() {
     const { data: sub } = supabase.auth.onAuthStateChange((_event, next) => {
       authStateChangeCount += 1;
       console.log(
-        `[useAuth] onAuthStateChange #${authStateChangeCount} - event=${_event}, hasSession=${!!next}, hasToken=${!!next?.access_token}`
+        `[useAuth] onAuthStateChange #${authStateChangeCount} - event=${_event}, hasSession=${!!next}, hasToken=${!!next?.access_token}`,
       );
       setSession(next);
       setLoading(false);
@@ -25,7 +25,7 @@ export function useAuth() {
     supabase.auth.getSession().then(({ data }) => {
       getSessionCount += 1;
       console.log(
-        `[useAuth] getSession #${getSessionCount} - hasSession=${!!data.session}, hasToken=${!!data.session?.access_token}`
+        `[useAuth] getSession #${getSessionCount} - hasSession=${!!data.session}, hasToken=${!!data.session?.access_token}`,
       );
       setSession(data.session);
       setLoading(false);

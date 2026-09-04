@@ -70,12 +70,7 @@ function NewProductPage() {
         </p>
       </div>
 
-      <ProductForm
-        isNew={true}
-        onSubmit={handleSubmit}
-        isLoading={submitting}
-        error={error}
-      />
+      <ProductForm isNew={true} onSubmit={handleSubmit} isLoading={submitting} error={error} />
     </div>
   );
 }

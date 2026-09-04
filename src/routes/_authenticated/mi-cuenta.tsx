@@ -18,8 +18,7 @@ export const Route = createFileRoute("/_authenticated/mi-cuenta")({
       { title: "Mi cuenta · floristeria lucia" },
       {
         name: "description",
-        content:
-          "Gestiona tu cuenta, ve tus pedidos y favoritos en floristeria lucia.",
+        content: "Gestiona tu cuenta, ve tus pedidos y favoritos en floristeria lucia.",
       },
       { property: "og:title", content: "Mi cuenta · floristeria lucia" },
       { property: "og:description", content: "Tu cuenta en floristeria lucia." },

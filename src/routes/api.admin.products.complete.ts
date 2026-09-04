@@ -805,11 +805,7 @@ const PUT = withAdminGuard(async (request, admin) => {
       const updatedProduct = await getProduct(id);
       if (updatedProduct.success) {
         const options = await listProductOptions(id);
-        const syncResult = await syncProductToGHL(
-          updatedProduct.data,
-          options.data ?? [],
-          true,
-        );
+        const syncResult = await syncProductToGHL(updatedProduct.data, options.data ?? [], true);
 
         if (!syncResult.success) {
           await updateProductSyncStatus(id, "error", syncResult.error);

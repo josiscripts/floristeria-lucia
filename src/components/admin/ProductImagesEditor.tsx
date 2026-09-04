@@ -92,7 +92,7 @@ export function ProductImagesEditor({
       images.map((img) => ({
         ...img,
         is_primary: img.id === id,
-      }))
+      })),
     );
   };
 
@@ -136,7 +136,9 @@ export function ProductImagesEditor({
           Imágenes ({images.length}/{maxImages})
         </h3>
         {images.length > 0 && (
-          <Badge variant="outline">{images.length} de {maxImages}</Badge>
+          <Badge variant="outline">
+            {images.length} de {maxImages}
+          </Badge>
         )}
       </div>
 
@@ -328,12 +330,7 @@ export function ProductImagesEditor({
               </Label>
             </div>
 
-            <Button
-              type="button"
-              onClick={handleAddImage}
-              className="w-full"
-              variant="secondary"
-            >
+            <Button type="button" onClick={handleAddImage} className="w-full" variant="secondary">
               <Upload className="mr-2 h-4 w-4" />
               Agregar Imagen
             </Button>

@@ -32,10 +32,7 @@ interface ProductOptionsEditorProps {
   onOptionsChange: (options: ProductOption[]) => void;
 }
 
-export function ProductOptionsEditor({
-  options,
-  onOptionsChange,
-}: ProductOptionsEditorProps) {
+export function ProductOptionsEditor({ options, onOptionsChange }: ProductOptionsEditorProps) {
   const [newOptionName, setNewOptionName] = useState("");
   const [newOptionPrice, setNewOptionPrice] = useState("");
   const [newOptionDiscount, setNewOptionDiscount] = useState("0");
@@ -82,13 +79,8 @@ export function ProductOptionsEditor({
     setNewOptionStock("");
   };
 
-  const handleUpdateOption = (
-    id: string,
-    updates: Partial<ProductOption>
-  ) => {
-    onOptionsChange(
-      options.map((opt) => (opt.id === id ? { ...opt, ...updates } : opt))
-    );
+  const handleUpdateOption = (id: string, updates: Partial<ProductOption>) => {
+    onOptionsChange(options.map((opt) => (opt.id === id ? { ...opt, ...updates } : opt)));
   };
 
   const handleDeleteOption = (id: string) => {
@@ -136,9 +128,7 @@ export function ProductOptionsEditor({
                       <Input
                         type="text"
                         value={option.name}
-                        onChange={(e) =>
-                          handleUpdateOption(option.id, { name: e.target.value })
-                        }
+                        onChange={(e) => handleUpdateOption(option.id, { name: e.target.value })}
                         placeholder="ej: Básico, Premium"
                         className="w-full"
                       />
@@ -181,9 +171,7 @@ export function ProductOptionsEditor({
                         value={option.stock_quantity ?? ""}
                         onChange={(e) =>
                           handleUpdateOption(option.id, {
-                            stock_quantity: e.target.value
-                              ? parseInt(e.target.value)
-                              : null,
+                            stock_quantity: e.target.value ? parseInt(e.target.value) : null,
                           })
                         }
                         placeholder="Sin tracking"
@@ -287,12 +275,7 @@ export function ProductOptionsEditor({
           </div>
         </div>
 
-        <Button
-          type="button"
-          onClick={handleAddOption}
-          className="w-full"
-          variant="secondary"
-        >
+        <Button type="button" onClick={handleAddOption} className="w-full" variant="secondary">
           <Plus className="mr-2 h-4 w-4" />
           Agregar Opción
         </Button>

@@ -24,7 +24,8 @@ export const shippingZones: ShippingZone[] = [
   {
     id: "cercanas",
     title: "Otras Localidades",
-    towns: "Vicálvaro, Paracuellos de Jarama, Alcalá de Henares, Mejorada del Campo, Parque Corredor",
+    towns:
+      "Vicálvaro, Paracuellos de Jarama, Alcalá de Henares, Mejorada del Campo, Parque Corredor",
     rates: [
       "Pedido mínimo: 25€: +16€ de portes.",
       "Pedidos superiores a 55€: Envío gratuito (Porte incluido).",
@@ -37,6 +38,4 @@ export const shippingZones: ShippingZone[] = [
   },
 ];
 
-export const shippingConditions = [
-  "Pedido mínimo 25 euros coste incluido.",
-];
+export const shippingConditions = ["Pedido mínimo 25 euros coste incluido."];

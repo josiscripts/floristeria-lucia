@@ -28,7 +28,13 @@ interface MigrationStatus {
 export function CatalogMigrationCard() {
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const { data: status, isLoading, isError, error, refetch } = useQuery({
+  const {
+    data: status,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
     queryKey: ["admin", "migration-status"],
     queryFn: async () => {
       const res = await fetch("/api/admin/migrate-catalog", {
@@ -124,8 +130,8 @@ export function CatalogMigrationCard() {
                 <div className="flex gap-3 rounded-lg bg-yellow-50 p-3 text-sm dark:bg-yellow-950">
                   <AlertCircle className="size-5 flex-shrink-0 text-yellow-600 dark:text-yellow-500" />
                   <div className="text-yellow-800 dark:text-yellow-200">
-                    <strong>Advertencia:</strong> Hay {status.condolenciasOrdersFound} pedido(s)
-                    que referencian productos de condolencias. Requiere confirmación para migrar.
+                    <strong>Advertencia:</strong> Hay {status.condolenciasOrdersFound} pedido(s) que
+                    referencian productos de condolencias. Requiere confirmación para migrar.
                   </div>
                 </div>
               )}

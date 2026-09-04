@@ -93,9 +93,7 @@ export function PrivacidadSection({ user }: PrivacidadSectionProps) {
             <Checkbox
               id="analytics"
               checked={cookies.cookies_analytics}
-              onCheckedChange={(checked) =>
-                handleChange("cookies_analytics", checked as boolean)
-              }
+              onCheckedChange={(checked) => handleChange("cookies_analytics", checked as boolean)}
             />
             <Label htmlFor="analytics" className="cursor-pointer text-sm font-normal">
               {t("auth.account.settings.analytics")}
@@ -119,9 +117,7 @@ export function PrivacidadSection({ user }: PrivacidadSectionProps) {
             <Checkbox
               id="marketing"
               checked={cookies.cookies_marketing}
-              onCheckedChange={(checked) =>
-                handleChange("cookies_marketing", checked as boolean)
-              }
+              onCheckedChange={(checked) => handleChange("cookies_marketing", checked as boolean)}
             />
             <Label htmlFor="marketing" className="cursor-pointer text-sm font-normal">
               {t("auth.account.settings.marketing")}

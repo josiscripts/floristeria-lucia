@@ -61,9 +61,7 @@ function SettingsPage() {
         <Tabs defaultValue="account" className="space-y-6">
           <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4">
             <TabsTrigger value="account">{t("auth.account.settings.tabs.account")}</TabsTrigger>
-            <TabsTrigger value="addresses">
-              {t("auth.account.settings.tabs.addresses")}
-            </TabsTrigger>
+            <TabsTrigger value="addresses">{t("auth.account.settings.tabs.addresses")}</TabsTrigger>
             <TabsTrigger value="payment">{t("auth.account.settings.tabs.payment")}</TabsTrigger>
             <TabsTrigger value="preferences">
               {t("auth.account.settings.tabs.preferences")}

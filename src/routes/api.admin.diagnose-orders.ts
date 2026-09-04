@@ -79,7 +79,7 @@ const GET = withAdminGuard(async () => {
       summary: {
         total_orders: allOrders?.length || 0,
         active_orders: activeOrders?.length || 0,
-        deleted_orders: ((allOrders?.length || 0) - (activeOrders?.length || 0)) || 0,
+        deleted_orders: (allOrders?.length || 0) - (activeOrders?.length || 0) || 0,
         status_distribution: statusCount,
       },
       orders: (activeOrders || []).map((order) => ({

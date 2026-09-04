@@ -134,21 +134,23 @@ function EditProductPage() {
           </div>
 
           <ProductForm
-            initialProduct={{
-              id: id,
-              name: data.product.name,
-              description: data.product.description,
-              category: data.product.category_id || undefined,
-              active: data.product.active,
-              cover_image_url: data.product.cover_image_url,
-              has_color_variants: data.product.has_color_variants,
-              options: data.product.product_options,
-              images: data.product.product_images,
-              color_variants: data.product.color_variants,
-              created_at: new Date().toISOString(),
-              updated_at: new Date().toISOString(),
-              deleted_at: null,
-            } as any}
+            initialProduct={
+              {
+                id: id,
+                name: data.product.name,
+                description: data.product.description,
+                category: data.product.category_id || undefined,
+                active: data.product.active,
+                cover_image_url: data.product.cover_image_url,
+                has_color_variants: data.product.has_color_variants,
+                options: data.product.product_options,
+                images: data.product.product_images,
+                color_variants: data.product.color_variants,
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
+                deleted_at: null,
+              } as any
+            }
             onSubmit={handleSubmit}
             isLoading={submitting}
           />

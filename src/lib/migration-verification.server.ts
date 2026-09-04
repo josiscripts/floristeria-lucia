@@ -102,9 +102,7 @@ export async function verifyCategoryDistribution(): Promise<VerificationResult> 
     for (const cat of Object.keys(expected) as CategoryId[]) {
       if (counts[cat] !== expected[cat]) {
         allMatched = false;
-        mismatchedCategories.push(
-          `${cat}: expected ${expected[cat]}, got ${counts[cat]}`,
-        );
+        mismatchedCategories.push(`${cat}: expected ${expected[cat]}, got ${counts[cat]}`);
       }
     }
 
@@ -362,10 +360,11 @@ export async function verifyPricing(): Promise<VerificationResult> {
       .select("price_amount, discount_percent, price_final")
       .limit(10);
 
-    const priceCalcErrors = options?.filter((opt) => {
-      const expected = opt.price_amount * (1 - opt.discount_percent / 100);
-      return Math.abs(expected - opt.price_final) > 0.01;
-    }) || [];
+    const priceCalcErrors =
+      options?.filter((opt) => {
+        const expected = opt.price_amount * (1 - opt.discount_percent / 100);
+        return Math.abs(expected - opt.price_final) > 0.01;
+      }) || [];
 
     return {
       name: "Price Validation Verification",

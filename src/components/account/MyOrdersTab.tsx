@@ -38,7 +38,7 @@ export function MyOrdersTab({ user }: MyOrdersTabProps) {
     const timestamp = new Date().toLocaleTimeString();
 
     console.log(
-      `[Orders Fetch #${fetchNumber}] Start - ${timestamp} | authLoading=${authLoading} | session=${!!session} | token=${!!session?.access_token}`
+      `[Orders Fetch #${fetchNumber}] Start - ${timestamp} | authLoading=${authLoading} | session=${!!session} | token=${!!session?.access_token}`,
     );
 
     const fetchOrders = async () => {
@@ -78,7 +78,7 @@ export function MyOrdersTab({ user }: MyOrdersTabProps) {
 
         const fetchDuration = (performance.now() - fetchStart).toFixed(0);
         console.log(
-          `[Orders Fetch #${fetchNumber}] Response - Status: ${response.status} | Duration: ${fetchDuration}ms`
+          `[Orders Fetch #${fetchNumber}] Response - Status: ${response.status} | Duration: ${fetchDuration}ms`,
         );
 
         if (!response.ok) {
@@ -90,9 +90,7 @@ export function MyOrdersTab({ user }: MyOrdersTabProps) {
 
         const responseData = await response.json();
         const orderCount = responseData.orders?.length || 0;
-        console.log(
-          `[Orders Fetch #${fetchNumber}] Success - Orders count: ${orderCount}`
-        );
+        console.log(`[Orders Fetch #${fetchNumber}] Success - Orders count: ${orderCount}`);
         setOrders(responseData.orders || []);
       } catch (err) {
         const message = err instanceof Error ? err.message : "Unknown error";
@@ -136,10 +134,10 @@ export function MyOrdersTab({ user }: MyOrdersTabProps) {
   if (orders.length === 0) {
     return (
       <Card className="border border-dashed border-border p-12 text-center">
-        <h3 className="font-display text-xl text-foreground">
-          {t("auth.account.noOrders.title")}
-        </h3>
-        <p className="mt-2 text-sm text-muted-foreground">{t("auth.account.noOrders.description")}</p>
+        <h3 className="font-display text-xl text-foreground">{t("auth.account.noOrders.title")}</h3>
+        <p className="mt-2 text-sm text-muted-foreground">
+          {t("auth.account.noOrders.description")}
+        </p>
         <Button asChild className="mt-6">
           <Link to="/catalogo">{t("auth.account.noOrders.cta")}</Link>
         </Button>

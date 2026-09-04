@@ -52,11 +52,13 @@ export interface ProductFormValues {
 }
 
 interface ProductFormProps {
-  initialProduct?: (Product & {
-    options: ProductOption[];
-    images: ProductImage[];
-    color_variants: ColorVariant[];
-  }) | null;
+  initialProduct?:
+    | (Product & {
+        options: ProductOption[];
+        images: ProductImage[];
+        color_variants: ColorVariant[];
+      })
+    | null;
   isNew?: boolean;
   onSubmit: (values: ProductFormValues) => Promise<void>;
   isLoading?: boolean;
@@ -80,12 +82,12 @@ export function ProductForm({
   const [active, setActive] = useState(initialProduct?.active ?? true);
   const [coverImageUrl, setCoverImageUrl] = useState(initialProduct?.cover_image_url ?? "");
   const [hasColorVariants, setHasColorVariants] = useState(
-    initialProduct?.has_color_variants ?? false
+    initialProduct?.has_color_variants ?? false,
   );
 
   const [options, setOptions] = useState<ProductOption[]>(initialProduct?.options ?? []);
   const [colorVariants, setColorVariants] = useState<ColorVariant[]>(
-    initialProduct?.color_variants ?? []
+    initialProduct?.color_variants ?? [],
   );
   const [images, setImages] = useState<ProductImage[]>(initialProduct?.images ?? []);
 
@@ -231,9 +233,7 @@ export function ProductForm({
                   placeholder="ej: Ramo de Rosas Rojas"
                   className={formErrors.name ? "border-red-500" : ""}
                 />
-                {formErrors.name && (
-                  <p className="text-xs text-red-600">{formErrors.name}</p>
-                )}
+                {formErrors.name && <p className="text-xs text-red-600">{formErrors.name}</p>}
               </div>
 
               <div className="space-y-1.5">
@@ -383,12 +383,7 @@ export function ProductForm({
         </div>
 
         <div className="space-y-4">
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={isLoading}
-            size="lg"
-          >
+          <Button type="submit" className="w-full" disabled={isLoading} size="lg">
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

@@ -256,11 +256,14 @@ export function updateProductNew(
     has_color_variants: boolean;
   }>,
 ) {
-  return fetchJson<{ success: boolean; product: any }>(`/api/admin/products/${encodeURIComponent(id)}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(input),
-  });
+  return fetchJson<{ success: boolean; product: any }>(
+    `/api/admin/products/${encodeURIComponent(id)}`,
+    {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(input),
+    },
+  );
 }
 
 /**
@@ -269,33 +272,50 @@ export function updateProductNew(
  * Supabase-only
  */
 export function deactivateProductNew(id: string) {
-  return fetchJson<{ success: boolean; message: string }>(`/api/admin/products/${encodeURIComponent(id)}`, {
-    method: "DELETE",
-  });
+  return fetchJson<{ success: boolean; message: string }>(
+    `/api/admin/products/${encodeURIComponent(id)}`,
+    {
+      method: "DELETE",
+    },
+  );
 }
 
 /**
  * Create a new product image
  * POST /api/admin/products/{id}/images
  */
-export function createProductImage(productId: string, imageUrl: string, isPrimary: boolean = false) {
-  return fetchJson<{ success: boolean; image: any }>(`/api/admin/products/${encodeURIComponent(productId)}/images`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ image_url: imageUrl, is_primary: isPrimary }),
-  });
+export function createProductImage(
+  productId: string,
+  imageUrl: string,
+  isPrimary: boolean = false,
+) {
+  return fetchJson<{ success: boolean; image: any }>(
+    `/api/admin/products/${encodeURIComponent(productId)}/images`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ image_url: imageUrl, is_primary: isPrimary }),
+    },
+  );
 }
 
 /**
  * Update a product image
  * PUT /api/admin/products/{id}/images/{imageId}
  */
-export function updateProductImage(productId: string, imageId: string, updates: { image_url?: string; is_primary?: boolean; sort_order?: number }) {
-  return fetchJson<{ success: boolean; image: any }>(`/api/admin/products/${encodeURIComponent(productId)}/images/${encodeURIComponent(imageId)}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(updates),
-  });
+export function updateProductImage(
+  productId: string,
+  imageId: string,
+  updates: { image_url?: string; is_primary?: boolean; sort_order?: number },
+) {
+  return fetchJson<{ success: boolean; image: any }>(
+    `/api/admin/products/${encodeURIComponent(productId)}/images/${encodeURIComponent(imageId)}`,
+    {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updates),
+    },
+  );
 }
 
 /**
@@ -303,9 +323,12 @@ export function updateProductImage(productId: string, imageId: string, updates: 
  * DELETE /api/admin/products/{id}/images/{imageId}
  */
 export function deleteProductImage(productId: string, imageId: string) {
-  return fetchJson<{ success: boolean; message: string }>(`/api/admin/products/${encodeURIComponent(productId)}/images/${encodeURIComponent(imageId)}`, {
-    method: "DELETE",
-  });
+  return fetchJson<{ success: boolean; message: string }>(
+    `/api/admin/products/${encodeURIComponent(productId)}/images/${encodeURIComponent(imageId)}`,
+    {
+      method: "DELETE",
+    },
+  );
 }
 
 // --- Webhook events ---

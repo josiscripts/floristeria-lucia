@@ -147,7 +147,8 @@ export async function updateProduct(productId: string, input: UpdateProductInput
     if (input.category_id !== undefined) updates.category_id = input.category_id;
     if (input.active !== undefined) updates.active = input.active;
     if (input.cover_image_url !== undefined) updates.cover_image_url = input.cover_image_url;
-    if (input.has_color_variants !== undefined) updates.has_color_variants = input.has_color_variants;
+    if (input.has_color_variants !== undefined)
+      updates.has_color_variants = input.has_color_variants;
 
     const { data, error } = await supabase
       .from("products")

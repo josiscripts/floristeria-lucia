@@ -122,7 +122,8 @@ export const auth: LocaleBundle = {
       items: "Productos",
       total: "Total",
       viewFull: "Ver configuración completa",
-      description: "Accede a la configuración avanzada para gestionar tus datos de cuenta, direcciones, preferencias y privacidad.",
+      description:
+        "Accede a la configuración avanzada para gestionar tus datos de cuenta, direcciones, preferencias y privacidad.",
       logoutButton: "Cerrar sesión",
       logout: {
         title: "¿Cerrar sesión?",
@@ -177,7 +178,8 @@ export const auth: LocaleBundle = {
         personalization: "Cookies de personalización",
         marketing: "Cookies de marketing",
         dataPrivacy: "Privacidad de datos",
-        privacyDescription: "Tus datos se tratan de acuerdo con nuestra política de privacidad y RGPD.",
+        privacyDescription:
+          "Tus datos se tratan de acuerdo con nuestra política de privacidad y RGPD.",
       },
     },
   },
@@ -301,7 +303,8 @@ export const auth: LocaleBundle = {
       items: "Products",
       total: "Total",
       viewFull: "View full settings",
-      description: "Access advanced settings to manage your account data, addresses, preferences and privacy.",
+      description:
+        "Access advanced settings to manage your account data, addresses, preferences and privacy.",
       logoutButton: "Sign out",
       logout: {
         title: "Sign out?",
@@ -481,7 +484,8 @@ export const auth: LocaleBundle = {
       items: "Productes",
       total: "Total",
       viewFull: "Veure configuració completa",
-      description: "Accedeix a la configuració avançada per gestionar les teves dades de compte, adreces, preferències i privacitat.",
+      description:
+        "Accedeix a la configuració avançada per gestionar les teves dades de compte, adreces, preferències i privacitat.",
       logoutButton: "Tanca sessió",
       logout: {
         title: "¿Tancar sessió?",
@@ -515,7 +519,8 @@ export const auth: LocaleBundle = {
         setDefault: "Establir com a adreça per defecte",
         labelPlaceholder: "Ex: Casa, Oficina",
         paymentMethods: "Mètodes de pagament",
-        paymentMethodsDescription: "Gestiona els teus mètodes de pagament de forma segura amb Stripe.",
+        paymentMethodsDescription:
+          "Gestiona els teus mètodes de pagament de forma segura amb Stripe.",
         connectStripe: "Connectar Stripe",
         purchasePreferences: "Preferències de compra",
         preferredDelivery: "Preferència d'horari de lliurament",
@@ -536,7 +541,8 @@ export const auth: LocaleBundle = {
         personalization: "Cookies de personalització",
         marketing: "Cookies de màrqueting",
         dataPrivacy: "Privacitat de dades",
-        privacyDescription: "Les teves dades es tracten d'acord amb la nostra política de privacitat i RGPD.",
+        privacyDescription:
+          "Les teves dades es tracten d'acord amb la nostra política de privacitat i RGPD.",
       },
     },
   },

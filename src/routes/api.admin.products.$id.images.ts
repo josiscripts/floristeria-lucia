@@ -76,7 +76,7 @@ const POST = withAdminGuard(async (request, admin) => {
     const imageRes = await createProductImage({
       product_id: productId,
       image_url: body.image_url.trim(),
-      is_primary: body.is_primary ?? (images.length === 0), // First image is primary by default
+      is_primary: body.is_primary ?? images.length === 0, // First image is primary by default
       sort_order: body.sort_order ?? images.length,
       alt_text: body.alt_text || null,
       color_variant_id: body.color_variant_id || null,
