@@ -259,18 +259,17 @@ export function Footer() {
 
   return (
     <footer className="bg-primary text-primary-foreground dark:bg-[oklch(0.22_0.05_322)] dark:text-surface-foreground">
-      {/* 1 — CTA / pre-footer: silueta floral → contenido → ramo (a sangre por la derecha) */}
+      {/* 1 — CTA / pre-footer: contenido → ramo (a sangre por la derecha) */}
       <div className="bg-surface text-surface-foreground">
-        <div className="relative mx-auto w-full max-w-[1600px] overflow-hidden">
-          {/* Ramo: pegado al borde derecho, sin hueco */}
+        <div className="relative w-full overflow-hidden lg:overflow-visible">
+          {/* Ramo: pegado al borde derecho del viewport, sin hueco */}
           <img
             src={ctaBouquet}
             alt={t("footer.cta.imageAlt")}
             loading="lazy"
             className="pointer-events-none absolute inset-y-0 right-0 m-0 hidden h-full w-60 object-cover p-0 opacity-90 [object-position:95%_center] [mask-image:linear-gradient(to_right,transparent,black_65%)] md:block lg:w-72 xl:w-80"
           />
-          <div className="relative flex flex-col gap-6 px-4 py-9 sm:px-8 lg:flex-row lg:items-center lg:gap-10 lg:py-8 lg:pl-12 md:pr-[15rem] lg:pr-[19rem] xl:pr-[21rem]">
-            <FloralLine className="h-20 w-24 shrink-0 text-gold/60 dark:text-gold/85 sm:h-24 sm:w-28" />
+          <div className="relative mx-auto flex w-full max-w-none flex-col gap-6 px-4 py-9 sm:px-8 lg:max-w-[1600px] lg:flex-row lg:items-center lg:gap-10 lg:py-8 lg:pl-12 md:pr-[15rem] lg:pr-[19rem] xl:pr-[21rem]">
             <div className="min-w-0 lg:max-w-xl">
               <h2 className="font-display text-2xl leading-tight text-ink dark:text-surface-foreground sm:text-[1.85rem]">
                 {t("footer.cta.title")}
