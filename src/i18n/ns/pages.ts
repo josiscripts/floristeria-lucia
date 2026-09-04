@@ -105,7 +105,7 @@ export const pages: LocaleBundle = {
       },
       generalItems: {
         min: { amount: "25 €", label: "Coste incluido", note: "Pedido mínimo más coste incluido" },
-        s120: { amount: "120 €", label: "Envío incluido", note: "En pedidos superiores a 120 €." },
+        s120: { amount: "120 €", label: "Envío gratuito", note: "En pedidos superiores a 120 €." },
       },
       towns: "Localidades",
       conditionsTitle: "Condiciones generales",
