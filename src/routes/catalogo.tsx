@@ -82,15 +82,25 @@ function CatalogPage() {
   const { categoryLabelOf } = useCatalogText();
 
   // Fetch products from Supabase with fallback to local catalog
-  const { data: supabaseData = [] } = useSupabaseProducts({
+  const { data: supabaseData = [], error: supabaseError, isLoading, status } = useSupabaseProducts({
     limit: 500,
   });
 
   const activeCategory = categoria;
 
+  // DEBUG: Log what's happening with Supabase
+  console.log("[catalogo] ===== CATALOG DEBUG =====");
+  console.log("[catalogo] Supabase data received:", supabaseData.length, "products");
+  console.log("[catalogo] Supabase status:", status);
+  if (supabaseError) console.error("[catalogo] Supabase error:", supabaseError);
+  console.log("[catalogo] Using:", supabaseData.length > 0 ? "SUPABASE DATA" : "FALLBACK CATALOG");
+
   // Convert Supabase products to legacy format, fallback to local catalog
   const productsToUse =
     supabaseData.length > 0 ? supabaseData.map(supabaseProductToLegacy) : fallbackProducts;
+
+  console.log("[catalogo] Total products after conversion:", productsToUse.length);
+  console.log("[catalogo] ============================");
 
   const filtered = useMemo(() => {
     const query = (q ?? "").trim().toLowerCase();

@@ -22,7 +22,7 @@ export function supabaseProductToLegacy(supabaseProduct: SupabaseProduct): Produ
     ? supabaseProduct.color_variants.map((v) => v.name)
     : undefined;
 
-  return {
+  const result = {
     id: supabaseProduct.id,
     name: supabaseProduct.name,
     category: supabaseProduct.category || "ramos",
@@ -34,6 +34,10 @@ export function supabaseProductToLegacy(supabaseProduct: SupabaseProduct): Produ
     // Store additional Supabase data in a way that doesn't break the type
     ...(supabaseProduct as any),
   };
+
+  console.log("[supabaseProductToLegacy]", result.name, "category:", result.category, "image:", result.image);
+
+  return result;
 }
 
 /**

@@ -54,6 +54,17 @@ export function useSupabaseProducts(options: UseSupabaseProductsOptions = {}) {
   return useQuery({
     queryKey: ["supabase-products", category, limit, skip],
     queryFn: async (): Promise<SupabaseProduct[]> => {
+      // TEST: Simple query without nested relations first
+      console.log("[useSupabaseProducts] Attempting simple query first...");
+      const simpleResult = await supabase
+        .from("products")
+        .select("id, name, category, active")
+        .eq("active", true)
+        .is("deleted_at", null);
+
+      console.log("[useSupabaseProducts] Simple query result:", simpleResult);
+
+      // NOW try the full query with nested relations
       let query = supabase
         .from("products")
         .select(
@@ -107,11 +118,23 @@ export function useSupabaseProducts(options: UseSupabaseProductsOptions = {}) {
         query = query.range(skip, skip + (limit || 50) - 1);
       }
 
-      const { data, error } = await query;
+      const { data, error, status } = await query;
+
+      console.log("[useSupabaseProducts] Query status:", status);
+      console.log("[useSupabaseProducts] Query error:", error);
 
       if (error) {
-        console.error("[useSupabaseProducts] Error fetching products:", error);
+        console.error("[useSupabaseProducts] ERROR fetching products:", error);
+        console.error("[useSupabaseProducts] Error message:", error.message);
+        console.error("[useSupabaseProducts] Error details:", JSON.stringify(error, null, 2));
         return [];
+      }
+
+      console.log("[useSupabaseProducts] Query returned:", data?.length || 0, "products");
+      if (data && data.length > 0) {
+        console.log("[useSupabaseProducts] First product:", JSON.stringify(data[0], null, 2));
+      } else {
+        console.warn("[useSupabaseProducts] NO PRODUCTS RETURNED - using fallback to catalog.ts");
       }
 
       // Ensure product_options are sorted by creation order
