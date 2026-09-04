@@ -54,6 +54,7 @@ import { Route as ApiAccountOrdersRouteImport } from './routes/api.account.order
 import { Route as ApiAdminDebugEnvRouteImport } from './routes/api.admin.debug-env'
 import { Route as ApiAdminDebugMetadataRouteImport } from './routes/api.admin.debug-metadata'
 import { Route as ApiAdminDiagnoseMetadataRouteImport } from './routes/api.admin.diagnose-metadata'
+import { Route as ApiAdminDiagnoseOrdersRouteImport } from './routes/api.admin.diagnose-orders'
 import { Route as ApiAdminPopulateMetadataRouteImport } from './routes/api.admin.populate-metadata'
 import { Route as ApiAdminProductsRouteImport } from './routes/api.admin.products'
 import { Route as ApiAdminSyncCatalogRouteImport } from './routes/api.admin.sync-catalog'
@@ -309,6 +310,11 @@ const ApiAdminDiagnoseMetadataRoute =
     path: '/api/admin/diagnose-metadata',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiAdminDiagnoseOrdersRoute = ApiAdminDiagnoseOrdersRouteImport.update({
+  id: '/api/admin/diagnose-orders',
+  path: '/api/admin/diagnose-orders',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAdminPopulateMetadataRoute =
   ApiAdminPopulateMetadataRouteImport.update({
     id: '/api/admin/populate-metadata',
@@ -463,6 +469,7 @@ export interface FileRoutesByFullPath {
   '/api/admin/debug-env': typeof ApiAdminDebugEnvRoute
   '/api/admin/debug-metadata': typeof ApiAdminDebugMetadataRoute
   '/api/admin/diagnose-metadata': typeof ApiAdminDiagnoseMetadataRoute
+  '/api/admin/diagnose-orders': typeof ApiAdminDiagnoseOrdersRoute
   '/api/admin/populate-metadata': typeof ApiAdminPopulateMetadataRoute
   '/api/admin/products': typeof ApiAdminProductsRouteWithChildren
   '/api/admin/sync-catalog': typeof ApiAdminSyncCatalogRoute
@@ -525,6 +532,7 @@ export interface FileRoutesByTo {
   '/api/admin/debug-env': typeof ApiAdminDebugEnvRoute
   '/api/admin/debug-metadata': typeof ApiAdminDebugMetadataRoute
   '/api/admin/diagnose-metadata': typeof ApiAdminDiagnoseMetadataRoute
+  '/api/admin/diagnose-orders': typeof ApiAdminDiagnoseOrdersRoute
   '/api/admin/populate-metadata': typeof ApiAdminPopulateMetadataRoute
   '/api/admin/products': typeof ApiAdminProductsRouteWithChildren
   '/api/admin/sync-catalog': typeof ApiAdminSyncCatalogRoute
@@ -593,6 +601,7 @@ export interface FileRoutesById {
   '/api/admin/debug-env': typeof ApiAdminDebugEnvRoute
   '/api/admin/debug-metadata': typeof ApiAdminDebugMetadataRoute
   '/api/admin/diagnose-metadata': typeof ApiAdminDiagnoseMetadataRoute
+  '/api/admin/diagnose-orders': typeof ApiAdminDiagnoseOrdersRoute
   '/api/admin/populate-metadata': typeof ApiAdminPopulateMetadataRoute
   '/api/admin/products': typeof ApiAdminProductsRouteWithChildren
   '/api/admin/sync-catalog': typeof ApiAdminSyncCatalogRoute
@@ -661,6 +670,7 @@ export interface FileRouteTypes {
     | '/api/admin/debug-env'
     | '/api/admin/debug-metadata'
     | '/api/admin/diagnose-metadata'
+    | '/api/admin/diagnose-orders'
     | '/api/admin/populate-metadata'
     | '/api/admin/products'
     | '/api/admin/sync-catalog'
@@ -723,6 +733,7 @@ export interface FileRouteTypes {
     | '/api/admin/debug-env'
     | '/api/admin/debug-metadata'
     | '/api/admin/diagnose-metadata'
+    | '/api/admin/diagnose-orders'
     | '/api/admin/populate-metadata'
     | '/api/admin/products'
     | '/api/admin/sync-catalog'
@@ -790,6 +801,7 @@ export interface FileRouteTypes {
     | '/api/admin/debug-env'
     | '/api/admin/debug-metadata'
     | '/api/admin/diagnose-metadata'
+    | '/api/admin/diagnose-orders'
     | '/api/admin/populate-metadata'
     | '/api/admin/products'
     | '/api/admin/sync-catalog'
@@ -843,6 +855,7 @@ export interface RootRouteChildren {
   ApiAdminDebugEnvRoute: typeof ApiAdminDebugEnvRoute
   ApiAdminDebugMetadataRoute: typeof ApiAdminDebugMetadataRoute
   ApiAdminDiagnoseMetadataRoute: typeof ApiAdminDiagnoseMetadataRoute
+  ApiAdminDiagnoseOrdersRoute: typeof ApiAdminDiagnoseOrdersRoute
   ApiAdminPopulateMetadataRoute: typeof ApiAdminPopulateMetadataRoute
   ApiAdminProductsRoute: typeof ApiAdminProductsRouteWithChildren
   ApiAdminSyncCatalogRoute: typeof ApiAdminSyncCatalogRoute
@@ -1168,6 +1181,13 @@ declare module '@tanstack/react-router' {
       path: '/api/admin/diagnose-metadata'
       fullPath: '/api/admin/diagnose-metadata'
       preLoaderRoute: typeof ApiAdminDiagnoseMetadataRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/diagnose-orders': {
+      id: '/api/admin/diagnose-orders'
+      path: '/api/admin/diagnose-orders'
+      fullPath: '/api/admin/diagnose-orders'
+      preLoaderRoute: typeof ApiAdminDiagnoseOrdersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/admin/populate-metadata': {
@@ -1531,6 +1551,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAdminDebugEnvRoute: ApiAdminDebugEnvRoute,
   ApiAdminDebugMetadataRoute: ApiAdminDebugMetadataRoute,
   ApiAdminDiagnoseMetadataRoute: ApiAdminDiagnoseMetadataRoute,
+  ApiAdminDiagnoseOrdersRoute: ApiAdminDiagnoseOrdersRoute,
   ApiAdminPopulateMetadataRoute: ApiAdminPopulateMetadataRoute,
   ApiAdminProductsRoute: ApiAdminProductsRouteWithChildren,
   ApiAdminSyncCatalogRoute: ApiAdminSyncCatalogRoute,
