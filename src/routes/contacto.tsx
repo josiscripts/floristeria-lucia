@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowRight, Mail, MapPin, Phone } from "lucide-react";
+import { ArrowRight, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -210,7 +210,7 @@ function ContactoPage() {
       {/* BLOQUE 2 — Información práctica de contacto */}
       <section className="py-10 lg:py-14">
         <div className="border-y border-gold/15 py-12 lg:py-16">
-          <div className="grid gap-0 md:grid-cols-[1fr_auto_1fr_auto_1fr]">
+          <div className="grid gap-0 md:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr]">
             {/* TIENDA */}
             <Reveal delay={0} className="px-4 py-8 md:px-8 lg:px-12">
               <div className="flex h-full flex-col">
@@ -223,7 +223,15 @@ function ContactoPage() {
                   <p>{t("pages.contact.info.addressLine2")}</p>
                 </div>
                 <div className="mt-auto pt-6">
-                  <ContactLink href="#mapa">{t("pages.contact.info.ctaMap")}</ContactLink>
+                  <a
+                    href="https://share.google/B6HPwCAYyrfQVspY7"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="group inline-flex items-center gap-1.5 text-sm font-medium text-primary transition-colors duration-300 hover:text-gold"
+                  >
+                    <span className="link-underline">{t("pages.contact.info.ctaMap")}</span>
+                    <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
+                  </a>
                 </div>
               </div>
             </Reveal>
@@ -240,7 +248,7 @@ function ContactoPage() {
                 <h2 className="mt-4 font-display text-sm font-normal tracking-[0.2em] text-primary uppercase">
                   {t("pages.contact.info.phoneTitle")}
                 </h2>
-                <p className="mt-5 text-lg font-normal tracking-wide text-foreground">
+                <p className="mt-5 max-w-[260px] text-lg font-normal tracking-wide text-foreground">
                   {company.phone}
                 </p>
                 <p className="mt-1 max-w-[260px] text-sm leading-relaxed text-muted-foreground">
@@ -256,9 +264,41 @@ function ContactoPage() {
 
             <div className="hidden md:block w-px self-center bg-gold/20 h-2/3" aria-hidden="true" />
 
-            {/* EMAIL */}
+            {/* WHATSAPP */}
             <Reveal
               delay={240}
+              className="px-4 py-8 md:px-8 lg:px-12 border-t border-gold/15 md:border-t-0"
+            >
+              <div className="flex h-full flex-col">
+                <MessageCircle
+                  className="size-[18px] stroke-[1.5px] text-gold/60"
+                  aria-hidden="true"
+                />
+                <h2 className="mt-4 font-display text-sm font-normal tracking-[0.2em] text-primary uppercase">
+                  {t("pages.contact.info.whatsappTitle")}
+                </h2>
+                <p className="mt-5 max-w-[260px] text-sm leading-relaxed text-muted-foreground">
+                  {t("pages.contact.info.whatsappNote")}
+                </p>
+                <div className="mt-auto pt-6">
+                  <a
+                    href={`https://wa.me/${company.whatsapp.replace(/[^\d]/g, "")}`}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="group inline-flex items-center gap-1.5 text-sm font-medium text-primary transition-colors duration-300 hover:text-gold"
+                  >
+                    <span className="link-underline">{t("pages.contact.info.ctaWhatsapp")}</span>
+                    <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
+                  </a>
+                </div>
+              </div>
+            </Reveal>
+
+            <div className="hidden md:block w-px self-center bg-gold/20 h-2/3" aria-hidden="true" />
+
+            {/* EMAIL */}
+            <Reveal
+              delay={360}
               className="px-4 py-8 md:px-8 lg:px-12 border-t border-gold/15 md:border-t-0"
             >
               <div className="flex h-full flex-col">
@@ -316,9 +356,10 @@ function ContactoPage() {
               <div className="overflow-hidden rounded-xl ring-1 ring-gold/15">
                 <iframe
                   title={t("pages.contact.location.mapTitle")}
-                  src={`https://www.google.com/maps?q=${encodeURIComponent(company.address)}&z=16&hl=es&output=embed`}
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d48600.378684222036!2d-3.5967536417968677!3d40.41940190000003!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd42315b12454275%3A0x4483a29370e76bd2!2sFloristeria%20Lucia!5e0!3m2!1ses!2ses!4v1788483806334!5m2!1ses!2ses"
                   loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  allowFullScreen
                   className="block aspect-[16/10] w-full border-0 md:aspect-[16/8] [filter:saturate(0.55)_contrast(0.95)_brightness(1.03)]"
                 />
               </div>

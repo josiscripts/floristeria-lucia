@@ -11,7 +11,7 @@ export const company = {
   description: "Floristería especializada en el arte floral.",
   claim: "La magia de una flor siempre dibuja sonrisas.",
   facebook: "https://www.facebook.com/floristerialuciamotrico",
-  instagram: "https://www.instagram.com/floristeria_lucia/",
+  instagram: "https://www.instagram.com/floristerialuciamotrico",
 };
 
 export const legalNotices = [

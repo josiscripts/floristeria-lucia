@@ -193,12 +193,15 @@ export const pages: LocaleBundle = {
       info: {
         storeTitle: "TIENDA",
         phoneTitle: "TELÉFONO",
+        whatsappTitle: "WHATSAPP",
         emailTitle: "EMAIL",
         addressLine1: "Calle de Motrico 9",
         addressLine2: "28830 San Fernando de Henares, Madrid",
         phoneNote: "Estamos disponibles para atenderte.",
+        whatsappNote: "Escríbenos y cuéntanos tu idea o necesidad.",
         ctaMap: "Cómo llegar",
         ctaCall: "Llamar",
+        ctaWhatsapp: "Escribir por WhatsApp",
         ctaEmail: "Escribir un email",
       },
       location: {
@@ -398,12 +401,15 @@ export const pages: LocaleBundle = {
       info: {
         storeTitle: "SHOP",
         phoneTitle: "PHONE",
+        whatsappTitle: "WHATSAPP",
         emailTitle: "EMAIL",
         addressLine1: "Calle de Motrico 9",
         addressLine2: "28830 San Fernando de Henares, Madrid",
         phoneNote: "We are available to help you.",
+        whatsappNote: "Write to us and tell us your idea or need.",
         ctaMap: "How to get there",
         ctaCall: "Call",
+        ctaWhatsapp: "Write via WhatsApp",
         ctaEmail: "Send an email",
       },
       location: {
@@ -616,12 +622,15 @@ export const pages: LocaleBundle = {
       info: {
         storeTitle: "BOTIGA",
         phoneTitle: "TELÈFON",
+        whatsappTitle: "WHATSAPP",
         emailTitle: "EMAIL",
         addressLine1: "Calle de Motrico 9",
         addressLine2: "28830 San Fernando de Henares, Madrid",
         phoneNote: "Estem disponibles per atendre't.",
+        whatsappNote: "Escriu-nos i explica'ns la teva idea o necessitat.",
         ctaMap: "Com arribar",
         ctaCall: "Trucar",
+        ctaWhatsapp: "Escriure per WhatsApp",
         ctaEmail: "Escriure un email",
       },
       location: {
