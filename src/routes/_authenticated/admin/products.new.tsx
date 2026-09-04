@@ -5,8 +5,8 @@ import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import ProductFormNew from "@/components/admin/ProductFormNew";
-import { createProductNew, type CreateProductRequest } from "@/lib/admin/api";
+import { ProductForm, type ProductFormValues } from "@/components/admin/ProductForm";
+import { createProductNew } from "@/lib/admin/api";
 
 export const Route = createFileRoute("/_authenticated/admin/products/new")({
   component: NewProductPage,
@@ -18,11 +18,20 @@ function NewProductPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = async (values: CreateProductRequest) => {
+  const handleSubmit = async (values: ProductFormValues) => {
     setSubmitting(true);
     setError(null);
     try {
-      await createProductNew(values);
+      await createProductNew({
+        name: values.name,
+        description: values.description,
+        category: values.category,
+        active: values.active,
+        cover_image_url: values.cover_image_url,
+        has_color_variants: values.has_color_variants,
+        options: values.options,
+        color_variants: values.color_variants,
+      });
       const productName = values.name || "Producto";
       toast.success(`${productName} creado correctamente`);
       await queryClient.invalidateQueries({ queryKey: ["admin", "products"] });
@@ -50,11 +59,16 @@ function NewProductPage() {
       <div>
         <h1 className="font-display text-2xl text-foreground">Nuevo producto</h1>
         <p className="text-sm text-muted-foreground">
-          Se creará en GoHighLevel y su metadata en Supabase.
+          Producto nuevo con opciones de precio, imágenes y variantes de color.
         </p>
       </div>
 
-      <ProductFormNew onSubmit={handleSubmit} isLoading={submitting} error={error} />
+      <ProductForm
+        isNew={true}
+        onSubmit={handleSubmit}
+        isLoading={submitting}
+        error={error}
+      />
     </div>
   );
 }
