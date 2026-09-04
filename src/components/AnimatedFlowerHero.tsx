@@ -1,164 +1,50 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { useT } from "@/context/LanguageContext";
-import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
+import heroImage from "@/assets/hero_1.png";
 
-const BUCKET = "hero-animation";
-const FRAME_COUNT = 205;
-const FRAME_MS = 40;
-const PAUSE_MS = 4000;
-const STOPS = [31, 100, 171] as const;
-const LOOP_START = 1;
-/** Frame estático para prefers-reduced-motion (primera parada). */
-const STILL_FRAME = 31;
-const SIGNED_URL_TTL = 60 * 60 * 24 * 7;
 const TEXT_TRANSITION_MS = 600;
+const SCENE_INTERVAL_MS = 7000;
 
-/** Los tres estados textuales, en el orden de las paradas 037 / 120 / 191. */
+/** Los tres estados textuales del hero. */
 const SCENES = ["baseDorada", "ramoMano", "cesta"] as const;
-
-const framePath = (n: number) => `ezgif-frame-${String(n).padStart(3, "0")}.jpg`;
 
 type TextPhase = "stable" | "exiting" | "entering";
 
 export function AnimatedFlowerHero() {
   const t = useT();
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const imagesRef = useRef<HTMLImageElement[]>([]);
-  const frameRef = useRef(1);
-  const nextAtRef = useRef(0);
-  const rafRef = useRef<number | null>(null);
   const [sceneIndex, setSceneIndex] = useState(0);
   const [phase, setPhase] = useState<TextPhase>("stable");
-  const phaseRef = useRef<TextPhase>(phase);
 
   useEffect(() => {
-    phaseRef.current = phase;
-  }, [phase]);
+    const reduced =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  useEffect(() => {
-    let cancelled = false;
-    let exitTimer: ReturnType<typeof setTimeout> | null = null;
-    let lastStopIdx: number | null = null;
+    if (reduced) {
+      // Sin movimiento: mostrar primera escena y mantenerla estática
+      return;
+    }
 
-    const draw = (n: number) => {
-      const canvas = canvasRef.current;
-      const img = imagesRef.current[n - 1];
-      if (!canvas || !img) return;
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return;
-      if (canvas.width !== img.naturalWidth || canvas.height !== img.naturalHeight) {
-        canvas.width = img.naturalWidth;
-        canvas.height = img.naturalHeight;
-      }
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-    };
+    const interval = setInterval(() => {
+      setPhase("exiting");
+      const exitTimer = setTimeout(() => {
+        setSceneIndex((prev) => (prev + 1) % SCENES.length);
+        setPhase("entering");
+        const enterTimer = setTimeout(() => {
+          setPhase("stable");
+        }, TEXT_TRANSITION_MS / 2);
+        return () => clearTimeout(enterTimer);
+      }, TEXT_TRANSITION_MS / 2);
 
-    const start = async () => {
-      const paths = Array.from({ length: FRAME_COUNT }, (_, i) => framePath(i + 1));
-      const { data, error } = await supabase.storage
-        .from(BUCKET)
-        .createSignedUrls(paths, SIGNED_URL_TTL);
-      if (cancelled || error || !data) return;
+      return () => clearTimeout(exitTimer);
+    }, SCENE_INTERVAL_MS);
 
-      const byPath = new Map(data.map((d) => [d.path ?? "", d.signedUrl]));
-      const images = paths.map((p) => {
-        const img = new Image();
-        img.decoding = "async";
-        const url = byPath.get(p);
-        if (url) img.src = url;
-        return img;
-      });
-      imagesRef.current = images;
-
-      const first = images[0];
-      const reduced =
-        typeof window !== "undefined" &&
-        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-      const onReady = () => {
-        if (cancelled) return;
-        if (reduced) {
-          // Sin movimiento: frame de parada estático + primer estado textual.
-          const still = images[STILL_FRAME - 1];
-          if (!still) return;
-          const paint = () => draw(STILL_FRAME);
-          if (still.complete) paint();
-          else still.addEventListener("load", paint, { once: true });
-          return;
-        }
-        frameRef.current = 1;
-        draw(1);
-        nextAtRef.current = 0;
-        rafRef.current = requestAnimationFrame(step);
-      };
-
-      const step = (ts: number) => {
-        if (nextAtRef.current === 0) nextAtRef.current = ts + FRAME_MS;
-        while (ts >= nextAtRef.current) {
-          const current = frameRef.current;
-          const next = current >= FRAME_COUNT ? LOOP_START : current + 1;
-          const img = imagesRef.current[next - 1];
-          if (!img || !img.complete) {
-            // Espera a que el frame esté disponible: nunca mostramos huecos en blanco.
-            nextAtRef.current = ts + FRAME_MS;
-            break;
-          }
-          frameRef.current = next;
-          draw(next);
-          const stopIdx = STOPS.indexOf(next as (typeof STOPS)[number]);
-          if (stopIdx >= 0) {
-            // Al llegar a una parada el contenido debe estar completamente estable.
-            if (exitTimer) {
-              clearTimeout(exitTimer);
-              exitTimer = null;
-            }
-            setSceneIndex(stopIdx);
-            setPhase("stable");
-            lastStopIdx = stopIdx;
-            nextAtRef.current += PAUSE_MS;
-          } else {
-            // Salida del texto cuando abandonamos una parada hacia la siguiente escena.
-            const leavingStop = STOPS.includes(current as (typeof STOPS)[number]);
-            if (leavingStop && phaseRef.current === "stable" && lastStopIdx !== null) {
-              const nextScene = (lastStopIdx + 1) % SCENES.length;
-              setPhase("exiting");
-              if (exitTimer) clearTimeout(exitTimer);
-              exitTimer = setTimeout(() => {
-                setSceneIndex(nextScene);
-                setPhase("entering");
-                // Doble requestAnimationFrame para asegurar que el navegador pinte
-                // el estado inicial de entrada antes de volver a estable.
-                requestAnimationFrame(() => {
-                  requestAnimationFrame(() => {
-                    setPhase("stable");
-                  });
-                });
-              }, TEXT_TRANSITION_MS);
-            }
-            nextAtRef.current += FRAME_MS;
-          }
-        }
-        rafRef.current = requestAnimationFrame(step);
-      };
-
-      if (!first) return;
-      if (first.complete) onReady();
-      else first.addEventListener("load", onReady, { once: true });
-    };
-
-    void start();
-
-    return () => {
-      cancelled = true;
-      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
-      if (exitTimer) clearTimeout(exitTimer);
-      rafRef.current = null;
-    };
+    return () => clearInterval(interval);
   }, []);
 
   const scene = SCENES[sceneIndex];
@@ -247,30 +133,31 @@ export function AnimatedFlowerHero() {
   );
 
   return (
-    <section className="relative flex w-full flex-col overflow-hidden bg-background lg:block lg:h-svh lg:min-h-svh">
-      {/* Capa 1 — animación: ventana fija en móvil/tablet, full-bleed en desktop. */}
+    <section className="relative flex w-full flex-col overflow-hidden bg-background lg:block lg:h-svh lg:min-h-svh lg:overflow-visible">
+      {/* Capa 1 — imagen estática: ventana fija en móvil/tablet, full-bleed en desktop. */}
       <div className="relative h-[50svh] w-full overflow-hidden md:h-[54svh] lg:absolute lg:inset-0 lg:h-full lg:overflow-visible">
-        <canvas
-          ref={canvasRef}
+        <img
+          src={heroImage}
+          alt={t(`home.hero.slides.${scene}.alt`)}
           role="img"
           aria-label={t(`home.hero.slides.${scene}.alt`)}
-          className="absolute top-0 right-0 h-full w-auto max-w-none lg:static lg:h-full lg:w-full lg:object-cover lg:object-[62%_center]"
+          className="absolute top-0 right-0 h-full w-auto max-w-none object-cover lg:static lg:h-full lg:w-full lg:object-cover lg:object-[62%_center]"
         />
 
-        {/* Degradado suave solo en la parte inferior de la zona de animación (móvil/tablet). */}
+        {/* Degradado suave solo en la parte inferior de la zona de imagen (móvil/tablet). */}
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-x-0 bottom-0 h-[26%] bg-gradient-to-b from-transparent via-background/70 to-background lg:hidden"
         />
       </div>
 
-      {/* Capa 2 — degradado de legibilidad solo en desktop (en móvil no cubre las flores). */}
+      {/* Capa 2 — degradado de legibilidad solo en desktop. */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 hidden lg:block lg:bg-gradient-to-r lg:from-background/88 lg:from-0% lg:via-background/45 lg:via-45% lg:to-transparent lg:to-100%"
       />
 
-      {/* Capa 3 — contenido textual: debajo de la animación en móvil/tablet. */}
+      {/* Capa 3 — contenido textual: debajo de la imagen en móvil/tablet. */}
       <div className="relative flex w-full flex-1 items-start bg-background px-5 pt-8 pb-14 sm:px-8 lg:absolute lg:inset-0 lg:h-full lg:items-center lg:bg-transparent lg:pt-[88px] lg:pb-0 lg:pl-[7vw] lg:pr-6 xl:pl-[8vw]">
         {content}
       </div>
