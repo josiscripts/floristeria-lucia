@@ -7,7 +7,6 @@ import type { Product } from "@/data/catalog";
  */
 export function supabaseProductToLegacy(supabaseProduct: SupabaseProduct): Product {
   const primaryOption = supabaseProduct.product_options[0];
-  const secondaryOption = supabaseProduct.product_options[1];
   const tertiaryOption = supabaseProduct.product_options[2];
 
   // Get primary image (marked as primary or first image)
@@ -22,7 +21,7 @@ export function supabaseProductToLegacy(supabaseProduct: SupabaseProduct): Produ
     ? supabaseProduct.color_variants.map((v) => v.name)
     : undefined;
 
-  const result = {
+  return {
     id: supabaseProduct.id,
     name: supabaseProduct.name,
     category: supabaseProduct.category || "ramos",
@@ -34,10 +33,6 @@ export function supabaseProductToLegacy(supabaseProduct: SupabaseProduct): Produ
     // Store additional Supabase data in a way that doesn't break the type
     ...(supabaseProduct as any),
   };
-
-  console.log("[supabaseProductToLegacy]", result.name, "category:", result.category, "image:", result.image);
-
-  return result;
 }
 
 /**
