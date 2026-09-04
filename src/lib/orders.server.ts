@@ -24,6 +24,7 @@ export interface CreateOrderRequest {
   dedicatory?: string | null;
   notes?: string | null;
   cartLines: CartLine[];
+  userId?: string | null; // Optional: set by server for authenticated users
 }
 
 /**
@@ -144,6 +145,7 @@ export async function createOrder(request: CreateOrderRequest): Promise<CreateOr
       notes: request.notes?.trim() || null,
       status: "pending",
       ghl_contact_id: null,
+      user_id: request.userId || null,
     };
 
     const { data: orderRow, error: orderError } = await supabaseAdmin

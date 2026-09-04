@@ -41,6 +41,9 @@ export const common: LocaleBundle = {
     madeToMeasure: "A medida",
     premium: "Premium",
     years710: "7-10 años",
+    view: "Ver",
+    item: "producto",
+    items: "productos",
   },
   en: {
     home: "Home",
@@ -82,6 +85,9 @@ export const common: LocaleBundle = {
     madeToMeasure: "Made to measure",
     premium: "Premium",
     years710: "7-10 years",
+    view: "View",
+    item: "product",
+    items: "products",
   },
   ca: {
     home: "Inici",
@@ -123,5 +129,8 @@ export const common: LocaleBundle = {
     madeToMeasure: "A mida",
     premium: "Premium",
     years710: "7-10 anys",
+    view: "Veure",
+    item: "producte",
+    items: "productes",
   },
 };

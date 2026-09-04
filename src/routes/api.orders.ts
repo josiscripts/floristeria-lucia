@@ -111,7 +111,7 @@ const GET = withAdminGuard(async (request) => {
 });
 
 /**
- * POST /api/orders — Público: usado por el checkout de la tienda, sin cambios.
+ * POST /api/orders — Público: usado por el checkout de la tienda.
  * Request body:
  * {
  *   customerName: string,
@@ -135,6 +135,9 @@ const GET = withAdminGuard(async (request) => {
  *     key: string
  *   }>
  * }
+ *
+ * Authenticated users will have their order associated with their user_id.
+ * Unauthenticated users will have user_id = NULL.
  */
 async function POST(request: Request) {
   try {
@@ -153,8 +156,30 @@ async function POST(request: Request) {
       return json({ success: false, error: "Cart is empty" }, { status: 400 });
     }
 
-    // Call server-side order creation
-    const result = await createOrder(body as CreateOrderRequest);
+    // Extract authenticated user from request headers (if available)
+    // The Authorization header should contain JWT token from Supabase
+    let userId: string | null = null;
+    try {
+      const authHeader = request.headers.get("authorization");
+      if (authHeader?.startsWith("Bearer ")) {
+        // Verify JWT and extract user ID
+        // Using supabaseAdmin to verify the token
+        const token = authHeader.substring(7);
+        const { data, error } = await supabaseAdmin.auth.getUser(token);
+        if (!error && data?.user?.id) {
+          userId = data.user.id;
+        }
+      }
+    } catch (authError) {
+      // Auth extraction failed - user remains null, order will be anonymous
+      console.debug("[API] Auth extraction failed, proceeding with anonymous order");
+    }
+
+    // Call server-side order creation with userId
+    const orderRequest: CreateOrderRequest = body as CreateOrderRequest;
+    orderRequest.userId = userId;
+
+    const result = await createOrder(orderRequest);
 
     if (!result.success) {
       return json(

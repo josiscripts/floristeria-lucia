@@ -465,13 +465,13 @@ function AccountMenu() {
           <Link to="/mi-cuenta">{t("nav.myAccount")}</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link to="/mi-cuenta">{t("nav.myOrders")}</Link>
+          <Link to="/mi-cuenta/pedidos">{t("nav.myOrders")}</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link to="/favoritos">{t("nav.favorites")}</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link to="/mi-cuenta">{t("nav.settings")}</Link>
+          <Link to="/mi-cuenta/configuracion">{t("nav.settings")}</Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onSelect={() => void signOut()}>{t("nav.signOut")}</DropdownMenuItem>
@@ -526,6 +526,27 @@ function MobileAccountLinks({ onNavigate }: { onNavigate: () => void }) {
         className="flex items-center gap-3 py-2 text-sm text-foreground hover:text-primary"
       >
         <CircleUserRound className="size-5" strokeWidth={1.5} /> {t("nav.myAccount")}
+      </Link>
+      <Link
+        to="/mi-cuenta/pedidos"
+        onClick={onNavigate}
+        className="flex items-center gap-3 py-2 text-sm text-foreground hover:text-primary"
+      >
+        {t("nav.myOrders")}
+      </Link>
+      <Link
+        to="/favoritos"
+        onClick={onNavigate}
+        className="flex items-center gap-3 py-2 text-sm text-foreground hover:text-primary"
+      >
+        {t("nav.favorites")}
+      </Link>
+      <Link
+        to="/mi-cuenta/configuracion"
+        onClick={onNavigate}
+        className="flex items-center gap-3 py-2 text-sm text-foreground hover:text-primary"
+      >
+        {t("nav.settings")}
       </Link>
       <button
         type="button"

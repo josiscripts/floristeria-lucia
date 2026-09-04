@@ -23,10 +23,13 @@ import { Route as RosasEternasRouteImport } from './routes/rosas-eternas'
 import { Route as ServiciosRouteImport } from './routes/servicios'
 import { Route as SobreNosotrosRouteImport } from './routes/sobre-nosotros'
 import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
+import { Route as AuthenticatedConfiguracionRouteImport } from './routes/_authenticated/configuracion'
 import { Route as AuthenticatedMiCuentaRouteImport } from './routes/_authenticated/mi-cuenta'
+import { Route as ApiAddressesRouteImport } from './routes/api.addresses'
 import { Route as ApiAuditLogsRouteImport } from './routes/api.audit-logs'
 import { Route as ApiConfirmationRouteImport } from './routes/api.confirmation'
 import { Route as ApiOrdersRouteImport } from './routes/api.orders'
+import { Route as ApiPreferencesRouteImport } from './routes/api.preferences'
 import { Route as ApiProductImagesRouteImport } from './routes/api.product-images'
 import { Route as ApiProductsRouteImport } from './routes/api.products'
 import { Route as ApiWebhookEventsRouteImport } from './routes/api.webhook-events'
@@ -46,6 +49,8 @@ import { Route as AuthenticatedAdminProductsRouteImport } from './routes/_authen
 import { Route as AuthenticatedAdminReportsRouteImport } from './routes/_authenticated/admin/reports'
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin/settings'
 import { Route as AuthenticatedAdminWebhooksRouteImport } from './routes/_authenticated/admin/webhooks'
+import { Route as AuthenticatedMiCuentaPedidosRouteImport } from './routes/_authenticated/mi-cuenta.pedidos'
+import { Route as ApiAccountOrdersRouteImport } from './routes/api.account.orders'
 import { Route as ApiAdminDebugEnvRouteImport } from './routes/api.admin.debug-env'
 import { Route as ApiAdminDebugMetadataRouteImport } from './routes/api.admin.debug-metadata'
 import { Route as ApiAdminDiagnoseMetadataRouteImport } from './routes/api.admin.diagnose-metadata'
@@ -139,10 +144,21 @@ const AuthenticatedAdminRouteRoute = AuthenticatedAdminRouteRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedConfiguracionRoute =
+  AuthenticatedConfiguracionRouteImport.update({
+    id: '/configuracion',
+    path: '/configuracion',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedMiCuentaRoute = AuthenticatedMiCuentaRouteImport.update({
   id: '/mi-cuenta',
   path: '/mi-cuenta',
   getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const ApiAddressesRoute = ApiAddressesRouteImport.update({
+  id: '/api/addresses',
+  path: '/api/addresses',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAuditLogsRoute = ApiAuditLogsRouteImport.update({
   id: '/api/audit-logs',
@@ -157,6 +173,11 @@ const ApiConfirmationRoute = ApiConfirmationRouteImport.update({
 const ApiOrdersRoute = ApiOrdersRouteImport.update({
   id: '/api/orders',
   path: '/api/orders',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPreferencesRoute = ApiPreferencesRouteImport.update({
+  id: '/api/preferences',
+  path: '/api/preferences',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiProductImagesRoute = ApiProductImagesRouteImport.update({
@@ -261,6 +282,17 @@ const AuthenticatedAdminWebhooksRoute =
     path: '/webhooks',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedMiCuentaPedidosRoute =
+  AuthenticatedMiCuentaPedidosRouteImport.update({
+    id: '/pedidos',
+    path: '/pedidos',
+    getParentRoute: () => AuthenticatedMiCuentaRoute,
+  } as any)
+const ApiAccountOrdersRoute = ApiAccountOrdersRouteImport.update({
+  id: '/api/account/orders',
+  path: '/api/account/orders',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAdminDebugEnvRoute = ApiAdminDebugEnvRouteImport.update({
   id: '/api/admin/debug-env',
   path: '/api/admin/debug-env',
@@ -401,10 +433,13 @@ export interface FileRoutesByFullPath {
   '/servicios': typeof ServiciosRouteWithChildren
   '/sobre-nosotros': typeof SobreNosotrosRoute
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
-  '/mi-cuenta': typeof AuthenticatedMiCuentaRoute
+  '/configuracion': typeof AuthenticatedConfiguracionRoute
+  '/mi-cuenta': typeof AuthenticatedMiCuentaRouteWithChildren
+  '/api/addresses': typeof ApiAddressesRoute
   '/api/audit-logs': typeof ApiAuditLogsRoute
   '/api/confirmation': typeof ApiConfirmationRoute
   '/api/orders': typeof ApiOrdersRouteWithChildren
+  '/api/preferences': typeof ApiPreferencesRoute
   '/api/product-images': typeof ApiProductImagesRoute
   '/api/products': typeof ApiProductsRouteWithChildren
   '/api/webhook-events': typeof ApiWebhookEventsRouteWithChildren
@@ -423,6 +458,8 @@ export interface FileRoutesByFullPath {
   '/admin/reports': typeof AuthenticatedAdminReportsRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/webhooks': typeof AuthenticatedAdminWebhooksRoute
+  '/mi-cuenta/pedidos': typeof AuthenticatedMiCuentaPedidosRoute
+  '/api/account/orders': typeof ApiAccountOrdersRoute
   '/api/admin/debug-env': typeof ApiAdminDebugEnvRoute
   '/api/admin/debug-metadata': typeof ApiAdminDebugMetadataRoute
   '/api/admin/diagnose-metadata': typeof ApiAdminDiagnoseMetadataRoute
@@ -460,10 +497,13 @@ export interface FileRoutesByTo {
   '/personalizar-ramo': typeof PersonalizarRamoRoute
   '/rosas-eternas': typeof RosasEternasRoute
   '/sobre-nosotros': typeof SobreNosotrosRoute
-  '/mi-cuenta': typeof AuthenticatedMiCuentaRoute
+  '/configuracion': typeof AuthenticatedConfiguracionRoute
+  '/mi-cuenta': typeof AuthenticatedMiCuentaRouteWithChildren
+  '/api/addresses': typeof ApiAddressesRoute
   '/api/audit-logs': typeof ApiAuditLogsRoute
   '/api/confirmation': typeof ApiConfirmationRoute
   '/api/orders': typeof ApiOrdersRouteWithChildren
+  '/api/preferences': typeof ApiPreferencesRoute
   '/api/product-images': typeof ApiProductImagesRoute
   '/api/products': typeof ApiProductsRouteWithChildren
   '/api/webhook-events': typeof ApiWebhookEventsRouteWithChildren
@@ -480,6 +520,8 @@ export interface FileRoutesByTo {
   '/admin/reports': typeof AuthenticatedAdminReportsRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/webhooks': typeof AuthenticatedAdminWebhooksRoute
+  '/mi-cuenta/pedidos': typeof AuthenticatedMiCuentaPedidosRoute
+  '/api/account/orders': typeof ApiAccountOrdersRoute
   '/api/admin/debug-env': typeof ApiAdminDebugEnvRoute
   '/api/admin/debug-metadata': typeof ApiAdminDebugMetadataRoute
   '/api/admin/diagnose-metadata': typeof ApiAdminDiagnoseMetadataRoute
@@ -521,10 +563,13 @@ export interface FileRoutesById {
   '/servicios': typeof ServiciosRouteWithChildren
   '/sobre-nosotros': typeof SobreNosotrosRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
-  '/_authenticated/mi-cuenta': typeof AuthenticatedMiCuentaRoute
+  '/_authenticated/configuracion': typeof AuthenticatedConfiguracionRoute
+  '/_authenticated/mi-cuenta': typeof AuthenticatedMiCuentaRouteWithChildren
+  '/api/addresses': typeof ApiAddressesRoute
   '/api/audit-logs': typeof ApiAuditLogsRoute
   '/api/confirmation': typeof ApiConfirmationRoute
   '/api/orders': typeof ApiOrdersRouteWithChildren
+  '/api/preferences': typeof ApiPreferencesRoute
   '/api/product-images': typeof ApiProductImagesRoute
   '/api/products': typeof ApiProductsRouteWithChildren
   '/api/webhook-events': typeof ApiWebhookEventsRouteWithChildren
@@ -543,6 +588,8 @@ export interface FileRoutesById {
   '/_authenticated/admin/reports': typeof AuthenticatedAdminReportsRoute
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/_authenticated/admin/webhooks': typeof AuthenticatedAdminWebhooksRoute
+  '/_authenticated/mi-cuenta/pedidos': typeof AuthenticatedMiCuentaPedidosRoute
+  '/api/account/orders': typeof ApiAccountOrdersRoute
   '/api/admin/debug-env': typeof ApiAdminDebugEnvRoute
   '/api/admin/debug-metadata': typeof ApiAdminDebugMetadataRoute
   '/api/admin/diagnose-metadata': typeof ApiAdminDiagnoseMetadataRoute
@@ -584,10 +631,13 @@ export interface FileRouteTypes {
     | '/servicios'
     | '/sobre-nosotros'
     | '/admin'
+    | '/configuracion'
     | '/mi-cuenta'
+    | '/api/addresses'
     | '/api/audit-logs'
     | '/api/confirmation'
     | '/api/orders'
+    | '/api/preferences'
     | '/api/product-images'
     | '/api/products'
     | '/api/webhook-events'
@@ -606,6 +656,8 @@ export interface FileRouteTypes {
     | '/admin/reports'
     | '/admin/settings'
     | '/admin/webhooks'
+    | '/mi-cuenta/pedidos'
+    | '/api/account/orders'
     | '/api/admin/debug-env'
     | '/api/admin/debug-metadata'
     | '/api/admin/diagnose-metadata'
@@ -643,10 +695,13 @@ export interface FileRouteTypes {
     | '/personalizar-ramo'
     | '/rosas-eternas'
     | '/sobre-nosotros'
+    | '/configuracion'
     | '/mi-cuenta'
+    | '/api/addresses'
     | '/api/audit-logs'
     | '/api/confirmation'
     | '/api/orders'
+    | '/api/preferences'
     | '/api/product-images'
     | '/api/products'
     | '/api/webhook-events'
@@ -663,6 +718,8 @@ export interface FileRouteTypes {
     | '/admin/reports'
     | '/admin/settings'
     | '/admin/webhooks'
+    | '/mi-cuenta/pedidos'
+    | '/api/account/orders'
     | '/api/admin/debug-env'
     | '/api/admin/debug-metadata'
     | '/api/admin/diagnose-metadata'
@@ -703,10 +760,13 @@ export interface FileRouteTypes {
     | '/servicios'
     | '/sobre-nosotros'
     | '/_authenticated/admin'
+    | '/_authenticated/configuracion'
     | '/_authenticated/mi-cuenta'
+    | '/api/addresses'
     | '/api/audit-logs'
     | '/api/confirmation'
     | '/api/orders'
+    | '/api/preferences'
     | '/api/product-images'
     | '/api/products'
     | '/api/webhook-events'
@@ -725,6 +785,8 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/reports'
     | '/_authenticated/admin/settings'
     | '/_authenticated/admin/webhooks'
+    | '/_authenticated/mi-cuenta/pedidos'
+    | '/api/account/orders'
     | '/api/admin/debug-env'
     | '/api/admin/debug-metadata'
     | '/api/admin/diagnose-metadata'
@@ -765,9 +827,11 @@ export interface RootRouteChildren {
   RosasEternasRoute: typeof RosasEternasRoute
   ServiciosRoute: typeof ServiciosRouteWithChildren
   SobreNosotrosRoute: typeof SobreNosotrosRoute
+  ApiAddressesRoute: typeof ApiAddressesRoute
   ApiAuditLogsRoute: typeof ApiAuditLogsRoute
   ApiConfirmationRoute: typeof ApiConfirmationRoute
   ApiOrdersRoute: typeof ApiOrdersRouteWithChildren
+  ApiPreferencesRoute: typeof ApiPreferencesRoute
   ApiProductImagesRoute: typeof ApiProductImagesRoute
   ApiProductsRoute: typeof ApiProductsRouteWithChildren
   ApiWebhookEventsRoute: typeof ApiWebhookEventsRouteWithChildren
@@ -775,6 +839,7 @@ export interface RootRouteChildren {
   DebugGhlTestRoute: typeof DebugGhlTestRoute
   LegalSlugRoute: typeof LegalSlugRoute
   ProductoIdRoute: typeof ProductoIdRoute
+  ApiAccountOrdersRoute: typeof ApiAccountOrdersRoute
   ApiAdminDebugEnvRoute: typeof ApiAdminDebugEnvRoute
   ApiAdminDebugMetadataRoute: typeof ApiAdminDebugMetadataRoute
   ApiAdminDiagnoseMetadataRoute: typeof ApiAdminDiagnoseMetadataRoute
@@ -888,12 +953,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/configuracion': {
+      id: '/_authenticated/configuracion'
+      path: '/configuracion'
+      fullPath: '/configuracion'
+      preLoaderRoute: typeof AuthenticatedConfiguracionRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/mi-cuenta': {
       id: '/_authenticated/mi-cuenta'
       path: '/mi-cuenta'
       fullPath: '/mi-cuenta'
       preLoaderRoute: typeof AuthenticatedMiCuentaRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/api/addresses': {
+      id: '/api/addresses'
+      path: '/api/addresses'
+      fullPath: '/api/addresses'
+      preLoaderRoute: typeof ApiAddressesRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/audit-logs': {
       id: '/api/audit-logs'
@@ -914,6 +993,13 @@ declare module '@tanstack/react-router' {
       path: '/api/orders'
       fullPath: '/api/orders'
       preLoaderRoute: typeof ApiOrdersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/preferences': {
+      id: '/api/preferences'
+      path: '/api/preferences'
+      fullPath: '/api/preferences'
+      preLoaderRoute: typeof ApiPreferencesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/product-images': {
@@ -1048,6 +1134,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/webhooks'
       preLoaderRoute: typeof AuthenticatedAdminWebhooksRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/mi-cuenta/pedidos': {
+      id: '/_authenticated/mi-cuenta/pedidos'
+      path: '/pedidos'
+      fullPath: '/mi-cuenta/pedidos'
+      preLoaderRoute: typeof AuthenticatedMiCuentaPedidosRouteImport
+      parentRoute: typeof AuthenticatedMiCuentaRoute
+    }
+    '/api/account/orders': {
+      id: '/api/account/orders'
+      path: '/api/account/orders'
+      fullPath: '/api/account/orders'
+      preLoaderRoute: typeof ApiAccountOrdersRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/admin/debug-env': {
       id: '/api/admin/debug-env'
@@ -1274,14 +1374,29 @@ const AuthenticatedAdminRouteRouteWithChildren =
     AuthenticatedAdminRouteRouteChildren,
   )
 
+interface AuthenticatedMiCuentaRouteChildren {
+  AuthenticatedMiCuentaPedidosRoute: typeof AuthenticatedMiCuentaPedidosRoute
+}
+
+const AuthenticatedMiCuentaRouteChildren: AuthenticatedMiCuentaRouteChildren = {
+  AuthenticatedMiCuentaPedidosRoute: AuthenticatedMiCuentaPedidosRoute,
+}
+
+const AuthenticatedMiCuentaRouteWithChildren =
+  AuthenticatedMiCuentaRoute._addFileChildren(
+    AuthenticatedMiCuentaRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRouteWithChildren
-  AuthenticatedMiCuentaRoute: typeof AuthenticatedMiCuentaRoute
+  AuthenticatedConfiguracionRoute: typeof AuthenticatedConfiguracionRoute
+  AuthenticatedMiCuentaRoute: typeof AuthenticatedMiCuentaRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRouteRoute: AuthenticatedAdminRouteRouteWithChildren,
-  AuthenticatedMiCuentaRoute: AuthenticatedMiCuentaRoute,
+  AuthenticatedConfiguracionRoute: AuthenticatedConfiguracionRoute,
+  AuthenticatedMiCuentaRoute: AuthenticatedMiCuentaRouteWithChildren,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -1400,9 +1515,11 @@ const rootRouteChildren: RootRouteChildren = {
   RosasEternasRoute: RosasEternasRoute,
   ServiciosRoute: ServiciosRouteWithChildren,
   SobreNosotrosRoute: SobreNosotrosRoute,
+  ApiAddressesRoute: ApiAddressesRoute,
   ApiAuditLogsRoute: ApiAuditLogsRoute,
   ApiConfirmationRoute: ApiConfirmationRoute,
   ApiOrdersRoute: ApiOrdersRouteWithChildren,
+  ApiPreferencesRoute: ApiPreferencesRoute,
   ApiProductImagesRoute: ApiProductImagesRoute,
   ApiProductsRoute: ApiProductsRouteWithChildren,
   ApiWebhookEventsRoute: ApiWebhookEventsRouteWithChildren,
@@ -1410,6 +1527,7 @@ const rootRouteChildren: RootRouteChildren = {
   DebugGhlTestRoute: DebugGhlTestRoute,
   LegalSlugRoute: LegalSlugRoute,
   ProductoIdRoute: ProductoIdRoute,
+  ApiAccountOrdersRoute: ApiAccountOrdersRoute,
   ApiAdminDebugEnvRoute: ApiAdminDebugEnvRoute,
   ApiAdminDebugMetadataRoute: ApiAdminDebugMetadataRoute,
   ApiAdminDiagnoseMetadataRoute: ApiAdminDiagnoseMetadataRoute,

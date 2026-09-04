@@ -1,14 +1,16 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
+import { useState } from "react";
+import { LogOut } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { supabase } from "@/integrations/supabase/client";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/useAuth";
 import { useT } from "@/context/LanguageContext";
+import { useShop } from "@/context/ShopContext";
+import { AccountTabContent } from "@/components/account/AccountTabContent";
+import { MyOrdersTab } from "@/components/account/MyOrdersTab";
+import { FavoritesTab } from "@/components/account/FavoritesTab";
+import { LogoutConfirmDialog } from "@/components/account/LogoutConfirmDialog";
 
 export const Route = createFileRoute("/_authenticated/mi-cuenta")({
   head: () => ({
@@ -17,10 +19,10 @@ export const Route = createFileRoute("/_authenticated/mi-cuenta")({
       {
         name: "description",
         content:
-          "Consulta y actualiza tus datos de contacto en floristeria lucia para tus pedidos de flores y plantas.",
+          "Gestiona tu cuenta, ve tus pedidos y favoritos en floristeria lucia.",
       },
       { property: "og:title", content: "Mi cuenta · floristeria lucia" },
-      { property: "og:description", content: "Gestiona tus datos en floristeria lucia." },
+      { property: "og:description", content: "Tu cuenta en floristeria lucia." },
     ],
   }),
   component: AccountPage,
@@ -30,84 +32,80 @@ function AccountPage() {
   const t = useT();
   const { user } = useAuth();
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
-  const [fullName, setFullName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [saving, setSaving] = useState(false);
+  const { favorites } = useShop();
+  const [activeTab, setActiveTab] = useState("account");
+  const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
 
-  useEffect(() => {
-    if (!user) return;
-    let active = true;
-    supabase
-      .from("profiles")
-      .select("full_name, phone")
-      .eq("id", user.id)
-      .maybeSingle()
-      .then(({ data }) => {
-        if (!active || !data) return;
-        setFullName(data.full_name ?? "");
-        setPhone(data.phone ?? "");
-      });
-    return () => {
-      active = false;
-    };
-  }, [user]);
-
-  const save = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!user) return;
-    setSaving(true);
-    const { error } = await supabase
-      .from("profiles")
-      .upsert({ id: user.id, full_name: fullName.trim(), phone: phone.trim() });
-    setSaving(false);
-    if (error) {
-      toast.error(t("auth.account.saveError"));
-      return;
-    }
-    toast.success(t("auth.account.saveSuccess"));
-  };
-
-  const signOut = async () => {
-    await queryClient.cancelQueries();
-    queryClient.clear();
-    await supabase.auth.signOut();
-    navigate({ to: "/auth", replace: true });
-  };
+  if (!user) {
+    return null;
+  }
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6">
-      <h1 className="font-display text-3xl text-foreground">{t("auth.account.title")}</h1>
-      <p className="mt-2 text-sm text-muted-foreground">{user?.email}</p>
-
-      <form onSubmit={save} className="mt-8 space-y-4 rounded-lg border border-border bg-card p-6">
-        <div className="space-y-2">
-          <Label htmlFor="name">{t("auth.fields.fullName")}</Label>
-          <Input
-            id="name"
-            maxLength={100}
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-          />
+    <div className="min-h-screen bg-background">
+      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:py-16">
+        {/* Header */}
+        <div className="mb-12">
+          <p className="text-xs tracking-[0.35em] text-primary uppercase">
+            {t("auth.account.welcome")}
+          </p>
+          <h1 className="mt-4 font-display text-4xl sm:text-5xl text-foreground">
+            {t("auth.account.title")}
+          </h1>
+          <p className="mt-2 text-muted-foreground">{user.email}</p>
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="phone">{t("auth.fields.phone")}</Label>
-          <Input
-            id="phone"
-            type="tel"
-            maxLength={20}
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-          />
-        </div>
-        <Button type="submit" disabled={saving}>
-          {saving ? t("auth.account.saving") : t("auth.account.saveChanges")}
-        </Button>
-      </form>
 
-      <Button variant="outline" className="mt-6" onClick={signOut}>
-        {t("auth.account.signOut")}
-      </Button>
+        {/* Main Content with Tabs */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="account">{t("auth.account.tabs.account")}</TabsTrigger>
+            <TabsTrigger value="orders">{t("auth.account.tabs.orders")}</TabsTrigger>
+            <TabsTrigger value="favorites">{t("auth.account.tabs.favorites")}</TabsTrigger>
+            <TabsTrigger value="settings">{t("auth.account.tabs.settings")}</TabsTrigger>
+          </TabsList>
+
+          {/* Tab: Account Overview */}
+          <TabsContent value="account">
+            <AccountTabContent user={user} favorites={favorites} />
+          </TabsContent>
+
+          {/* Tab: My Orders */}
+          <TabsContent value="orders">
+            <MyOrdersTab user={user} />
+          </TabsContent>
+
+          {/* Tab: Favorites */}
+          <TabsContent value="favorites">
+            <FavoritesTab favorites={favorites} />
+          </TabsContent>
+
+          {/* Tab: Settings */}
+          <TabsContent value="settings">
+            <SettingsPreview onNavigate={() => window.location.href = "/mi-cuenta/configuracion"} />
+          </TabsContent>
+        </Tabs>
+
+        {/* Logout Section */}
+        <div className="mt-12 space-y-4 border-t border-border pt-8">
+          <Button variant="destructive" onClick={() => setLogoutDialogOpen(true)}>
+            <LogOut className="mr-2 size-4" />
+            {t("auth.account.logoutButton")}
+          </Button>
+        </div>
+      </div>
+
+      {/* Logout Confirmation Dialog */}
+      <LogoutConfirmDialog open={logoutDialogOpen} onOpenChange={setLogoutDialogOpen} />
+    </div>
+  );
+}
+
+function SettingsPreview({ onNavigate }: { onNavigate: () => void }) {
+  const t = useT();
+
+  return (
+    <div className="space-y-4">
+      <p className="text-sm text-muted-foreground">{t("auth.account.description")}</p>
+      <Button onClick={onNavigate}>{t("auth.account.viewFull")}</Button>
     </div>
   );
 }
