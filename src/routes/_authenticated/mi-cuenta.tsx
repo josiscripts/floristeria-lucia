@@ -56,11 +56,10 @@ function AccountPage() {
 
         {/* Main Content with Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="account">{t("auth.account.tabs.account")}</TabsTrigger>
             <TabsTrigger value="orders">{t("auth.account.tabs.orders")}</TabsTrigger>
             <TabsTrigger value="favorites">{t("auth.account.tabs.favorites")}</TabsTrigger>
-            <TabsTrigger value="settings">{t("auth.account.tabs.settings")}</TabsTrigger>
           </TabsList>
 
           {/* Tab: Account Overview */}
@@ -77,12 +76,18 @@ function AccountPage() {
           <TabsContent value="favorites">
             <FavoritesTab favorites={favorites} />
           </TabsContent>
-
-          {/* Tab: Settings */}
-          <TabsContent value="settings">
-            <SettingsPreview onNavigate={() => navigate({ to: "/mi-cuenta/configuracion" })} />
-          </TabsContent>
         </Tabs>
+
+        {/* Link to full configuration */}
+        <div className="mt-8 border-t border-border pt-8">
+          <p className="mb-4 text-sm text-muted-foreground">{t("auth.account.description")}</p>
+          <button
+            onClick={() => navigate({ to: "/mi-cuenta/configuracion" })}
+            className="text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+          >
+            {t("auth.account.viewFull")} →
+          </button>
+        </div>
 
         {/* Logout Section */}
         <div className="mt-12 space-y-4 border-t border-border pt-8">
@@ -95,17 +100,6 @@ function AccountPage() {
 
       {/* Logout Confirmation Dialog */}
       <LogoutConfirmDialog open={logoutDialogOpen} onOpenChange={setLogoutDialogOpen} />
-    </div>
-  );
-}
-
-function SettingsPreview({ onNavigate }: { onNavigate: () => void }) {
-  const t = useT();
-
-  return (
-    <div className="space-y-4">
-      <p className="text-sm text-muted-foreground">{t("auth.account.description")}</p>
-      <Button onClick={onNavigate}>{t("auth.account.viewFull")}</Button>
     </div>
   );
 }

@@ -24,7 +24,7 @@ interface MyOrdersTabProps {
 export function MyOrdersTab({ user }: MyOrdersTabProps) {
   const t = useT();
   const navigate = useNavigate();
-  const { session } = useAuth();
+  const { session, loading: authLoading } = useAuth();
   const [orders, setOrders] = useState<UserOrder[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -32,11 +32,24 @@ export function MyOrdersTab({ user }: MyOrdersTabProps) {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        setLoading(true);
         setError(null);
+
+        // Wait for auth to be loaded
+        if (authLoading) {
+          return;
+        }
 
         if (!session) {
           setOrders([]);
+          setLoading(false);
+          return;
+        }
+
+        // Verify we have a valid access token
+        if (!session.access_token) {
+          setError("No valid authentication token");
+          setOrders([]);
+          setLoading(false);
           return;
         }
 
@@ -64,7 +77,7 @@ export function MyOrdersTab({ user }: MyOrdersTabProps) {
     };
 
     fetchOrders();
-  }, [session]);
+  }, [session, authLoading]);
 
   if (loading) {
     return (
