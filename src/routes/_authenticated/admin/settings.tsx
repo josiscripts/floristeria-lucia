@@ -8,6 +8,7 @@ import { AdminPagination } from "@/components/admin/Pagination";
 import { LoadingState } from "@/components/admin/LoadingState";
 import { EmptyState } from "@/components/admin/EmptyState";
 import { ErrorState } from "@/components/admin/ErrorState";
+import { CatalogMigrationCard } from "@/components/admin/CatalogMigrationCard";
 import { useAuth } from "@/hooks/useAuth";
 import { fetchAuditLogs } from "@/lib/admin/api";
 
@@ -60,6 +61,8 @@ function SettingsPage() {
           </p>
         </CardContent>
       </Card>
+
+      <CatalogMigrationCard />
 
       <Card>
         <CardHeader>

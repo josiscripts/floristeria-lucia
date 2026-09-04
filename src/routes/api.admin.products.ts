@@ -1,5 +1,5 @@
 /**
- * Admin API endpoints for product management (BLOQUE 4 redesign)
+ * Admin API endpoints for product management (Supabase-only)
  * POST /api/admin/products - Create product with options
  * GET /api/admin/products - List all products
  */
@@ -14,16 +14,12 @@ import {
   listProducts,
   getProductWithOptions,
 } from "@/lib/products.server";
-import { createGHLProduct } from "@/lib/ghl/client.server";
 import { generateSKU } from "@/lib/sku-generator.server";
-import { ensureProductPrice } from "@/lib/price-sync.server";
-import { getGHLCollectionIdForCategory } from "@/lib/category-collection.server";
-import type { CategoryId } from "@/data/catalog";
 
 interface CreateProductWithOptionsRequest {
   name: string;
   description?: string;
-  category?: CategoryId;
+  category_id?: string; // FK to categories table
   active?: boolean;
   cover_image_url?: string;
   has_color_variants?: boolean;
@@ -33,22 +29,22 @@ interface CreateProductWithOptionsRequest {
     discount_percent?: number;
     stock_quantity?: number | null;
   }>;
-  color_variants?: string[]; // For rosas-eternas
+  color_variants?: string[];
 }
 
 /**
  * GET /api/admin/products
- * List all products with their options
+ * List all products with their options and images
  */
 const GET = withAdminGuard(async (request) => {
   try {
     const url = new URL(request.url);
-    const category = url.searchParams.get("category") || undefined;
+    const category_id = url.searchParams.get("category_id") || undefined;
     const search = url.searchParams.get("search") || undefined;
     const active = url.searchParams.get("active");
 
     const result = await listProducts({
-      category: category,
+      category_id: category_id,
       active: active === "true" ? true : active === "false" ? false : undefined,
       search: search || undefined,
     });
@@ -57,7 +53,7 @@ const GET = withAdminGuard(async (request) => {
       return json({ error: result.error }, { status: 500 });
     }
 
-    // Enrich with options and colors
+    // Enrich with options, images, and colors
     const products = await Promise.all(
       result.data.map(async (product) => {
         const full = await getProductWithOptions(product.id);
@@ -89,49 +85,32 @@ const POST = withAdminGuard(async (request, admin) => {
     const body: CreateProductWithOptionsRequest = await request.json();
 
     // Validation
-    if (!body.name) {
-      return json({ error: "Missing required field: name" }, { status: 400 });
+    if (!body.name?.trim()) {
+      return json({ error: "Product name is required" }, { status: 400 });
     }
 
     if (!body.options || body.options.length === 0) {
-      return json({ error: "At least one option is required" }, { status: 400 });
+      return json({ error: "At least one price option is required" }, { status: 400 });
     }
 
-    // Step 1: Create product in GHL
-    const ghlPayload: Record<string, any> = {
-      name: body.name,
-      description: body.description || "",
-      category: body.category || "",
-      status: "active",
-    };
-
-    if (body.category) {
-      const collectionResult = await getGHLCollectionIdForCategory(body.category);
-      if (collectionResult.success && collectionResult.collectionId) {
-        ghlPayload.collectionIds = [collectionResult.collectionId];
+    for (const opt of body.options) {
+      if (!opt.name?.trim()) {
+        return json({ error: "Option name is required" }, { status: 400 });
+      }
+      if (typeof opt.price_amount !== "number" || opt.price_amount <= 0) {
+        return json({ error: "Option price must be > 0" }, { status: 400 });
       }
     }
 
-    const ghlResult = await createGHLProduct(ghlPayload);
-
-    if ("code" in ghlResult && "statusCode" in ghlResult) {
-      return json(
-        { error: ghlResult.message, code: ghlResult.code },
-        { status: ghlResult.statusCode || 500 },
-      );
-    }
-
-    const ghlProductId = ghlResult.id;
-
-    // Step 2: Create product in Supabase
+    // Create product in Supabase
     const productRes = await createProduct({
-      ghl_product_id: ghlProductId,
-      name: body.name,
-      description: body.description,
-      category: body.category,
+      name: body.name.trim(),
+      description: body.description?.trim() || null,
+      category_id: body.category_id || null,
       active: body.active ?? true,
-      cover_image_url: body.cover_image_url,
+      cover_image_url: body.cover_image_url || null,
       has_color_variants: body.has_color_variants ?? false,
+      ghl_product_id: null, // Supabase-only product
     });
 
     if (!productRes.success) {
@@ -140,36 +119,22 @@ const POST = withAdminGuard(async (request, admin) => {
 
     const productId = productRes.data.id;
 
-    // Step 3: Create options with GHL prices
+    // Create price options
     const createdOptions = [];
     for (let i = 0; i < body.options.length; i++) {
       const opt = body.options[i];
 
-      // Generate SKU
-      const skuRes = await generateSKU(body.category || "complementos");
-      const sku = skuRes.success ? skuRes.sku : `FL-MIX-${i + 1}`;
-
-      // Create price in GHL
-      const locationId = process.env["GHL_LOCATION_ID"];
-      const priceRes = await ensureProductPrice({
-        ghlProductId,
-        amount: opt.price_amount,
-        currency: "EUR",
-        sku,
-        priceName: opt.name,
-        locationId,
-      });
-
-      const ghlPriceId = priceRes.success ? priceRes.ghlPriceId : null;
+      // Generate SKU for this option
+      const skuRes = await generateSKU(body.category_id || "complementos");
+      const sku = skuRes.success ? skuRes.sku : `FL-OPT-${productId.slice(0, 8)}-${i}`;
 
       // Create option in Supabase
       const optionRes = await createProductOption({
         product_id: productId,
-        ghl_price_id: ghlPriceId || undefined,
-        name: opt.name,
+        name: opt.name.trim(),
         price_amount: opt.price_amount,
         discount_percent: opt.discount_percent ?? 0,
-        stock_quantity: opt.stock_quantity,
+        stock_quantity: opt.stock_quantity ?? null,
         sku,
         active: true,
       });
@@ -179,13 +144,13 @@ const POST = withAdminGuard(async (request, admin) => {
       }
     }
 
-    // Step 4: Create color variants if applicable
+    // Create color variants if applicable
     const createdColors = [];
-    if (body.has_color_variants && body.color_variants) {
+    if (body.has_color_variants && body.color_variants?.length) {
       for (let i = 0; i < body.color_variants.length; i++) {
         const colorRes = await createColorVariant({
           product_id: productId,
-          name: body.color_variants[i],
+          name: body.color_variants[i].trim(),
           sort_order: i,
           active: true,
         });
@@ -196,7 +161,7 @@ const POST = withAdminGuard(async (request, admin) => {
       }
     }
 
-    // Step 5: Log action
+    // Log admin action
     await logAdminAction({
       userId: admin.user.id,
       action: "product.create",
@@ -209,7 +174,7 @@ const POST = withAdminGuard(async (request, admin) => {
       },
     });
 
-    // Step 6: Return full product
+    // Return full product with all relations
     const fullProduct = await getProductWithOptions(productId);
 
     return json(

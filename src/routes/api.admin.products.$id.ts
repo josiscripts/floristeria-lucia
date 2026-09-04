@@ -1,22 +1,20 @@
 /**
- * Admin API endpoints for product management by ID (BLOQUE 4 redesign)
+ * Admin API endpoints for product management by ID (Supabase-only)
  * GET /api/admin/products/{id} - Get product with options
  * PUT /api/admin/products/{id} - Update product
- * DELETE /api/admin/products/{id} - Delete product
+ * DELETE /api/admin/products/{id} - Soft delete product
  */
 
 import { createFileRoute } from "@tanstack/react-router";
 import { json } from "@tanstack/react-start";
+import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { withAdminGuard, logAdminAction } from "@/lib/admin/guard.server";
 import { getProductWithOptions, updateProduct, deleteProduct } from "@/lib/products.server";
-import { updateGHLProduct } from "@/lib/ghl/client.server";
-import { getGHLCollectionIdForCategory } from "@/lib/category-collection.server";
-import type { CategoryId } from "@/data/catalog";
 
 interface UpdateProductRequest {
   name?: string;
   description?: string;
-  category?: CategoryId;
+  category_id?: string | null; // FK to categories
   active?: boolean;
   cover_image_url?: string;
   has_color_variants?: boolean;
@@ -24,7 +22,7 @@ interface UpdateProductRequest {
 
 /**
  * GET /api/admin/products/{id}
- * Get a single product with all its options and color variants
+ * Get a single product with all its options, images, and color variants
  */
 const GET = withAdminGuard(async (request) => {
   try {
@@ -51,8 +49,7 @@ const GET = withAdminGuard(async (request) => {
 
 /**
  * PUT /api/admin/products/{id}
- * Update a product (name, description, category, status, etc.)
- * Note: Use /api/admin/products/{id}/options endpoints for option management
+ * Update a product (name, description, category, status, color variants, etc.)
  */
 const PUT = withAdminGuard(async (request, admin) => {
   try {
@@ -65,28 +62,22 @@ const PUT = withAdminGuard(async (request, admin) => {
 
     const body: UpdateProductRequest = await request.json();
 
-    // Check if product exists
+    // Validate product exists
     const existing = await getProductWithOptions(id);
     if (!existing.success) {
       return json({ error: "Product not found" }, { status: 404 });
     }
 
-    // Update in GHL if name/description/category changed
-    const ghlUpdatePayload: Record<string, any> = {};
-    if (body.name) ghlUpdatePayload.name = body.name;
-    if (body.description) ghlUpdatePayload.description = body.description;
-    if (body.category) {
-      const collectionResult = await getGHLCollectionIdForCategory(body.category);
-      if (collectionResult.success && collectionResult.collectionId) {
-        ghlUpdatePayload.collectionIds = [collectionResult.collectionId];
-      }
-    }
+    // Validate category_id if provided
+    if (body.category_id) {
+      const { data: category, error: catError } = await supabaseAdmin
+        .from("categories")
+        .select("id")
+        .eq("id", body.category_id)
+        .single();
 
-    if (Object.keys(ghlUpdatePayload).length > 0) {
-      const ghlResult = await updateGHLProduct(existing.data.ghl_product_id, ghlUpdatePayload);
-      if ("code" in ghlResult && "statusCode" in ghlResult) {
-        console.warn(`[API] GHL update failed: ${ghlResult.message}`);
-        // Don't fail the request, continue with Supabase update
+      if (catError || !category) {
+        return json({ error: "Invalid category ID" }, { status: 400 });
       }
     }
 
@@ -120,7 +111,7 @@ const PUT = withAdminGuard(async (request, admin) => {
 /**
  * DELETE /api/admin/products/{id}
  * Soft delete a product (set deleted_at)
- * Does NOT delete from GHL to maintain historical records
+ * Protects products with historical orders and Condolencias category
  */
 const DELETE = withAdminGuard(async (request, admin) => {
   try {
@@ -133,11 +124,40 @@ const DELETE = withAdminGuard(async (request, admin) => {
 
     // Check if product exists
     const existing = await getProductWithOptions(id);
-    if (!existing.success) {
+    if (!existing.success || !existing.data) {
       return json({ error: "Product not found" }, { status: 404 });
     }
 
-    // Soft delete in Supabase
+    const product = existing.data;
+
+    // Protection 1: Check if product belongs to Condolencias category
+    // Condolencias must be protected (can only soft delete, never hard delete)
+    if (product?.category_id) {
+      const { data: category } = await supabaseAdmin
+        .from("categories")
+        .select("slug")
+        .eq("id", product.category_id)
+        .single();
+
+      // Allow soft delete but log clearly
+      if (category?.slug === "condolencias") {
+        console.info(`[API] Soft deleting Condolencias product: ${product?.id}`);
+      }
+    }
+
+    // Protection 2: Check for historical orders referencing this product
+    const { data: orders, error: orderError } = await supabaseAdmin
+      .from("order_items")
+      .select("id, order_id")
+      .eq("product_id", id)
+      .limit(1);
+
+    if (!orderError && orders && orders.length > 0) {
+      // Product has order history - only soft delete allowed, never hard delete
+      console.info(`[API] Product ${id} has historical orders. Using safe soft delete.`);
+    }
+
+    // Perform soft delete (set deleted_at)
     const deleteRes = await deleteProduct(id);
 
     if (!deleteRes.success) {
@@ -150,10 +170,14 @@ const DELETE = withAdminGuard(async (request, admin) => {
       action: "product.delete",
       resource: "products",
       recordId: id,
-      metadata: { name: existing.data.name },
+      metadata: {
+        name: product.name,
+        category_id: product.category_id,
+        has_orders: orders && orders.length > 0,
+      },
     });
 
-    return json({ success: true, message: "Product deleted" }, { status: 200 });
+    return json({ success: true, message: "Product deleted (soft delete)" }, { status: 200 });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
     console.error("[API] /api/admin/products/{id} DELETE error:", message);

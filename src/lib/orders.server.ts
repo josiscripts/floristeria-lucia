@@ -5,7 +5,6 @@
  */
 
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
-import { syncGHLContact, syncGHLOpportunity } from "@/lib/ghl/client.server";
 import type { CartLine } from "@/context/ShopContext";
 import type { TablesInsert } from "@/integrations/supabase/types";
 
@@ -190,16 +189,6 @@ export async function createOrder(request: CreateOrderRequest): Promise<CreateOr
 
     console.log(`[Orders] Successfully created order ${orderNumber} (${orderRow.id})`);
 
-    // Sync customer and opportunity to GHL (non-blocking, graceful failure)
-    const ghlLocationId = process.env["GHL_LOCATION_ID"];
-    if (ghlLocationId) {
-      syncGHLContactAndUpdateOrder(orderRow.id, orderNumber, request, total, ghlLocationId).catch(
-        (err) => {
-          console.error("[Orders] Background GHL sync error (non-blocking):", err);
-        },
-      );
-    }
-
     return {
       success: true,
       orderId: orderRow.id,
@@ -213,90 +202,5 @@ export async function createOrder(request: CreateOrderRequest): Promise<CreateOr
       success: false,
       error: "An unexpected error occurred. Please try again.",
     };
-  }
-}
-
-/**
- * Background sync: find or create GHL contact and opportunity, update order with IDs
- * Non-blocking operation - will not throw, errors are logged
- */
-async function syncGHLContactAndUpdateOrder(
-  orderId: string,
-  orderNumber: string,
-  request: CreateOrderRequest,
-  orderTotal: number,
-  ghlLocationId: string,
-): Promise<void> {
-  try {
-    // Step 1: Sync contact
-    const contactId = await syncGHLContact(
-      request.customerEmail,
-      {
-        firstName: request.customerName.split(" ")[0] || request.customerName,
-        lastName: request.customerName.split(" ").slice(1).join(" ") || "",
-        phone: request.customerPhone,
-      },
-      ghlLocationId,
-    );
-
-    if (!contactId) {
-      console.warn(`[Orders] GHL contact sync failed (no ID returned) for order ${orderId}`);
-      return;
-    }
-
-    // Update order with contact ID
-    let { error } = await supabaseAdmin
-      .from("orders")
-      .update({ ghl_contact_id: contactId })
-      .eq("id", orderId);
-
-    if (error) {
-      console.error(`[Orders] Failed to update order with GHL contact ID:`, error);
-      return;
-    }
-
-    console.log(`[Orders] Synced GHL contact ${contactId} for order ${orderId}`);
-
-    // Step 2: Sync opportunity
-    const opportunityId = await syncGHLOpportunity(
-      orderNumber,
-      {
-        id: orderId,
-        total: orderTotal,
-        customer_name: request.customerName,
-        customer_email: request.customerEmail,
-        customer_phone: request.customerPhone,
-        address: request.address,
-        city: request.city,
-        postal_code: request.postalCode,
-        delivery_date: request.deliveryDate ?? null,
-        dedicatory: request.dedicatory ?? null,
-        notes: request.notes ?? null,
-      },
-      contactId,
-      ghlLocationId,
-    );
-
-    if (!opportunityId) {
-      console.warn(`[Orders] GHL opportunity sync failed (no ID returned) for order ${orderId}`);
-      return;
-    }
-
-    // Update order with opportunity ID
-    ({ error } = await supabaseAdmin
-      .from("orders")
-      .update({ ghl_opportunity_id: opportunityId } as Record<string, string>)
-      .eq("id", orderId));
-
-    if (error) {
-      console.error(`[Orders] Failed to update order with GHL opportunity ID:`, error);
-      return;
-    }
-
-    console.log(
-      `[Orders] Successfully synced GHL opportunity ${opportunityId} for order ${orderId}`,
-    );
-  } catch (error) {
-    console.error(`[Orders] Unexpected error in GHL sync:`, error);
   }
 }

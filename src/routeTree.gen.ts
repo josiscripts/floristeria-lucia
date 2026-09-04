@@ -55,6 +55,7 @@ import { Route as ApiAdminDebugEnvRouteImport } from './routes/api.admin.debug-e
 import { Route as ApiAdminDebugMetadataRouteImport } from './routes/api.admin.debug-metadata'
 import { Route as ApiAdminDiagnoseMetadataRouteImport } from './routes/api.admin.diagnose-metadata'
 import { Route as ApiAdminDiagnoseOrdersRouteImport } from './routes/api.admin.diagnose-orders'
+import { Route as ApiAdminMigrateCatalogRouteImport } from './routes/api.admin.migrate-catalog'
 import { Route as ApiAdminPopulateMetadataRouteImport } from './routes/api.admin.populate-metadata'
 import { Route as ApiAdminProductsRouteImport } from './routes/api.admin.products'
 import { Route as ApiAdminSyncCatalogRouteImport } from './routes/api.admin.sync-catalog'
@@ -71,6 +72,7 @@ import { Route as AuthenticatedAdminProductsIndexRouteImport } from './routes/_a
 import { Route as AuthenticatedAdminProductsIdRouteImport } from './routes/_authenticated/admin/products.$id'
 import { Route as AuthenticatedAdminProductsNewRouteImport } from './routes/_authenticated/admin/products.new'
 import { Route as ApiAdminProductsIdRouteImport } from './routes/api.admin.products.$id'
+import { Route as ApiAdminProductsCompleteRouteImport } from './routes/api.admin.products.complete'
 import { Route as ApiGhlProductsIdRouteImport } from './routes/api.ghl.products.$id'
 import { Route as ApiWebhookEventsIdRetryRouteImport } from './routes/api.webhook-events.$id.retry'
 import { Route as ApiAdminProductsIdColorsRouteImport } from './routes/api.admin.products.$id.colors'
@@ -315,6 +317,11 @@ const ApiAdminDiagnoseOrdersRoute = ApiAdminDiagnoseOrdersRouteImport.update({
   path: '/api/admin/diagnose-orders',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAdminMigrateCatalogRoute = ApiAdminMigrateCatalogRouteImport.update({
+  id: '/api/admin/migrate-catalog',
+  path: '/api/admin/migrate-catalog',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAdminPopulateMetadataRoute =
   ApiAdminPopulateMetadataRouteImport.update({
     id: '/api/admin/populate-metadata',
@@ -402,6 +409,12 @@ const ApiAdminProductsIdRoute = ApiAdminProductsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => ApiAdminProductsRoute,
 } as any)
+const ApiAdminProductsCompleteRoute =
+  ApiAdminProductsCompleteRouteImport.update({
+    id: '/complete',
+    path: '/complete',
+    getParentRoute: () => ApiAdminProductsRoute,
+  } as any)
 const ApiGhlProductsIdRoute = ApiGhlProductsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -470,6 +483,7 @@ export interface FileRoutesByFullPath {
   '/api/admin/debug-metadata': typeof ApiAdminDebugMetadataRoute
   '/api/admin/diagnose-metadata': typeof ApiAdminDiagnoseMetadataRoute
   '/api/admin/diagnose-orders': typeof ApiAdminDiagnoseOrdersRoute
+  '/api/admin/migrate-catalog': typeof ApiAdminMigrateCatalogRoute
   '/api/admin/populate-metadata': typeof ApiAdminPopulateMetadataRoute
   '/api/admin/products': typeof ApiAdminProductsRouteWithChildren
   '/api/admin/sync-catalog': typeof ApiAdminSyncCatalogRoute
@@ -485,6 +499,7 @@ export interface FileRoutesByFullPath {
   '/admin/products/$id': typeof AuthenticatedAdminProductsIdRoute
   '/admin/products/new': typeof AuthenticatedAdminProductsNewRoute
   '/api/admin/products/$id': typeof ApiAdminProductsIdRouteWithChildren
+  '/api/admin/products/complete': typeof ApiAdminProductsCompleteRoute
   '/api/ghl/products/$id': typeof ApiGhlProductsIdRoute
   '/api/webhook-events/$id/retry': typeof ApiWebhookEventsIdRetryRoute
   '/admin/orders/': typeof AuthenticatedAdminOrdersIndexRoute
@@ -533,6 +548,7 @@ export interface FileRoutesByTo {
   '/api/admin/debug-metadata': typeof ApiAdminDebugMetadataRoute
   '/api/admin/diagnose-metadata': typeof ApiAdminDiagnoseMetadataRoute
   '/api/admin/diagnose-orders': typeof ApiAdminDiagnoseOrdersRoute
+  '/api/admin/migrate-catalog': typeof ApiAdminMigrateCatalogRoute
   '/api/admin/populate-metadata': typeof ApiAdminPopulateMetadataRoute
   '/api/admin/products': typeof ApiAdminProductsRouteWithChildren
   '/api/admin/sync-catalog': typeof ApiAdminSyncCatalogRoute
@@ -548,6 +564,7 @@ export interface FileRoutesByTo {
   '/admin/products/$id': typeof AuthenticatedAdminProductsIdRoute
   '/admin/products/new': typeof AuthenticatedAdminProductsNewRoute
   '/api/admin/products/$id': typeof ApiAdminProductsIdRouteWithChildren
+  '/api/admin/products/complete': typeof ApiAdminProductsCompleteRoute
   '/api/ghl/products/$id': typeof ApiGhlProductsIdRoute
   '/api/webhook-events/$id/retry': typeof ApiWebhookEventsIdRetryRoute
   '/admin/orders': typeof AuthenticatedAdminOrdersIndexRoute
@@ -602,6 +619,7 @@ export interface FileRoutesById {
   '/api/admin/debug-metadata': typeof ApiAdminDebugMetadataRoute
   '/api/admin/diagnose-metadata': typeof ApiAdminDiagnoseMetadataRoute
   '/api/admin/diagnose-orders': typeof ApiAdminDiagnoseOrdersRoute
+  '/api/admin/migrate-catalog': typeof ApiAdminMigrateCatalogRoute
   '/api/admin/populate-metadata': typeof ApiAdminPopulateMetadataRoute
   '/api/admin/products': typeof ApiAdminProductsRouteWithChildren
   '/api/admin/sync-catalog': typeof ApiAdminSyncCatalogRoute
@@ -617,6 +635,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/products/$id': typeof AuthenticatedAdminProductsIdRoute
   '/_authenticated/admin/products/new': typeof AuthenticatedAdminProductsNewRoute
   '/api/admin/products/$id': typeof ApiAdminProductsIdRouteWithChildren
+  '/api/admin/products/complete': typeof ApiAdminProductsCompleteRoute
   '/api/ghl/products/$id': typeof ApiGhlProductsIdRoute
   '/api/webhook-events/$id/retry': typeof ApiWebhookEventsIdRetryRoute
   '/_authenticated/admin/orders/': typeof AuthenticatedAdminOrdersIndexRoute
@@ -671,6 +690,7 @@ export interface FileRouteTypes {
     | '/api/admin/debug-metadata'
     | '/api/admin/diagnose-metadata'
     | '/api/admin/diagnose-orders'
+    | '/api/admin/migrate-catalog'
     | '/api/admin/populate-metadata'
     | '/api/admin/products'
     | '/api/admin/sync-catalog'
@@ -686,6 +706,7 @@ export interface FileRouteTypes {
     | '/admin/products/$id'
     | '/admin/products/new'
     | '/api/admin/products/$id'
+    | '/api/admin/products/complete'
     | '/api/ghl/products/$id'
     | '/api/webhook-events/$id/retry'
     | '/admin/orders/'
@@ -734,6 +755,7 @@ export interface FileRouteTypes {
     | '/api/admin/debug-metadata'
     | '/api/admin/diagnose-metadata'
     | '/api/admin/diagnose-orders'
+    | '/api/admin/migrate-catalog'
     | '/api/admin/populate-metadata'
     | '/api/admin/products'
     | '/api/admin/sync-catalog'
@@ -749,6 +771,7 @@ export interface FileRouteTypes {
     | '/admin/products/$id'
     | '/admin/products/new'
     | '/api/admin/products/$id'
+    | '/api/admin/products/complete'
     | '/api/ghl/products/$id'
     | '/api/webhook-events/$id/retry'
     | '/admin/orders'
@@ -802,6 +825,7 @@ export interface FileRouteTypes {
     | '/api/admin/debug-metadata'
     | '/api/admin/diagnose-metadata'
     | '/api/admin/diagnose-orders'
+    | '/api/admin/migrate-catalog'
     | '/api/admin/populate-metadata'
     | '/api/admin/products'
     | '/api/admin/sync-catalog'
@@ -817,6 +841,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/products/$id'
     | '/_authenticated/admin/products/new'
     | '/api/admin/products/$id'
+    | '/api/admin/products/complete'
     | '/api/ghl/products/$id'
     | '/api/webhook-events/$id/retry'
     | '/_authenticated/admin/orders/'
@@ -856,6 +881,7 @@ export interface RootRouteChildren {
   ApiAdminDebugMetadataRoute: typeof ApiAdminDebugMetadataRoute
   ApiAdminDiagnoseMetadataRoute: typeof ApiAdminDiagnoseMetadataRoute
   ApiAdminDiagnoseOrdersRoute: typeof ApiAdminDiagnoseOrdersRoute
+  ApiAdminMigrateCatalogRoute: typeof ApiAdminMigrateCatalogRoute
   ApiAdminPopulateMetadataRoute: typeof ApiAdminPopulateMetadataRoute
   ApiAdminProductsRoute: typeof ApiAdminProductsRouteWithChildren
   ApiAdminSyncCatalogRoute: typeof ApiAdminSyncCatalogRoute
@@ -1190,6 +1216,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAdminDiagnoseOrdersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/admin/migrate-catalog': {
+      id: '/api/admin/migrate-catalog'
+      path: '/api/admin/migrate-catalog'
+      fullPath: '/api/admin/migrate-catalog'
+      preLoaderRoute: typeof ApiAdminMigrateCatalogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/admin/populate-metadata': {
       id: '/api/admin/populate-metadata'
       path: '/api/admin/populate-metadata'
@@ -1300,6 +1333,13 @@ declare module '@tanstack/react-router' {
       path: '/$id'
       fullPath: '/api/admin/products/$id'
       preLoaderRoute: typeof ApiAdminProductsIdRouteImport
+      parentRoute: typeof ApiAdminProductsRoute
+    }
+    '/api/admin/products/complete': {
+      id: '/api/admin/products/complete'
+      path: '/complete'
+      fullPath: '/api/admin/products/complete'
+      preLoaderRoute: typeof ApiAdminProductsCompleteRouteImport
       parentRoute: typeof ApiAdminProductsRoute
     }
     '/api/ghl/products/$id': {
@@ -1501,10 +1541,12 @@ const ApiAdminProductsIdRouteWithChildren =
 
 interface ApiAdminProductsRouteChildren {
   ApiAdminProductsIdRoute: typeof ApiAdminProductsIdRouteWithChildren
+  ApiAdminProductsCompleteRoute: typeof ApiAdminProductsCompleteRoute
 }
 
 const ApiAdminProductsRouteChildren: ApiAdminProductsRouteChildren = {
   ApiAdminProductsIdRoute: ApiAdminProductsIdRouteWithChildren,
+  ApiAdminProductsCompleteRoute: ApiAdminProductsCompleteRoute,
 }
 
 const ApiAdminProductsRouteWithChildren =
@@ -1553,6 +1595,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAdminDebugMetadataRoute: ApiAdminDebugMetadataRoute,
   ApiAdminDiagnoseMetadataRoute: ApiAdminDiagnoseMetadataRoute,
   ApiAdminDiagnoseOrdersRoute: ApiAdminDiagnoseOrdersRoute,
+  ApiAdminMigrateCatalogRoute: ApiAdminMigrateCatalogRoute,
   ApiAdminPopulateMetadataRoute: ApiAdminPopulateMetadataRoute,
   ApiAdminProductsRoute: ApiAdminProductsRouteWithChildren,
   ApiAdminSyncCatalogRoute: ApiAdminSyncCatalogRoute,

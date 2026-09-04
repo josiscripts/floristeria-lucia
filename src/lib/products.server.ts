@@ -16,12 +16,12 @@ const supabase = createClient<Database>(
 // ============================================================
 
 export interface CreateProductInput {
-  ghl_product_id: string;
+  ghl_product_id?: string | null;
   name: string;
-  description?: string;
-  category?: string;
+  description?: string | null;
+  category_id?: string | null; // FK to categories
   active?: boolean;
-  cover_image_url?: string;
+  cover_image_url?: string | null;
   has_color_variants?: boolean;
 }
 
@@ -29,15 +29,17 @@ export async function createProduct(input: CreateProductInput) {
   try {
     const { data, error } = await supabase
       .from("products")
-      .insert({
-        ghl_product_id: input.ghl_product_id,
-        name: input.name,
-        description: input.description || null,
-        category: input.category || null,
-        active: input.active ?? true,
-        cover_image_url: input.cover_image_url || null,
-        has_color_variants: input.has_color_variants ?? false,
-      })
+      .insert([
+        {
+          name: input.name,
+          description: input.description || null,
+          category_id: input.category_id || null,
+          active: input.active ?? true,
+          cover_image_url: input.cover_image_url || null,
+          has_color_variants: input.has_color_variants ?? false,
+          ghl_product_id: input.ghl_product_id || null,
+        },
+      ])
       .select()
       .single();
 
@@ -122,7 +124,7 @@ export async function listProducts(filters?: {
 export interface UpdateProductInput {
   name?: string;
   description?: string;
-  category?: string;
+  category_id?: string | null;
   active?: boolean;
   cover_image_url?: string;
   has_color_variants?: boolean;
@@ -130,19 +132,26 @@ export interface UpdateProductInput {
 
 export async function updateProduct(productId: string, input: UpdateProductInput) {
   try {
-    const updateData: Record<string, any> = {};
+    // Build update object with only defined fields
+    const updates: Partial<{
+      name: string;
+      description: string;
+      category_id: string | null;
+      active: boolean;
+      cover_image_url: string;
+      has_color_variants: boolean;
+    }> = {};
 
-    if (input.name !== undefined) updateData.name = input.name;
-    if (input.description !== undefined) updateData.description = input.description;
-    if (input.category !== undefined) updateData.category = input.category;
-    if (input.active !== undefined) updateData.active = input.active;
-    if (input.cover_image_url !== undefined) updateData.cover_image_url = input.cover_image_url;
-    if (input.has_color_variants !== undefined)
-      updateData.has_color_variants = input.has_color_variants;
+    if (input.name !== undefined) updates.name = input.name;
+    if (input.description !== undefined) updates.description = input.description;
+    if (input.category_id !== undefined) updates.category_id = input.category_id;
+    if (input.active !== undefined) updates.active = input.active;
+    if (input.cover_image_url !== undefined) updates.cover_image_url = input.cover_image_url;
+    if (input.has_color_variants !== undefined) updates.has_color_variants = input.has_color_variants;
 
     const { data, error } = await supabase
       .from("products")
-      .update(updateData)
+      .update(updates)
       .eq("id", productId)
       .select()
       .single();
@@ -267,19 +276,28 @@ export interface UpdateProductOptionInput {
 
 export async function updateProductOption(optionId: string, input: UpdateProductOptionInput) {
   try {
-    const updateData: Record<string, any> = {};
+    // Build update object with only defined fields
+    const updates: Partial<{
+      name: string;
+      price_amount: number;
+      discount_percent: number;
+      stock_quantity: number | null;
+      sku: string;
+      ghl_price_id: string | null;
+      active: boolean;
+    }> = {};
 
-    if (input.name !== undefined) updateData.name = input.name;
-    if (input.price_amount !== undefined) updateData.price_amount = input.price_amount;
-    if (input.discount_percent !== undefined) updateData.discount_percent = input.discount_percent;
-    if (input.stock_quantity !== undefined) updateData.stock_quantity = input.stock_quantity;
-    if (input.sku !== undefined) updateData.sku = input.sku;
-    if (input.ghl_price_id !== undefined) updateData.ghl_price_id = input.ghl_price_id;
-    if (input.active !== undefined) updateData.active = input.active;
+    if (input.name !== undefined) updates.name = input.name;
+    if (input.price_amount !== undefined) updates.price_amount = input.price_amount;
+    if (input.discount_percent !== undefined) updates.discount_percent = input.discount_percent;
+    if (input.stock_quantity !== undefined) updates.stock_quantity = input.stock_quantity;
+    if (input.sku !== undefined) updates.sku = input.sku;
+    if (input.ghl_price_id !== undefined) updates.ghl_price_id = input.ghl_price_id;
+    if (input.active !== undefined) updates.active = input.active;
 
     const { data, error } = await supabase
       .from("product_options")
-      .update(updateData)
+      .update(updates)
       .eq("id", optionId)
       .select()
       .single();
