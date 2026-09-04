@@ -76,6 +76,7 @@ import { Route as ApiAdminProductsCompleteRouteImport } from './routes/api.admin
 import { Route as ApiGhlProductsIdRouteImport } from './routes/api.ghl.products.$id'
 import { Route as ApiWebhookEventsIdRetryRouteImport } from './routes/api.webhook-events.$id.retry'
 import { Route as ApiAdminProductsIdColorsRouteImport } from './routes/api.admin.products.$id.colors'
+import { Route as ApiAdminProductsIdImagesRouteImport } from './routes/api.admin.products.$id.images'
 import { Route as ApiAdminProductsIdOptionsRouteImport } from './routes/api.admin.products.$id.options'
 
 const IndexRoute = IndexRouteImport.update({
@@ -431,6 +432,12 @@ const ApiAdminProductsIdColorsRoute =
     path: '/colors',
     getParentRoute: () => ApiAdminProductsIdRoute,
   } as any)
+const ApiAdminProductsIdImagesRoute =
+  ApiAdminProductsIdImagesRouteImport.update({
+    id: '/images',
+    path: '/images',
+    getParentRoute: () => ApiAdminProductsIdRoute,
+  } as any)
 const ApiAdminProductsIdOptionsRoute =
   ApiAdminProductsIdOptionsRouteImport.update({
     id: '/options',
@@ -505,6 +512,7 @@ export interface FileRoutesByFullPath {
   '/admin/orders/': typeof AuthenticatedAdminOrdersIndexRoute
   '/admin/products/': typeof AuthenticatedAdminProductsIndexRoute
   '/api/admin/products/$id/colors': typeof ApiAdminProductsIdColorsRoute
+  '/api/admin/products/$id/images': typeof ApiAdminProductsIdImagesRoute
   '/api/admin/products/$id/options': typeof ApiAdminProductsIdOptionsRoute
 }
 export interface FileRoutesByTo {
@@ -570,6 +578,7 @@ export interface FileRoutesByTo {
   '/admin/orders': typeof AuthenticatedAdminOrdersIndexRoute
   '/admin/products': typeof AuthenticatedAdminProductsIndexRoute
   '/api/admin/products/$id/colors': typeof ApiAdminProductsIdColorsRoute
+  '/api/admin/products/$id/images': typeof ApiAdminProductsIdImagesRoute
   '/api/admin/products/$id/options': typeof ApiAdminProductsIdOptionsRoute
 }
 export interface FileRoutesById {
@@ -641,6 +650,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/orders/': typeof AuthenticatedAdminOrdersIndexRoute
   '/_authenticated/admin/products/': typeof AuthenticatedAdminProductsIndexRoute
   '/api/admin/products/$id/colors': typeof ApiAdminProductsIdColorsRoute
+  '/api/admin/products/$id/images': typeof ApiAdminProductsIdImagesRoute
   '/api/admin/products/$id/options': typeof ApiAdminProductsIdOptionsRoute
 }
 export interface FileRouteTypes {
@@ -712,6 +722,7 @@ export interface FileRouteTypes {
     | '/admin/orders/'
     | '/admin/products/'
     | '/api/admin/products/$id/colors'
+    | '/api/admin/products/$id/images'
     | '/api/admin/products/$id/options'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -777,6 +788,7 @@ export interface FileRouteTypes {
     | '/admin/orders'
     | '/admin/products'
     | '/api/admin/products/$id/colors'
+    | '/api/admin/products/$id/images'
     | '/api/admin/products/$id/options'
   id:
     | '__root__'
@@ -847,6 +859,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/orders/'
     | '/_authenticated/admin/products/'
     | '/api/admin/products/$id/colors'
+    | '/api/admin/products/$id/images'
     | '/api/admin/products/$id/options'
   fileRoutesById: FileRoutesById
 }
@@ -1363,6 +1376,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAdminProductsIdColorsRouteImport
       parentRoute: typeof ApiAdminProductsIdRoute
     }
+    '/api/admin/products/$id/images': {
+      id: '/api/admin/products/$id/images'
+      path: '/images'
+      fullPath: '/api/admin/products/$id/images'
+      preLoaderRoute: typeof ApiAdminProductsIdImagesRouteImport
+      parentRoute: typeof ApiAdminProductsIdRoute
+    }
     '/api/admin/products/$id/options': {
       id: '/api/admin/products/$id/options'
       path: '/options'
@@ -1528,11 +1548,13 @@ const ApiWebhookEventsRouteWithChildren =
 
 interface ApiAdminProductsIdRouteChildren {
   ApiAdminProductsIdColorsRoute: typeof ApiAdminProductsIdColorsRoute
+  ApiAdminProductsIdImagesRoute: typeof ApiAdminProductsIdImagesRoute
   ApiAdminProductsIdOptionsRoute: typeof ApiAdminProductsIdOptionsRoute
 }
 
 const ApiAdminProductsIdRouteChildren: ApiAdminProductsIdRouteChildren = {
   ApiAdminProductsIdColorsRoute: ApiAdminProductsIdColorsRoute,
+  ApiAdminProductsIdImagesRoute: ApiAdminProductsIdImagesRoute,
   ApiAdminProductsIdOptionsRoute: ApiAdminProductsIdOptionsRoute,
 }
 

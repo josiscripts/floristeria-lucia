@@ -1,5 +1,5 @@
 /**
- * Admin API endpoints for product options management (BLOQUE 4 redesign)
+ * Admin API endpoints for product options management (Supabase-only)
  * POST /api/admin/products/{id}/options - Create option
  * PUT /api/admin/products/{id}/options/{optionId} - Update option
  * DELETE /api/admin/products/{id}/options/{optionId} - Delete option
@@ -15,8 +15,6 @@ import {
   getProductOption,
   getProductWithOptions,
 } from "@/lib/products.server";
-import { ensureProductPrice, syncPriceAmount } from "@/lib/price-sync.server";
-import { generateSKU } from "@/lib/sku-generator.server";
 
 interface CreateOptionRequest {
   name: string;
@@ -51,39 +49,22 @@ const POST = withAdminGuard(async (request, admin) => {
       return json({ error: "Missing required fields: name, price_amount" }, { status: 400 });
     }
 
-    // Get product to verify it exists and get category
+    // Verify product exists
     const productRes = await getProductWithOptions(productId);
     if (!productRes.success) {
       return json({ error: "Product not found" }, { status: 404 });
     }
 
-    const product = productRes.data;
-
     // Generate SKU
-    const skuRes = await generateSKU(product.category || "complementos");
-    const sku = skuRes.success ? skuRes.sku : `FL-MIX-${Date.now()}`;
+    const sku = `FL-OPT-${productId.slice(0, 8)}-${Date.now()}`;
 
-    // Create price in GHL
-    const locationId = process.env["GHL_LOCATION_ID"];
-    const priceRes = await ensureProductPrice({
-      ghlProductId: product.ghl_product_id,
-      amount: body.price_amount,
-      currency: "EUR",
-      sku,
-      priceName: body.name,
-      locationId,
-    });
-
-    const ghlPriceId = priceRes.success ? priceRes.ghlPriceId : null;
-
-    // Create option in Supabase
+    // Create option in Supabase (Supabase-only)
     const optionRes = await createProductOption({
       product_id: productId,
-      ghl_price_id: ghlPriceId || undefined,
       name: body.name,
       price_amount: body.price_amount,
       discount_percent: body.discount_percent ?? 0,
-      stock_quantity: body.stock_quantity,
+      stock_quantity: body.stock_quantity ?? null,
       sku,
       active: true,
     });
@@ -136,31 +117,7 @@ const PUT = withAdminGuard(async (request, admin) => {
       return json({ error: "Option not found" }, { status: 404 });
     }
 
-    const option = optionRes.data;
-
-    // Get product for GHL sync
-    const productRes = await getProductWithOptions(productId);
-    if (!productRes.success) {
-      return json({ error: "Product not found" }, { status: 404 });
-    }
-
-    // Sync price to GHL if changed
-    if (body.price_amount !== undefined && body.price_amount !== option.price_amount) {
-      const locationId = process.env["GHL_LOCATION_ID"];
-      const priceSync = await syncPriceAmount(
-        productRes.data.ghl_product_id,
-        body.price_amount,
-        "EUR",
-        locationId,
-      );
-
-      if (!priceSync.success) {
-        console.warn(`[API] Price sync failed: ${priceSync.error}`);
-        // Continue with update despite GHL failure
-      }
-    }
-
-    // Update in Supabase
+    // Update in Supabase (no GHL sync)
     const updateRes = await updateProductOption(optionId, body);
 
     if (!updateRes.success) {

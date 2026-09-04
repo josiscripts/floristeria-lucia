@@ -384,6 +384,41 @@ export async function listColorVariants(productId: string) {
   }
 }
 
+export interface UpdateColorVariantInput {
+  name?: string;
+  sort_order?: number;
+  active?: boolean;
+}
+
+export async function updateColorVariant(colorVariantId: string, input: UpdateColorVariantInput) {
+  try {
+    const updates: Partial<{
+      name: string;
+      sort_order: number;
+      active: boolean;
+    }> = {};
+
+    if (input.name !== undefined) updates.name = input.name;
+    if (input.sort_order !== undefined) updates.sort_order = input.sort_order;
+    if (input.active !== undefined) updates.active = input.active;
+
+    const { data, error } = await supabase
+      .from("color_variants")
+      .update(updates)
+      .eq("id", colorVariantId)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return { success: true, data };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    console.error("[ProductsLib] updateColorVariant error:", message);
+    return { success: false, error: message };
+  }
+}
+
 export async function deleteColorVariant(colorVariantId: string) {
   try {
     const { data, error } = await supabase
@@ -407,6 +442,127 @@ export async function deleteColorVariant(colorVariantId: string) {
 // PRODUCT WITH RELATIONS
 // ============================================================
 
+// ============================================================
+// PRODUCT IMAGES
+// ============================================================
+
+export interface CreateProductImageInput {
+  product_id: string;
+  image_url: string;
+  is_primary?: boolean;
+  sort_order?: number;
+  alt_text?: string | null;
+  color_variant_id?: string | null;
+}
+
+export async function createProductImage(input: CreateProductImageInput) {
+  try {
+    const { data, error } = await supabase
+      .from("product_images")
+      .insert({
+        product_id: input.product_id,
+        image_url: input.image_url,
+        is_primary: input.is_primary ?? false,
+        sort_order: input.sort_order ?? 0,
+        alt_text: input.alt_text || null,
+        color_variant_id: input.color_variant_id || null,
+        ghl_product_id: null,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return { success: true, data };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    console.error("[ProductsLib] createProductImage error:", message);
+    return { success: false, error: message };
+  }
+}
+
+export async function listProductImages(productId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("product_images")
+      .select("*")
+      .eq("product_id", productId)
+      .order("sort_order", { ascending: true });
+
+    if (error) throw error;
+
+    return { success: true, data };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    console.error("[ProductsLib] listProductImages error:", message);
+    return { success: false, error: message };
+  }
+}
+
+export interface UpdateProductImageInput {
+  image_url?: string;
+  is_primary?: boolean;
+  sort_order?: number;
+  alt_text?: string | null;
+  color_variant_id?: string | null;
+}
+
+export async function updateProductImage(imageId: string, input: UpdateProductImageInput) {
+  try {
+    const updates: Partial<{
+      image_url: string;
+      is_primary: boolean;
+      sort_order: number;
+      alt_text: string | null;
+      color_variant_id: string | null;
+    }> = {};
+
+    if (input.image_url !== undefined) updates.image_url = input.image_url;
+    if (input.is_primary !== undefined) updates.is_primary = input.is_primary;
+    if (input.sort_order !== undefined) updates.sort_order = input.sort_order;
+    if (input.alt_text !== undefined) updates.alt_text = input.alt_text;
+    if (input.color_variant_id !== undefined) updates.color_variant_id = input.color_variant_id;
+
+    const { data, error } = await supabase
+      .from("product_images")
+      .update(updates)
+      .eq("id", imageId)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return { success: true, data };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    console.error("[ProductsLib] updateProductImage error:", message);
+    return { success: false, error: message };
+  }
+}
+
+export async function deleteProductImage(imageId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("product_images")
+      .delete()
+      .eq("id", imageId)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return { success: true, data };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    console.error("[ProductsLib] deleteProductImage error:", message);
+    return { success: false, error: message };
+  }
+}
+
+// ============================================================
+// PRODUCT WITH RELATIONS
+// ============================================================
+
 export async function getProductWithOptions(productId: string) {
   try {
     const productRes = await getProduct(productId);
@@ -416,13 +572,15 @@ export async function getProductWithOptions(productId: string) {
     const colorsRes = productRes.data.has_color_variants
       ? await listColorVariants(productId)
       : { success: true, data: [] };
+    const imagesRes = await listProductImages(productId);
 
     return {
       success: true,
       data: {
         ...productRes.data,
         options: optionsRes.data || [],
-        colors: colorsRes.data || [],
+        color_variants: colorsRes.data || [],
+        product_images: imagesRes.data || [],
       },
     };
   } catch (error) {

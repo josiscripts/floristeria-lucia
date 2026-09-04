@@ -1,6 +1,7 @@
 /**
- * Admin API endpoints for product color variants management (BLOQUE 4 redesign)
+ * Admin API endpoints for product color variants management (Supabase-only)
  * POST /api/admin/products/{id}/colors - Create color variant
+ * PUT /api/admin/products/{id}/colors/{colorId} - Update color variant
  * DELETE /api/admin/products/{id}/colors/{colorId} - Delete color variant
  */
 
@@ -9,6 +10,7 @@ import { json } from "@tanstack/react-start";
 import { withAdminGuard, logAdminAction } from "@/lib/admin/guard.server";
 import {
   createColorVariant,
+  updateColorVariant,
   deleteColorVariant,
   getProductWithOptions,
   listColorVariants,
@@ -16,6 +18,11 @@ import {
 
 interface CreateColorVariantRequest {
   name: string;
+  sort_order?: number;
+}
+
+interface UpdateColorVariantRequest {
+  name?: string;
   sort_order?: number;
 }
 
@@ -85,6 +92,62 @@ const POST = withAdminGuard(async (request, admin) => {
 });
 
 /**
+ * PUT /api/admin/products/{id}/colors/{colorId}
+ * Update a color variant (name, sort_order)
+ */
+const PUT = withAdminGuard(async (request, admin) => {
+  try {
+    const url = new URL(request.url);
+    const pathParts = url.pathname.split("/");
+    const productId = pathParts[4];
+    const colorId = pathParts[6]; // /api/admin/products/{id}/colors/{colorId}
+
+    if (!productId || !colorId) {
+      return json({ error: "Missing product ID or color ID" }, { status: 400 });
+    }
+
+    const body: UpdateColorVariantRequest = await request.json();
+
+    // Verify product exists
+    const productRes = await getProductWithOptions(productId);
+    if (!productRes.success) {
+      return json({ error: "Product not found" }, { status: 404 });
+    }
+
+    // Verify color belongs to product
+    const color = productRes.data?.color_variants?.find((c: any) => c.id === colorId);
+    if (!color) {
+      return json({ error: "Color not found" }, { status: 404 });
+    }
+
+    // Update color variant
+    const updateRes = await updateColorVariant(colorId, body);
+
+    if (!updateRes.success) {
+      return json({ error: updateRes.error }, { status: 500 });
+    }
+
+    // Log action
+    await logAdminAction({
+      userId: admin.user.id,
+      action: "product.color.update",
+      resource: "color_variants",
+      recordId: colorId,
+      metadata: {
+        product_id: productId,
+        fields: Object.keys(body),
+      },
+    });
+
+    return json({ success: true, color: updateRes.data }, { status: 200 });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    console.error("[API] /api/admin/products/{id}/colors/{colorId} PUT error:", message);
+    return json({ error: message }, { status: 500 });
+  }
+});
+
+/**
  * DELETE /api/admin/products/{id}/colors/{colorId}
  * Delete a color variant
  */
@@ -106,7 +169,7 @@ const DELETE = withAdminGuard(async (request, admin) => {
     }
 
     // Verify color belongs to product
-    const color = productRes.data.colors?.find((c: any) => c.id === colorId);
+    const color = productRes.data?.color_variants?.find((c: any) => c.id === colorId);
     if (!color) {
       return json({ error: "Color not found" }, { status: 404 });
     }
@@ -142,6 +205,7 @@ export const Route = createFileRoute("/api/admin/products/$id/colors")({
   server: {
     handlers: {
       POST: ({ request }) => POST(request),
+      PUT: ({ request }) => PUT(request),
       DELETE: ({ request }) => DELETE(request),
     },
   },
