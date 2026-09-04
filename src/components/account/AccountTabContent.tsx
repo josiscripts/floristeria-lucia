@@ -14,17 +14,40 @@ interface AccountTabContentProps {
 
 export function AccountTabContent({ user, favorites }: AccountTabContentProps) {
   const t = useT();
-  const { session } = useAuth();
+  const { session, loading: authLoading } = useAuth();
   const [orderCount, setOrderCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const fetchCountRef = { current: 0 };
 
   useEffect(() => {
+    fetchCountRef.current += 1;
+    const fetchNumber = fetchCountRef.current;
+    const timestamp = new Date().toLocaleTimeString();
+
+    console.log(
+      `[AccountTab Fetch #${fetchNumber}] Start - ${timestamp} | authLoading=${authLoading} | session=${!!session} | token=${!!session?.access_token}`
+    );
+
     const fetchOrderCount = async () => {
       try {
+        if (authLoading) {
+          console.log(`[AccountTab Fetch #${fetchNumber}] Skipped - authLoading=true`);
+          return;
+        }
+
         if (!session) {
+          console.log(`[AccountTab Fetch #${fetchNumber}] No session - skipping`);
           setLoading(false);
           return;
         }
+
+        if (!session.access_token) {
+          console.log(`[AccountTab Fetch #${fetchNumber}] No token - skipping`);
+          setLoading(false);
+          return;
+        }
+
+        console.log(`[AccountTab Fetch #${fetchNumber}] Fetching order count`);
 
         const response = await fetch("/api/account/orders", {
           headers: {
@@ -32,19 +55,30 @@ export function AccountTabContent({ user, favorites }: AccountTabContentProps) {
           },
         });
 
+        console.log(`[AccountTab Fetch #${fetchNumber}] Response - Status: ${response.status}`);
+
         if (response.ok) {
           const responseData = await response.json();
-          setOrderCount(responseData.orders?.length || 0);
+          const count = responseData.orders?.length || 0;
+          console.log(`[AccountTab Fetch #${fetchNumber}] Success - Count: ${count}`);
+          setOrderCount(count);
+        } else {
+          console.log(`[AccountTab Fetch #${fetchNumber}] Error status - not ok`);
         }
       } catch (error) {
-        console.error("Error fetching order count:", error);
+        console.error(`[AccountTab Fetch #${fetchNumber}] Exception:`, error instanceof Error ? error.message : error);
       } finally {
         setLoading(false);
+        console.log(`[AccountTab Fetch #${fetchNumber}] Complete`);
       }
     };
 
     fetchOrderCount();
-  }, [session]);
+
+    return () => {
+      console.log(`[AccountTab Fetch #${fetchNumber}] Cleanup`);
+    };
+  }, [session, authLoading]);
 
   return (
     <div className="space-y-8">

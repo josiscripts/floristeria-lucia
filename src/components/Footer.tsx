@@ -3,7 +3,6 @@ import { Link } from "@tanstack/react-router";
 import {
   ArrowRight,
   BadgeCheck,
-  Clock,
   CreditCard,
   Facebook,
   Heart,
@@ -233,27 +232,6 @@ export function Footer() {
           </a>
         </li>
       </ul>
-
-      <div className="mt-6 flex gap-2.5">
-        <Clock
-          className="mt-0.5 size-4 shrink-0 text-gold/80 dark:text-gold/85"
-          strokeWidth={1.5}
-        />
-        <div>
-          <p className="text-sm font-medium text-primary-foreground dark:text-surface-foreground">
-            {t("footer.schedule.title")}
-          </p>
-          <p className="mt-1 text-sm text-primary-foreground/72 dark:text-surface-foreground/80">
-            {t("footer.schedule.weekdays")}
-          </p>
-          <p className="text-sm text-primary-foreground/72 dark:text-surface-foreground/80">
-            {t("footer.schedule.saturday")}
-          </p>
-          <p className="text-sm text-primary-foreground/72 dark:text-surface-foreground/80">
-            {t("footer.schedule.sunday")}
-          </p>
-        </div>
-      </div>
     </>
   );
 

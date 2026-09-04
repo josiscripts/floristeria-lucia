@@ -410,8 +410,8 @@ function EnviosPage() {
             <p className="text-[0.7rem] tracking-[0.28em] text-muted-foreground uppercase">
               {t("pages.shipping.conditionsTitle")}
             </p>
-            <div className="mt-10 grid gap-10 md:grid-cols-3 md:gap-0">
-              {(["min", "s35", "s120"] as const).map((key, idx) => (
+            <div className="mt-10 grid gap-10 md:grid-cols-2 md:gap-0">
+              {(["min", "s120"] as const).map((key, idx) => (
                 <div
                   key={key}
                   className={`flex flex-col items-center px-4 text-center ${

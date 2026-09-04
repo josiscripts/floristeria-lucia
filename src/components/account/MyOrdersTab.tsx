@@ -21,6 +21,8 @@ interface MyOrdersTabProps {
   user: User;
 }
 
+const FETCH_COUNTER = { current: 0 };
+
 export function MyOrdersTab({ user }: MyOrdersTabProps) {
   const t = useT();
   const navigate = useNavigate();
@@ -28,18 +30,29 @@ export function MyOrdersTab({ user }: MyOrdersTabProps) {
   const [orders, setOrders] = useState<UserOrder[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const fetchCountRef = { current: 0 };
 
   useEffect(() => {
+    fetchCountRef.current += 1;
+    const fetchNumber = fetchCountRef.current;
+    const timestamp = new Date().toLocaleTimeString();
+
+    console.log(
+      `[Orders Fetch #${fetchNumber}] Start - ${timestamp} | authLoading=${authLoading} | session=${!!session} | token=${!!session?.access_token}`
+    );
+
     const fetchOrders = async () => {
       try {
         setError(null);
 
         // Wait for auth to be loaded
         if (authLoading) {
+          console.log(`[Orders Fetch #${fetchNumber}] Skipped - authLoading=true`);
           return;
         }
 
         if (!session) {
+          console.log(`[Orders Fetch #${fetchNumber}] No session - returning empty`);
           setOrders([]);
           setLoading(false);
           return;
@@ -47,11 +60,15 @@ export function MyOrdersTab({ user }: MyOrdersTabProps) {
 
         // Verify we have a valid access token
         if (!session.access_token) {
+          console.log(`[Orders Fetch #${fetchNumber}] No access_token - setting error`);
           setError("No valid authentication token");
           setOrders([]);
           setLoading(false);
           return;
         }
+
+        const fetchStart = performance.now();
+        console.log(`[Orders Fetch #${fetchNumber}] Fetching from /api/account/orders`);
 
         const response = await fetch("/api/account/orders", {
           headers: {
@@ -59,24 +76,40 @@ export function MyOrdersTab({ user }: MyOrdersTabProps) {
           },
         });
 
+        const fetchDuration = (performance.now() - fetchStart).toFixed(0);
+        console.log(
+          `[Orders Fetch #${fetchNumber}] Response - Status: ${response.status} | Duration: ${fetchDuration}ms`
+        );
+
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
-          throw new Error(errorData.error || response.statusText);
+          const errorMsg = errorData.error || response.statusText;
+          console.log(`[Orders Fetch #${fetchNumber}] Error response: ${errorMsg}`);
+          throw new Error(errorMsg);
         }
 
         const responseData = await response.json();
+        const orderCount = responseData.orders?.length || 0;
+        console.log(
+          `[Orders Fetch #${fetchNumber}] Success - Orders count: ${orderCount}`
+        );
         setOrders(responseData.orders || []);
       } catch (err) {
         const message = err instanceof Error ? err.message : "Unknown error";
-        console.error("Error fetching orders:", err);
+        console.error(`[Orders Fetch #${fetchNumber}] Exception:`, message);
         setError(message);
         setOrders([]);
       } finally {
         setLoading(false);
+        console.log(`[Orders Fetch #${fetchNumber}] Complete`);
       }
     };
 
     fetchOrders();
+
+    return () => {
+      console.log(`[Orders Fetch #${fetchNumber}] Component cleanup`);
+    };
   }, [session, authLoading]);
 
   if (loading) {
