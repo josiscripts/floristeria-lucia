@@ -187,12 +187,90 @@ export function deactivateProduct(id: string) {
 /**
  * Create a new product using the BLOQUE 4 redesigned schema
  * POST /api/admin/products
+ * Supabase-only, no GHL
  */
 export function createProductNew(input: CreateProductRequest) {
   return fetchJson<{ success: boolean; product: any }>("/api/admin/products", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(input),
+  });
+}
+
+/**
+ * Fetch a product using the new Supabase schema
+ * GET /api/admin/products/{id}
+ * Supabase-only
+ */
+export function fetchProductByIdNew(id: string) {
+  return fetchJson<{
+    success: boolean;
+    product: {
+      id: string;
+      name: string;
+      description: string | null;
+      category_id: string | null;
+      active: boolean;
+      cover_image_url: string | null;
+      has_color_variants: boolean;
+      product_options: Array<{
+        id: string;
+        name: string;
+        price_amount: number;
+        discount_percent: number;
+        price_final: number;
+        stock_quantity: number | null;
+        sku: string | null;
+        active: boolean;
+      }>;
+      color_variants: Array<{
+        id: string;
+        name: string;
+        sort_order: number;
+        active: boolean | null;
+      }>;
+      product_images: Array<{
+        id: string;
+        image_url: string | null;
+        is_primary: boolean;
+        sort_order: number;
+        alt_text: string | null;
+      }>;
+    };
+  }>(`/api/admin/products/${encodeURIComponent(id)}`);
+}
+
+/**
+ * Update a product using the new Supabase schema
+ * PUT /api/admin/products/{id}
+ * Supabase-only
+ */
+export function updateProductNew(
+  id: string,
+  input: Partial<{
+    name: string;
+    description: string;
+    category_id: string | null;
+    active: boolean;
+    cover_image_url: string;
+    has_color_variants: boolean;
+  }>,
+) {
+  return fetchJson<{ success: boolean; product: any }>(`/api/admin/products/${encodeURIComponent(id)}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input),
+  });
+}
+
+/**
+ * Deactivate a product using the new Supabase schema
+ * DELETE /api/admin/products/{id} (soft delete)
+ * Supabase-only
+ */
+export function deactivateProductNew(id: string) {
+  return fetchJson<{ success: boolean; message: string }>(`/api/admin/products/${encodeURIComponent(id)}`, {
+    method: "DELETE",
   });
 }
 
