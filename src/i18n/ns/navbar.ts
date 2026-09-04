@@ -4,8 +4,15 @@ export const navbar: LocaleBundle = {
   es: {
     links: {
       catalog: "Catálogo",
-      preserved: "Rosas eternas",
-      services: "Eventos",
+      catalogCategories: {
+        bouquets: "Ramos y arreglos florales",
+        plants: "Plantas y Composiciones",
+        preserved: "Rosas eternas",
+        events: "Bodas y eventos",
+        accessories: "Complementos",
+        condolences: "Condolencias",
+      },
+      services: "Bodas y eventos",
       shipping: "Envíos y cobertura",
       about: "Sobre nosotros",
       contact: "Contacto",
@@ -30,8 +37,15 @@ export const navbar: LocaleBundle = {
   en: {
     links: {
       catalog: "Catalogue",
-      preserved: "Eternal roses",
-      services: "Events",
+      catalogCategories: {
+        bouquets: "Bouquets and floral arrangements",
+        plants: "Plants and Compositions",
+        preserved: "Eternal roses",
+        events: "Weddings and events",
+        accessories: "Accessories",
+        condolences: "Condolences",
+      },
+      services: "Weddings and events",
       shipping: "Shipping and coverage",
       about: "About us",
       contact: "Contact",
@@ -56,8 +70,15 @@ export const navbar: LocaleBundle = {
   ca: {
     links: {
       catalog: "Catàleg",
-      preserved: "Roses eternes",
-      services: "Esdeveniments",
+      catalogCategories: {
+        bouquets: "Rams i arranjaments florals",
+        plants: "Plantes i Composicions",
+        preserved: "Roses eternes",
+        events: "Casaments i esdeveniments",
+        accessories: "Accessoris",
+        condolences: "Condolències",
+      },
+      services: "Casaments i esdeveniments",
       shipping: "Enviaments i cobertura",
       about: "Sobre nosaltres",
       contact: "Contacte",

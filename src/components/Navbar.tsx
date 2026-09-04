@@ -42,13 +42,26 @@ export function Navbar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const overlay = pathname === "/";
 
+  const catalogCategories = [
+    { to: "/catalogo?categoria=ramos", label: t("nav.links.catalogCategories.bouquets") },
+    { to: "/catalogo?categoria=plantas", label: t("nav.links.catalogCategories.plants") },
+    { to: "/catalogo?categoria=rosas-eternas", label: t("nav.links.catalogCategories.preserved") },
+    { to: "/servicios/bodas", label: t("nav.links.catalogCategories.events") },
+    { to: "/catalogo?categoria=complementos", label: t("nav.links.catalogCategories.accessories") },
+    { to: "/catalogo?categoria=condolencias", label: t("nav.links.catalogCategories.condolences") },
+  ] as const;
+
   const navLinks = [
-    { to: "/catalogo", label: t("nav.links.catalog") },
     { to: "/servicios", label: t("nav.links.services") },
     { to: "/envios", label: t("nav.links.shipping") },
     { to: "/sobre-nosotros", label: t("nav.links.about") },
     { to: "/contacto", label: t("nav.links.contact") },
   ] as const;
+
+  const isCatalogPage =
+    pathname.startsWith("/catalogo") ||
+    pathname.startsWith("/servicios/bodas") ||
+    pathname.startsWith("/servicios/eventos");
 
   return (
     <header
@@ -75,6 +88,11 @@ export function Navbar() {
         </Link>
 
         <nav className="hidden min-w-0 flex-1 items-center gap-6 xl:flex xl:gap-8">
+          <CatalogDropdown
+            label={t("nav.links.catalog")}
+            categories={catalogCategories}
+            isActive={isCatalogPage}
+          />
           {navLinks.map((link) => (
             <Link
               key={link.to}
@@ -161,6 +179,12 @@ export function Navbar() {
               </SheetHeader>
 
               <nav className="mt-2 flex flex-col px-4">
+                <MobileCatalogMenu
+                  label={t("nav.links.catalog")}
+                  categories={catalogCategories}
+                  isActive={isCatalogPage}
+                  onNavigate={() => setMobileOpen(false)}
+                />
                 {navLinks.map((link) => (
                   <Link
                     key={link.to}
@@ -525,5 +549,96 @@ function CounterBadge({ value }: { value: number }) {
     >
       {value}
     </span>
+  );
+}
+
+function CatalogDropdown({
+  label,
+  categories,
+  isActive,
+}: {
+  label: string;
+  categories: readonly { to: string; label: string }[];
+  isActive: boolean;
+}) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button
+          type="button"
+          className={cn(
+            "link-underline group/catalog flex items-center gap-1 py-1 text-[0.9375rem] font-normal after:bg-primary hover:text-primary focus-visible:outline-none",
+            isActive ? "text-primary after:scale-x-100" : "text-foreground/80",
+          )}
+          aria-haspopup="menu"
+        >
+          {label}
+          <ChevronDown
+            className="size-3.5 transition-transform duration-200 ease-out group-data-[state=open]/catalog:rotate-180"
+            strokeWidth={1.5}
+          />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" className="w-56">
+        {categories.map((cat) => (
+          <DropdownMenuItem key={cat.to} asChild>
+            <Link to={cat.to} className="cursor-pointer">
+              {cat.label}
+            </Link>
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+function MobileCatalogMenu({
+  label,
+  categories,
+  isActive,
+  onNavigate,
+}: {
+  label: string;
+  categories: readonly { to: string; label: string }[];
+  isActive: boolean;
+  onNavigate: () => void;
+}) {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setExpanded(!expanded)}
+        className={cn(
+          "flex w-full items-center justify-between border-b border-border/50 py-3 text-left text-sm transition-colors hover:text-primary",
+          isActive ? "text-primary" : "text-foreground",
+        )}
+        aria-expanded={expanded}
+      >
+        {label}
+        <ChevronDown
+          className={cn("size-4 transition-transform duration-200", expanded && "rotate-180")}
+          strokeWidth={1.5}
+        />
+      </button>
+      {expanded && (
+        <div className="flex flex-col overflow-hidden bg-card/50 pl-4">
+          {categories.map((cat) => (
+            <Link
+              key={cat.to}
+              to={cat.to}
+              onClick={() => {
+                setExpanded(false);
+                onNavigate();
+              }}
+              className="border-b border-border/30 py-2.5 text-xs text-foreground/80 transition-colors hover:text-primary"
+            >
+              {cat.label}
+            </Link>
+          ))}
+        </div>
+      )}
+    </>
   );
 }
