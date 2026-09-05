@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { useLanguage } from "@/context/LanguageContext";
 import { useShop } from "@/context/ShopContext";
 import { useCatalogText } from "@/i18n/catalog-text";
-import { categories, products as fallbackProducts, type CategoryId } from "@/data/catalog";
+import { categories, type CategoryId } from "@/data/catalog";
 import { useSupabaseProducts } from "@/hooks/useSupabaseProducts";
 import { supabaseProductToLegacy } from "@/lib/convert-supabase-product";
 import { legacyCategoryToService } from "@/data/services";
@@ -81,16 +81,15 @@ function CatalogPage() {
   const { t } = useLanguage();
   const { categoryLabelOf } = useCatalogText();
 
-  // Fetch products from Supabase with fallback to local catalog
+  // FASE 5.1: Fetch products from Supabase only (no fallback to hardcoded data)
   const { data: supabaseData = [] } = useSupabaseProducts({
     limit: 500,
   });
 
   const activeCategory = categoria;
 
-  // Convert Supabase products to legacy format, fallback to local catalog
-  const productsToUse =
-    supabaseData.length > 0 ? supabaseData.map(supabaseProductToLegacy) : fallbackProducts;
+  // Convert Supabase products to legacy format
+  const productsToUse = supabaseData.map(supabaseProductToLegacy);
 
   const filtered = useMemo(() => {
     const query = (q ?? "").trim().toLowerCase();

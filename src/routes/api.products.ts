@@ -5,13 +5,7 @@
 
 import { createFileRoute } from "@tanstack/react-router";
 import { json } from "@tanstack/react-start";
-import { createGHLProduct, getGHLProducts } from "@/lib/ghl/client.server";
-import { syncProductMetadata, getFullProductMetadataByIds } from "@/lib/product-metadata.server";
 import { withAdminGuard, logAdminAction } from "@/lib/admin/guard.server";
-import { ensureProductPrice } from "@/lib/price-sync.server";
-import { generateSKU } from "@/lib/sku-generator.server";
-import { getGHLCollectionIdForCategory } from "@/lib/category-collection.server";
-import type { GHLProduct } from "@/lib/ghl/types";
 import type { CategoryId } from "@/data/catalog";
 
 interface CreateProductRequest {
@@ -29,16 +23,19 @@ interface CreateProductRequest {
 
 /**
  * GET /api/products
- * Admin listing: raw GHL products (no category normalization/drop) + Supabase metadata.
+ * Admin listing: Supabase products as source of truth.
  * Query params: page, limit (max 100), status ("active" | "inactive"), search (name/sku).
- *
- * Search/pagination are applied in-memory after a single GHL page fetch (limit 100),
- * which is fine for a shop-sized catalog but would need server-side search for a larger one.
+ * Filters: active=true AND deleted_at IS NULL (via RLS)
  */
 const GET = withAdminGuard(async (request) => {
   try {
+    const { createClient } = await import("@supabase/supabase-js");
+    const supabase = createClient(
+      process.env["SUPABASE_URL"] || "",
+      process.env["SUPABASE_SERVICE_ROLE_KEY"] || "",
+    );
+
     const url = new URL(request.url);
-    const locationId = url.searchParams.get("locationId") || process.env["GHL_LOCATION_ID"];
     const status = url.searchParams.get("status");
     const search = url.searchParams.get("search")?.trim().toLowerCase();
     const page = Math.max(1, parseInt(url.searchParams.get("page") || "1", 10) || 1);
@@ -46,42 +43,43 @@ const GET = withAdminGuard(async (request) => {
     const limit = Math.min(Math.max(limitParam, 1), 100);
     const skip = (page - 1) * limit;
 
-    const needsInMemoryPaging = Boolean(search);
-    const fetchOptions: { limit?: number; skip?: number; filter?: Record<string, unknown> } = {
-      limit: needsInMemoryPaging ? 100 : limit,
-      skip: needsInMemoryPaging ? 0 : skip,
-    };
-    if (status) fetchOptions.filter = { status };
-
-    const result = await getGHLProducts(locationId ?? undefined, fetchOptions);
-
-    if (!("products" in result)) {
-      return json(result, { status: result.statusCode || 500 });
-    }
-
-    let products: GHLProduct[] = result.products || [];
-
-    if (status) {
-      products = products.filter((p) => p.status === status);
-    }
+    let query = supabase
+      .from("products")
+      .select("*", { count: "exact" })
+      .eq("active", true)
+      .is("deleted_at", null)
+      .order("name", { ascending: true });
 
     if (search) {
-      products = products.filter((p) =>
-        `${p.name || ""} ${p.sku || ""}`.toLowerCase().includes(search),
-      );
+      query = query.or(`name.ilike.%${search}%,id.ilike.%${search}%`);
     }
 
-    const total = needsInMemoryPaging ? products.length : result.total || products.length;
-
-    if (needsInMemoryPaging) {
-      products = products.slice(skip, skip + limit);
+    if (status === "inactive") {
+      query = supabase
+        .from("products")
+        .select("*", { count: "exact" })
+        .eq("active", false)
+        .is("deleted_at", null)
+        .order("name", { ascending: true });
+      if (search) {
+        query = query.or(`name.ilike.%${search}%,id.ilike.%${search}%`);
+      }
     }
 
-    const metadataMap = await getFullProductMetadataByIds(products.map((p) => p.id));
+    query = query.range(skip, skip + limit - 1);
 
-    const items = products.map((product) => ({
+    const { data: products, count, error } = await query;
+
+    if (error) {
+      console.error("[API] Supabase query error:", error);
+      return json({ error: error.message, code: "DB_ERROR" }, { status: 500 });
+    }
+
+    const total = count ?? 0;
+
+    const items = (products || []).map((product: any) => ({
       ...product,
-      metadata: metadataMap.get(product.id) || null,
+      metadata: null,
     }));
 
     return json(
