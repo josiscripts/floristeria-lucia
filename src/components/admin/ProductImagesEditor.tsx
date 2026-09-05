@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Upload, Trash2, Star, Copy, AlertCircle } from "lucide-react";
+import { useState, useRef } from "react";
+import { Upload, Trash2, Star, Copy, AlertCircle, Loader } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,11 +27,13 @@ export function ProductImagesEditor({
   onImagesChange,
   maxImages = 10,
 }: ProductImagesEditorProps) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [newImageUrl, setNewImageUrl] = useState("");
   const [newAltText, setNewAltText] = useState("");
   const [makePrimary, setMakePrimary] = useState(false);
   const [dragOverId, setDragOverId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
 
   const canAddMore = images.length < maxImages;
 
@@ -81,6 +83,62 @@ export function ProductImagesEditor({
     setNewImageUrl("");
     setNewAltText("");
     setMakePrimary(false);
+  };
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setError(null);
+    const file = e.target.files?.[0];
+
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith("image/")) {
+      setError("Por favor selecciona una imagen válida");
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setError("La imagen no debe pesar más de 5MB");
+      return;
+    }
+
+    if (!canAddMore) {
+      setError(`Máximo ${maxImages} imágenes permitidas`);
+      return;
+    }
+
+    setUploading(true);
+
+    try {
+      // Create a blob URL for immediate preview
+      const blobUrl = URL.createObjectURL(file);
+
+      // If making this primary, remove primary from others
+      const updatedImages = makePrimary
+        ? images.map((img) => ({ ...img, is_primary: false }))
+        : images;
+
+      const newImage: ProductImageFormData = {
+        id: `temp-${Date.now()}-${Math.random()}`,
+        image_url: blobUrl,
+        is_primary: makePrimary || images.length === 0,
+        alt_text: file.name,
+        sort_order: images.length,
+      };
+
+      onImagesChange([...updatedImages, newImage]);
+
+      // Reset file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Error al procesar la imagen";
+      setError(message);
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleSetPrimary = (id: string) => {
@@ -268,7 +326,7 @@ export function ProductImagesEditor({
           <div className="space-y-2">
             <h3 className="font-semibold text-sm">Agregar Nueva Imagen</h3>
             <p className="text-xs text-muted-foreground">
-              Por URL. Asegúrate de que la URL sea válida y la imagen sea accesible.
+              Puedes agregar imágenes por URL o subiendo archivos desde tu dispositivo.
             </p>
           </div>
 
@@ -279,57 +337,87 @@ export function ProductImagesEditor({
             </Alert>
           )}
 
-          <div className="space-y-3">
-            <div className="space-y-1.5">
-              <Label htmlFor="new-image-url" className="text-xs">
-                URL de Imagen *
-              </Label>
-              <Input
-                id="new-image-url"
-                type="url"
-                value={newImageUrl}
-                onChange={(e) => {
-                  setNewImageUrl(e.target.value);
-                  if (error) setError(null);
-                }}
-                onKeyPress={handleKeyPress}
-                placeholder="https://ejemplo.com/imagen.jpg"
-                size="sm"
-              />
+          <div className="space-y-4">
+            {/* URL Method */}
+            <div className="space-y-3 p-3 border border-dashed rounded-lg">
+              <h4 className="text-xs font-medium">Por URL</h4>
+              <div className="space-y-1.5">
+                <Label htmlFor="new-image-url" className="text-xs">
+                  URL de Imagen *
+                </Label>
+                <Input
+                  id="new-image-url"
+                  type="url"
+                  value={newImageUrl}
+                  onChange={(e) => {
+                    setNewImageUrl(e.target.value);
+                    if (error) setError(null);
+                  }}
+                  onKeyPress={handleKeyPress}
+                  placeholder="https://ejemplo.com/imagen.jpg"
+                  size="sm"
+                />
+              </div>
+
+              <Button type="button" onClick={handleAddImage} className="w-full" variant="secondary" size="sm">
+                <Upload className="mr-2 h-4 w-4" />
+                Agregar desde URL
+              </Button>
             </div>
 
-            <div className="space-y-1.5">
-              <Label htmlFor="new-image-alt" className="text-xs">
-                Texto Alternativo (opcional)
-              </Label>
-              <Input
-                id="new-image-alt"
-                type="text"
-                value={newAltText}
-                onChange={(e) => setNewAltText(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="Descripción de la imagen"
-                size="sm"
-              />
+            {/* File Upload Method */}
+            <div className="space-y-3 p-3 border border-dashed rounded-lg border-blue-200 bg-blue-50/30">
+              <h4 className="text-xs font-medium">Subir Archivo</h4>
+              <div className="space-y-1.5">
+                <Label htmlFor="file-upload" className="text-xs cursor-pointer">
+                  Selecciona una imagen de tu dispositivo
+                </Label>
+                <Input
+                  ref={fileInputRef}
+                  id="file-upload"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileSelect}
+                  disabled={uploading}
+                  className="cursor-pointer"
+                  size="sm"
+                />
+                <p className="text-xs text-muted-foreground">
+                  Máximo 5MB. Formatos: JPG, PNG, WebP, GIF
+                </p>
+              </div>
             </div>
 
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="make-primary"
-                checked={makePrimary}
-                onChange={(e) => setMakePrimary(e.target.checked)}
-                className="rounded border-gray-300"
-              />
-              <Label htmlFor="make-primary" className="text-xs cursor-pointer">
-                Establecer como imagen primaria
-              </Label>
-            </div>
+            {/* Common options */}
+            <div className="space-y-1.5 pt-2 border-t">
+              <div className="space-y-1.5">
+                <Label htmlFor="new-image-alt" className="text-xs">
+                  Texto Alternativo (opcional)
+                </Label>
+                <Input
+                  id="new-image-alt"
+                  type="text"
+                  value={newAltText}
+                  onChange={(e) => setNewAltText(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Descripción de la imagen"
+                  size="sm"
+                />
+              </div>
 
-            <Button type="button" onClick={handleAddImage} className="w-full" variant="secondary">
-              <Upload className="mr-2 h-4 w-4" />
-              Agregar Imagen
-            </Button>
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="make-primary"
+                  checked={makePrimary}
+                  onChange={(e) => setMakePrimary(e.target.checked)}
+                  className="rounded border-gray-300"
+                />
+                <Label htmlFor="make-primary" className="text-xs cursor-pointer">
+                  Establecer como imagen primaria
+                </Label>
+              </div>
+            </div>
           </div>
         </Card>
       )}

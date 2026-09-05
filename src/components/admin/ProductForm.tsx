@@ -80,7 +80,6 @@ export function ProductForm({
   const [description, setDescription] = useState(initialProduct?.description ?? "");
   const [category, setCategory] = useState(initialProduct?.category ?? "");
   const [active, setActive] = useState(initialProduct?.active ?? true);
-  const [coverImageUrl, setCoverImageUrl] = useState(initialProduct?.cover_image_url ?? "");
   const [hasColorVariants, setHasColorVariants] = useState(
     initialProduct?.has_color_variants ?? false,
   );
@@ -134,7 +133,7 @@ export function ProductForm({
         description: description.trim() || undefined,
         category: category || undefined,
         active,
-        cover_image_url: coverImageUrl.trim() || undefined,
+        cover_image_url: undefined,
         has_color_variants: hasColorVariants,
         options: options.map((opt) => ({
           name: opt.name,
@@ -273,17 +272,6 @@ export function ProductForm({
                     <span className="text-sm">{active ? "Activo" : "Inactivo"}</span>
                   </div>
                 </div>
-              </div>
-
-              <div className="space-y-1.5">
-                <Label htmlFor="product-cover-image">URL de Imagen de Portada</Label>
-                <Input
-                  id="product-cover-image"
-                  type="url"
-                  value={coverImageUrl}
-                  onChange={(e) => setCoverImageUrl(e.target.value)}
-                  placeholder="https://..."
-                />
               </div>
             </CardContent>
           </Card>
