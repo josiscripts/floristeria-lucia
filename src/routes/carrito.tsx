@@ -1,12 +1,10 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
-import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { useShop } from "@/context/ShopContext";
 import { useT } from "@/context/LanguageContext";
 import { formatPrice } from "@/data/catalog";
-import { company } from "@/data/company";
 
 export const Route = createFileRoute("/carrito")({
   head: () => ({
@@ -29,6 +27,7 @@ export const Route = createFileRoute("/carrito")({
 
 function CartPage() {
   const t = useT();
+  const navigate = useNavigate({ from: "/carrito" });
   const { lines, setQty, removeLine, total, clearCart } = useShop();
 
   return (
@@ -158,12 +157,7 @@ function CartPage() {
               <Button
                 size="lg"
                 className="mt-7 w-full rounded-full text-[0.7rem] uppercase tracking-[0.2em]"
-                onClick={() => {
-                  toast.success(t("cart.orderReservedTitle"), {
-                    description: t("cart.orderReservedDescription", { phone: company.phone }),
-                  });
-                  clearCart();
-                }}
+                onClick={() => navigate({ to: "/checkout" })}
               >
                 {t("cart.continueStep")}
               </Button>
