@@ -14,6 +14,7 @@ interface ProductImageFormData {
   is_primary: boolean;
   alt_text?: string | null;
   sort_order?: number;
+  file?: File; // For file uploads
 }
 
 interface ProductImagesEditorProps {
@@ -108,8 +109,6 @@ export function ProductImagesEditor({
       return;
     }
 
-    setUploading(true);
-
     try {
       // Create a blob URL for immediate preview
       const blobUrl = URL.createObjectURL(file);
@@ -121,10 +120,11 @@ export function ProductImagesEditor({
 
       const newImage: ProductImageFormData = {
         id: `temp-${Date.now()}-${Math.random()}`,
-        image_url: blobUrl,
+        image_url: blobUrl, // Blob URL for preview
         is_primary: makePrimary || images.length === 0,
         alt_text: file.name,
         sort_order: images.length,
+        file: file, // Store the actual file
       };
 
       onImagesChange([...updatedImages, newImage]);
@@ -136,8 +136,6 @@ export function ProductImagesEditor({
     } catch (err) {
       const message = err instanceof Error ? err.message : "Error al procesar la imagen";
       setError(message);
-    } finally {
-      setUploading(false);
     }
   };
 
@@ -383,7 +381,8 @@ export function ProductImagesEditor({
                   size="sm"
                 />
                 <p className="text-xs text-muted-foreground">
-                  Máximo 5MB. Formatos: JPG, PNG, WebP, GIF
+                  Máximo 5MB. Formatos: JPG, PNG, WebP, GIF<br/>
+                  <span className="text-green-600">✓ Se subirá automáticamente al guardar el producto</span>
                 </p>
               </div>
             </div>

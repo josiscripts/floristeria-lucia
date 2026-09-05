@@ -19,6 +19,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useSupabaseCategories } from "@/hooks/useSupabaseCategories";
 import { syncProductImages } from "@/lib/product-images-sync";
+import { uploadProductImage } from "@/lib/upload-product-image";
 import { ProductOptionsEditor } from "./ProductOptionsEditor";
 import { ProductImagesEditor } from "./ProductImagesEditor";
 
@@ -128,6 +129,30 @@ export function ProductForm({
     }
 
     try {
+      // Process images: upload files to Supabase Storage and get URLs
+      const processedImages = await Promise.all(
+        images.map(async (img) => {
+          let imageUrl = img.image_url;
+
+          // If image has a file and is a blob URL, upload it
+          if ((img as any).file && imageUrl?.startsWith("blob:")) {
+            try {
+              imageUrl = await uploadProductImage((img as any).file);
+            } catch (err) {
+              console.error("Failed to upload image file:", err);
+              throw err;
+            }
+          }
+
+          return {
+            id: img.id,
+            image_url: imageUrl,
+            is_primary: img.is_primary,
+            sort_order: img.sort_order,
+          };
+        }),
+      );
+
       const values: ProductFormValues = {
         name: name.trim(),
         description: description.trim() || undefined,
@@ -142,17 +167,13 @@ export function ProductForm({
           stock_quantity: opt.stock_quantity,
         })),
         color_variants: colorVariants.map((cv) => cv.name),
-        images: images.map((img) => ({
-          id: img.id,
-          image_url: img.image_url,
-          is_primary: img.is_primary,
-          sort_order: img.sort_order,
-        })),
+        images: processedImages,
       };
 
       await onSubmit(values);
     } catch (err) {
       console.error("Error submitting form:", err);
+      throw err;
     }
   };
 

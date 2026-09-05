@@ -27,13 +27,16 @@ export async function syncProductImages(
   // Create new images
   for (let i = 0; i < newImages.length; i++) {
     const img = newImages[i];
-    if (img.image_url) {
+    // Only process images with valid URLs (not blob URLs which are temporary)
+    if (img.image_url && img.image_url.startsWith("http")) {
       try {
         const res = await createProductImage(productId, img.image_url, img.is_primary);
         results.created.push(res);
       } catch (err) {
         console.error("Error creating image:", err);
       }
+    } else if (img.image_url?.startsWith("blob:")) {
+      console.warn(`Skipping blob URL - file uploads need to be processed server-side: ${img.image_url}`);
     }
   }
 
