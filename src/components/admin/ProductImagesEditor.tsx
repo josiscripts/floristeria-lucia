@@ -8,11 +8,7 @@ import { Card } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 
-import type { Tables } from "@/integrations/supabase/types";
-
-type ProductImage = Tables<"product_images">;
-
-interface ProductImage {
+interface ProductImageFormData {
   id: string;
   image_url: string | null;
   is_primary: boolean;
@@ -21,8 +17,8 @@ interface ProductImage {
 }
 
 interface ProductImagesEditorProps {
-  images: ProductImage[];
-  onImagesChange: (images: ProductImage[]) => void;
+  images: ProductImageFormData[];
+  onImagesChange: (images: ProductImageFormData[]) => void;
   maxImages?: number;
 }
 
@@ -71,7 +67,7 @@ export function ProductImagesEditor({
       ? images.map((img) => ({ ...img, is_primary: false }))
       : images;
 
-    const newImage: ProductImage = {
+    const newImage: ProductImageFormData = {
       id: `temp-${Date.now()}-${Math.random()}`,
       image_url: newImageUrl.trim(),
       is_primary: makePrimary || images.length === 0, // First image is primary by default
