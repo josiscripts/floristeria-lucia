@@ -19,7 +19,8 @@ export interface CreateProductInput {
   ghl_product_id?: string | null;
   name: string;
   description?: string | null;
-  category_id?: string | null; // FK to categories
+  category?: string | null; // legacy text column - the public catalog filters/reads by this
+  category_id?: string | null; // FK to categories (normalized, not yet used by the public catalog)
   active?: boolean;
   cover_image_url?: string | null;
   has_color_variants?: boolean;
@@ -33,6 +34,7 @@ export async function createProduct(input: CreateProductInput) {
         {
           name: input.name,
           description: input.description || null,
+          category: input.category || null,
           category_id: input.category_id || null,
           active: input.active ?? true,
           cover_image_url: input.cover_image_url || null,
@@ -124,6 +126,7 @@ export async function listProducts(filters?: {
 export interface UpdateProductInput {
   name?: string;
   description?: string;
+  category?: string | null;
   category_id?: string | null;
   active?: boolean;
   cover_image_url?: string;
@@ -136,6 +139,7 @@ export async function updateProduct(productId: string, input: UpdateProductInput
     const updates: Partial<{
       name: string;
       description: string;
+      category: string | null;
       category_id: string | null;
       active: boolean;
       cover_image_url: string;
@@ -144,6 +148,7 @@ export async function updateProduct(productId: string, input: UpdateProductInput
 
     if (input.name !== undefined) updates.name = input.name;
     if (input.description !== undefined) updates.description = input.description;
+    if (input.category !== undefined) updates.category = input.category;
     if (input.category_id !== undefined) updates.category_id = input.category_id;
     if (input.active !== undefined) updates.active = input.active;
     if (input.cover_image_url !== undefined) updates.cover_image_url = input.cover_image_url;

@@ -19,7 +19,8 @@ import { generateSKU } from "@/lib/sku-generator.server";
 interface CreateProductWithOptionsRequest {
   name: string;
   description?: string;
-  category_id?: string; // FK to categories table
+  category?: string; // legacy text column - this is what the public catalog filters by
+  category_id?: string; // FK to categories table (normalized, not yet used by the public catalog)
   active?: boolean;
   cover_image_url?: string;
   has_color_variants?: boolean;
@@ -106,6 +107,7 @@ const POST = withAdminGuard(async (request, admin) => {
     const productRes = await createProduct({
       name: body.name.trim(),
       description: body.description?.trim() || null,
+      category: body.category || null,
       category_id: body.category_id || null,
       active: body.active ?? true,
       cover_image_url: body.cover_image_url || null,
@@ -125,7 +127,7 @@ const POST = withAdminGuard(async (request, admin) => {
       const opt = body.options[i];
 
       // Generate SKU for this option
-      const skuRes = await generateSKU(body.category_id || "complementos");
+      const skuRes = await generateSKU(body.category || "complementos");
       const sku = skuRes.success ? skuRes.sku : `FL-OPT-${productId.slice(0, 8)}-${i}`;
 
       // Create option in Supabase

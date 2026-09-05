@@ -46,21 +46,32 @@ export function ProductsTable({ products }: { products: AdminProduct[] }) {
                   <span className="truncate">{product.name}</span>
                 </Link>
               </TableCell>
-              <TableCell className="text-sm text-muted-foreground">{product.sku || "—"}</TableCell>
-              <TableCell className="text-sm text-muted-foreground">
-                {product.category || "—"}
-              </TableCell>
-              <TableCell className="text-foreground">
-                {typeof product.price === "number" ? formatPrice(product.price) : "—"}
-                {product.metadata?.price_max ? (
-                  <span className="text-xs text-muted-foreground">
-                    {" "}
-                    – {formatPrice(product.metadata.price_max)}
-                  </span>
-                ) : null}
-              </TableCell>
+              {(() => {
+                const opts = product.product_options ?? [];
+                const primaryOption = opts.length
+                  ? [...opts].sort((a, b) => (a.price_amount ?? 0) - (b.price_amount ?? 0))[0]
+                  : null;
+                return (
+                  <>
+                    <TableCell className="text-sm text-muted-foreground">
+                      {primaryOption?.sku || "—"}
+                    </TableCell>
+                    <TableCell className="text-sm text-muted-foreground">
+                      {product.category || "—"}
+                    </TableCell>
+                    <TableCell className="text-foreground">
+                      {typeof primaryOption?.price_amount === "number"
+                        ? formatPrice(primaryOption.price_amount)
+                        : "—"}
+                      {opts.length > 1 ? (
+                        <span className="text-xs text-muted-foreground"> ({opts.length} opciones)</span>
+                      ) : null}
+                    </TableCell>
+                  </>
+                );
+              })()}
               <TableCell>
-                <GHLStatusBadge status={product.status} />
+                <GHLStatusBadge status={product["active"] ? "active" : "inactive"} />
               </TableCell>
               <TableCell>
                 <Link

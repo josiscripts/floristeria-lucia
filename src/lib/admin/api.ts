@@ -116,7 +116,16 @@ export async function fetchAllOrdersInRange(
 
 // --- Products ---
 
-export type AdminProduct = GHLProduct & { metadata: ProductMetadataRow | null };
+export type AdminProduct = GHLProduct & {
+  metadata: ProductMetadataRow | null;
+  product_options?: Array<{
+    id: string;
+    name: string;
+    price_amount: number;
+    sku: string | null;
+    sort_order: number | null;
+  }>;
+};
 
 export interface ProductsListParams {
   page: number;

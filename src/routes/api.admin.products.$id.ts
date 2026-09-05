@@ -14,6 +14,7 @@ import { getProductWithOptions, updateProduct, deleteProduct } from "@/lib/produ
 interface UpdateProductRequest {
   name?: string;
   description?: string;
+  category?: string | null; // legacy text column - the public catalog filters/reads by this
   category_id?: string | null; // FK to categories
   active?: boolean;
   cover_image_url?: string;

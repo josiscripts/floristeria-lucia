@@ -43,9 +43,11 @@ const GET = withAdminGuard(async (request) => {
     const limit = Math.min(Math.max(limitParam, 1), 100);
     const skip = (page - 1) * limit;
 
+    const PRODUCTS_SELECT = "*, product_options(id, name, price_amount, sku, sort_order)";
+
     let query = supabase
       .from("products")
-      .select("*", { count: "exact" })
+      .select(PRODUCTS_SELECT, { count: "exact" })
       .eq("active", true)
       .is("deleted_at", null)
       .order("name", { ascending: true });
@@ -57,7 +59,7 @@ const GET = withAdminGuard(async (request) => {
     if (status === "inactive") {
       query = supabase
         .from("products")
-        .select("*", { count: "exact" })
+        .select(PRODUCTS_SELECT, { count: "exact" })
         .eq("active", false)
         .is("deleted_at", null)
         .order("name", { ascending: true });

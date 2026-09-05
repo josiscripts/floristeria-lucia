@@ -14,11 +14,7 @@ import {
 } from "@/components/ui/table";
 import { Card } from "@/components/ui/card";
 
-import type { Tables } from "@/integrations/supabase/types";
-
-type ProductOption = Tables<"product_options">;
-
-interface ProductOption {
+interface ProductOptionFormData {
   id: string;
   name: string;
   price_amount: number | string;
@@ -28,8 +24,8 @@ interface ProductOption {
 }
 
 interface ProductOptionsEditorProps {
-  options: ProductOption[];
-  onOptionsChange: (options: ProductOption[]) => void;
+  options: ProductOptionFormData[];
+  onOptionsChange: (options: ProductOptionFormData[]) => void;
 }
 
 export function ProductOptionsEditor({ options, onOptionsChange }: ProductOptionsEditorProps) {
@@ -61,7 +57,7 @@ export function ProductOptionsEditor({ options, onOptionsChange }: ProductOption
       return;
     }
 
-    const newOption: ProductOption = {
+    const newOption: ProductOptionFormData = {
       id: `temp-${Date.now()}-${Math.random()}`,
       name: newOptionName.trim(),
       price_amount: price,
@@ -79,7 +75,7 @@ export function ProductOptionsEditor({ options, onOptionsChange }: ProductOption
     setNewOptionStock("");
   };
 
-  const handleUpdateOption = (id: string, updates: Partial<ProductOption>) => {
+  const handleUpdateOption = (id: string, updates: Partial<ProductOptionFormData>) => {
     onOptionsChange(options.map((opt) => (opt.id === id ? { ...opt, ...updates } : opt)));
   };
 
