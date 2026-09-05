@@ -6,7 +6,8 @@ import { ProductCard } from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
 import { useT } from "@/context/LanguageContext";
 import { useShop } from "@/context/ShopContext";
-import { products } from "@/data/catalog";
+import { useSupabaseProducts } from "@/hooks/useSupabaseProducts";
+import { supabaseProductToLegacy } from "@/lib/convert-supabase-product";
 
 export const Route = createFileRoute("/favoritos")({
   head: () => ({
@@ -33,7 +34,12 @@ export const Route = createFileRoute("/favoritos")({
 function FavoritesPage() {
   const t = useT();
   const { favorites } = useShop();
-  const items = useMemo(() => products.filter((p) => favorites.includes(p.id)), [favorites]);
+  const { data: supabaseProducts = [] } = useSupabaseProducts({ limit: 500 });
+
+  const items = useMemo(() => {
+    const legacyProducts = supabaseProducts.map(supabaseProductToLegacy);
+    return legacyProducts.filter((p) => favorites.includes(p.id));
+  }, [supabaseProducts, favorites]);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:py-16">

@@ -6,7 +6,8 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/ProductCard";
 import { useT } from "@/context/LanguageContext";
-import { products as fallbackProducts } from "@/data/catalog";
+import { useSupabaseProducts } from "@/hooks/useSupabaseProducts";
+import { supabaseProductToLegacy } from "@/lib/convert-supabase-product";
 
 interface FavoritesTabProps {
   favorites: string[];
@@ -14,10 +15,12 @@ interface FavoritesTabProps {
 
 export function FavoritesTab({ favorites }: FavoritesTabProps) {
   const t = useT();
+  const { data: supabaseProducts = [] } = useSupabaseProducts({ limit: 500 });
 
   const favoriteProducts = useMemo(() => {
-    return fallbackProducts.filter((p) => favorites.includes(p.id));
-  }, [favorites]);
+    const legacyProducts = supabaseProducts.map(supabaseProductToLegacy);
+    return legacyProducts.filter((p) => favorites.includes(p.id));
+  }, [supabaseProducts, favorites]);
 
   if (favoriteProducts.length === 0) {
     return (

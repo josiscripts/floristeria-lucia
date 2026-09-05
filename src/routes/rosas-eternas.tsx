@@ -9,8 +9,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { products } from "@/data/catalog";
 import { useT } from "@/context/LanguageContext";
+import { useSupabaseProductsByCategory } from "@/hooks/useSupabaseProductsByCategory";
+import { supabaseProductToLegacy } from "@/lib/convert-supabase-product";
 import rosasImage from "@/assets/cat-rosas-eternas.jpg";
 
 export const Route = createFileRoute("/rosas-eternas")({
@@ -37,7 +38,8 @@ const stepIcons: LucideIcon[] = [Sparkles, Droplets, Sun, Gift];
 
 function RosasEternasPage() {
   const t = useT();
-  const eternas = products.filter((p) => p.category === "rosas-eternas");
+  const { data: supabaseEternas = [] } = useSupabaseProductsByCategory("rosas-eternas");
+  const eternas = supabaseEternas.map(supabaseProductToLegacy);
 
   return (
     <>

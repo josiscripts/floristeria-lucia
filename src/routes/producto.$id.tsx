@@ -15,16 +15,14 @@ import { useShop } from "@/context/ShopContext";
 import { useCatalogText } from "@/i18n/catalog-text";
 import {
   categoryLabels,
-  findProduct,
   formatPrice,
   isRibbonFree,
-  priceTiers,
   RIBBON_PRICE,
   ribbonCost,
   supportsRibbon,
-  products,
 } from "@/data/catalog";
 import { useSupabaseProduct } from "@/hooks/useSupabaseProduct";
+import { useSupabaseProductsByCategory } from "@/hooks/useSupabaseProductsByCategory";
 import {
   supabaseProductToLegacy,
   getSupabasePriceTiers,
@@ -33,22 +31,16 @@ import {
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/producto/$id")({
-  head: ({ params }) => {
-    const p = findProduct(params.id);
-    const title = p ? `${p.name} · floristeria lucia` : "Producto · floristeria lucia";
-    const description =
-      p?.description ?? "Producto de nuestra floristería en San Fernando de Henares.";
-    return {
-      meta: [
-        { title },
-        { name: "description", content: description },
-        { property: "og:title", content: title },
-        { property: "og:description", content: description },
-        { property: "og:type", content: "website" },
-        { name: "twitter:card", content: "summary_large_image" },
-      ],
-    };
-  },
+  head: () => ({
+    meta: [
+      { title: "Producto · floristeria lucia" },
+      { name: "description", content: "Producto de nuestra floristería en San Fernando de Henares." },
+      { property: "og:title", content: "Producto · floristeria lucia" },
+      { property: "og:description", content: "Descubre nuestro producto especial." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: ProductPage,
 });
 
@@ -59,24 +51,34 @@ function ProductPage() {
   const { productName, productDescription, productBadge, tierLabel } = useCatalogText();
   const { addLine, setCartOpen, toggleFavorite, isFavorite } = useShop();
 
-  // Fetch product from Supabase, with fallback to local catalog
+  // FASE 5.1: Fetch product from Supabase only (no fallback to hardcoded data)
   const { data: supabaseProduct } = useSupabaseProduct(id);
-  const fallbackProduct = findProduct(id);
 
-  // Use Supabase product if available, otherwise use legacy product
-  const isSupabaseProduct = !!supabaseProduct;
-  const product = supabaseProduct ? supabaseProductToLegacy(supabaseProduct) : fallbackProduct;
+  // Use Supabase product only
+  const product = supabaseProduct ? supabaseProductToLegacy(supabaseProduct) : null;
 
-  // Get tiers from Supabase product options or use legacy priceTiers
+  // Get tiers from Supabase product options
   const tiers = useMemo(() => {
-    if (isSupabaseProduct && supabaseProduct) {
+    if (supabaseProduct) {
       return getSupabasePriceTiers(supabaseProduct.product_options);
     }
-    return product ? priceTiers(product) : [];
-  }, [product, isSupabaseProduct, supabaseProduct]);
+    return [];
+  }, [supabaseProduct]);
+
+  // Get related products from same category
+  const { data: categoryProducts = [] } = useSupabaseProductsByCategory(
+    product?.category as any,
+    { enabled: !!product }
+  );
+  const related = useMemo(() => {
+    return categoryProducts
+      .map(supabaseProductToLegacy)
+      .filter((p) => p.id !== product?.id)
+      .slice(0, 4);
+  }, [categoryProducts, product?.id]);
 
   const [tierIndex, setTierIndex] = useState(0);
-  const [colorVariantId, setColorVariantId] = useState<string | undefined>(undefined);
+  const [colorVariantId, setColorVariantId] = useState<string | null>(null);
   const [qty, setQty] = useState(1);
   const [ribbonSelected, setRibbonSelected] = useState(false);
   const [justAdded, setJustAdded] = useState(false);
@@ -103,9 +105,6 @@ function ProductPage() {
   const ribbonFree = isRibbonFree(subtotal);
   const ribbonPrice = ribbonSelected ? ribbonCost(subtotal) : 0;
   const orderTotal = subtotal + ribbonPrice;
-  const related = products
-    .filter((p) => p.category === product.category && p.id !== product.id)
-    .slice(0, 4);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:py-14">
@@ -121,7 +120,7 @@ function ProductPage() {
         <div className="relative overflow-hidden rounded-xl border border-border/70 bg-card">
           <img
             src={
-              isSupabaseProduct && supabaseProduct
+              supabaseProduct
                 ? getImageForColor(supabaseProduct, colorVariantId)
                 : product.image
             }
@@ -169,7 +168,7 @@ function ProductPage() {
             </div>
           )}
 
-          {isSupabaseProduct && supabaseProduct && supabaseProduct.color_variants.length > 0 && (
+          {supabaseProduct && supabaseProduct && supabaseProduct.color_variants.length > 0 && (
             <div className="mt-6">
               <p className="text-sm font-medium">{t("product.color")}</p>
               <div className="mt-2 flex flex-wrap gap-2">
@@ -194,7 +193,7 @@ function ProductPage() {
             </div>
           )}
 
-          {product.colors && product.colors.length > 0 && !isSupabaseProduct && (
+          {product.colors && product.colors.length > 0 && !supabaseProduct && (
             <div className="mt-6">
               <p className="text-sm font-medium">{t("product.color")}</p>
               <div className="mt-2 flex flex-wrap gap-2">
@@ -317,16 +316,16 @@ function ProductPage() {
                 onClick={() => {
                   // Get color name if using Supabase color variant
                   let colorLabel: string | undefined = undefined;
-                  if (isSupabaseProduct && supabaseProduct && colorVariantId) {
+                  if (supabaseProduct && supabaseProduct && colorVariantId) {
                     colorLabel = supabaseProduct.color_variants.find(
                       (v) => v.id === colorVariantId,
                     )?.name;
-                  } else if (!isSupabaseProduct && colorVariantId) {
+                  } else if (!supabaseProduct && colorVariantId) {
                     colorLabel = colorVariantId;
                   }
 
                   const displayImage =
-                    isSupabaseProduct && supabaseProduct
+                    supabaseProduct && supabaseProduct
                       ? getImageForColor(supabaseProduct, colorVariantId)
                       : product.image;
 
