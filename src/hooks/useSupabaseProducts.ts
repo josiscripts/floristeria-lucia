@@ -54,6 +54,7 @@ export function useSupabaseProducts(options: UseSupabaseProductsOptions = {}) {
   return useQuery({
     queryKey: ["supabase-products", category, limit, skip],
     queryFn: async (): Promise<SupabaseProduct[]> => {
+      console.log('[useSupabaseProducts] Query starting', { category, limit, skip });
       let query = supabase
         .from("products")
         .select(
@@ -110,15 +111,37 @@ export function useSupabaseProducts(options: UseSupabaseProductsOptions = {}) {
       const { data, error } = await query;
 
       if (error) {
+        console.error(
+          '[useSupabaseProducts] Query failed:',
+          error.code,
+          error.message,
+          { category, limit, skip }
+        );
         return [];
       }
 
-      // Ensure product_options are sorted by creation order
-      return (data as SupabaseProduct[]).map((product) => ({
+      const sorted = (data as SupabaseProduct[]).map((product) => ({
         ...product,
         color_variants: product.color_variants.sort((a, b) => a.sort_order - b.sort_order),
         product_images: product.product_images.sort((a, b) => a.sort_order - b.sort_order),
       }));
+
+      console.log('[useSupabaseProducts] Query succeeded', {
+        count: sorted.length,
+        category,
+        limit,
+        skip,
+        sample: sorted[0]
+          ? {
+              id: sorted[0].id,
+              name: sorted[0].name,
+              optionsCount: sorted[0].product_options?.length,
+              imagesCount: sorted[0].product_images?.length,
+            }
+          : null,
+      });
+
+      return sorted;
     },
     enabled,
     staleTime: 5 * 60 * 1000, // 5 minutes

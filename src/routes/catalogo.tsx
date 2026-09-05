@@ -86,10 +86,24 @@ function CatalogPage() {
     limit: 500,
   });
 
+  console.log('[catalogo] Received from hook:', {
+    count: supabaseData.length,
+    sample: supabaseData[0]
+      ? { id: supabaseData[0].id, name: supabaseData[0].name }
+      : null,
+  });
+
   const activeCategory = categoria;
 
   // Convert Supabase products to legacy format
   const productsToUse = supabaseData.map(supabaseProductToLegacy);
+
+  console.log('[catalogo] After conversion:', {
+    count: productsToUse.length,
+    sample: productsToUse[0]
+      ? { id: productsToUse[0].id, name: productsToUse[0].name, image: productsToUse[0].image }
+      : null,
+  });
 
   const filtered = useMemo(() => {
     const query = (q ?? "").trim().toLowerCase();
