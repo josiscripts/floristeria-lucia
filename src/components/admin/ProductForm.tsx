@@ -92,6 +92,7 @@ export function ProductForm({
   const [images, setImages] = useState<ProductImage[]>(initialProduct?.images ?? []);
 
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const validateForm = (): boolean => {
     const errors: Record<string, string> = {};
@@ -129,18 +130,24 @@ export function ProductForm({
     }
 
     try {
+      console.log("[ProductForm] Starting submission...");
+
       // Process images: upload files to Supabase Storage and get URLs
+      console.log("[ProductForm] Processing images...", { count: images.length });
       const processedImages = await Promise.all(
         images.map(async (img) => {
           let imageUrl = img.image_url;
 
           // If image has a file and is a blob URL, upload it
           if ((img as any).file && imageUrl?.startsWith("blob:")) {
+            console.log("[ProductForm] Uploading file:", (img as any).file.name);
             try {
               imageUrl = await uploadProductImage((img as any).file);
+              console.log("[ProductForm] File uploaded successfully:", imageUrl);
             } catch (err) {
-              console.error("Failed to upload image file:", err);
-              throw err;
+              const errorMsg = err instanceof Error ? err.message : String(err);
+              console.error("[ProductForm] Failed to upload image file:", errorMsg);
+              throw new Error(`Error al subir imagen ${(img as any).file.name}: ${errorMsg}`);
             }
           }
 
@@ -152,6 +159,8 @@ export function ProductForm({
           };
         }),
       );
+
+      console.log("[ProductForm] Images processed, creating product...");
 
       const values: ProductFormValues = {
         name: name.trim(),
@@ -170,10 +179,18 @@ export function ProductForm({
         images: processedImages,
       };
 
+      console.log("[ProductForm] Submitting with values:", {
+        name: values.name,
+        imagesCount: values.images.length,
+        optionsCount: values.options.length
+      });
+
       await onSubmit(values);
+      console.log("[ProductForm] Submission successful!");
     } catch (err) {
-      console.error("Error submitting form:", err);
-      throw err;
+      const errorMessage = err instanceof Error ? err.message : "Error desconocido al guardar el producto";
+      console.error("[ProductForm] Error submitting form:", errorMessage, err);
+      setSubmitError(errorMessage);
     }
   };
 
@@ -223,10 +240,10 @@ export function ProductForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {error && (
+      {(error || submitError) && (
         <Alert className="border-red-200 bg-red-50">
           <AlertCircle className="h-4 w-4 text-red-600" />
-          <AlertDescription className="text-red-700">{error}</AlertDescription>
+          <AlertDescription className="text-red-700">{submitError || error}</AlertDescription>
         </Alert>
       )}
 
